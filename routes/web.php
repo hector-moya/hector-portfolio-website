@@ -13,6 +13,9 @@ use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
 use App\Livewire\Settings\TwoFactor;
+use App\Livewire\Users\Create as UsersCreate;
+use App\Livewire\Users\Edit as UsersEdit;
+use App\Livewire\Users\Index as UsersIndex;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 
@@ -39,6 +42,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('entries', EntriesIndex::class)->name('entries');
     Route::get('entries/create', EntriesCreate::class)->name('entries.create');
     Route::get('entries/{entry}/edit', EntriesEdit::class)->name('entries.edit');
+
+    // Users Routes
+    Route::get('users', UsersIndex::class)->name('users.index');
+    Route::get('users/create', UsersCreate::class)->name('users.create');
+    Route::get('users/{user}/edit', UsersEdit::class)->name('users.edit');
 
     // Settings Routes
     Route::redirect('settings', 'settings/profile');
