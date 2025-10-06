@@ -15,6 +15,18 @@
                 <flux:navlist.group :heading="__('Platform')" class="grid">
                     <flux:navlist.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>{{ __('Dashboard') }}</flux:navlist.item>
                 </flux:navlist.group>
+
+                <flux:navlist.group :heading="__('Content')" class="grid">
+                    <flux:navlist.item icon="folder" :href="route('collections.index')" :current="request()->routeIs('collections.*')" wire:navigate>{{ __('Collections') }}</flux:navlist.item>
+                    <flux:navlist.item icon="document-duplicate" :href="route('entries')" :current="request()->routeIs('entries*')" wire:navigate>{{ __('Entries') }}</flux:navlist.item>
+                    <flux:navlist.item icon="cube" :href="route('blueprints.index')" :current="request()->routeIs('blueprints.*')" wire:navigate>{{ __('Blueprints') }}</flux:navlist.item>
+                </flux:navlist.group>
+
+                @can('viewAny', App\Models\User::class)
+                    <flux:navlist.group :heading="__('Administration')" class="grid">
+                        <flux:navlist.item icon="user-group" :href="route('users.index')" :current="request()->routeIs('users.*')" wire:navigate>{{ __('Users') }}</flux:navlist.item>
+                    </flux:navlist.group>
+                @endcan
             </flux:navlist>
 
             <flux:spacer />

@@ -24,9 +24,22 @@ class Index extends Component
     #[Url(as: 'status')]
     public ?string $statusFilter = null;
 
+    public array $selected = [];
+
+    public bool $selectAll = false;
+
     public function updatedSearch(): void
     {
         $this->resetPage();
+    }
+
+    public function updatedSelectAll(): void
+    {
+        if ($this->selectAll) {
+            $this->selected = $this->entries->pluck('id')->toArray();
+        } else {
+            $this->selected = [];
+        }
     }
 
     public function updatedCollectionFilter(): void
@@ -83,6 +96,57 @@ class Index extends Component
 
         $this->dispatch('entry-deleted');
         $this->dispatch('notify', message: 'Entry deleted successfully.');
+    }
+
+    public function bulkPublish(): void
+    {
+        if (empty($this->selected)) {
+            return;
+        }
+
+        Entry::whereIn('id', $this->selected)->update([
+            'status' => 'published',
+            'published_at' => now(),
+        ]);
+
+        $count = count($this->selected);
+        $this->selected = [];
+        $this->selectAll = false;
+
+        $this->dispatch('notify', message: "{$count} entries published successfully.");
+    }
+
+    public function bulkUnpublish(): void
+    {
+        if (empty($this->selected)) {
+            return;
+        }
+
+        Entry::whereIn('id', $this->selected)->update([
+            'status' => 'draft',
+        ]);
+
+        $count = count($this->selected);
+        $this->selected = [];
+        $this->selectAll = false;
+
+        $this->dispatch('notify', message: "{$count} entries unpublished successfully.");
+    }
+
+    public function bulkDelete(): void
+    {
+        if (empty($this->selected)) {
+            return;
+        }
+
+        Entry::whereIn('id', $this->selected)->delete();
+
+        $count = count($this->selected);
+        $this->selected = [];
+        $this->selectAll = false;
+
+        $this->dispatch('entry-deleted');
+        $this->dispatch('notify', message: "{$count} entries deleted successfully.");
     }
 
     public function render()

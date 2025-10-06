@@ -57,8 +57,34 @@
             </div>
         </flux:card>
     @else
+        {{-- Bulk Actions Bar --}}
+        @if (count($selected) > 0)
+            <flux:card class="mb-4">
+                <div class="flex items-center justify-between">
+                    <flux:text>{{ count($selected) }} entries selected</flux:text>
+                    <div class="flex gap-2">
+                        <flux:button size="sm" wire:click="bulkPublish" wire:confirm="Publish {{ count($selected) }} entries?">
+                            <flux:icon.check-circle class="size-4" />
+                            Publish
+                        </flux:button>
+                        <flux:button size="sm" wire:click="bulkUnpublish" wire:confirm="Unpublish {{ count($selected) }} entries?">
+                            <flux:icon.x-circle class="size-4" />
+                            Unpublish
+                        </flux:button>
+                        <flux:button size="sm" variant="danger" wire:click="bulkDelete" wire:confirm="Delete {{ count($selected) }} entries?">
+                            <flux:icon.trash class="size-4" />
+                            Delete
+                        </flux:button>
+                    </div>
+                </div>
+            </flux:card>
+        @endif
+
         <flux:table>
             <flux:table.columns>
+                <flux:table.column class="w-12">
+                    <flux:checkbox wire:model.live="selectAll" />
+                </flux:table.column>
                 <flux:table.column>Title</flux:table.column>
                 <flux:table.column>Collection</flux:table.column>
                 <flux:table.column>Status</flux:table.column>
@@ -70,6 +96,10 @@
             <flux:table.rows>
                 @foreach ($this->entries as $entry)
                     <flux:table.row :key="$entry->id">
+                        <flux:table.cell>
+                            <flux:checkbox wire:model.live="selected" value="{{ $entry->id }}" />
+                        </flux:table.cell>
+
                         <flux:table.cell>
                             <div>
                                 <div class="font-medium">{{ $entry->title }}</div>
@@ -106,6 +136,11 @@
 
                         <flux:table.cell>
                             <div class="flex gap-2">
+                                <flux:button size="sm" wire:click="$dispatch('preview-entry', { entryId: {{ $entry->id }} })">
+                                    <flux:icon.eye class="size-4" />
+                                    Preview
+                                </flux:button>
+
                                 <flux:button size="sm" :href="route('entries.edit', $entry)" wire:navigate>
                                     Edit
                                 </flux:button>
@@ -129,4 +164,7 @@
             {{ $this->entries->links() }}
         </div>
     @endif
+
+    {{-- Preview Modal --}}
+    <livewire:entries.preview />
 </div>

@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Actions;
 
+use App\Models\Activity;
 use App\Models\Blueprint;
 use App\Models\Entry;
 use Illuminate\Support\Facades\DB;
@@ -24,6 +25,21 @@ class CreateEntry
 
             // Create entry elements from field values
             $this->syncEntryElements($entry, $data['fieldValues'] ?? []);
+
+            // Log activity
+            Activity::create([
+                'log_name' => 'entry',
+                'description' => 'Created entry',
+                'subject_type' => Entry::class,
+                'subject_id' => $entry->id,
+                'causer_type' => 'App\\Models\\User',
+                'causer_id' => auth()->id(),
+                'event' => 'created',
+                'properties' => [
+                    'title' => $entry->title,
+                    'status' => $entry->status,
+                ],
+            ]);
 
             return $entry->load('elements', 'collection', 'blueprint');
         });

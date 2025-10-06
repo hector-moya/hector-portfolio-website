@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Actions;
 
+use App\Models\Activity;
 use App\Models\Blueprint;
 use App\Models\Entry;
 use Illuminate\Support\Facades\DB;
@@ -11,6 +12,13 @@ class UpdateEntry
     public function execute(Entry $entry, array $data): Entry
     {
         return DB::transaction(function () use ($entry, $data) {
+            // Store old values for logging
+            $oldValues = [
+                'title' => $entry->title,
+                'slug' => $entry->slug,
+                'status' => $entry->status,
+            ];
+
             // Update the entry
             $entry->update([
                 'title' => $data['title'],
@@ -21,6 +29,25 @@ class UpdateEntry
 
             // Sync entry elements
             $this->syncEntryElements($entry, $data['fieldValues'] ?? []);
+
+            // Log activity
+            Activity::create([
+                'log_name' => 'entry',
+                'description' => 'Updated entry',
+                'subject_type' => Entry::class,
+                'subject_id' => $entry->id,
+                'causer_type' => 'App\\Models\\User',
+                'causer_id' => auth()->id(),
+                'event' => 'updated',
+                'properties' => [
+                    'old' => $oldValues,
+                    'new' => [
+                        'title' => $entry->title,
+                        'slug' => $entry->slug,
+                        'status' => $entry->status,
+                    ],
+                ],
+            ]);
 
             return $entry->fresh(['elements', 'collection', 'blueprint']);
         });
