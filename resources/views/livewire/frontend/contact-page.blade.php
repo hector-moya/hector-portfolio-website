@@ -16,7 +16,7 @@
                 {{-- Contact Information --}}
                 <div class="bg-white dark:bg-zinc-800 rounded-lg shadow-md p-8">
                     <h2 class="text-2xl font-bold text-zinc-900 dark:text-white mb-6">Get in Touch</h2>
-                    
+
                     <div class="space-y-4">
                         @if($email = $entry->elements->firstWhere('handle', 'email')?->value)
                             <div>

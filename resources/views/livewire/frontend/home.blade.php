@@ -14,7 +14,7 @@
                     @endif
                     @if($ctaText = $entry->elements->firstWhere('handle', 'cta_text')?->value)
                         <div class="mt-10">
-                            <a href="{{ $entry->elements->firstWhere('handle', 'cta_url')?->value ?? '#' }}" 
+                            <a href="{{ $entry->elements->firstWhere('handle', 'cta_url')?->value ?? '#' }}"
                                class="inline-block bg-white text-indigo-600 px-8 py-3 rounded-lg font-semibold hover:bg-zinc-100 transition">
                                 {{ $ctaText }}
                             </a>
