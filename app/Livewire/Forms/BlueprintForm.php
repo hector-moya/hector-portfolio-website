@@ -1,0 +1,80 @@
+<?php
+
+namespace App\Livewire\Forms;
+
+use Livewire\Attributes\Validate;
+use Livewire\Form;
+
+class BlueprintForm extends Form
+{
+    public ?int $blueprint_id = null;
+
+    #[Validate('required|string|max:255')]
+    public string $name = '';
+
+    public string $slug = '';
+
+    #[Validate('nullable|string|max:1000')]
+    public string $description = '';
+
+    #[Validate('boolean')]
+    public bool $is_active = true;
+
+    public array $elements = [];
+
+    public function rules(): array
+    {
+        return [
+            'slug' => [
+                'nullable',
+                'string',
+                'max:255',
+                \Illuminate\Validation\Rule::unique('blueprints', 'slug')
+                    ->ignore($this->blueprint_id),
+            ],
+            'elements.*.type' => 'required|string',
+            'elements.*.label' => 'required|string|max:255',
+            'elements.*.handle' => 'nullable|string|max:255',
+            'elements.*.instructions' => 'nullable|string',
+            'elements.*.is_required' => 'boolean',
+        ];
+    }
+
+    public function setBlueprint($blueprint): void
+    {
+        $this->blueprint_id = $blueprint->id;
+        $this->name = $blueprint->name;
+        $this->slug = $blueprint->slug;
+        $this->description = $blueprint->description ?? '';
+        $this->is_active = $blueprint->is_active;
+
+        $this->elements = $blueprint->elements->map(function ($element) {
+            return [
+                'type' => $element->type,
+                'label' => $element->label,
+                'handle' => $element->handle,
+                'instructions' => $element->instructions ?? '',
+                'is_required' => $element->is_required,
+                'config' => $element->config ?? [],
+            ];
+        })->toArray();
+    }
+
+    public function addElement(): void
+    {
+        $this->elements[] = [
+            'type' => 'text',
+            'label' => '',
+            'handle' => '',
+            'instructions' => '',
+            'is_required' => false,
+            'config' => [],
+        ];
+    }
+
+    public function removeElement(int $index): void
+    {
+        unset($this->elements[$index]);
+        $this->elements = array_values($this->elements);
+    }
+}

@@ -1,5 +1,8 @@
 <?php
 
+use App\Livewire\Blueprints\Create as BlueprintsCreate;
+use App\Livewire\Blueprints\Edit as BlueprintsEdit;
+use App\Livewire\Blueprints\Index as BlueprintsIndex;
 use App\Livewire\Collections\Create as CollectionsCreate;
 use App\Livewire\Collections\Edit as CollectionsEdit;
 use App\Livewire\Collections\Index as CollectionsIndex;
@@ -23,6 +26,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('collections', CollectionsIndex::class)->name('collections.index');
     Route::get('collections/create', CollectionsCreate::class)->name('collections.create');
     Route::get('collections/{collection}/edit', CollectionsEdit::class)->name('collections.edit');
+
+    // Blueprints Routes
+    Route::get('blueprints', BlueprintsIndex::class)->name('blueprints.index');
+    Route::get('blueprints/create', BlueprintsCreate::class)->name('blueprints.create');
+    Route::get('blueprints/{blueprint}/edit', BlueprintsEdit::class)->name('blueprints.edit');
 
     // Settings Routes
     Route::redirect('settings', 'settings/profile');

@@ -41,4 +41,9 @@ class BlueprintElement extends Model
     {
         return $this->hasMany(EntryElement::class);
     }
+
+    public function scopeOrdered($query)
+    {
+        return $query->orderBy('order');
+    }
 }
