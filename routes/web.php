@@ -9,6 +9,11 @@ use App\Livewire\Collections\Index as CollectionsIndex;
 use App\Livewire\Entries\Create as EntriesCreate;
 use App\Livewire\Entries\Edit as EntriesEdit;
 use App\Livewire\Entries\Index as EntriesIndex;
+use App\Livewire\Frontend\BlogIndex;
+use App\Livewire\Frontend\BlogShow;
+use App\Livewire\Frontend\ContactPage;
+use App\Livewire\Frontend\Home;
+use App\Livewire\Frontend\PortfolioIndex;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
@@ -19,9 +24,12 @@ use App\Livewire\Users\Index as UsersIndex;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
+// Frontend Routes (Public)
+Route::get('/', Home::class)->name('home');
+Route::get('/blog', BlogIndex::class)->name('blog.index');
+Route::get('/blog/{slug}', BlogShow::class)->name('blog.show');
+Route::get('/portfolio', PortfolioIndex::class)->name('portfolio.index');
+Route::get('/contact', ContactPage::class)->name('contact');
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
