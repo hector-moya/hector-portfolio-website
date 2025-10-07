@@ -54,7 +54,7 @@ class EntryForm extends Form
 
     public function initializeFieldValues(): void
     {
-        if (! $this->blueprint_id) {
+        if ($this->blueprint_id === null || $this->blueprint_id === 0) {
             return;
         }
 
@@ -98,18 +98,14 @@ class EntryForm extends Form
         ];
 
         // Add dynamic field validation rules
-        if ($this->blueprint_id) {
+        if ($this->blueprint_id !== null && $this->blueprint_id !== 0) {
             $blueprint = Blueprint::with('elements')->find($this->blueprint_id);
 
             if ($blueprint) {
                 foreach ($blueprint->elements as $element) {
                     $fieldRules = [];
 
-                    if ($element->is_required) {
-                        $fieldRules[] = 'required';
-                    } else {
-                        $fieldRules[] = 'nullable';
-                    }
+                    $fieldRules[] = $element->is_required ? 'required' : 'nullable';
 
                     // Add type-specific validation
                     $fieldRules = array_merge($fieldRules, $this->getFieldTypeRules($element->type));
@@ -153,7 +149,7 @@ class EntryForm extends Form
         ];
 
         // Add friendly names for dynamic fields
-        if ($this->blueprint_id) {
+        if ($this->blueprint_id !== null && $this->blueprint_id !== 0) {
             $blueprint = Blueprint::with('elements')->find($this->blueprint_id);
 
             if ($blueprint) {

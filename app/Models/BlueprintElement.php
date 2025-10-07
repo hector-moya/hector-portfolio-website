@@ -42,7 +42,8 @@ class BlueprintElement extends Model
         return $this->hasMany(EntryElement::class);
     }
 
-    public function scopeOrdered($query)
+    #[\Illuminate\Database\Eloquent\Attributes\Scope]
+    protected function ordered($query)
     {
         return $query->orderBy('order');
     }

@@ -13,7 +13,7 @@ class UpdateBlueprint
             $data['slug'] = Str::slug($data['name']);
         }
 
-        $blueprint = Blueprint::findOrFail($data['id']);
+        $blueprint = \App\Models\Blueprint::query()->findOrFail($data['id']);
 
         $blueprint->update([
             'name' => $data['name'],
@@ -22,37 +22,23 @@ class UpdateBlueprint
             'is_active' => $data['is_active'] ?? false,
         ]);
 
-        //Sync elements create, update or delete as necessary
-        $existingElementIds = $blueprint->elements->pluck('id')->toArray();
-        $submittedElementIds = collect($data['elements'] ?? [])->pluck('id')->toArray();
-        $elementsToDelete = array_diff($existingElementIds, $submittedElementIds);
-        if (!empty($elementsToDelete)) {
-            $blueprint->elements()->whereIn('id', $elementsToDelete)->delete();
-        }
+        $handles = collect($data['elements'])->pluck('handle')->filter();
 
+        // Delete removed elements
+        $blueprint->elements()->whereNotIn('handle', $handles)->delete();
+
+        // Update or create remaining
         foreach ($data['elements'] ?? [] as $elementData) {
-            if (isset($elementData['id']) && in_array($elementData['id'], $existingElementIds)) {
-                // Update existing element
-                $element = $blueprint->elements()->where('id', $elementData['id'])->first();
-                $element->update([
-                    'label' => $elementData['label'],
-                    'handle' => Str::slug($elementData['handle'], '_'),
+            $blueprint->elements()->updateOrCreate(
+                ['handle' => $elementData['handle']],
+                [
                     'type' => $elementData['type'],
-                    'config' => $elementData['config'] ?? [],
-                    'is_required' => $elementData['is_required'] ?? false,
-                    'order' => $elementData['order'] ?? 0,
-                ]);
-            } else {
-                // Create new element
-                $blueprint->elements()->create([
                     'label' => $elementData['label'],
-                    'handle' => Str::slug($elementData['handle'], '_'),
-                    'type' => $elementData['type'],
-                    'config' => $elementData['config'] ?? [],
+                    'instructions' => $elementData['instructions'] ?? null,
                     'is_required' => $elementData['is_required'] ?? false,
-                    'order' => $elementData['order'] ?? 0,
-                ]);
-            }
+                    'config' => $elementData['config'] ?? [],
+                ]
+            );
         }
 
         return $blueprint->fresh('elements');

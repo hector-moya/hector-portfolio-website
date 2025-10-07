@@ -13,7 +13,7 @@ class CreateEntry
     {
         return DB::transaction(function () use ($data) {
             // Create the entry
-            $entry = Entry::create([
+            $entry = \App\Models\Entry::query()->create([
                 'collection_id' => $data['collection_id'],
                 'blueprint_id' => $data['blueprint_id'],
                 'author_id' => auth()->id(),
@@ -27,12 +27,12 @@ class CreateEntry
             $this->syncEntryElements($entry, $data['fieldValues'] ?? []);
 
             // Log activity
-            Activity::create([
+            \App\Models\Activity::query()->create([
                 'log_name' => 'entry',
                 'description' => 'Created entry',
                 'subject_type' => Entry::class,
                 'subject_id' => $entry->id,
-                'causer_type' => 'App\\Models\\User',
+                'causer_type' => \App\Models\User::class,
                 'causer_id' => auth()->id(),
                 'event' => 'created',
                 'properties' => [

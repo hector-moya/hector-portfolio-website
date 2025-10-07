@@ -31,12 +31,12 @@ class UpdateEntry
             $this->syncEntryElements($entry, $data['fieldValues'] ?? []);
 
             // Log activity
-            Activity::create([
+            \App\Models\Activity::query()->create([
                 'log_name' => 'entry',
                 'description' => 'Updated entry',
                 'subject_type' => Entry::class,
                 'subject_id' => $entry->id,
-                'causer_type' => 'App\\Models\\User',
+                'causer_type' => \App\Models\User::class,
                 'causer_id' => auth()->id(),
                 'event' => 'updated',
                 'properties' => [

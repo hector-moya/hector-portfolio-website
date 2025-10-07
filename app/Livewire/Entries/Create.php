@@ -29,7 +29,7 @@ class Create extends Component
 
     public function updatedSelectedCollectionId(): void
     {
-        if ($this->selectedCollectionId) {
+        if ($this->selectedCollectionId !== null && $this->selectedCollectionId !== 0) {
             $collection = Collection::with('blueprint.elements')->findOrFail($this->selectedCollectionId);
             $this->form->setCollection($collection);
         }
@@ -37,7 +37,7 @@ class Create extends Component
 
     public function updatedFormTitle(): void
     {
-        if (empty($this->form->slug)) {
+        if ($this->form->slug === '' || $this->form->slug === '0') {
             $this->form->slug = Str::slug($this->form->title);
         }
     }
@@ -55,7 +55,7 @@ class Create extends Component
     #[Computed]
     public function blueprint(): ?Blueprint
     {
-        if (! $this->form->blueprint_id) {
+        if ($this->form->blueprint_id === null || $this->form->blueprint_id === 0) {
             return null;
         }
 
@@ -66,7 +66,7 @@ class Create extends Component
     {
         $this->form->validate();
 
-        $entry = (new CreateEntry)->execute([
+        (new CreateEntry)->execute([
             'collection_id' => $this->form->collection_id,
             'blueprint_id' => $this->form->blueprint_id,
             'title' => $this->form->title,
@@ -80,7 +80,7 @@ class Create extends Component
         $this->redirect(route('entries'), navigate: true);
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
     {
         return view('livewire.entries.create');
     }

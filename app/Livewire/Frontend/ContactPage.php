@@ -11,9 +11,9 @@ class ContactPage extends Component
 {
     #[Layout('components.layouts.frontend')]
     #[Title('Contact')]
-    public function render()
+    public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
     {
-        $entry = Entry::where('slug', 'contact')
+        $entry = \App\Models\Entry::query()->where('slug', 'contact')
             ->where('status', 'published')
             ->with(['elements.blueprintElement'])
             ->first();

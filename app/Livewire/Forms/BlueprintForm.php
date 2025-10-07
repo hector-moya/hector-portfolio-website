@@ -2,9 +2,9 @@
 
 namespace App\Livewire\Forms;
 
-use Livewire\Attributes\Validate;
-use App\Models\Blueprint;
 use App\Livewire\Actions\Blueprints\UpdateBlueprint;
+use App\Models\Blueprint;
+use Livewire\Attributes\Validate;
 use Livewire\Form;
 
 class BlueprintForm extends Form
@@ -50,22 +50,17 @@ class BlueprintForm extends Form
         $this->description = $blueprint->description ?? '';
         $this->is_active = $blueprint->is_active;
 
-        $this->elements = $blueprint->elements->map(function ($element) {
-            return [
-                'type' => $element->type,
-                'label' => $element->label,
-                'handle' => $element->handle,
-                'instructions' => $element->instructions ?? '',
-                'is_required' => $element->is_required,
-                'config' => $element->config ?? [],
-            ];
-        })->toArray();
+        $this->elements = $blueprint->elements->map(fn($element): array => [
+            'type' => $element->type,
+            'label' => $element->label,
+            'handle' => $element->handle,
+            'instructions' => $element->instructions ?? '',
+            'is_required' => $element->is_required,
+            'config' => $element->config ?? [],
+        ])->toArray();
     }
 
-    public function create()
-    {
-
-    }
+    public function create() {}
 
     public function update(int $blueprintId): Blueprint
     {

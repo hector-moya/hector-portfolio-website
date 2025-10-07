@@ -30,7 +30,7 @@ class Create extends Component
     }
 
     #[Title('Create User')]
-    public function render()
+    public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
     {
         return view('livewire.users.create');
     }

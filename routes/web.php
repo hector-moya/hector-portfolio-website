@@ -35,7 +35,7 @@ Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth'])->group(function (): void {
     // Collections Routes
     Route::get('collections', CollectionsIndex::class)->name('collections.index');
     Route::get('collections/create', CollectionsCreate::class)->name('collections.create');

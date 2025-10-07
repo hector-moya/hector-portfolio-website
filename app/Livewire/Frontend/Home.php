@@ -11,9 +11,9 @@ class Home extends Component
 {
     #[Layout('components.layouts.frontend')]
     #[Title('Home')]
-    public function render()
+    public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
     {
-        $entry = Entry::where('slug', 'home')
+        $entry = \App\Models\Entry::query()->where('slug', 'home')
             ->where('status', 'published')
             ->with(['elements.blueprintElement'])
             ->first();

@@ -36,7 +36,7 @@ class Edit extends Component
     }
 
     #[Title('Edit User')]
-    public function render()
+    public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
     {
         return view('livewire.users.edit');
     }

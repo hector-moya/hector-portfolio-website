@@ -21,7 +21,7 @@ class Index extends Component
 
     public function delete(int $id): void
     {
-        $blueprint = Blueprint::findOrFail($id);
+        $blueprint = \App\Models\Blueprint::query()->findOrFail($id);
 
         (new DeleteBlueprint)->execute($blueprint);
 
@@ -29,7 +29,7 @@ class Index extends Component
     }
 
     #[Title('Blueprints')]
-    public function render()
+    public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
     {
         $blueprints = Blueprint::query()
             ->withCount('elements', 'collections')

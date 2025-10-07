@@ -32,7 +32,7 @@ class EntryFactory extends Factory
 
     public function published(): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn (array $attributes): array => [
             'status' => 'published',
             'published_at' => now(),
         ]);
@@ -40,7 +40,7 @@ class EntryFactory extends Factory
 
     public function draft(): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn (array $attributes): array => [
             'status' => 'draft',
             'published_at' => null,
         ]);

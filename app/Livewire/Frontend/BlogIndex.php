@@ -15,11 +15,11 @@ class BlogIndex extends Component
 
     #[Layout('components.layouts.frontend')]
     #[Title('Blog')]
-    public function render()
+    public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
     {
-        $collection = Collection::where('slug', 'blog')->first();
+        $collection = \App\Models\Collection::query()->where('slug', 'blog')->first();
 
-        $posts = Entry::where('collection_id', $collection?->id)
+        $posts = \App\Models\Entry::query()->where('collection_id', $collection?->id)
             ->where('status', 'published')
             ->with(['elements.blueprintElement', 'author'])
             ->latest('published_at')

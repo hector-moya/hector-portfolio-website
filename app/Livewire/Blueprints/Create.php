@@ -59,7 +59,7 @@ class Create extends Component
     }
 
     #[Title('Create Blueprint')]
-    public function render()
+    public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
     {
         return view('livewire.blueprints.create');
     }

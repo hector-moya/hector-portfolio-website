@@ -61,12 +61,18 @@
             "@php artisan migrate --graceful --ansi"
         ],
         "dev": [
-            "Composer\\Config::disableProcessTimeout",
+            "Composer\\Config::˝",
             "npx concurrently -c \"#93c5fd,#c4b5fd,#fdba74\" \"php artisan serve\" \"php artisan queue:listen --tries=1\" \"npm run dev\" --names='server,queue,vite'"
         ],
         "test": [
             "@php artisan config:clear --ansi",
             "@php artisan test"
+        ],
+        "prepare": [
+            "vendor/bin/pint",
+            "vendor/bin/pest",
+            "vendor/bin/rector",
+            "vendor/bin/phpstan analyse"
         ]
     },
     "extra": {

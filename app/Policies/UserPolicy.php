@@ -19,7 +19,11 @@ class UserPolicy
      */
     public function view(User $user, User $model): bool
     {
-        return $user->isAdmin() || $user->id === $model->id; // Admins or viewing self
+        if ($user->isAdmin()) {
+            return true;
+        }
+        return $user->id === $model->id;
+        // Admins or viewing self
     }
 
     /**
@@ -35,7 +39,11 @@ class UserPolicy
      */
     public function update(User $user, User $model): bool
     {
-        return $user->isAdmin() || $user->id === $model->id; // Admins or updating self
+        if ($user->isAdmin()) {
+            return true;
+        }
+        return $user->id === $model->id;
+        // Admins or updating self
     }
 
     /**

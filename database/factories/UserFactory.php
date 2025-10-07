@@ -40,7 +40,7 @@ class UserFactory extends Factory
      */
     public function unverified(): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn (array $attributes): array => [
             'email_verified_at' => null,
         ]);
     }
@@ -50,7 +50,7 @@ class UserFactory extends Factory
      */
     public function withoutTwoFactor(): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn (array $attributes): array => [
             'two_factor_secret' => null,
             'two_factor_recovery_codes' => null,
             'two_factor_confirmed_at' => null,
@@ -62,7 +62,7 @@ class UserFactory extends Factory
      */
     public function admin(): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn (array $attributes): array => [
             'role' => 'admin',
         ]);
     }
@@ -72,7 +72,7 @@ class UserFactory extends Factory
      */
     public function editor(): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn (array $attributes): array => [
             'role' => 'editor',
         ]);
     }
@@ -82,7 +82,7 @@ class UserFactory extends Factory
      */
     public function viewer(): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn (array $attributes): array => [
             'role' => 'viewer',
         ]);
     }

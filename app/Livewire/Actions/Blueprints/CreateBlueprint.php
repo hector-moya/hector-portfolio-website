@@ -13,7 +13,7 @@ class CreateBlueprint
             $data['slug'] = Str::slug($data['name']);
         }
 
-        $blueprint = Blueprint::create($data);
+        $blueprint = \App\Models\Blueprint::query()->create($data);
 
         // Create elements if provided
         foreach ($elements as $index => $element) {

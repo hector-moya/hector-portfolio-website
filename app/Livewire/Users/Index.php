@@ -28,7 +28,7 @@ class Index extends Component
 
     public function delete(int $id): void
     {
-        $user = User::findOrFail($id);
+        $user = \App\Models\User::query()->findOrFail($id);
 
         $this->authorize('delete', $user);
 
@@ -49,7 +49,7 @@ class Index extends Component
     }
 
     #[Title('Users')]
-    public function render()
+    public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
     {
         $users = User::query()
             ->when($this->search, fn ($query) => $query->where('name', 'like', "%{$this->search}%")

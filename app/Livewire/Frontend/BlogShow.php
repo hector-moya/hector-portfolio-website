@@ -10,16 +10,16 @@ class BlogShow extends Component
 {
     public Entry $entry;
 
-    public function mount(string $slug)
+    public function mount(string $slug): void
     {
-        $this->entry = Entry::where('slug', $slug)
+        $this->entry = \App\Models\Entry::query()->where('slug', $slug)
             ->where('status', 'published')
             ->with(['elements.blueprintElement', 'author', 'collection'])
             ->firstOrFail();
     }
 
     #[Layout('components.layouts.frontend')]
-    public function render()
+    public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
     {
         return view('livewire.frontend.blog-show');
     }

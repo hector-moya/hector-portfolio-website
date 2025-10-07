@@ -50,7 +50,6 @@ class Edit extends Component
     {
         $this->form->validate();
 
-
         $this->form->update($this->blueprint->id);
 
         session()->flash('message', 'Blueprint updated successfully.');
@@ -59,7 +58,7 @@ class Edit extends Component
     }
 
     #[Title('Edit Blueprint')]
-    public function render()
+    public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
     {
         return view('livewire.blueprints.edit');
     }

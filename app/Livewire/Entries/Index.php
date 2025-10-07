@@ -35,11 +35,7 @@ class Index extends Component
 
     public function updatedSelectAll(): void
     {
-        if ($this->selectAll) {
-            $this->selected = $this->entries->pluck('id')->toArray();
-        } else {
-            $this->selected = [];
-        }
+        $this->selected = $this->selectAll ? $this->entries->pluck('id')->toArray() : [];
     }
 
     public function updatedCollectionFilter(): void
@@ -57,16 +53,16 @@ class Index extends Component
     {
         return Entry::query()
             ->with(['collection', 'blueprint', 'author'])
-            ->when($this->search, function ($query) {
-                $query->where(function ($q) {
+            ->when($this->search, function ($query): void {
+                $query->where(function ($q): void {
                     $q->where('title', 'like', "%{$this->search}%")
                         ->orWhere('slug', 'like', "%{$this->search}%");
                 });
             })
-            ->when($this->collectionFilter, function ($query) {
+            ->when($this->collectionFilter, function ($query): void {
                 $query->where('collection_id', $this->collectionFilter);
             })
-            ->when($this->statusFilter, function ($query) {
+            ->when($this->statusFilter, function ($query): void {
                 $query->where('status', $this->statusFilter);
             })
             ->latest()
@@ -90,7 +86,7 @@ class Index extends Component
 
     public function delete(int $id): void
     {
-        $entry = Entry::findOrFail($id);
+        $entry = \App\Models\Entry::query()->findOrFail($id);
 
         (new DeleteEntry)->execute($entry);
 
@@ -100,11 +96,11 @@ class Index extends Component
 
     public function bulkPublish(): void
     {
-        if (empty($this->selected)) {
+        if ($this->selected === []) {
             return;
         }
 
-        Entry::whereIn('id', $this->selected)->update([
+        \App\Models\Entry::query()->whereIn('id', $this->selected)->update([
             'status' => 'published',
             'published_at' => now(),
         ]);
@@ -118,11 +114,11 @@ class Index extends Component
 
     public function bulkUnpublish(): void
     {
-        if (empty($this->selected)) {
+        if ($this->selected === []) {
             return;
         }
 
-        Entry::whereIn('id', $this->selected)->update([
+        \App\Models\Entry::query()->whereIn('id', $this->selected)->update([
             'status' => 'draft',
         ]);
 
@@ -135,11 +131,11 @@ class Index extends Component
 
     public function bulkDelete(): void
     {
-        if (empty($this->selected)) {
+        if ($this->selected === []) {
             return;
         }
 
-        Entry::whereIn('id', $this->selected)->delete();
+        \App\Models\Entry::query()->whereIn('id', $this->selected)->delete();
 
         $count = count($this->selected);
         $this->selected = [];
@@ -149,7 +145,7 @@ class Index extends Component
         $this->dispatch('notify', message: "{$count} entries deleted successfully.");
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
     {
         return view('livewire.entries.index');
     }

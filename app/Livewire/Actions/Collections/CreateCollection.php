@@ -13,6 +13,6 @@ class CreateCollection
             $data['slug'] = Str::slug($data['name']);
         }
 
-        return Collection::create($data);
+        return \App\Models\Collection::query()->create($data);
     }
 }

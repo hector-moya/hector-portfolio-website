@@ -45,7 +45,7 @@ class UserForm extends Form
         ];
 
         // Password is required for new users, optional for updates
-        if (! $this->user) {
+        if (!$this->user instanceof \App\Models\User) {
             $rules['password'] = ['required', 'string', 'min:8', 'confirmed'];
         } else {
             $rules['password'] = ['nullable', 'string', 'min:8', 'confirmed'];

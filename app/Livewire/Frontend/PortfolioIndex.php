@@ -12,11 +12,11 @@ class PortfolioIndex extends Component
 {
     #[Layout('components.layouts.frontend')]
     #[Title('Portfolio')]
-    public function render()
+    public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
     {
-        $collection = Collection::where('slug', 'portfolio')->first();
+        $collection = \App\Models\Collection::query()->where('slug', 'portfolio')->first();
 
-        $projects = Entry::where('collection_id', $collection?->id)
+        $projects = \App\Models\Entry::query()->where('collection_id', $collection?->id)
             ->where('status', 'published')
             ->with(['elements.blueprintElement'])
             ->latest('published_at')

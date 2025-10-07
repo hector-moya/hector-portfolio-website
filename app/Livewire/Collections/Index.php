@@ -21,7 +21,7 @@ class Index extends Component
 
     public function delete(int $id): void
     {
-        $collection = Collection::findOrFail($id);
+        $collection = \App\Models\Collection::query()->findOrFail($id);
 
         (new DeleteCollection)->execute($collection);
 
@@ -29,7 +29,7 @@ class Index extends Component
     }
 
     #[Title('Collections')]
-    public function render()
+    public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
     {
         $collections = Collection::query()
             ->with('blueprint')

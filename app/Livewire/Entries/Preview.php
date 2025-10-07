@@ -29,7 +29,7 @@ class Preview extends Component
     #[Computed]
     public function entry(): ?Entry
     {
-        if (! $this->entryId) {
+        if ($this->entryId === null || $this->entryId === 0) {
             return null;
         }
 
@@ -37,7 +37,7 @@ class Preview extends Component
             ->find($this->entryId);
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
     {
         return view('livewire.entries.preview');
     }

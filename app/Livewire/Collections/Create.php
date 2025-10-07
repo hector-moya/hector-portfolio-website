@@ -24,10 +24,10 @@ class Create extends Component
     }
 
     #[Title('Create Collection')]
-    public function render()
+    public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
     {
         return view('livewire.collections.create', [
-            'blueprints' => Blueprint::where('is_active', true)->get(),
+            'blueprints' => \App\Models\Blueprint::query()->where('is_active', true)->get(),
         ]);
     }
 }
