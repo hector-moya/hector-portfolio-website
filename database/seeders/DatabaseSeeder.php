@@ -14,7 +14,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // Create admin user
-        User::factory()->admin()->create([
+        User::factory()->admin()->withoutTwoFactor()->create([
             'name' => 'Admin User',
             'email' => 'admin@example.com',
         ]);
@@ -30,5 +30,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Viewer User',
             'email' => 'viewer@example.com',
         ]);
+
+        $this->call(BlogContentSeeder::class);
     }
 }

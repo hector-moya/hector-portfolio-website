@@ -3,6 +3,8 @@
 namespace App\Livewire\Forms;
 
 use Livewire\Attributes\Validate;
+use App\Models\Blueprint;
+use App\Livewire\Actions\Blueprints\UpdateBlueprint;
 use Livewire\Form;
 
 class BlueprintForm extends Form
@@ -58,6 +60,23 @@ class BlueprintForm extends Form
                 'config' => $element->config ?? [],
             ];
         })->toArray();
+    }
+
+    public function create()
+    {
+
+    }
+
+    public function update(int $blueprintId): Blueprint
+    {
+        return app(UpdateBlueprint::class)->execute([
+            'id' => $blueprintId,
+            'name' => $this->name,
+            'slug' => $this->slug,
+            'description' => $this->description,
+            'is_active' => $this->is_active,
+            'elements' => $this->elements,
+        ]);
     }
 
     public function addElement(): void

@@ -2,7 +2,6 @@
 
 namespace App\Livewire\Blueprints;
 
-use App\Livewire\Actions\Blueprints\UpdateBlueprint;
 use App\Livewire\Forms\BlueprintForm;
 use App\Models\Blueprint;
 use Livewire\Attributes\Title;
@@ -51,11 +50,8 @@ class Edit extends Component
     {
         $this->form->validate();
 
-        (new UpdateBlueprint)->execute(
-            $this->blueprint,
-            $this->form->only(['name', 'slug', 'description', 'is_active']),
-            $this->form->elements
-        );
+
+        $this->form->update($this->blueprint->id);
 
         session()->flash('message', 'Blueprint updated successfully.');
 
