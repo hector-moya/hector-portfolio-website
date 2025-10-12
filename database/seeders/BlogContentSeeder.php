@@ -3,10 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Blueprint;
-use App\Models\BlueprintElement;
 use App\Models\Collection;
-use App\Models\Entry;
-use App\Models\EntryElement;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 

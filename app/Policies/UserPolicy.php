@@ -22,6 +22,7 @@ class UserPolicy
         if ($user->isAdmin()) {
             return true;
         }
+
         return $user->id === $model->id;
         // Admins or viewing self
     }
@@ -42,6 +43,7 @@ class UserPolicy
         if ($user->isAdmin()) {
             return true;
         }
+
         return $user->id === $model->id;
         // Admins or updating self
     }

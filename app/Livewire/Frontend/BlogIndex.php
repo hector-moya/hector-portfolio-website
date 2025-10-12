@@ -2,8 +2,6 @@
 
 namespace App\Livewire\Frontend;
 
-use App\Models\Collection;
-use App\Models\Entry;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;

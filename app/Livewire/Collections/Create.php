@@ -4,7 +4,6 @@ namespace App\Livewire\Collections;
 
 use App\Livewire\Actions\Collections\CreateCollection;
 use App\Livewire\Forms\CollectionForm;
-use App\Models\Blueprint;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 

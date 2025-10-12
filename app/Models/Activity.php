@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 class Activity extends Model
 {
     use \Illuminate\Database\Eloquent\Factories\HasFactory;
+
     public const UPDATED_AT = null;
 
     protected $table = 'activity_log';
