@@ -25,41 +25,41 @@
         </div>
 
         {{-- Blueprints Table --}}
-        <div class="overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
+        <div class="overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-700 shadow-2xl">
             <table class="w-full">
-                <thead class="border-b border-neutral-200 bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-900">
+                <thead class="border-b border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
                     <tr>
-                        <th class="px-6 py-3 text-left text-sm font-medium text-neutral-700 dark:text-neutral-300">Name</th>
-                        <th class="px-6 py-3 text-left text-sm font-medium text-neutral-700 dark:text-neutral-300">Slug</th>
-                        <th class="px-6 py-3 text-left text-sm font-medium text-neutral-700 dark:text-neutral-300">Fields</th>
-                        <th class="px-6 py-3 text-left text-sm font-medium text-neutral-700 dark:text-neutral-300">Collections</th>
-                        <th class="px-6 py-3 text-left text-sm font-medium text-neutral-700 dark:text-neutral-300">Status</th>
-                        <th class="px-6 py-3 text-right text-sm font-medium text-neutral-700 dark:text-neutral-300">Actions</th>
+                        <th class="px-6 py-3 text-left text-sm font-medium text-zinc-700 dark:text-zinc-300">Name</th>
+                        <th class="px-6 py-3 text-left text-sm font-medium text-zinc-700 dark:text-zinc-300">Slug</th>
+                        <th class="px-6 py-3 text-left text-sm font-medium text-zinc-700 dark:text-zinc-300">Fields</th>
+                        <th class="px-6 py-3 text-left text-sm font-medium text-zinc-700 dark:text-zinc-300">Collections</th>
+                        <th class="px-6 py-3 text-left text-sm font-medium text-zinc-700 dark:text-zinc-300">Status</th>
+                        <th class="px-6 py-3 text-right text-sm font-medium text-zinc-700 dark:text-zinc-300">Actions</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-neutral-200 bg-white dark:divide-neutral-700 dark:bg-neutral-800">
+                <tbody class="divide-y divide-zinc-200 bg-white dark:divide-zinc-700 dark:bg-zinc-800">
                     @forelse ($blueprints as $blueprint)
-                        <tr wire:key="blueprint-{{ $blueprint->id }}" class="hover:bg-neutral-50 dark:hover:bg-neutral-700/50">
+                        <tr wire:key="blueprint-{{ $blueprint->id }}" class="hover:bg-zinc-50 dark:hover:bg-zinc-700/50">
                             <td class="px-6 py-4">
-                                <div class="font-medium text-neutral-900 dark:text-neutral-100">{{ $blueprint->name }}</div>
+                                <div class="font-medium text-zinc-900 dark:text-zinc-100">{{ $blueprint->name }}</div>
                                 @if ($blueprint->description)
-                                    <div class="text-sm text-neutral-500 dark:text-neutral-400">{{ Str::limit($blueprint->description, 50) }}</div>
+                                    <div class="text-sm text-zinc-500 dark:text-zinc-400">{{ Str::limit($blueprint->description, 50) }}</div>
                                 @endif
                             </td>
-                            <td class="px-6 py-4 text-sm text-neutral-600 dark:text-neutral-400">
-                                <code class="rounded bg-neutral-100 px-2 py-1 dark:bg-neutral-700">{{ $blueprint->slug }}</code>
+                            <td class="px-6 py-4 text-sm text-zinc-600 dark:text-zinc-400">
+                                <code class="rounded bg-zinc-100 px-2 py-1 dark:bg-zinc-700">{{ $blueprint->slug }}</code>
                             </td>
-                            <td class="px-6 py-4 text-sm text-neutral-600 dark:text-neutral-400">
+                            <td class="px-6 py-4 text-sm text-zinc-600 dark:text-zinc-400">
                                 {{ $blueprint->elements_count }} {{ Str::plural('field', $blueprint->elements_count) }}
                             </td>
-                            <td class="px-6 py-4 text-sm text-neutral-600 dark:text-neutral-400">
+                            <td class="px-6 py-4 text-sm text-zinc-600 dark:text-zinc-400">
                                 {{ $blueprint->collections_count }}
                             </td>
                             <td class="px-6 py-4">
                                 @if ($blueprint->is_active)
                                     <flux:badge variant="success">Active</flux:badge>
                                 @else
-                                    <flux:badge variant="neutral">Inactive</flux:badge>
+                                    <flux:badge variant="zinc">Inactive</flux:badge>
                                 @endif
                             </td>
                             <td class="px-6 py-4 text-right">
@@ -77,7 +77,7 @@
                         <tr>
                             <td colspan="6" class="px-6 py-12 text-center">
                                 <div class="flex flex-col items-center gap-2">
-                                    <flux:icon.document class="size-12 text-neutral-400" />
+                                    <flux:icon.document class="size-12 text-zinc-400" />
                                     <flux:text>No blueprints found</flux:text>
                                     <flux:button wire:navigate href="{{ route('blueprints.create') }}" size="sm" variant="primary">
                                         Create your first blueprint
