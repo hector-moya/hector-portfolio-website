@@ -15,14 +15,10 @@ class BlogContentSeeder extends Seeder
     public function run(): void
     {
         // Get or create admin user
-        $admin = \App\Models\User::query()->firstOrCreate(['email' => 'admin@example.com'], [
-            'name' => 'Admin User',
-            'password' => bcrypt('password'),
-            'role' => 'admin',
-        ]);
+        $admin = \App\Models\User::query()->where('role', 'admin')->first();
 
         // Create Blueprints
-        $pageBlueprint = $this->createPageBlueprint();
+        $pageBlueprint = $this->createHomePageBlueprint();
         $blogBlueprint = $this->createBlogBlueprint();
         $portfolioBlueprint = $this->createPortfolioBlueprint();
         $contactBlueprint = $this->createContactBlueprint();
@@ -65,12 +61,12 @@ class BlogContentSeeder extends Seeder
         $this->command->info('Blog content seeded successfully!');
     }
 
-    private function createPageBlueprint(): Blueprint
+    private function createHomePageBlueprint(): Blueprint
     {
         $blueprint = \App\Models\Blueprint::query()->create([
-            'name' => 'Page',
-            'slug' => 'page',
-            'description' => 'Standard page template',
+            'name' => 'Home Page',
+            'slug' => 'home-page',
+            'description' => 'Home page template',
         ]);
 
         $elements = [
@@ -78,8 +74,10 @@ class BlogContentSeeder extends Seeder
             ['label' => 'Hero Subtitle', 'handle' => 'hero_subtitle', 'type' => 'text', 'is_required' => false, 'order' => 2],
             ['label' => 'Hero Image', 'handle' => 'hero_image', 'type' => 'url', 'is_required' => false, 'order' => 3],
             ['label' => 'Content', 'handle' => 'content', 'type' => 'textarea', 'is_required' => true, 'order' => 4],
-            ['label' => 'Call to Action Text', 'handle' => 'cta_text', 'type' => 'text', 'is_required' => false, 'order' => 5],
-            ['label' => 'Call to Action URL', 'handle' => 'cta_url', 'type' => 'url', 'is_required' => false, 'order' => 6],
+            ['label' => 'Call to Action Primary Text', 'handle' => 'cta_text_primary', 'type' => 'text', 'is_required' => false, 'order' => 5],
+            ['label' => 'Call to Action Primary URL', 'handle' => 'cta_url_primary', 'type' => 'url', 'is_required' => false, 'order' => 6],
+            ['label' => 'Call to Action Secondary Text', 'handle' => 'cta_text_secondary', 'type' => 'text', 'is_required' => false, 'order' => 7],
+            ['label' => 'Call to Action Secondary URL', 'handle' => 'cta_url_secondary', 'type' => 'url', 'is_required' => false, 'order' => 8],
         ];
 
         foreach ($elements as $element) {
@@ -150,9 +148,8 @@ class BlogContentSeeder extends Seeder
             ['label' => 'Heading', 'handle' => 'heading', 'type' => 'text', 'is_required' => true, 'order' => 1],
             ['label' => 'Description', 'handle' => 'description', 'type' => 'textarea', 'is_required' => true, 'order' => 2],
             ['label' => 'Email', 'handle' => 'email', 'type' => 'email', 'is_required' => true, 'order' => 3],
-            ['label' => 'Phone', 'handle' => 'phone', 'type' => 'text', 'is_required' => false, 'order' => 4],
-            ['label' => 'Address', 'handle' => 'address', 'type' => 'textarea', 'is_required' => false, 'order' => 5],
-            ['label' => 'Map URL', 'handle' => 'map_url', 'type' => 'url', 'is_required' => false, 'order' => 6],
+            ['label' => 'LinkedIn', 'handle' => 'linkedin', 'type' => 'url', 'is_required' => false, 'order' => 4],
+            ['label' => 'GitHub', 'handle' => 'github', 'type' => 'url', 'is_required' => false, 'order' => 5],
         ];
 
         foreach ($elements as $element) {
@@ -175,12 +172,18 @@ class BlogContentSeeder extends Seeder
         ]);
 
         $elements = [
-            'hero_title' => 'Welcome to Our Amazing Platform',
-            'hero_subtitle' => 'Build something extraordinary with our innovative solutions',
+            'hero_title' => 'Progress, not perfection. The work is never done. That’s the point.',
+            'hero_subtitle' => 'A living archive of the things I build, learn, and break.',
             'hero_image' => 'https://picsum.photos/seed/hero/1920/1080',
-            'content' => "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\n\nDuis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\n\nSed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.",
-            'cta_text' => 'Get Started Today',
-            'cta_url' => '/contact',
+            'content' => "The work of building software is rarely elegant. It’s an ongoing loop of trial, adjustment, and acceptance — an exercise in problem-solving where every solution creates new questions.
+                           I’ve stopped expecting the process to end cleanly; it never does. And that’s what keeps it interesting.
+                           My approach is pragmatic but curious. I prefer structure to style, clarity to perfection. I believe that most good systems are the result of patience — small, deliberate refinements layered over time.
+                           Sometimes the best thing I can do is step back, re-evaluate, and start again with a better question.
+                           This site is where that loop continues — a place to record what I’ve built, what I’ve learned, and the patterns I keep chasing. The goal isn’t to impress; it’s to understand.",
+            'cta_text_primary' => 'See what I’m building',
+            'cta_url_primary' => '/portfolio',
+            'cta_text_secondary' => 'Check the journey',
+            'cta_url_secondary' => '/blog',
         ];
 
         foreach ($blueprint->elements as $blueprintElement) {
@@ -366,7 +369,7 @@ class BlogContentSeeder extends Seeder
     private function createContactPage(Collection $collection, Blueprint $blueprint, User $admin): void
     {
         $entry = \App\Models\Entry::query()->create([
-            'title' => 'Contact Us',
+            'title' => 'Contact',
             'slug' => 'contact',
             'collection_id' => $collection->id,
             'blueprint_id' => $blueprint->id,
@@ -377,11 +380,12 @@ class BlogContentSeeder extends Seeder
 
         $elements = [
             'heading' => 'Get in Touch',
-            'description' => "Lorem ipsum dolor sit amet, consectetur adipiscing elit. We'd love to hear from you! Whether you have a question about our services, pricing, or anything else, our team is ready to answer all your questions.\n\nSed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Feel free to reach out using the contact information below or send us a message using the contact form.",
-            'email' => 'hello@example.com',
-            'phone' => '+1 (555) 123-4567',
-            'address' => "123 Business Street\nSuite 100\nSan Francisco, CA 94102\nUnited States",
-            'map_url' => 'https://maps.google.com',
+            'description' => "I’m always open to new ideas, collaborations, or a good conversation about code, design, or the process of building interesting things.
+                              Whether you’re looking to work together, have a question about one of my projects, or just want to exchange thoughts on web development,
+                              feel free to reach out. You can contact me using the form below — I’ll do my best to reply soon.",
+            'email' => 'contact@hector-moya.com',
+            'linkedin' => 'https://www.linkedin.com/in/hector-moya-lopez/',
+            'github' => 'https://github.com/hector-moya/',
         ];
 
         foreach ($blueprint->elements as $blueprintElement) {

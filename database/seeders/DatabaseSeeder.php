@@ -15,8 +15,10 @@ class DatabaseSeeder extends Seeder
     {
         // Create admin user
         User::factory()->admin()->withoutTwoFactor()->create([
-            'name' => 'Admin User',
-            'email' => 'admin@example.com',
+            'name' => config('admin.name'),
+            'email' => config('admin.email'),
+            'password' => bcrypt(config('admin.password')),
+            'role' => 'admin',
         ]);
 
         // Create editor user

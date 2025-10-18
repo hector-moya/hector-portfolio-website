@@ -24,7 +24,7 @@ class Edit extends Component
 
     public function updatedFormTitle(): void
     {
-        if ($this->form->slug === '' || $this->form->slug === '0' || $this->form->slug === Str::slug($this->entry->title)) {
+        if (in_array($this->form->slug, ['', '0', Str::slug($this->entry->title)], true)) {
             $this->form->slug = Str::slug($this->form->title);
         }
     }

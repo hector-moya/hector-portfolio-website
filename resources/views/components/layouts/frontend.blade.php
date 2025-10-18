@@ -11,8 +11,8 @@
         <nav aria-label="Global" class="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8">
             <div class="flex lg:flex-1">
                 <a href="#" class="-m-1.5 p-1.5">
-                    <span class="sr-only">{{ config('app.name') }}</span>
-                    <flux:icon name="bolt" />
+                    <flux:heading size="lg">{{ config('app.name') }}</flux:heading>
+                    {{-- <flux:icon name="bolt" /> --}}
                 </a>
             </div>
             <div class="flex lg:hidden">
@@ -29,9 +29,9 @@
                 <a href="/portfolio" class="text-sm/6 font-semibold text-white">{{ __('Portfolio') }}</a>
                 <a href="/contact" class="text-sm/6 font-semibold text-white">{{ __('Contact') }}</a>
             </div>
-            <div class="hidden lg:flex lg:flex-1 lg:justify-end">
+            {{-- <div class="hidden lg:flex lg:flex-1 lg:justify-end">
                 <a href="/dashboard" class="text-sm/6 font-semibold text-white">{{ __('Log in') }} <span aria-hidden="true">&rarr;</span></a>
-            </div>
+            </div> --}}
         </nav>
         <el-dialog>
             <dialog id="mobile-menu" class="backdrop:bg-transparent lg:hidden transition">
@@ -57,9 +57,9 @@
                                     <a href="/portfolio" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5">{{ __('Portfolio') }}</a>
                                     <a href="/contact" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5">{{ __('Contact') }}</a>
                                 </div>
-                                <div class="py-6">
+                                {{-- <div class="py-6">
                                     <a href="/dashboard" class="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-white hover:bg-white/5">{{ __('Log in') }}</a>
-                                </div>
+                                </div> --}}
                             </div>
                         </div>
                     </el-dialog-panel>

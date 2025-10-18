@@ -62,6 +62,66 @@ select:focus[data-flux-control] {
     @apply outline-hidden ring-2 ring-accent ring-offset-2 ring-offset-accent-foreground;
 }
 
+@keyframes slide-in-from-bottom {
+    0% {
+        opacity: 0;
+        transform: translateY(6rem);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@utility animate-slide-in-from-bottom {
+    animation: slide-in-from-bottom 1.5s ease-out forwards;
+}
+
+@keyframes slide-in-from-top {
+    0% {
+        opacity: 0;
+        transform: translateY(-6rem);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@utility animate-slide-in-from-top {
+    animation: slide-in-from-top 1.5s ease-out forwards;
+}
+
+@keyframes slide-in-from-left {
+    0% {
+        opacity: 0;
+        transform: translateX(-6rem);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@utility animate-slide-in-from-left {
+    animation: slide-in-from-left 1.5s ease-out forwards;
+}
+
+@keyframes slide-in-from-right {
+    0% {
+        opacity: 0;
+        transform: translateX(6rem);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@utility animate-slide-in-from-right {
+    animation: slide-in-from-right 1s ease-out forwards;
+}
+
 /* \[:where(&)\]:size-4 {
     @apply size-4;
 } */
