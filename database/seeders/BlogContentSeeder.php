@@ -175,11 +175,11 @@ class BlogContentSeeder extends Seeder
             'hero_title' => 'Progress, not perfection. The work is never done. That’s the point.',
             'hero_subtitle' => 'A living archive of the things I build, learn, and break.',
             'hero_image' => 'https://picsum.photos/seed/hero/1920/1080',
-            'content' => "The work of building software is rarely elegant. It’s an ongoing loop of trial, adjustment, and acceptance — an exercise in problem-solving where every solution creates new questions.
+            'content' => 'The work of building software is rarely elegant. It’s an ongoing loop of trial, adjustment, and acceptance — an exercise in problem-solving where every solution creates new questions.
                            I’ve stopped expecting the process to end cleanly; it never does. And that’s what keeps it interesting.
                            My approach is pragmatic but curious. I prefer structure to style, clarity to perfection. I believe that most good systems are the result of patience — small, deliberate refinements layered over time.
                            Sometimes the best thing I can do is step back, re-evaluate, and start again with a better question.
-                           This site is where that loop continues — a place to record what I’ve built, what I’ve learned, and the patterns I keep chasing. The goal isn’t to impress; it’s to understand.",
+                           This site is where that loop continues — a place to record what I’ve built, what I’ve learned, and the patterns I keep chasing. The goal isn’t to impress; it’s to understand.',
             'cta_text_primary' => 'See what I’m building',
             'cta_url_primary' => '/portfolio',
             'cta_text_secondary' => 'Check the journey',
@@ -380,9 +380,9 @@ class BlogContentSeeder extends Seeder
 
         $elements = [
             'heading' => 'Get in Touch',
-            'description' => "I’m always open to new ideas, collaborations, or a good conversation about code, design, or the process of building interesting things.
+            'description' => 'I’m always open to new ideas, collaborations, or a good conversation about code, design, or the process of building interesting things.
                               Whether you’re looking to work together, have a question about one of my projects, or just want to exchange thoughts on web development,
-                              feel free to reach out. You can contact me using the form below — I’ll do my best to reply soon.",
+                              feel free to reach out. You can contact me using the form below — I’ll do my best to reply soon.',
             'email' => 'contact@hector-moya.com',
             'linkedin' => 'https://www.linkedin.com/in/hector-moya-lopez/',
             'github' => 'https://github.com/hector-moya/',

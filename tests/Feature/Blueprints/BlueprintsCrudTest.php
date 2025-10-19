@@ -10,8 +10,8 @@ use Livewire\Livewire;
 use function Pest\Laravel\actingAs;
 
 beforeEach(function () {
-    $this->user = User::factory()->create();
-    actingAs($this->user);
+    $user = User::factory()->create();
+    actingAs($user);
 });
 
 test('can view blueprints index page', function () {

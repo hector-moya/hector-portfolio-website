@@ -3,7 +3,7 @@
 namespace App\Livewire\Entries;
 
 use App\Livewire\Actions\DeleteEntry;
-use App\Models\Collection;
+use App\Models\Collection as ModelsCollection;
 use App\Models\Entry;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
@@ -35,7 +35,8 @@ class Index extends Component
 
     public function updatedSelectAll(): void
     {
-        $this->selected = $this->selectAll ? $this->entries->pluck('id')->toArray() : [];
+        $entries = $this->entries();
+        $this->selected = $this->selectAll ? $entries->pluck('id')->toArray() : [];
     }
 
     public function updatedCollectionFilter(): void
@@ -72,7 +73,7 @@ class Index extends Component
     #[Computed]
     public function collections()
     {
-        return Collection::query()
+        return ModelsCollection::query()
             ->withCount('entries')
             ->orderBy('title')
             ->get();

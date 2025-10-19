@@ -10,7 +10,7 @@
     <header class="absolute inset-x-0 top-0 z-50">
         <nav aria-label="Global" class="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8">
             <div class="flex lg:flex-1">
-                <a href="#" class="-m-1.5 p-1.5">
+                <a href="/" class="-m-1.5 p-1.5">
                     <flux:heading size="lg">{{ config('app.name') }}</flux:heading>
                     {{-- <flux:icon name="bolt" /> --}}
                 </a>
@@ -38,7 +38,7 @@
                 <div tabindex="0" class="fixed inset-0 focus:outline-none">
                     <el-dialog-panel class="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-gray-900 p-6 sm:max-w-sm sm:ring-1 sm:ring-gray-100/10">
                         <div class="flex items-center justify-between">
-                            <a href="#" class="-m-1.5 p-1.5">
+                            <a href="/" class="-m-1.5 p-1.5">
                                 <span class="sr-only">{{ config('app.name') }}</span>
                                 <img src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500" alt="" class="h-8 w-auto" />
                             </a>

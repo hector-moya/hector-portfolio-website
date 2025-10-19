@@ -35,7 +35,7 @@
         </flux:navbar.item>
     </flux:navbar>
 
-    @if ($this->entries->isEmpty())
+    @if (!$this->entries)
         <flux:card>
             <div class="flex items-center justify-center py-12">
                 <div class="text-center">
