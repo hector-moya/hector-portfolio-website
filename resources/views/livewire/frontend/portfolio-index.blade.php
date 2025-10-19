@@ -1,10 +1,10 @@
 <div>
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div class="text-center mb-12">
-            <h1 class="text-4xl font-bold text-zinc-900 dark:text-white">Portfolio</h1>
-            <p class="mt-4 text-xl text-zinc-600 dark:text-zinc-400">
-                Our recent projects and work
-            </p>
+    <x-themes.greenpeace>
+        <div class="text-center mb-12 space-y-8">
+            <flux:heading class="!text-4xl">{{ __('Portfolio') }}</flux:heading>
+            <flux:text class="!text-xl">
+                {{ __('Our recent projects and work') }}
+            </flux:text>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -51,5 +51,5 @@
                 </div>
             @endforelse
         </div>
-    </div>
+    </x-themes.greenpeace>
 </div>

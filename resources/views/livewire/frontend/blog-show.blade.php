@@ -1,5 +1,5 @@
 <div>
-    <article class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <x-themes.greenpeace>
         {{-- Featured Image --}}
         @if($featuredImage = $entry->elements->firstWhere('handle', 'featured_image')?->value)
             <img src="{{ $featuredImage }}" alt="{{ $entry->title }}" class="w-full h-96 object-cover rounded-lg mb-8">
@@ -49,5 +49,5 @@
                 ← Back to Blog
             </a>
         </div>
-    </article>
+    </x-themes.greenpeace>
 </div>
