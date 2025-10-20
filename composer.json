@@ -75,6 +75,9 @@
         "phpstan": [
             "vendor/bin/phpstan --pro"
         ],
+        "rector": [
+            "vendor/bin/rector"
+        ],
         "prepare": [
             "vendor/bin/pint",
             "vendor/bin/pest",

@@ -3,7 +3,10 @@
 namespace App\Livewire\Forms;
 
 use App\Livewire\Actions\Blueprints\UpdateBlueprint;
+use App\Livewire\Actions\Blueprints\DeleteBlueprint;
 use App\Models\Blueprint;
+use Flux\Flux;
+use Illuminate\Validation\Rule;
 use Livewire\Attributes\Validate;
 use Livewire\Form;
 
@@ -31,8 +34,7 @@ class BlueprintForm extends Form
                 'nullable',
                 'string',
                 'max:255',
-                \Illuminate\Validation\Rule::unique('blueprints', 'slug')
-                    ->ignore($this->blueprint_id),
+                Rule::unique('blueprints', 'slug')->ignore($this->blueprint_id),
             ],
             'elements.*.type' => 'required|string',
             'elements.*.label' => 'required|string|max:255',
@@ -90,5 +92,19 @@ class BlueprintForm extends Form
     {
         unset($this->elements[$index]);
         $this->elements = array_values($this->elements);
+    }
+
+    public function destroy(int $blueprintId): void
+    {
+        $blueprint = Blueprint::query()->findOrFail($blueprintId);
+
+        (new DeleteBlueprint)->execute($blueprint);
+
+        Flux::toast(
+            heading:'Blueprint Deleted',
+            text:'The blueprint has been successfully deleted.',
+            variant:'success',
+        );
+
     }
 }

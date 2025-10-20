@@ -6,11 +6,9 @@
                     <flux:heading class="!text-4xl">
                         {{ $entry->elements->firstWhere('handle', 'heading')?->value ?? 'Contact Us' }}
                     </flux:heading>
-                    @if ($description = $entry->elements->firstWhere('handle', 'description')?->value)
-                        <flux:text class="mx-auto max-w-2xl !text-lg">
-                            {!! nl2br(e($description)) !!}
-                        </flux:text>
-                    @endif
+                    <flux:text class="mx-auto max-w-2xl !text-lg">
+                        {!! nl2br(e($entry->elements->firstWhere('handle', 'description')?->value)) !!}
+                    </flux:text>
                 </div>
 
                 <div class="flex justify-center">
