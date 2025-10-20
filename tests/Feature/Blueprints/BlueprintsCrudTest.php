@@ -124,7 +124,7 @@ test('can delete a blueprint', function () {
 
 test('can add and remove fields dynamically', function () {
     Livewire::test(Create::class)
-        ->call('addElement')
+        ->call('addElement', 'text')
         ->assertCount('form.elements', 2)
         ->call('removeElement', 1)
         ->assertCount('form.elements', 1);
@@ -135,8 +135,7 @@ test('preserves field order when creating blueprint', function () {
         ->set('form.name', 'Multi Field Blueprint')
         ->set('form.elements.0.type', 'text')
         ->set('form.elements.0.label', 'First Field')
-        ->call('addElement')
-        ->set('form.elements.1.type', 'textarea')
+        ->call('addElement', 'textarea')
         ->set('form.elements.1.label', 'Second Field')
         ->call('save')
         ->assertHasNoErrors();

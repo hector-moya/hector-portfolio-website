@@ -48,7 +48,7 @@
                 <div class="rounded-xl border border-neutral-200 bg-white p-6 dark:border-neutral-700 dark:bg-neutral-800">
                     <div class="mb-4 flex items-center justify-between">
                         <flux:heading size="lg">Fields</flux:heading>
-                        <flux:button type="button" wire:click="addElement" size="sm" variant="ghost">
+                        <flux:button type="button" size="sm" variant="ghost">
                             <flux:icon.plus class="size-4" />
                             Add Field
                         </flux:button>

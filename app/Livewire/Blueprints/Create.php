@@ -2,8 +2,8 @@
 
 namespace App\Livewire\Blueprints;
 
-use App\Livewire\Actions\Blueprints\CreateBlueprint;
 use App\Livewire\Forms\BlueprintForm;
+use Flux\Flux;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
@@ -31,12 +31,13 @@ class Create extends Component
     public function mount(): void
     {
         // Start with one empty element
-        $this->form->addElement();
+        $this->form->addElement('text');
     }
 
-    public function addElement(): void
+    public function addElement(string $type): void
     {
-        $this->form->addElement();
+        $this->form->addElement($type);
+        Flux::modal('select-field-modal')->close();
     }
 
     public function removeElement(int $index): void
@@ -46,14 +47,7 @@ class Create extends Component
 
     public function save(): void
     {
-        $this->form->validate();
-
-        (new CreateBlueprint)->execute(
-            $this->form->only(['name', 'slug', 'description', 'is_active']),
-            $this->form->elements
-        );
-
-        session()->flash('message', 'Blueprint created successfully.');
+        $this->form->create();
 
         $this->redirect(route('blueprints.index'), navigate: true);
     }

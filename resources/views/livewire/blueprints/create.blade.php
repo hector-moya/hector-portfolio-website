@@ -9,48 +9,30 @@
 
             <form wire:submit="save" class="flex flex-col gap-6">
                 {{-- Basic Info Card --}}
-                <flux:card>
-                    <flux:heading size="lg" class="mb-4">{{ __('Basic Information') }}</flux:heading>
+                <flux:card class="space-y-8">
+                    <flux:heading size="lg">{{ __('Basic Information') }}</flux:heading>
 
-                    <div class="flex flex-col gap-6">
+                    <div class="flex flex-col space-y-8">
                         {{-- Name --}}
-                        <flux:field>
-                            <flux:label>{{ __('Name') }} <span class="text-red-500">*</span></flux:label>
-                            <flux:input wire:model.live="form.name" placeholder="Blog Post" />
-                            <flux:error name="form.name" />
-                        </flux:field>
+                        <flux:input label="{{ __('Name') }}" placeholder="{{ __('Blog Post') }}" badge="{{ __('Required') }}" wire:model.live="form.name" />
 
                         {{-- Slug --}}
-                        <flux:field>
-                            <flux:label>{{ __('Slug') }}</flux:label>
-                            <flux:input wire:model="form.slug" placeholder="blog-post" />
-                            <flux:error name="form.slug" />
-                            <flux:text>{{ __('URL-friendly identifier (auto-generated if left blank)') }}</flux:text>
-                        </flux:field>
+                        <flux:input label="{{ __('Slug') }}" placeholder="blog-post" badge="{{ __('Required') }}" wire:model="form.slug" />
 
                         {{-- Description --}}
-                        <flux:field>
-                            <flux:label>{{ __('Description') }}</flux:label>
-                            <flux:textarea wire:model="form.description" placeholder="Structure for blog posts..." rows="3" />
-                            <flux:error name="form.description" />
-                        </flux:field>
+                        <flux:textarea label="{{ __('Description') }}" placeholder="Structure for blog posts..." rows="3" badge="{{ __('Optional') }}" wire:model="form.description" />
 
                         {{-- Status --}}
-                        <flux:field>
-                            <flux:checkbox wire:model="form.is_active">
-                                <flux:label>{{ __('Active') }}</flux:label>
-                            </flux:checkbox>
-                        </flux:field>
+                        <div class="flex justify-end">
+                            <flux:switch label="{{ $form->is_active ? 'Active' : 'Draft' }}" wire:model.live="form.is_active" />
+                        </div>
                     </div>
                 </flux:card>
 
                 {{-- Fields Card --}}
-                <flux:card>
+                <flux:card class="space-y-6">
                     <div class="mb-4 flex items-center justify-between">
                         <flux:heading size="lg">{{ __('Fields') }}</flux:heading>
-                        <flux:button icon="plus" wire:click="addElement" size="sm" variant="primary">
-                            {{ __('Add Field') }}
-                        </flux:button>
                     </div>
 
                     @if (empty($form->elements))
@@ -60,65 +42,66 @@
                     @else
                         <div class="flex flex-col gap-4">
                             @foreach ($form->elements as $index => $element)
-                                <div wire:key="element-{{ $index }}" class="rounded-lg border border-zinc-200 p-4 dark:border-zinc-700">
+                                <flux:card wire:key="element-{{ $index }}">
                                     <div class="flex items-start gap-4">
                                         <div class="flex-1 space-y-4">
-                                            {{-- Type and Label Row --}}
                                             <div class="grid grid-cols-2 gap-4">
-                                                <flux:field>
-                                                    <flux:label>{{ __('Type') }}</flux:label>
-                                                    <flux:select wire:model="form.elements.{{ $index }}.type">
-                                                        @foreach ($fieldTypes as $value => $label)
-                                                            <option value="{{ $value }}">{{ $label }}</option>
-                                                        @endforeach
-                                                    </flux:select>
-                                                    <flux:error name="form.elements.{{ $index }}.type" />
-                                                </flux:field>
+                                                {{-- Field Type --}}
+                                                <flux:select label="{{ __('Type') }}" wire:model="form.elements.{{ $index }}.type">
+                                                    @foreach ($fieldTypes as $value => $label)
+                                                        <flux:select.option value="{{ $value }}">{{ $label }}</flux:select.option>
+                                                    @endforeach
+                                                </flux:select>
 
-                                                <flux:field>
-                                                    <flux:label>{{ __('Label') }}</flux:label>
-                                                    <flux:input wire:model="form.elements.{{ $index }}.label" placeholder="Title" />
-                                                    <flux:error name="form.elements.{{ $index }}.label" />
-                                                </flux:field>
+                                                {{-- Field Label --}}
+                                                <flux:input label="{{ __('Label') }}" wire:model="form.elements.{{ $index }}.label" placeholder="Eg. Post title" />
                                             </div>
 
-                                            {{-- Handle and Instructions Row --}}
                                             <div class="grid grid-cols-2 gap-4">
-                                                <flux:field>
-                                                    <flux:label>{{ __('Handle') }}</flux:label>
-                                                    <flux:input wire:model="form.elements.{{ $index }}.handle" placeholder="title" />
-                                                    <flux:error name="form.elements.{{ $index }}.handle" />
-                                                    <flux:text>{{ __('Field identifier for data storage') }}</flux:text>
-                                                </flux:field>
+                                                {{-- Field Title --}}
+                                                <flux:input label="{{ __('Handle') }}" wire:model="form.elements.{{ $index }}.handle" placeholder="post_title" />
 
-                                                <flux:field>
-                                                    <flux:label>{{ __('Instructions') }}</flux:label>
-                                                    <flux:input wire:model="form.elements.{{ $index }}.instructions" placeholder="Enter the post title" />
-                                                    <flux:error name="form.elements.{{ $index }}.instructions" />
-                                                </flux:field>
+                                                {{-- Field Instructions --}}
+                                                <flux:input label="{{ __('Instructions') }}" wire:model="form.elements.{{ $index }}.instructions" placeholder="Enter the post title" />
                                             </div>
 
                                             {{-- Required Checkbox --}}
-                                            <flux:field>
-                                                <flux:checkbox wire:model="form.elements.{{ $index }}.is_required">
-                                                    <flux:label>{{ __('Required field') }}</flux:label>
-                                                </flux:checkbox>
-                                            </flux:field>
+                                            <div class="flex justify-end">
+                                                <flux:switch label="{{ $form->elements[$index]['is_required'] ? 'Required' : 'Optional' }}" wire:model.live="form.elements.{{ $index }}.is_required" />
+                                            </div>
                                         </div>
 
                                         {{-- Remove Button --}}
-                                        <flux:button type="button" wire:click="removeElement({{ $index }})" size="sm" variant="ghost">
-                                            <flux:icon.x-mark class="size-4" />
-                                        </flux:button>
+                                        <flux:button type="button" icon="trash" wire:click="removeElement({{ $index }})" size="sm" variant="danger" />
                                     </div>
-                                </div>
+                                </flux:card>
                             @endforeach
                         </div>
                     @endif
+                    <div class="flex justify-center">
+                        <flux:modal.trigger name="select-field-modal">
+                            <flux:button icon="plus" size="sm" variant="primary">
+                                {{ __('Add Field') }}
+                            </flux:button>
+                        </flux:modal.trigger>
+                    </div>
                 </flux:card>
 
+                <flux:modal name="select-field-modal">
+                    <div class="space-y-6">
+                        <flux:heading size="lg">{{ __('Select Field Type') }}</flux:heading>
+                        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                            @foreach ($fieldTypes as $value => $label)
+                                <flux:card :key="$value" wire:click="addElement('{{ $value }}')" class="cursor-pointer hover:bg-zinc-50 dark:hover:bg-zinc-800">
+                                    <flux:text>{{ $label }}</flux:text>
+                                </flux:card>
+                            @endforeach
+                        </div>
+                    </div>
+                </flux:modal>
+
                 {{-- Actions --}}
-                <div class="flex items-center justify-end gap-3 border-t border-zinc-200 pt-6 dark:border-zinc-700">
+                <div class="flex items-center justify-end gap-3">
                     <flux:button wire:navigate href="{{ route('blueprints.index') }}" type="button" variant="ghost">
                         {{ __('Cancel') }}
                     </flux:button>

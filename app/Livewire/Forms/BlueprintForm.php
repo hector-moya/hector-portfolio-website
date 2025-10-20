@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Forms;
 
+use App\Livewire\Actions\Blueprints\CreateBlueprint;
 use App\Livewire\Actions\Blueprints\DeleteBlueprint;
 use App\Livewire\Actions\Blueprints\UpdateBlueprint;
 use App\Models\Blueprint;
@@ -62,7 +63,28 @@ class BlueprintForm extends Form
         ])->toArray();
     }
 
-    public function create() {}
+    public function create(): Blueprint
+    {
+        $this->validate();
+
+        $blueprint = (new CreateBlueprint)->create(
+            blueprintData: [
+                'name' => $this->name,
+                'slug' => $this->slug,
+                'description' => $this->description,
+                'is_active' => $this->is_active,
+            ],
+            elements: $this->elements
+        );
+
+        Flux::toast(
+            heading: 'Blueprint Created',
+            text: 'The blueprint has been successfully created.',
+            variant: 'success',
+        );
+
+        return $blueprint;
+    }
 
     public function update(int $blueprintId): Blueprint
     {
@@ -76,10 +98,10 @@ class BlueprintForm extends Form
         ]);
     }
 
-    public function addElement(): void
+    public function addElement(string $type): void
     {
         $this->elements[] = [
-            'type' => 'text',
+            'type' => $type,
             'label' => '',
             'handle' => '',
             'instructions' => '',

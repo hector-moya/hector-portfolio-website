@@ -3,17 +3,20 @@
 namespace App\Livewire\Actions\Blueprints;
 
 use App\Models\Blueprint;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 
 class CreateBlueprint
 {
-    public function execute(array $data, array $elements = []): Blueprint
+    public function create(array $blueprintData, array $elements = []): Blueprint
     {
-        if (empty($data['slug'])) {
-            $data['slug'] = Str::slug($data['name']);
+        Gate::authorize('create', Blueprint::class);
+
+        if (empty($blueprintData['slug'])) {
+            $blueprintData['slug'] = Str::slug($blueprintData['name']);
         }
 
-        $blueprint = \App\Models\Blueprint::query()->create($data);
+        $blueprint = Blueprint::query()->create($blueprintData);
 
         // Create elements if provided
         foreach ($elements as $index => $element) {

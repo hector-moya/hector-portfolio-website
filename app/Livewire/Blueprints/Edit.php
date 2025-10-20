@@ -36,9 +36,9 @@ class Edit extends Component
         $this->form->setBlueprint($blueprint);
     }
 
-    public function addElement(): void
+    public function addElement(string $type): void
     {
-        $this->form->addElement();
+        $this->form->addElement($type);
     }
 
     public function removeElement(int $index): void
