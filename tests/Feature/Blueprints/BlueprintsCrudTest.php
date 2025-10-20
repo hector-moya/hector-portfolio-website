@@ -10,7 +10,7 @@ use Livewire\Livewire;
 use function Pest\Laravel\actingAs;
 
 beforeEach(function () {
-    $user = User::factory()->create();
+    $user = User::factory()->admin()->create();
     actingAs($user);
 });
 

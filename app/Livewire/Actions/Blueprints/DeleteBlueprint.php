@@ -10,6 +10,7 @@ class DeleteBlueprint
     public function execute(Blueprint $blueprint): bool
     {
         Gate::authorize('delete', $blueprint);
+
         return $blueprint->delete();
     }
 }

@@ -2,8 +2,8 @@
 
 namespace App\Livewire\Forms;
 
-use App\Livewire\Actions\Blueprints\UpdateBlueprint;
 use App\Livewire\Actions\Blueprints\DeleteBlueprint;
+use App\Livewire\Actions\Blueprints\UpdateBlueprint;
 use App\Models\Blueprint;
 use Flux\Flux;
 use Illuminate\Validation\Rule;
@@ -101,9 +101,9 @@ class BlueprintForm extends Form
         (new DeleteBlueprint)->execute($blueprint);
 
         Flux::toast(
-            heading:'Blueprint Deleted',
-            text:'The blueprint has been successfully deleted.',
-            variant:'success',
+            heading: 'Blueprint Deleted',
+            text: 'The blueprint has been successfully deleted.',
+            variant: 'success',
         );
 
     }

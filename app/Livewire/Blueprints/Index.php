@@ -2,11 +2,11 @@
 
 namespace App\Livewire\Blueprints;
 
-use App\Models\Blueprint;
-use Livewire\Attributes\Title;
-use Livewire\Attributes\Computed;
-use Illuminate\Pagination\LengthAwarePaginator;
 use App\Livewire\Forms\BlueprintForm;
+use App\Models\Blueprint;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Livewire\Attributes\Computed;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -19,6 +19,7 @@ class Index extends Component
     public BlueprintForm $blueprintForm;
 
     public string $sortBy = 'date';
+
     public string $sortDirection = 'desc';
 
     public function updatingSearch(): void
@@ -29,6 +30,7 @@ class Index extends Component
     public function delete(int $blueprintId): void
     {
         $this->blueprintForm->destroy($blueprintId);
+        $this->dispatch('blueprint-deleted');
     }
 
     #[Computed]
@@ -38,7 +40,7 @@ class Index extends Component
             ->withCount('elements', 'collections')
             ->when($this->search, fn ($query) => $query->where('name', 'like', "%{$this->search}%")
                 ->orWhere('slug', 'like', "%{$this->search}%"))
-            ->tap(fn ($query) => $this->sortBy ? $query->orderBy($this->sortBy, $this->sortDirection) : $query)
+            ->tap(fn ($query) => $this->sortBy !== '' && $this->sortBy !== '0' ? $query->orderBy($this->sortBy, $this->sortDirection) : $query)
             ->latest()
             ->paginate(10);
     }
