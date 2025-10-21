@@ -29,28 +29,28 @@
                 </flux:table.columns>
                 <flux:table.rows>
                     @forelse ($this->blueprints as $blueprint)
-                        <flux:table.row wire:key="blueprint-{{ $blueprint->id }}" class="hover:bg-zinc-50 dark:hover:bg-zinc-700/50">
+                        <flux:table.row wire:key="blueprint-{{ $blueprint->id }}">
                             <flux:table.cell class="px-6 py-4">
-                                <div class="font-medium text-zinc-900 dark:text-zinc-100">{{ $blueprint->name }}</div>
-                                @if ($blueprint->description)
-                                    <div class="text-sm text-zinc-500 dark:text-zinc-400">{{ Str::limit($blueprint->description, 50) }}</div>
-                                @endif
+                                <div>
+                                    <flux:heading level="5">{{ $blueprint->name }}</flux:heading>
+                                    @if ($blueprint->description)
+                                        <flux:text>{{ Str::limit($blueprint->description, 50) }}</flux:text>
+                                    @endif
+                                </div>
                             </flux:table.cell>
-                            <flux:table.cell class="px-6 py-4 text-sm text-zinc-600 dark:text-zinc-400">
-                                <code class="rounded bg-zinc-100 px-2 py-1 dark:bg-zinc-700">{{ $blueprint->slug }}</code>
+                            <flux:table.cell>
+                                <flux:badge>{{ $blueprint->slug }}</flux:badge>
                             </flux:table.cell>
-                            <flux:table.cell class="px-6 py-4 text-sm text-zinc-600 dark:text-zinc-400">
+                            <flux:table.cell>
                                 {{ $blueprint->elements_count }} {{ Str::plural('field', $blueprint->elements_count) }}
                             </flux:table.cell>
-                            <flux:table.cell class="px-6 py-4 text-sm text-zinc-600 dark:text-zinc-400">
+                            <flux:table.cell>
                                 {{ $blueprint->collections_count }}
                             </flux:table.cell>
-                            <flux:table.cell class="px-6 py-4">
-                                @if ($blueprint->is_active)
-                                    <flux:badge variant="success">{{ __('Active') }}</flux:badge>
-                                @else
-                                    <flux:badge variant="zinc">{{ __('Inactive') }}</flux:badge>
-                                @endif
+                            <flux:table.cell>
+                                <flux:badge size="sm" :color="$blueprint->is_active ? 'green' : 'zinc'">
+                                    {{ $blueprint->is_active ? 'Active' : 'Inactive' }}
+                                </flux:badge>
                             </flux:table.cell>
                             <flux:table.cell class="px-6 py-4 text-right">
                                 <flux:dropdown>

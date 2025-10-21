@@ -3,7 +3,7 @@
         <div class="flex items-center justify-between">
             <div>
                 <flux:heading size="xl">{{ __('Entries') }}</flux:heading>
-                <flux:text>{{ __('Define content structures with custom fields') }}</flux:text>
+                <flux:text>{{ __('Manage your entries') }}</flux:text>
             </div>
 
             <flux:button icon="plus" variant="primary" :href="route('entries.create')" wire:navigate>
@@ -57,16 +57,16 @@
                     <div class="flex items-center justify-between">
                         <flux:text>{{ count($selected) }} {{ __('entries selected') }}</flux:text>
                         <div class="flex gap-2">
-                            <flux:button size="sm" wire:click="bulkPublish" wire:confirm="Publish {{ count($selected) }} {{ __('entries?') }}">
-                                <flux:icon.check-circle class="size-4" />
+                            <flux:button size="sm" wire:click="bulkPublish" icon="check-circle" wire:confirm="Publish {{ count($selected) }} {{ __('entries?') }}">
                                 {{ __('Publish') }}
                             </flux:button>
-                            <flux:button size="sm" wire:click="bulkUnpublish" wire:confirm="Unpublish {{ count($selected) }} {{ __('entries?') }}">
-                                <flux:icon.x-circle class="size-4" />
+                            <flux:button size="sm" wire:click="bulkUnpublish" icon="x-circle" wire:confirm="Unpublish {{ count($selected) }} {{ __('entries?') }}">
                                 {{ __('Unpublish') }}
                             </flux:button>
-                            <flux:button size="sm" variant="danger" wire:click="bulkDelete" wire:confirm="Delete {{ count($selected) }} {{ __('entries?') }}">
-                                <flux:icon.trash class="size-4" />
+                            <flux:button size="sm" wire:click="bulkArchive" icon="archive-box" wire:confirm="Archive {{ count($selected) }} {{ __('entries?') }}">
+                                {{ __('Archive') }}
+                            </flux:button>
+                            <flux:button size="sm" variant="danger" wire:click="bulkDelete" icon="trash" wire:confirm="Delete {{ count($selected) }} {{ __('entries?') }}">
                                 {{ __('Delete') }}
                             </flux:button>
                         </div>
@@ -74,78 +74,77 @@
                 </flux:card>
             @endif
 
-            <flux:table>
-                <flux:table.columns>
-                    <flux:table.column class="w-12">
-                        <flux:checkbox wire:model.live="selectAll" />
-                    </flux:table.column>
-                    <flux:table.column>{{ __('Title') }}</flux:table.column>
-                    <flux:table.column>{{ __('Collection') }}</flux:table.column>
-                    <flux:table.column>{{ __('Status') }}</flux:table.column>
-                    <flux:table.column>{{ __('Author') }}</flux:table.column>
-                    <flux:table.column>{{ __('Published') }}</flux:table.column>
-                    <flux:table.column>{{ __('Actions') }}</flux:table.column>
-                </flux:table.columns>
+            <flux:card>
+                <flux:table :paginate="$this->entries">
+                    <flux:table.columns>
+                        <flux:table.column class="w-12">
+                            <flux:checkbox wire:model.live="selectAll" />
+                        </flux:table.column>
+                        <flux:table.column sortable :sorted="$sortBy === 'title'" :direction="$sortDirection" wire:click="sort('title')">{{ __('Title') }}</flux:table.column>
+                        <flux:table.column sortable :sorted="$sortBy === 'collection_id'" :direction="$sortDirection" wire:click="sort('collection_id')">{{ __('Collection') }}</flux:table.column>
+                        <flux:table.column sortable :sorted="$sortBy === 'status'" :direction="$sortDirection" wire:click="sort('status')">{{ __('Status') }}</flux:table.column>
+                        <flux:table.column sortable :sorted="$sortBy === 'author'" :direction="$sortDirection" wire:click="sort('author')">{{ __('Author') }}</flux:table.column>
+                        <flux:table.column sortable :sorted="$sortBy === 'published_at'" :direction="$sortDirection" wire:click="sort('published_at')">{{ __('Published') }}</flux:table.column>
+                        <flux:table.column>{{ __('Actions') }}</flux:table.column>
+                    </flux:table.columns>
 
-                <flux:table.rows>
-                    @foreach ($this->entries as $entry)
-                        <flux:table.row :key="$entry->id">
-                            <flux:table.cell>
-                                <flux:checkbox wire:model.live="selected" value="{{ $entry->id }}" />
-                            </flux:table.cell>
+                    <flux:table.rows>
+                        @foreach ($this->entries as $entry)
+                            <flux:table.row :key="$entry->id">
+                                <flux:table.cell>
+                                    <flux:checkbox wire:model.live="selected" value="{{ $entry->id }}" />
+                                </flux:table.cell>
 
-                            <flux:table.cell>
-                                <div>
-                                    <div class="font-medium">{{ $entry->title }}</div>
-                                    <div class="text-sm text-zinc-500 dark:text-zinc-400">{{ $entry->slug }}</div>
-                                </div>
-                            </flux:table.cell>
+                                <flux:table.cell>
+                                    <div>
+                                        <flux:heading level="5">{{ $entry->title }}</flux:heading>
+                                        <flux:text>{{ $entry->slug }}</flux:text>
+                                    </div>
+                                </flux:table.cell>
 
-                            <flux:table.cell>
-                                <flux:badge size="sm" color="zinc">
-                                    {{ $entry->collection->name }}
-                                </flux:badge>
-                            </flux:table.cell>
+                                <flux:table.cell>
+                                    <flux:badge size="sm" color="zinc">
+                                        {{ $entry->collection->name }}
+                                    </flux:badge>
+                                </flux:table.cell>
 
-                            <flux:table.cell>
-                                <flux:badge size="sm"
-                                            :color="match($entry->status) {
-                                                                                                                            'published' => 'green',
-                                                                                                                            'draft' => 'yellow',
-                                                                                                                            'archived' => 'zinc',
-                                                                                                                        }">
-                                    {{ ucfirst($entry->status) }}
-                                </flux:badge>
-                            </flux:table.cell>
+                                <flux:table.cell>
+                                    <flux:badge size="sm" :color="match($entry->status) { 'published' => 'green', 'draft' => 'yellow', 'archived' => 'zinc', }">
+                                        {{ ucfirst($entry->status) }}
+                                    </flux:badge>
+                                </flux:table.cell>
 
-                            <flux:table.cell>
-                                {{ $entry->author->name }}
-                            </flux:table.cell>
+                                <flux:table.cell>
+                                    {{ $entry->author->name }}
+                                </flux:table.cell>
 
-                            <flux:table.cell>
-                                {{ $entry->published_at?->format('M d, Y') ?? '-' }}
-                            </flux:table.cell>
+                                <flux:table.cell>
+                                    {{ $entry->published_at?->format('M d, Y') ?? '-' }}
+                                </flux:table.cell>
 
-                            <flux:table.cell>
-                                <div class="flex gap-2">
-                                    <flux:button size="sm" wire:click="$dispatch('preview-entry', { entryId: {{ $entry->id }} })">
-                                        <flux:icon.eye class="size-4" />
-                                        {{ __('Preview') }}
-                                    </flux:button>
-
-                                    <flux:button size="sm" :href="route('entries.edit', $entry)" wire:navigate>
-                                        {{ __('Edit') }}
-                                    </flux:button>
-
-                                    <flux:button size="sm" variant="danger" wire:click="delete({{ $entry->id }})" wire:confirm="Are you sure you want to delete this entry?">
-                                        {{ __('Delete') }}
-                                    </flux:button>
-                                </div>
-                            </flux:table.cell>
-                        </flux:table.row>
-                    @endforeach
-                </flux:table.rows>
-            </flux:table>
+                                <flux:table.cell>
+                                    <flux:dropdown>
+                                        <flux:button variant="ghost" size="sm" icon="ellipsis-horizontal" />
+                                        <flux:menu>
+                                            <flux:menu.item icon="eye" wire:click="$dispatch('preview-entry', { entryId: {{ $entry->id }} })">
+                                                {{ __('Preview') }}
+                                            </flux:menu.item>
+                                            <flux:menu.separator />
+                                            <flux:menu.item icon="pencil" :href="route('entries.edit', $entry)" wire:navigate>
+                                                {{ __('Edit') }}
+                                            </flux:menu.item>
+                                            <flux:menu.separator />
+                                            <flux:menu.item icon="trash" variant="danger" wire:click="delete({{ $entry->id }})" wire:confirm="Are you sure you want to delete this entry?">
+                                                {{ __('Delete') }}
+                                            </flux:menu.item>
+                                        </flux:menu>
+                                    </flux:dropdown>
+                                </flux:table.cell>
+                            </flux:table.row>
+                        @endforeach
+                    </flux:table.rows>
+                </flux:table>
+            </flux:card>
 
             <div class="mt-4">
                 {{ $this->entries->links() }}

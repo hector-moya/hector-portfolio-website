@@ -5,6 +5,7 @@ namespace App\Livewire\Entries;
 use App\Livewire\Actions\DeleteEntry;
 use App\Models\Collection as ModelsCollection;
 use App\Models\Entry;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
@@ -29,6 +30,10 @@ class Index extends Component
 
     public bool $selectAll = false;
 
+    public string $sortBy = 'date';
+
+    public string $sortDirection = 'desc';
+
     public function updatedSearch(): void
     {
         $this->resetPage();
@@ -51,7 +56,7 @@ class Index extends Component
     }
 
     #[Computed]
-    public function entries()
+    public function entries(): LengthAwarePaginator
     {
         return Entry::query()
             ->with(['collection', 'blueprint', 'author'])
@@ -67,6 +72,7 @@ class Index extends Component
             ->when($this->statusFilter, function ($query): void {
                 $query->where('status', $this->statusFilter);
             })
+            ->tap(fn ($query) => $this->sortBy !== '' && $this->sortBy !== '0' ? $query->orderBy($this->sortBy, $this->sortDirection) : $query)
             ->latest()
             ->paginate(15);
     }
@@ -86,9 +92,19 @@ class Index extends Component
         $this->resetPage();
     }
 
+    public function sort(string $column): void
+    {
+        if ($this->sortBy === $column) {
+            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortBy = $column;
+            $this->sortDirection = 'asc';
+        }
+    }
+
     public function delete(int $id): void
     {
-        $entry = \App\Models\Entry::query()->findOrFail($id);
+        $entry = Entry::query()->findOrFail($id);
 
         (new DeleteEntry)->execute($entry);
 
@@ -102,7 +118,7 @@ class Index extends Component
             return;
         }
 
-        \App\Models\Entry::query()->whereIn('id', $this->selected)->update([
+        Entry::query()->whereIn('id', $this->selected)->update([
             'status' => 'published',
             'published_at' => now(),
         ]);
@@ -120,7 +136,7 @@ class Index extends Component
             return;
         }
 
-        \App\Models\Entry::query()->whereIn('id', $this->selected)->update([
+        Entry::query()->whereIn('id', $this->selected)->update([
             'status' => 'draft',
         ]);
 
@@ -137,7 +153,7 @@ class Index extends Component
             return;
         }
 
-        \App\Models\Entry::query()->whereIn('id', $this->selected)->delete();
+        Entry::query()->whereIn('id', $this->selected)->delete();
 
         $count = count($this->selected);
         $this->selected = [];
