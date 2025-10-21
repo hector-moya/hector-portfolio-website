@@ -7,6 +7,7 @@ use App\Models\Collection as ModelsCollection;
 use App\Models\Entry;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
+use Livewire\Attributes\Title;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -146,6 +147,7 @@ class Index extends Component
         $this->dispatch('notify', message: "{$count} entries deleted successfully.");
     }
 
+    #[Title('Entries')]
     public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
     {
         return view('livewire.entries.index');

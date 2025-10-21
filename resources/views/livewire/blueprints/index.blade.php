@@ -6,22 +6,14 @@
                 <flux:heading size="xl">{{ __('Blueprints') }}</flux:heading>
                 <flux:text>{{ __('Define content structures with custom fields') }}</flux:text>
             </div>
-            <flux:button wire:navigate href="{{ route('blueprints.create') }}" variant="primary">
-                <flux:icon.plus class="size-5" />
+            <flux:button wire:navigate href="{{ route('blueprints.create') }}" icon="plus" variant="primary">
                 {{ __('Create Blueprint') }}
             </flux:button>
         </div>
 
-        {{-- Success Message --}}
-        @if (session('message'))
-            <flux:callout variant="success">
-                {{ session('message') }}
-            </flux:callout>
-        @endif
-
         {{-- Search --}}
         <div class="flex items-center gap-4">
-            <flux:input wire:model.live.debounce.300ms="search" placeholder="Search blueprints..." class="flex-1" />
+            <flux:input wire:model.live.debounce.300ms="search" icon="magnifying-glass" placeholder="Search blueprints..." class="flex-grow" />
         </div>
 
         {{-- Blueprints Table --}}
