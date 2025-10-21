@@ -7,28 +7,28 @@ use Illuminate\Support\Str;
 
 class UpdateBlueprint
 {
-    public function execute(array $data = []): Blueprint
+    public function update(array $blueprintData = []): Blueprint
     {
-        if (empty($data['slug'])) {
-            $data['slug'] = Str::slug($data['name']);
+        if (empty($blueprintData['slug'])) {
+            $blueprintData['slug'] = Str::slug($blueprintData['name']);
         }
 
-        $blueprint = \App\Models\Blueprint::query()->findOrFail($data['id']);
+        $blueprint = Blueprint::query()->findOrFail($blueprintData['id']);
 
         $blueprint->update([
-            'name' => $data['name'],
-            'slug' => $data['slug'],
-            'description' => $data['description'] ?? null,
-            'is_active' => $data['is_active'] ?? false,
+            'name' => $blueprintData['name'],
+            'slug' => $blueprintData['slug'],
+            'description' => $blueprintData['description'] ?? null,
+            'is_active' => $blueprintData['is_active'] ?? false,
         ]);
 
-        $handles = collect($data['elements'])->pluck('handle')->filter();
+        $handles = collect($blueprintData['elements'])->pluck('handle')->filter();
 
         // Delete removed elements
         $blueprint->elements()->whereNotIn('handle', $handles)->delete();
 
         // Update or create remaining
-        foreach ($data['elements'] ?? [] as $elementData) {
+        foreach ($blueprintData['elements'] ?? [] as $elementData) {
             $blueprint->elements()->updateOrCreate(
                 ['handle' => $elementData['handle']],
                 [

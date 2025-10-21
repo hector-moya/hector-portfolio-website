@@ -5,6 +5,7 @@ namespace App\Livewire\Forms;
 use App\Livewire\Actions\Blueprints\CreateBlueprint;
 use App\Livewire\Actions\Blueprints\DeleteBlueprint;
 use App\Livewire\Actions\Blueprints\UpdateBlueprint;
+use Illuminate\Support\Str;
 use App\Models\Blueprint;
 use Flux\Flux;
 use Illuminate\Validation\Rule;
@@ -39,7 +40,17 @@ class BlueprintForm extends Form
             ],
             'elements.*.type' => 'required|string',
             'elements.*.label' => 'required|string|max:255',
-            'elements.*.handle' => 'nullable|string|max:255',
+            'elements.*.handle' => [
+                'nullable',
+                'string',
+                'max:255',
+                function ($attribute, $value, $fail) {
+                    $handles = array_column((array) $this->elements, 'handle');
+                    if ($value && count(array_keys($handles, $value)) > 1) {
+                        $fail(__('Handles must be unique within the blueprint.'));
+                    }
+                },
+            ],
             'elements.*.instructions' => 'nullable|string',
             'elements.*.is_required' => 'boolean',
         ];
@@ -73,9 +84,8 @@ class BlueprintForm extends Form
                 'slug' => $this->slug,
                 'description' => $this->description,
                 'is_active' => $this->is_active,
-            ],
-            elements: $this->elements
-        );
+                'elements' => $this->elements,
+            ]);
 
         Flux::toast(
             heading: 'Blueprint Created',
@@ -83,19 +93,32 @@ class BlueprintForm extends Form
             variant: 'success',
         );
 
+        $this->reset(['name', 'slug', 'description', 'is_active', 'elements']);
+
         return $blueprint;
     }
 
     public function update(int $blueprintId): Blueprint
     {
-        return app(UpdateBlueprint::class)->execute([
-            'id' => $blueprintId,
-            'name' => $this->name,
-            'slug' => $this->slug,
-            'description' => $this->description,
-            'is_active' => $this->is_active,
-            'elements' => $this->elements,
-        ]);
+        $this->validate();
+
+        $blueprint = app(UpdateBlueprint::class)->update(
+            blueprintData: [
+                'id' => $blueprintId,
+                'name' => $this->name,
+                'slug' => $this->slug,
+                'description' => $this->description,
+                'is_active' => $this->is_active,
+                'elements' => $this->elements,
+            ]);
+
+        Flux::toast(
+            heading: 'Blueprint Updated',
+            text: 'The blueprint has been successfully updated.',
+            variant: 'success',
+        );
+
+        return $blueprint;
     }
 
     public function addElement(string $type): void
@@ -128,5 +151,15 @@ class BlueprintForm extends Form
             variant: 'success',
         );
 
+    }
+
+    public function generateSlug(string $slug): string
+    {
+        return Str::slug($slug);
+    }
+
+    public function updateHandleFromLabel(int $index): void
+    {
+        $this->elements[$index]['handle'] = $this->generateSlug($this->elements[$index]['label']);
     }
 }

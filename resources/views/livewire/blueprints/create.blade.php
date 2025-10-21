@@ -14,7 +14,7 @@
 
                     <div class="flex flex-col space-y-8">
                         {{-- Name --}}
-                        <flux:input label="{{ __('Name') }}" placeholder="{{ __('Blog Post') }}" badge="{{ __('Required') }}" wire:model.live="form.name" />
+                        <flux:input label="{{ __('Name') }}" placeholder="{{ __('Blog Post') }}" badge="{{ __('Required') }}" wire:model.live.debounce.750ms="form.name" />
 
                         {{-- Slug --}}
                         <flux:input label="{{ __('Slug') }}" placeholder="blog-post" badge="{{ __('Required') }}" wire:model="form.slug" />
@@ -54,7 +54,7 @@
                                                 </flux:select>
 
                                                 {{-- Field Label --}}
-                                                <flux:input label="{{ __('Label') }}" wire:model="form.elements.{{ $index }}.label" placeholder="Eg. Post title" />
+                                                <flux:input label="{{ __('Label') }}" wire:model.live.debounce.750ms="form.elements.{{ $index }}.label" placeholder="Eg. Post title" />
                                             </div>
 
                                             <div class="grid grid-cols-2 gap-4">

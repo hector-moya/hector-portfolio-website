@@ -5,6 +5,7 @@ namespace App\Livewire\Blueprints;
 use App\Livewire\Forms\BlueprintForm;
 use App\Models\Blueprint;
 use Livewire\Attributes\Title;
+use Flux\Flux;
 use Livewire\Component;
 
 class Edit extends Component
@@ -38,7 +39,20 @@ class Edit extends Component
 
     public function addElement(string $type): void
     {
-        $this->form->addElement($type);
+        $this->form->addElement(type: $type);
+        Flux::modal('select-field-modal')->close();
+    }
+
+    public function updatedFormName(): void
+    {
+        $this->form->slug = $this->form->generateSlug($this->form->name);
+    }
+
+    public function updated($propertyName, $value)
+    {
+        if (preg_match('/^form\.elements\.(\d+)\.label$/', $propertyName, $matches)) {
+            $this->form->updateHandleFromLabel((int) $matches[1]);
+        }
     }
 
     public function removeElement(int $index): void
@@ -48,13 +62,7 @@ class Edit extends Component
 
     public function save(): void
     {
-        $this->form->validate();
-
         $this->form->update($this->blueprint->id);
-
-        session()->flash('message', 'Blueprint updated successfully.');
-
-        $this->redirect(route('blueprints.index'), navigate: true);
     }
 
     #[Title('Edit Blueprint')]

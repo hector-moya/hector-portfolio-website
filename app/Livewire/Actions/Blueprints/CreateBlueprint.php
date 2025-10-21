@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 
 class CreateBlueprint
 {
-    public function create(array $blueprintData, array $elements = []): Blueprint
+    public function create(array $blueprintData): Blueprint
     {
         Gate::authorize('create', Blueprint::class);
 
@@ -19,7 +19,7 @@ class CreateBlueprint
         $blueprint = Blueprint::query()->create($blueprintData);
 
         // Create elements if provided
-        foreach ($elements as $index => $element) {
+        foreach ($blueprintData['elements'] as $index => $element) {
             $blueprint->elements()->create([
                 'type' => $element['type'],
                 'label' => $element['label'],

@@ -33,10 +33,21 @@ class Create extends Component
         // Start with one empty element
         $this->form->addElement('text');
     }
+    public function updatedFormName(): void
+    {
+        $this->form->slug = $this->form->generateSlug($this->form->name);
+    }
+
+    public function updated($propertyName, $value)
+    {
+        if (preg_match('/^form\.elements\.(\d+)\.label$/', $propertyName, $matches)) {
+            $this->form->updateHandleFromLabel((int) $matches[1]);
+        }
+    }
 
     public function addElement(string $type): void
     {
-        $this->form->addElement($type);
+        $this->form->addElement(type: $type);
         Flux::modal('select-field-modal')->close();
     }
 
