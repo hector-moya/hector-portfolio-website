@@ -33,14 +33,15 @@ class Create extends Component
         // Start with one empty element
         $this->form->addElement('text');
     }
+
     public function updatedFormName(): void
     {
         $this->form->slug = $this->form->generateSlug($this->form->name);
     }
 
-    public function updated($propertyName, $value)
+    public function updated($propertyName, $value): void
     {
-        if (preg_match('/^form\.elements\.(\d+)\.label$/', $propertyName, $matches)) {
+        if (preg_match('/^form\.elements\.(\d+)\.label$/', (string) $propertyName, $matches)) {
             $this->form->updateHandleFromLabel((int) $matches[1]);
         }
     }

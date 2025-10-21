@@ -4,8 +4,8 @@ namespace App\Livewire\Blueprints;
 
 use App\Livewire\Forms\BlueprintForm;
 use App\Models\Blueprint;
-use Livewire\Attributes\Title;
 use Flux\Flux;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 
 class Edit extends Component
@@ -48,9 +48,9 @@ class Edit extends Component
         $this->form->slug = $this->form->generateSlug($this->form->name);
     }
 
-    public function updated($propertyName, $value)
+    public function updated($propertyName, $value): void
     {
-        if (preg_match('/^form\.elements\.(\d+)\.label$/', $propertyName, $matches)) {
+        if (preg_match('/^form\.elements\.(\d+)\.label$/', (string) $propertyName, $matches)) {
             $this->form->updateHandleFromLabel((int) $matches[1]);
         }
     }

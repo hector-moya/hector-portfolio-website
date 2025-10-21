@@ -5,9 +5,9 @@ namespace App\Livewire\Forms;
 use App\Livewire\Actions\Blueprints\CreateBlueprint;
 use App\Livewire\Actions\Blueprints\DeleteBlueprint;
 use App\Livewire\Actions\Blueprints\UpdateBlueprint;
-use Illuminate\Support\Str;
 use App\Models\Blueprint;
 use Flux\Flux;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Livewire\Attributes\Validate;
 use Livewire\Form;
@@ -44,8 +44,8 @@ class BlueprintForm extends Form
                 'nullable',
                 'string',
                 'max:255',
-                function ($attribute, $value, $fail) {
-                    $handles = array_column((array) $this->elements, 'handle');
+                function ($attribute, $value, $fail): void {
+                    $handles = array_column($this->elements, 'handle');
                     if ($value && count(array_keys($handles, $value)) > 1) {
                         $fail(__('Handles must be unique within the blueprint.'));
                     }

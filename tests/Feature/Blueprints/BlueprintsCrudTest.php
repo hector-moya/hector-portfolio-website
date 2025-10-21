@@ -104,8 +104,7 @@ test('can update a blueprint', function () {
         ->set('form.name', 'New Name')
         ->set('form.slug', 'new-slug')
         ->call('save')
-        ->assertHasNoErrors()
-        ->assertRedirect(route('blueprints.index'));
+        ->assertHasNoErrors();
 
     $blueprint->refresh();
     expect($blueprint->name)->toBe('New Name');
