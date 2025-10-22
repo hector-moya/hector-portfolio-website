@@ -2,7 +2,6 @@
 
 namespace App\Livewire\Entries;
 
-use App\Livewire\Actions\UpdateEntry;
 use App\Livewire\Forms\EntryForm;
 use App\Models\Blueprint;
 use App\Models\Entry;
@@ -41,15 +40,7 @@ class Edit extends Component
 
     public function save(): void
     {
-        $this->form->validate();
-
-        (new UpdateEntry)->execute($this->entry, [
-            'title' => $this->form->title,
-            'slug' => $this->form->slug,
-            'status' => $this->form->status,
-            'published_at' => $this->form->published_at,
-            'fieldValues' => $this->form->fieldValues,
-        ]);
+        $this->form->update($this->form->entry->id);
 
         $this->dispatch('notify', message: 'Entry updated successfully.');
         $this->redirect(route('entries'), navigate: true);

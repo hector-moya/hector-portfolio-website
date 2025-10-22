@@ -6,6 +6,7 @@ use App\Livewire\Actions\DeleteEntry;
 use App\Models\Collection as ModelsCollection;
 use App\Models\Entry;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
@@ -78,7 +79,7 @@ class Index extends Component
     }
 
     #[Computed]
-    public function collections()
+    public function collections(): Collection
     {
         return ModelsCollection::query()
             ->withCount('entries')

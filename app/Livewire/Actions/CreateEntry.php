@@ -5,34 +5,35 @@ namespace App\Livewire\Actions;
 use App\Models\Activity;
 use App\Models\Blueprint;
 use App\Models\Entry;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
 class CreateEntry
 {
-    public function execute(array $data): Entry
+    public function create(array $entryData): Entry
     {
-        return DB::transaction(function () use ($data) {
+        return DB::transaction(function () use ($entryData) {
             // Create the entry
-            $entry = \App\Models\Entry::query()->create([
-                'collection_id' => $data['collection_id'],
-                'blueprint_id' => $data['blueprint_id'],
+            $entry = Entry::query()->create([
+                'collection_id' => $entryData['collection_id'],
+                'blueprint_id' => $entryData['blueprint_id'],
                 'author_id' => auth()->id(),
-                'title' => $data['title'],
-                'slug' => $data['slug'],
-                'status' => $data['status'],
-                'published_at' => $data['published_at'] ?? null,
+                'title' => $entryData['title'],
+                'slug' => $entryData['slug'],
+                'status' => $entryData['status'],
+                'published_at' => $entryData['published_at'] ?? null,
             ]);
 
             // Create entry elements from field values
-            $this->syncEntryElements($entry, $data['fieldValues'] ?? []);
+            $this->syncEntryElements($entry, $entryData['fieldValues'] ?? []);
 
             // Log activity
-            \App\Models\Activity::query()->create([
+            Activity::query()->create([
                 'log_name' => 'entry',
                 'description' => 'Created entry',
                 'subject_type' => Entry::class,
                 'subject_id' => $entry->id,
-                'causer_type' => \App\Models\User::class,
+                'causer_type' => User::class,
                 'causer_id' => auth()->id(),
                 'event' => 'created',
                 'properties' => [

@@ -2,9 +2,12 @@
 
 namespace App\Livewire\Forms;
 
+use App\Livewire\Actions\CreateEntry;
+use App\Livewire\Actions\UpdateEntry;
 use App\Models\Blueprint;
 use App\Models\Collection;
 use App\Models\Entry;
+use Flux\Flux;
 use Illuminate\Validation\Rule;
 use Livewire\Attributes\Validate;
 use Livewire\Form;
@@ -50,6 +53,53 @@ class EntryForm extends Form
         $this->collection_id = $collection->id;
         $this->blueprint_id = $collection->blueprint_id;
         $this->initializeFieldValues();
+    }
+
+    public function create(): Entry
+    {
+        $this->validate();
+
+        $entry = app(CreateEntry::class)->create(
+            entryData: [
+                'collection_id' => $this->collection_id,
+                'blueprint_id' => $this->blueprint_id,
+                'title' => $this->title,
+                'slug' => $this->slug,
+                'status' => $this->status,
+                'published_at' => $this->published_at,
+                'fieldValues' => $this->fieldValues,
+            ]);
+
+        Flux::toast(
+            heading: 'Entry Created',
+            text: 'Entry created successfully.',
+            variant: 'success',
+        );
+
+        return $entry;
+    }
+
+    public function update(int $entryId): Entry
+    {
+        $this->validate();
+
+        $entry = app(UpdateEntry::class)->update(
+            entryData: [
+                'id' => $entryId,
+                'title' => $this->title,
+                'slug' => $this->slug,
+                'status' => $this->status,
+                'published_at' => $this->published_at,
+                'fieldValues' => $this->fieldValues,
+            ]);
+
+        Flux::toast(
+            heading: 'Entry Updated',
+            text: 'Entry updated successfully.',
+            variant: 'success',
+        );
+
+        return $entry;
     }
 
     public function initializeFieldValues(): void

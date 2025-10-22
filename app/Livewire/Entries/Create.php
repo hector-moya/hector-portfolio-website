@@ -2,10 +2,10 @@
 
 namespace App\Livewire\Entries;
 
-use App\Livewire\Actions\CreateEntry;
 use App\Livewire\Forms\EntryForm;
 use App\Models\Blueprint;
-use App\Models\Collection;
+use App\Models\Collection as ModelsCollection;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
@@ -19,7 +19,7 @@ class Create extends Component
     public function mount(): void
     {
         // Auto-select collection if only one exists
-        $collections = Collection::with('blueprint.elements')->get();
+        $collections = ModelsCollection::with('blueprint.elements')->get();
 
         if ($collections->count() === 1) {
             $this->selectedCollectionId = $collections->first()->id;
@@ -30,7 +30,7 @@ class Create extends Component
     public function updatedSelectedCollectionId(): void
     {
         if ($this->selectedCollectionId !== null && $this->selectedCollectionId !== 0) {
-            $collection = Collection::with('blueprint.elements')->findOrFail($this->selectedCollectionId);
+            $collection = ModelsCollection::with('blueprint.elements')->findOrFail($this->selectedCollectionId);
             $this->form->setCollection($collection);
         }
     }
@@ -43,9 +43,9 @@ class Create extends Component
     }
 
     #[Computed]
-    public function collections()
+    public function collections(): Collection
     {
-        return Collection::query()
+        return ModelsCollection::query()
             ->with('blueprint')
             ->where('is_active', true)
             ->orderBy('title')
@@ -64,18 +64,7 @@ class Create extends Component
 
     public function save(): void
     {
-        $this->form->validate();
-
-        (new CreateEntry)->execute([
-            'collection_id' => $this->form->collection_id,
-            'blueprint_id' => $this->form->blueprint_id,
-            'title' => $this->form->title,
-            'slug' => $this->form->slug,
-            'status' => $this->form->status,
-            'published_at' => $this->form->published_at,
-            'fieldValues' => $this->form->fieldValues,
-        ]);
-
+        $this->form->create();
         $this->dispatch('notify', message: 'Entry created successfully.');
         $this->redirect(route('entries'), navigate: true);
     }

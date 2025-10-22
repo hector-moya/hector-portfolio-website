@@ -5,13 +5,16 @@ namespace App\Livewire\Actions;
 use App\Models\Activity;
 use App\Models\Blueprint;
 use App\Models\Entry;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
 class UpdateEntry
 {
-    public function execute(Entry $entry, array $data): Entry
+    public function update(array $entryData): Entry
     {
-        return DB::transaction(function () use ($entry, $data) {
+        return DB::transaction(function () use ($entryData) {
+            $entry = \App\Models\Entry::query()->findOrFail($entryData['id']);
+
             // Store old values for logging
             $oldValues = [
                 'title' => $entry->title,
@@ -21,22 +24,22 @@ class UpdateEntry
 
             // Update the entry
             $entry->update([
-                'title' => $data['title'],
-                'slug' => $data['slug'],
-                'status' => $data['status'],
-                'published_at' => $data['published_at'] ?? null,
+                'title' => $entryData['title'],
+                'slug' => $entryData['slug'],
+                'status' => $entryData['status'],
+                'published_at' => $entryData['published_at'] ?? null,
             ]);
 
             // Sync entry elements
-            $this->syncEntryElements($entry, $data['fieldValues'] ?? []);
+            $this->syncEntryElements($entry, $entryData['fieldValues'] ?? []);
 
             // Log activity
-            \App\Models\Activity::query()->create([
+            Activity::query()->create([
                 'log_name' => 'entry',
                 'description' => 'Updated entry',
                 'subject_type' => Entry::class,
                 'subject_id' => $entry->id,
-                'causer_type' => \App\Models\User::class,
+                'causer_type' => User::class,
                 'causer_id' => auth()->id(),
                 'event' => 'updated',
                 'properties' => [
