@@ -23,24 +23,21 @@ test('can view collections index page', function () {
 });
 
 test('can list collections', function () {
-    Collection::factory()->count(3)->create();
+    $collections = Collection::factory()->count(3)->create();
 
     Livewire::test(Index::class)
-        ->assertViewHas('collections', function ($collections) {
-            return $collections->count() === 3;
-        });
+        ->assertSee($collections->first()->name)
+        ->assertSee($collections->last()->name);
 });
 
 test('can search collections', function () {
-    Collection::factory()->create(['name' => 'Blog Posts']);
-    Collection::factory()->create(['name' => 'Pages']);
+    $collections_one = Collection::factory()->create(['name' => 'Blog Posts']);
+    $collections_two = Collection::factory()->create(['name' => 'Pages']);
 
     Livewire::test(Index::class)
         ->set('search', 'Blog')
-        ->assertViewHas('collections', function ($collections) {
-            return $collections->count() === 1
-                && $collections->first()->name === 'Blog Posts';
-        });
+        ->assertSee('Blog Posts')
+        ->assertDontSee('Pages');
 });
 
 test('can view create collection page', function () {

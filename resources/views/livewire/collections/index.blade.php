@@ -3,98 +3,85 @@
         {{-- Header --}}
         <div class="flex items-center justify-between">
             <div>
-                <flux:heading size="xl">Collections</flux:heading>
-                <flux:text>Manage your content collections</flux:text>
+                <flux:heading size="xl">{{ __('Collections') }}</flux:heading>
+                <flux:text>{{ __('Manage your content collections') }}</flux:text>
             </div>
-            <flux:button wire:navigate href="{{ route('collections.create') }}" variant="primary">
-                <flux:icon.plus class="size-5" />
-                Create Collection
+            <flux:button icon="plus" wire:navigate href="{{ route('collections.create') }}" variant="primary">
+                {{ __('Create Collection') }}
             </flux:button>
         </div>
 
-        {{-- Success Message --}}
-        @if (session('message'))
-            <flux:callout variant="success">
-                {{ session('message') }}
-            </flux:callout>
-        @endif
-
         {{-- Search --}}
         <div class="flex items-center gap-4">
-            <flux:input wire:model.live.debounce.300ms="search" placeholder="Search collections..." class="flex-1" />
+            <flux:input wire:model.live.debounce.300ms="search" placeholder="{{ __('Search collections...') }}" class="flex-1" />
         </div>
 
         {{-- Collections Table --}}
-        <div class="overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
-            <table class="w-full">
-                <thead class="border-b border-neutral-200 bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-900">
-                    <tr>
-                        <th class="px-6 py-3 text-left text-sm font-medium text-neutral-700 dark:text-neutral-300">Name</th>
-                        <th class="px-6 py-3 text-left text-sm font-medium text-neutral-700 dark:text-neutral-300">Slug</th>
-                        <th class="px-6 py-3 text-left text-sm font-medium text-neutral-700 dark:text-neutral-300">Blueprint</th>
-                        <th class="px-6 py-3 text-left text-sm font-medium text-neutral-700 dark:text-neutral-300">Status</th>
-                        <th class="px-6 py-3 text-left text-sm font-medium text-neutral-700 dark:text-neutral-300">Entries</th>
-                        <th class="px-6 py-3 text-right text-sm font-medium text-neutral-700 dark:text-neutral-300">Actions</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-neutral-200 bg-white dark:divide-neutral-700 dark:bg-neutral-800">
-                    @forelse ($collections as $collection)
-                        <tr wire:key="collection-{{ $collection->id }}" class="hover:bg-neutral-50 dark:hover:bg-neutral-700/50">
-                            <td class="px-6 py-4">
-                                <div class="font-medium text-neutral-900 dark:text-neutral-100">{{ $collection->name }}</div>
-                                @if ($collection->description)
-                                    <div class="text-sm text-neutral-500 dark:text-neutral-400">{{ Str::limit($collection->description, 50) }}</div>
-                                @endif
-                            </td>
-                            <td class="px-6 py-4 text-sm text-neutral-600 dark:text-neutral-400">
-                                <code class="rounded bg-neutral-100 px-2 py-1 dark:bg-neutral-700">{{ $collection->slug }}</code>
-                            </td>
-                            <td class="px-6 py-4 text-sm text-neutral-600 dark:text-neutral-400">
-                                {{ $collection->blueprint?->name ?? '—' }}
-                            </td>
-                            <td class="px-6 py-4">
-                                @if ($collection->is_active)
-                                    <flux:badge variant="success">Active</flux:badge>
-                                @else
-                                    <flux:badge variant="neutral">Inactive</flux:badge>
-                                @endif
-                            </td>
-                            <td class="px-6 py-4 text-sm text-neutral-600 dark:text-neutral-400">
-                                {{ $collection->entries_count ?? 0 }}
-                            </td>
-                            <td class="px-6 py-4 text-right">
-                                <div class="flex items-center justify-end gap-2">
-                                    <flux:button wire:navigate href="{{ route('collections.edit', $collection) }}" size="sm" variant="ghost">
-                                        Edit
-                                    </flux:button>
-                                    <flux:button wire:click="delete({{ $collection->id }})" wire:confirm="Are you sure you want to delete this collection?" size="sm" variant="ghost">
-                                        Delete
-                                    </flux:button>
+        <flux:card>
+            <flux:table :paginate="$this->collectionModels">
+                <flux:table.columns>
+                    <flux:table.column sortable :sorted="$sortBy === 'name'" :direction="$sortDirection" wire:click="sort('name')">{{ __('Name') }}</flux:table.column>
+                    <flux:table.column sortable :sorted="$sortBy === 'slug'" :direction="$sortDirection" wire:click="sort('slug')">{{ __('Slug') }}</flux:table.column>
+                    <flux:table.column sortable :sorted="$sortBy === 'blueprint'" :direction="$sortDirection" wire:click="sort('blueprint')">{{ __('Blueprint') }}</flux:table.column>
+                    <flux:table.column sortable :sorted="$sortBy === 'status'" :direction="$sortDirection" wire:click="sort('status')">{{ __('Status') }}</flux:table.column>
+                    <flux:table.column sortable :sorted="$sortBy === 'entries'" :direction="$sortDirection" wire:click="sort('entries')">{{ __('Entries') }}</flux:table.column>
+                    <flux:table.column class="text-right">{{ __('Actions') }}</flux:table.column>
+                </flux:table.columns>
+                <flux:table.rows>
+                    @forelse ($this->collectionModels as $collection)
+                        <flux:table.row wire:key="collection-{{ $collection->id }}">
+                            <flux:table.cell class="px-6 py-4">
+                                <div>
+                                    <flux:heading level="5">{{ $collection->name }}</flux:heading>
+                                    @if ($collection->description)
+                                        <flux:text>{{ Str::limit($collection->description, 50) }}</flux:text>
+                                    @endif
                                 </div>
-                            </td>
-                        </tr>
+                            </flux:table.cell>
+                            <flux:table.cell>
+                                <flux:badge>{{ $collection->slug }}</flux:badge>
+                            </flux:table.cell>
+                            <flux:table.cell>
+                                {{ $collection->blueprint?->name ?? '—' }}
+                            </flux:table.cell>
+                            <flux:table.cell class="px-6 py-4">
+                                <flux:badge :color="$collection->is_active ? 'green' : 'gray'">
+                                    {{ $collection->is_active ? __('Active') : __('Inactive') }}
+                                </flux:badge>
+                            </flux:table.cell>
+                            <flux:table.cell>
+                                {{ $collection->entries_count ?? 0 }}
+                            </flux:table.cell>
+                            <flux:table.cell class="px-6 py-4 text-right">
+                                <flux:dropdown>
+                                    <flux:button variant="ghost" size="sm" icon="ellipsis-horizontal" />
+                                    <flux:menu>
+                                        <flux:menu.item icon="pencil" wire:navigate href="{{ route('collections.edit', $collection) }}">
+                                            {{ __('Edit') }}
+                                        </flux:menu.item>
+                                        <flux:menu.separator />
+                                        <flux:menu.item icon="trash" variant="danger" wire:click="delete({{ $collection->id }})" wire:confirm="{{ __('Are you sure you want to delete this collection?') }}">
+                                            {{ __('Delete') }}
+                                        </flux:menu.item>
+                                    </flux:menu>
+                                </flux:dropdown>
+                            </flux:table.cell>
+                        </flux:table.row>
                     @empty
-                        <tr>
-                            <td colspan="6" class="px-6 py-12 text-center">
+                        <flux:table.row>
+                            <flux:table.cell colspan="6" class="px-6 py-12 text-center">
                                 <div class="flex flex-col items-center gap-2">
                                     <flux:icon.folder class="size-12 text-neutral-400" />
-                                    <flux:text>No collections found</flux:text>
+                                    <flux:text>{{ __('No collections found') }}</flux:text>
                                     <flux:button wire:navigate href="{{ route('collections.create') }}" size="sm" variant="primary">
-                                        Create your first collection
+                                        {{ __('Create your first collection') }}
                                     </flux:button>
                                 </div>
-                            </td>
-                        </tr>
+                            </flux:table.cell>
+                        </flux:table.row>
                     @endforelse
-                </tbody>
-            </table>
-        </div>
-
-        {{-- Pagination --}}
-        @if ($collections->hasPages())
-            <div class="mt-4">
-                {{ $collections->links() }}
-            </div>
-        @endif
+                </flux:table.rows>
+            </flux:table>
+        </flux:card>
     </div>
 </div>
