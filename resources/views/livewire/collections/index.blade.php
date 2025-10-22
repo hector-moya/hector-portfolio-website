@@ -30,7 +30,7 @@
                 <flux:table.rows>
                     @forelse ($this->collectionModels as $collection)
                         <flux:table.row wire:key="collection-{{ $collection->id }}">
-                            <flux:table.cell class="px-6 py-4">
+                            <flux:table.cell>
                                 <div>
                                     <flux:heading level="5">{{ $collection->name }}</flux:heading>
                                     @if ($collection->description)
