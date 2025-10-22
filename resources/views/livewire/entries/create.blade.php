@@ -12,20 +12,19 @@
 
         <form wire:submit="save" class="space-y-6">
             <flux:card>
-                <div class="space-y-6">
-                    {{-- Collection Selection --}}
-                    <flux:select label="{{ __('Collection') }}" wire:model.live="selectedCollectionId" required>
-                        <flux:select.option value="">{{ __('Select a collection...') }}</flux:select.option>
-                        @foreach ($this->collections as $collection)
-                            <flux:select.option value="{{ $collection->id }}">
-                                {{ $collection->name }}
-                            </flux:select.option>
-                        @endforeach
-                    </flux:select>
+                {{-- Collection Selection --}}
+                <flux:select label="{{ __('Collection') }}" wire:model.live="selectedCollectionId" required>
+                    <flux:select.option value="">{{ __('Select a collection...') }}</flux:select.option>
+                    @foreach ($this->collections as $collection)
+                        <flux:select.option value="{{ $collection->id }}">
+                            {{ $collection->name }}
+                        </flux:select.option>
+                    @endforeach
+                </flux:select>
             </flux:card>
 
             @if ($selectedCollectionId && $this->blueprint)
-                <flux:card>
+                <flux:card class="space-y-6">
                     {{-- <flux:separator text="{{ $this->blueprint->name }}" /> --}}
                     <flux:heading size="lg">{{ $this->blueprint->name }}</flux:heading>
                     {{-- Basic Entry Fields --}}
@@ -47,7 +46,7 @@
                 {{-- Dynamic Blueprint Fields --}}
                 @if ($this->blueprint->elements->isNotEmpty())
 
-                    <flux:card>
+                    <flux:card class="space-y-6">
                         <flux:heading size="lg">{{ __('Content Fields') }}</flux:heading>
                         {{-- <flux:separator text="{{ __('Content Fields') }}" /> --}}
 
@@ -134,18 +133,17 @@
                     </flux:card>
                 @endif
             @endif
-    </div>
 
-    @if ($selectedCollectionId && $this->blueprint)
-        <div class="flex justify-end gap-2">
-            <flux:button type="button" variant="ghost" :href="route('entries')" wire:navigate>
-                {{ __('Cancel') }}
-            </flux:button>
-            <flux:button type="submit" variant="primary">
-                {{ __('Create Entry') }}
-            </flux:button>
-        </div>
-    @endif
-    </form>
-</div>
+            @if ($selectedCollectionId && $this->blueprint)
+                <div class="flex justify-end gap-2">
+                    <flux:button type="button" variant="ghost" :href="route('entries')" wire:navigate>
+                        {{ __('Cancel') }}
+                    </flux:button>
+                    <flux:button type="submit" variant="primary">
+                        {{ __('Create Entry') }}
+                    </flux:button>
+                </div>
+            @endif
+        </form>
+    </div>
 </div>
