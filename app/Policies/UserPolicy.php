@@ -53,6 +53,7 @@ class UserPolicy
      */
     public function delete(User $user, User $model): bool
     {
+        dump('policy', $user->id, $model->id);
         return $user->isAdmin() && $user->id !== $model->id; // Admins can delete others, not themselves
     }
 

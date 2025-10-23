@@ -108,7 +108,7 @@ class UserForm extends Form
 
             return;
         }
-        
+
         app(DeleteUser::class)->delete($userId);
 
         Flux::toast(
