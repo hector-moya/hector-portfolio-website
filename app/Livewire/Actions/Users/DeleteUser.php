@@ -14,8 +14,7 @@ class DeleteUser
     {
         $user = User::findOrFail($userId);
 
-        dump('Class', auth()->user()->id, $user->id);
-        Gate::authorize('delete', [auth()->user(), $user]);
+        Gate::authorize('delete',  $user);
 
         return $user->delete();
     }
