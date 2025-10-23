@@ -10,9 +10,9 @@ class UpdateUser
 {
     public function update(array $userData): User
     {
-        Gate::authorize('update', User::class);
-        
-        $user = User::findOrFail($userData['id']);
+
+        $user = \App\Models\User::query()->findOrFail($userData['id']);
+        \Illuminate\Support\Facades\Gate::authorize('update', $user);
 
         $updateData = [
             'name' => $userData['name'],

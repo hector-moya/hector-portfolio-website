@@ -12,9 +12,9 @@ class DeleteUser
      */
     public function delete(int $userId): bool
     {
-        $user = User::findOrFail($userId);
+        $user = \App\Models\User::query()->findOrFail($userId);
 
-        Gate::authorize('delete',  $user);
+        Gate::authorize('delete', $user);
 
         return $user->delete();
     }

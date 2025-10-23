@@ -2,13 +2,13 @@
 
 namespace App\Livewire\Users;
 
-use Livewire\Attributes\Computed;
-use App\Models\User;
-use Livewire\Attributes\Title;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Contracts\View\View;
-use Illuminate\Contracts\View\Factory;
 use App\Livewire\Forms\Users\UserForm;
+use App\Models\User;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Livewire\Attributes\Computed;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithPagination;
 

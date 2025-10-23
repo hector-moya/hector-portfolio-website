@@ -2,12 +2,12 @@
 
 namespace App\Livewire\Forms\Users;
 
-use App\Models\User;
-use Illuminate\Validation\Rule;
 use App\Livewire\Actions\Users\CreateUser;
-use App\Livewire\Actions\Users\UpdateUser;
 use App\Livewire\Actions\Users\DeleteUser;
+use App\Livewire\Actions\Users\UpdateUser;
+use App\Models\User;
 use Flux\Flux;
+use Illuminate\Validation\Rule;
 use Livewire\Attributes\Validate;
 use Livewire\Form;
 
@@ -18,26 +18,23 @@ class UserForm extends Form
     #[Validate('required|string|max:255')]
     public string $name = '';
 
-    #[Validate('required|email|max:255')]
     public string $email = '';
 
-    #[Validate('required|string|min:8|confirmed')]
     public string $password = '';
 
-    #[Validate('required|string|min:8|confirmed')]
     public string $password_confirmation = '';
 
     #[Validate('required|in:admin,editor,viewer')]
     public string $role = 'viewer';
 
-
     public function rules(): array
     {
-        $rules['email'][] = Rule::unique(User::class, 'email')
-            ->ignoreModel($this->user)
-            ->whereNull('deleted_at');
+        $rules['email'] = ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($this->user?->id)];
 
-        if ($this->user?->exists) {
+        // Password is required for new users, optional for updates
+        if (! $this->user instanceof User) {
+            $rules['password'] = ['required', 'string', 'min:8', 'confirmed'];
+        } else {
             $rules['password'] = ['nullable', 'string', 'min:8', 'confirmed'];
         }
 
@@ -66,11 +63,11 @@ class UserForm extends Form
                 'role' => $this->role,
             ]);
 
-            Flux::toast(
-                heading: 'User Created',
-                text: 'The user has been successfully created.',
-                variant: 'success',
-            );
+        Flux::toast(
+            heading: 'User Created',
+            text: 'The user has been successfully created.',
+            variant: 'success',
+        );
 
         return $user;
     }
@@ -88,11 +85,11 @@ class UserForm extends Form
                 'role' => $this->role,
             ]);
 
-            Flux::toast(
-                heading: 'User Updated',
-                text: 'The user has been successfully updated.',
-                variant: 'success',
-            );
+        Flux::toast(
+            heading: 'User Updated',
+            text: 'The user has been successfully updated.',
+            variant: 'success',
+        );
 
         return $user;
     }
