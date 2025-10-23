@@ -2,9 +2,13 @@
 
 namespace App\Livewire\Users;
 
-use App\Livewire\Actions\Users\DeleteUser;
+use Livewire\Attributes\Computed;
 use App\Models\User;
 use Livewire\Attributes\Title;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Contracts\View\View;
+use Illuminate\Contracts\View\Factory;
+use App\Livewire\Forms\Users\UserForm;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -12,9 +16,20 @@ class Index extends Component
 {
     use WithPagination;
 
+    public UserForm $form;
+
     public string $search = '';
 
     public string $roleFilter = '';
+
+    public string $sortBy = 'date';
+
+    public string $sortDirection = 'desc';
+
+    public function mount(): void
+    {
+        $this->authorize('viewAny', User::class);
+    }
 
     public function updatingSearch(): void
     {
@@ -26,40 +41,38 @@ class Index extends Component
         $this->resetPage();
     }
 
-    public function delete(int $id): void
+    public function sort(string $column): void
     {
-        $user = \App\Models\User::query()->findOrFail($id);
-
-        $this->authorize('delete', $user);
-
-        if ($user->id === auth()->id()) {
-            $this->dispatch('error', message: 'You cannot delete yourself.');
-
-            return;
+        if ($this->sortBy === $column) {
+            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortBy = $column;
+            $this->sortDirection = 'asc';
         }
+    }
 
-        (new DeleteUser)->execute($user);
+    #[Computed]
+    public function users(): LengthAwarePaginator
+    {
+        return User::query()
+            ->when($this->search, fn ($query) => $query->where('name', 'like', "%{$this->search}%")
+                ->orWhere('email', 'like', "%{$this->search}%"))
+            ->when($this->roleFilter, fn ($query) => $query->where('role', $this->roleFilter))
+            ->tap(fn ($query) => $this->sortBy !== '' && $this->sortBy !== '0' ? $query->orderBy($this->sortBy, $this->sortDirection) : $query)
+            ->latest()
+            ->paginate(10);
+    }
+
+    public function delete(int $userId): void
+    {
+        $this->form->destroy($userId);
 
         $this->dispatch('user-deleted');
     }
 
-    public function mount(): void
-    {
-        $this->authorize('viewAny', User::class);
-    }
-
     #[Title('Users')]
-    public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+    public function render(): View|Factory
     {
-        $users = User::query()
-            ->when($this->search, fn ($query) => $query->where('name', 'like', "%{$this->search}%")
-                ->orWhere('email', 'like', "%{$this->search}%"))
-            ->when($this->roleFilter, fn ($query) => $query->where('role', $this->roleFilter))
-            ->latest()
-            ->paginate(10);
-
-        return view('livewire.users.index', [
-            'users' => $users,
-        ]);
+        return view('livewire.users.index');
     }
 }

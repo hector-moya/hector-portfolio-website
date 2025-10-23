@@ -25,16 +25,16 @@
 
         {{-- Users Table --}}
         <flux:card>
-            <flux:table>
+            <flux:table :paginate="$this->users">
                 <flux:table.columns>
-                    <flux:table.column>{{ __('Name') }}</flux:table.column>
-                    <flux:table.column>{{ __('Email') }}</flux:table.column>
-                    <flux:table.column>{{ __('Role') }}</flux:table.column>
+                    <flux:table.column sortable :sorted="$sortBy === 'name'" :direction="$sortDirection" wire:click="sort('name')">{{ __('Name') }}</flux:table.column>
+                    <flux:table.column sortable :sorted="$sortBy === 'email'" :direction="$sortDirection" wire:click="sort('email')">{{ __('Email') }}</flux:table.column>
+                    <flux:table.column sortable :sorted="$sortBy === 'role'" :direction="$sortDirection" wire:click="sort('role')">{{ __('Role') }}</flux:table.column>
                     <flux:table.column>{{ __('Joined') }}</flux:table.column>
                     <flux:table.column class="text-right">{{ __('Actions') }}</flux:table.column>
                 </flux:table.columns>
                 <flux:table.rows>
-                    @forelse ($users as $user)
+                    @forelse ($this->users as $user)
                         <flux:table.row wire:key="user-{{ $user->id }}">
                             <flux:table.cell>
                                 <div class="flex items-center gap-3">
@@ -99,10 +99,5 @@
                 </flux:table.rows>
             </flux:table>
         </flux:card>
-
-        {{-- Pagination --}}
-        <div>
-            {{ $users->links() }}
-        </div>
     </div>
 </div>

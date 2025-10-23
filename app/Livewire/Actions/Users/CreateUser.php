@@ -3,6 +3,7 @@
 namespace App\Livewire\Actions\Users;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 
 class CreateUser
@@ -10,13 +11,15 @@ class CreateUser
     /**
      * Execute the action
      */
-    public function execute(array $data): User
+    public function create(array $userData): User
     {
-        return \App\Models\User::query()->create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-            'role' => $data['role'],
+        Gate::authorize('create', User::class);
+
+        return User::query()->create([
+            'name' => $userData['name'],
+            'email' => $userData['email'],
+            'password' => Hash::make($userData['password']),
+            'role' => $userData['role'],
         ]);
     }
 }
