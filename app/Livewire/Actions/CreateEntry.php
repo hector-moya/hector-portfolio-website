@@ -57,11 +57,24 @@ class CreateEntry
         foreach ($blueprint->elements as $element) {
             $value = $fieldValues[$element->handle] ?? $this->getDefaultValue($element->type);
 
-            $entry->elements()->create([
-                'blueprint_element_id' => $element->id,
-                'handle' => $element->handle,
-                'value' => $this->sanitizeValue($value, $element->type),
-            ]);
+            $sanitizedValue = $this->sanitizeValue($value, $element->type);
+
+            if ($this->shouldStoreInMeta($element->type)) {
+                $entry->elements()->create([
+                    'blueprint_element_id' => $element->id,
+                    'handle' => $element->handle,
+                    'value' => null,
+                    'meta' => $sanitizedValue,
+                ]);
+            } else {
+                $newElement = $entry->elements()->create([
+                    'blueprint_element_id' => $element->id,
+                    'handle' => $element->handle,
+                ]);
+
+                $newElement->setElementValue($sanitizedValue);
+                $newElement->save();
+            }
         }
     }
 
@@ -79,7 +92,16 @@ class CreateEntry
         return match ($type) {
             'checkbox' => (bool) $value,
             'number' => $value ? (float) $value : null,
+            'select' => is_array($value) ? $value : (string) ($value ?? ''),
+            'repeater' => [
+                'items' => $value['items'] ?? [],
+            ],
             default => (string) ($value ?? ''),
         };
+    }
+
+    protected function shouldStoreInMeta(string $type): bool
+    {
+        return in_array($type, ['repeater', 'select']);
     }
 }

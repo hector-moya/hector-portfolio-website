@@ -53,6 +53,46 @@ class EntryElement extends Model
         ];
     }
 
+    protected function shouldUseMetaForValue(mixed $value): bool
+    {
+        return is_array($value);
+    }
+
+    /**
+     * Get the value for this element, checking meta for arrays
+     */
+    public function getElementValue(): mixed
+    {
+        return $this->meta ?? $this->value;
+    }
+
+    /**
+     * Get the raw value without transformation
+     */
+    public function getRawValue(): mixed
+    {
+        return $this->attributes['value'] ?? null;
+    }
+
+    /**
+     * Set the value for this element, using meta for arrays
+     */
+    public function setElementValue(mixed $value): void
+    {
+        if ($this->shouldUseMetaForValue($value)) {
+            $this->meta = $value;
+            $this->attributes['value'] = null;
+        } else {
+            $this->attributes['value'] = $value;
+            $this->meta = null;
+        }
+    }
+
+    public function getValue(): mixed
+    {
+        return $this->meta ?? $this->attributes['value'];
+    }
+
     public function entry(): BelongsTo
     {
         return $this->belongsTo(Entry::class);

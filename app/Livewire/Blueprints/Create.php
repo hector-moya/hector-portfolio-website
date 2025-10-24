@@ -67,6 +67,26 @@ class Create extends Component
         $this->redirect(route('blueprints.index'), navigate: true);
     }
 
+    public function addNestedField(int $parentIndex, string $type = 'text'): void
+    {
+        $this->form->addNestedField($parentIndex, $type);
+    }
+
+    public function removeNestedField(int $parentIndex, int $childIndex): void
+    {
+        $this->form->removeNestedField($parentIndex, $childIndex);
+    }
+
+    public function addOption(int $index): void
+    {
+        $this->form->addOption($index);
+    }
+
+    public function removeOption(int $index, int $optIndex): void
+    {
+        $this->form->removeOption($index, $optIndex);
+    }
+
     #[Title('Create Blueprint')]
     public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
     {

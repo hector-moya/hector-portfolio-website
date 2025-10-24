@@ -67,6 +67,18 @@
                                             <div class="flex justify-end">
                                                 <flux:switch label="{{ $form->elements[$index]['is_required'] ? __('Required') : __('Optional') }}" wire:model.live="form.elements.{{ $index }}.is_required" />
                                             </div>
+
+                                            <div class="mt-4 border-t pt-4">
+                                                <flux:heading size="sm">{{ __('Field Configuration') }}</flux:heading>
+                                                {{-- Dynamic Field Configuration --}}
+
+                                                @php($type = $form->elements[$index]['type'] ?? 'text')
+
+                                                @includeIf('blueprints.fields.config-' . $type, [
+                                                    'index' => $index,
+                                                    'element' => $form->elements[$index],
+                                                ])
+                                            </div>
                                         </div>
 
                                         {{-- Remove Button --}}

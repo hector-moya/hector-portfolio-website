@@ -2,10 +2,12 @@
 
 namespace App\Livewire\Forms;
 
+use App\Enums\FieldType;
 use App\Livewire\Actions\Blueprints\CreateBlueprint;
 use App\Livewire\Actions\Blueprints\DeleteBlueprint;
 use App\Livewire\Actions\Blueprints\UpdateBlueprint;
 use App\Models\Blueprint;
+use App\Services\FieldTypeRegistry;
 use Flux\Flux;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -41,9 +43,7 @@ class BlueprintForm extends Form
             'elements.*.type' => 'required|string',
             'elements.*.label' => 'required|string|max:255',
             'elements.*.handle' => [
-                'nullable',
-                'string',
-                'max:255',
+                'nullable', 'string', 'max:255',
                 function ($attribute, $value, $fail): void {
                     $handles = array_column($this->elements, 'handle');
                     if ($value && count(array_keys($handles, $value)) > 1) {
@@ -53,7 +53,28 @@ class BlueprintForm extends Form
             ],
             'elements.*.instructions' => 'nullable|string',
             'elements.*.is_required' => 'boolean',
+            'elements.*.config' => 'array',
         ];
+    }
+
+    public function validate($rules = null, $messages = [], $attributes = [])
+    {
+        $validated = parent::validate($rules, $messages, $attributes);
+
+        // Per-type config validation (including nested repeater blueprints)
+        $registry = app(FieldTypeRegistry::class);
+        foreach ($this->elements as $index => $element) {
+            $registry->validateConfig($element, $index);
+
+            if (($element['type'] ?? null) === FieldType::Repeater->value) {
+                foreach (($element['config']['blueprint'] ?? []) as $nestedIndex => $nested) {
+                    // validate nested config recursively
+                    $registry->validateConfig($nested, $nestedIndex);
+                }
+            }
+        }
+
+        return $validated;
     }
 
     public function setBlueprint($blueprint): void
@@ -163,5 +184,58 @@ class BlueprintForm extends Form
     public function updateHandleFromLabel(int $index): void
     {
         $this->elements[$index]['handle'] = $this->generateSlug($this->elements[$index]['label']);
+    }
+
+    public function addNestedField(int $parentIndex, string $type = 'text'): void
+    {
+        // Ensure array scaffolding exists
+        $this->elements[$parentIndex]['config'] ??= [];
+        $this->elements[$parentIndex]['config']['blueprint'] ??= [];
+
+        // Default config for the chosen type
+        $defaults = app(FieldTypeRegistry::class)->defaultConfigFor($type);
+
+        $this->elements[$parentIndex]['config']['blueprint'][] = [
+            'type' => $type,
+            'label' => '',
+            'handle' => '',
+            'instructions' => '',
+            'is_required' => false,
+            'config' => $defaults,
+        ];
+    }
+
+    public function removeNestedField(int $parentIndex, int $childIndex): void
+    {
+        if (! isset($this->elements[$parentIndex]['config']['blueprint'][$childIndex])) {
+            return;
+        }
+
+        unset($this->elements[$parentIndex]['config']['blueprint'][$childIndex]);
+        $this->elements[$parentIndex]['config']['blueprint'] = array_values(
+            $this->elements[$parentIndex]['config']['blueprint']
+        );
+    }
+
+    /**
+     * Generic helpers for option-based types (select/radio) while editing blueprint.
+     */
+    public function addOption(int $index): void
+    {
+        $this->elements[$index]['config'] ??= [];
+        $this->elements[$index]['config']['options'] ??= [];
+        $this->elements[$index]['config']['options'][] = ['value' => '', 'label' => ''];
+    }
+
+    public function removeOption(int $index, int $optIndex): void
+    {
+        if (! isset($this->elements[$index]['config']['options'][$optIndex])) {
+            return;
+        }
+
+        unset($this->elements[$index]['config']['options'][$optIndex]);
+        $this->elements[$index]['config']['options'] = array_values(
+            $this->elements[$index]['config']['options']
+        );
     }
 }

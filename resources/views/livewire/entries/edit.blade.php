@@ -38,84 +38,9 @@
                     <flux:heading size="lg">{{ __('Content Fields') }}</flux:heading>
 
                     @foreach ($this->blueprint->elements as $element)
-                        <flux:field>
-                            <flux:label>
-                                {{ $element->label }}
-                                @if ($element->is_required)
-                                    <flux:badge size="sm" class="ml-2">{{ __('Required') }}</flux:badge>
-                                @endif
-                            </flux:label>
-
-                            @if ($element->instructions)
-                                <flux:description>{{ $element->instructions }}</flux:description>
-                            @endif
-
-                            @switch($element->type)
-                                @case('text')
-                                @case('email')
-
-                                @case('url')
-                                    <flux:input type="{{ $element->type }}" wire:model="form.fieldValues.{{ $element->handle }}" :required="$element->is_required" />
-                                @break
-
-                                @case('textarea')
-                                    <flux:textarea wire:model="form.fieldValues.{{ $element->handle }}" :required="$element->is_required" rows="4" />
-                                @break
-
-                                @case('richtext')
-                                    <flux:editor wire:model="form.fieldValues.{{ $element->handle }}" :required="$element->is_required" rows="8" />
-                                @break
-
-                                @case('number')
-                                    <flux:input type="number" step="any" wire:model="form.fieldValues.{{ $element->handle }}" :required="$element->is_required" />
-                                @break
-
-                                @case('date')
-                                    <flux:input type="date" wire:model="form.fieldValues.{{ $element->handle }}" :required="$element->is_required" />
-                                @break
-
-                                @case('time')
-                                    <flux:input type="time" wire:model="form.fieldValues.{{ $element->handle }}" :required="$element->is_required" />
-                                @break
-
-                                @case('datetime')
-                                    <flux:input type="datetime-local" wire:model="form.fieldValues.{{ $element->handle }}" :required="$element->is_required" />
-                                @break
-
-                                @case('checkbox')
-                                    <flux:checkbox wire:model="form.fieldValues.{{ $element->handle }}" :label="$element->label" />
-                                @break
-
-                                @case('select')
-                                    <flux:select wire:model="form.fieldValues.{{ $element->handle }}" :required="$element->is_required">
-                                        <flux:select.option value="">{{ __('Select an option...') }}</flux:select.option>
-                                        @if (isset($element->config['options']))
-                                            @foreach ($element->config['options'] as $option)
-                                                <flux:select.option value="{{ $option }}">{{ $option }}</flux:select.option>
-                                            @endforeach
-                                        @endif
-                                    </flux:select>
-                                @break
-
-                                @case('radio')
-                                    <div class="space-y-2">
-                                        @if (isset($element->config['options']))
-                                            @foreach ($element->config['options'] as $option)
-                                                <flux:radio wire:model="form.fieldValues.{{ $element->handle }}" value="{{ $option }}" :label="$option" />
-                                            @endforeach
-                                        @endif
-                                    </div>
-                                @break
-
-                                @case('image')
-                                @case('file')
-                                    <flux:input type="text" wire:model="form.fieldValues.{{ $element->handle }}" :required="$element->is_required" placeholder="{{ __('File path or URL') }}" />
-                                    <flux:description>{{ __('File upload functionality coming soon') }}</flux:description>
-                                @break
-                            @endswitch
-
-                            <flux:error name="form.fieldValues.{{ $element->handle }}" />
-                        </flux:field>
+                            <div>
+                                @includeIf('entries.fields.' . $element->type, ['element' => $element])
+                            </div>
                     @endforeach
 
                 </flux:card>

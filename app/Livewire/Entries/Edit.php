@@ -46,6 +46,16 @@ class Edit extends Component
         $this->redirect(route('entries'), navigate: true);
     }
 
+    public function addRepeaterItem(string $handle): void
+    {
+        $this->form->addRepeaterItem($handle);
+    }
+
+    public function removeRepeaterItem(string $handle, int $index): void
+    {
+        $this->form->removeRepeaterItem($handle, $index);
+    }
+
     public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
     {
         return view('livewire.entries.edit');

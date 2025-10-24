@@ -13,7 +13,7 @@ class UpdateEntry
     public function update(array $entryData): Entry
     {
         return DB::transaction(function () use ($entryData) {
-            $entry = \App\Models\Entry::query()->findOrFail($entryData['id']);
+            $entry = Entry::query()->findOrFail($entryData['id']);
 
             // Store old values for logging
             $oldValues = [
@@ -32,8 +32,6 @@ class UpdateEntry
 
             // Sync entry elements
             $this->syncEntryElements($entry, $entryData['fieldValues'] ?? []);
-
-            // Log activity
             Activity::query()->create([
                 'log_name' => 'entry',
                 'description' => 'Updated entry',
@@ -73,15 +71,34 @@ class UpdateEntry
 
             // Update existing or create new
             if ($existingElements->has($element->handle)) {
-                $existingElements[$element->handle]->update([
-                    'value' => $sanitizedValue,
-                ]);
+                $existingEl = $existingElements[$element->handle];
+
+                if ($this->shouldStoreInMeta($element->type)) {
+                    $existingEl->update([
+                        'value' => null,
+                        'meta' => $sanitizedValue,
+                    ]);
+                } else {
+                    $existingEl->setElementValue($sanitizedValue);
+                    $existingEl->save();
+                }
             } else {
-                $entry->elements()->create([
-                    'blueprint_element_id' => $element->id,
-                    'handle' => $element->handle,
-                    'value' => $sanitizedValue,
-                ]);
+                if ($this->shouldStoreInMeta($element->type)) {
+                    $entry->elements()->create([
+                        'blueprint_element_id' => $element->id,
+                        'handle' => $element->handle,
+                        'value' => null,
+                        'meta' => $sanitizedValue,
+                    ]);
+                } else {
+                    $element = $entry->elements()->create([
+                        'blueprint_element_id' => $element->id,
+                        'handle' => $element->handle,
+                    ]);
+
+                    $element->setElementValue($sanitizedValue);
+                    $element->save();
+                }
             }
         }
 
@@ -95,6 +112,7 @@ class UpdateEntry
         return match ($type) {
             'checkbox' => false,
             'number' => null,
+            'repeater' => ['items' => []],
             default => '',
         };
     }
@@ -104,7 +122,16 @@ class UpdateEntry
         return match ($type) {
             'checkbox' => (bool) $value,
             'number' => $value ? (float) $value : null,
+            'select' => is_array($value) ? $value : (string) ($value ?? ''),
+            'repeater' => [
+                'items' => $value['items'] ?? [],
+            ],
             default => (string) ($value ?? ''),
         };
+    }
+
+    protected function shouldStoreInMeta(string $type): bool
+    {
+        return in_array($type, ['repeater', 'select']);
     }
 }
