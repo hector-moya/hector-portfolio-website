@@ -22,10 +22,8 @@
                     <flux:input label="{{ __('Name') }}" placeholder="{{ __('Categories') }}" badge="{{ __('Required') }}" wire:model.live.debounce.750ms="form.name" />
 
                     {{-- Slug --}}
-                    <flux:input label="{{ __('Slug') }}" placeholder="categories" badge="{{ __('Required') }}" wire:model="form.slug" />
+                    <flux:input label="{{ __('Slug') }}" placeholder="categories" badge="{{ __('Required') }}" wire:model="form.handle" />
 
-                    {{-- Description --}}
-                    <flux:textarea label="{{ __('Description') }}" placeholder="Main categories for the blog..." badge="{{ __('Optional') }}" rows="3" wire:model="form.description" />
                 </div>
             </flux:card>
 
@@ -58,10 +56,20 @@
                                             <flux:badge>{{ $loop->iteration }}</flux:badge>
                                         </flux:table.cell>
                                         <flux:table.cell>
-                                            <flux:input wire:model.live="form.terms.{{ $loop->index }}.name" />
+                                            <flux:input wire:model="form.terms.{{ $loop->index }}.name" />
                                         </flux:table.cell>
                                         <flux:table.cell>
-                                            <flux:input wire:model.live="form.terms.{{ $loop->index }}.slug" />
+                                            <flux:input wire:model="form.terms.{{ $loop->index }}.slug" />
+                                        </flux:table.cell>
+                                        <flux:table.cell>
+                                            <flux:select wire:model="form.terms.{{ $loop->index }}.parent_id">
+                                                <flux:select.option value="">{{ __('Select Parent') }}</flux:select.option>
+                                                @foreach ($this->form->terms as $parentTerm)
+                                                    @if ($parentTerm['id'] != $term['id'])
+                                                        <flux:select.option value="{{ $parentTerm['id'] }}">{{ $parentTerm['name'] }}</flux:select.option>
+                                                    @endif
+                                                @endforeach
+                                            </flux:select>
                                         </flux:table.cell>
                                         <flux:table.cell class="flex justify-end">
                                             <flux:button icon="trash" variant="danger" size="sm" wire:click="deleteTerm({{ $term['id'] }})" />

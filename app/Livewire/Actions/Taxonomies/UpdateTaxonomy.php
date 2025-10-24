@@ -6,6 +6,7 @@ use App\Models\Activity;
 use App\Models\Taxonomy;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class UpdateTaxonomy
 {
@@ -13,6 +14,8 @@ class UpdateTaxonomy
     {
         return DB::transaction(function () use ($taxonomyData) {
             $taxonomy = Taxonomy::query()->findOrFail($taxonomyData['id']);
+
+            Gate::authorize('update', $taxonomy);
 
             // Store old values for logging
             $oldValues = [
@@ -29,6 +32,24 @@ class UpdateTaxonomy
                 'hierarchical' => $taxonomyData['hierarchical'],
                 'single_select' => $taxonomyData['single_select'],
             ]);
+
+            foreach ($taxonomyData['terms'] as $termData) {
+                if (isset($termData['id']) && $term = $taxonomy->terms()->find($termData['id'])) {
+                    // Update existing term
+                    $term->update([
+                        'slug' => $termData['slug'],
+                        'name' => $termData['name'],
+                        'parent_id' => empty($termData['parent_id']) ? null : $termData['parent_id'],
+                    ]);
+                } else {
+                    // Create new term
+                    $taxonomy->terms()->create([
+                        'slug' => $termData['slug'],
+                        'name' => $termData['name'],
+                        'parent_id' => empty($termData['parent_id']) ? null : $termData['parent_id'],
+                    ]);
+                }
+            }
 
             // Log activity
             Activity::query()->create([

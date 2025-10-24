@@ -2,50 +2,41 @@
 
 namespace App\Policies;
 
+use App\Models\Taxonomy;
 use App\Models\User;
 
 class TaxonomyPolicy
 {
     /**
-     * Determine whether the user can view any models.
+     * Determine whether the user can view any taxonomies.
      */
     public function viewAny(User $user): bool
     {
-        return $user->isAdmin(); // Only admins can view users
+        return $user->canEdit();
     }
 
     /**
-     * Determine whether the user can view the model.
+     * Determine whether the user can view the taxonomy.
      */
-    public function view(User $user, User $model): bool
+    public function view(User $user, Taxonomy $taxonomy): bool
     {
-        if ($user->isAdmin()) {
-            return true;
-        }
-
-        return $user->id === $model->id;
-        // Admins or viewing self
+        return true;
     }
 
     /**
-     * Determine whether the user can create models.
+     * Determine whether the user can create taxonomies.
      */
     public function create(User $user): bool
     {
-        return $user->isAdmin(); // Only admins can create users
+        return $user->canEdit();
     }
 
     /**
-     * Determine whether the user can update the model.
+     * Determine whether the user can update the taxonomy.
      */
-    public function update(User $user, User $model): bool
+    public function update(User $user, Taxonomy $taxonomy): bool
     {
-        if ($user->isAdmin()) {
-            return true;
-        }
-
-        return $user->id === $model->id;
-        // Admins or updating self
+        return $user->canEdit();
     }
 
     /**
@@ -57,18 +48,18 @@ class TaxonomyPolicy
     }
 
     /**
-     * Determine whether the user can restore the model.
+     * Determine whether the user can restore the taxonomy.
      */
-    public function restore(User $user, User $model): bool
+    public function restore(User $user, Taxonomy $taxonomy): bool
     {
-        return $user->isAdmin(); // Only admins can restore
+        return $user->isAdmin();
     }
 
     /**
-     * Determine whether the user can permanently delete the model.
+     * Determine whether the user can permanently delete the taxonomy.
      */
-    public function forceDelete(User $user, User $model): bool
+    public function forceDelete(User $user, Taxonomy $taxonomy): bool
     {
-        return $user->isAdmin() && $user->id !== $model->id; // Admins can force delete others, not themselves
+        return $user->isAdmin();
     }
 }

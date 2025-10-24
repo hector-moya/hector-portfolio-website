@@ -34,5 +34,6 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $this->call(BlogContentSeeder::class);
+        $this->call(TaxonomySeeder::class);
     }
 }

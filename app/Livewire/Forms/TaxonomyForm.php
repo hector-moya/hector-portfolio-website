@@ -56,12 +56,14 @@ class TaxonomyForm extends Form
     {
         $this->validate();
 
-        $taxonomy = app(CreateTaxonomy::class)->create([
-            'name' => $this->name,
-            'handle' => $this->handle,
-            'hierarchical' => $this->hierarchical,
-            'single_select' => $this->single_select,
-        ]);
+        $taxonomy = app(CreateTaxonomy::class)->create(
+            taxonomyData: [
+                'name' => $this->name,
+                'handle' => $this->handle,
+                'hierarchical' => $this->hierarchical,
+                'single_select' => $this->single_select,
+                'terms' => $this->terms,
+            ]);
 
         Flux::toast(
             heading: 'Taxonomy Created',
@@ -69,7 +71,7 @@ class TaxonomyForm extends Form
             variant: 'success',
         );
 
-        $this->reset();
+        $this->reset('name', 'handle', 'hierarchical', 'single_select', 'terms');
 
         return $taxonomy;
     }
@@ -78,13 +80,15 @@ class TaxonomyForm extends Form
     {
         $this->validate();
 
-        $taxonomy = app(UpdateTaxonomy::class)->update([
-            'id' => $taxonomyId,
-            'name' => $this->name,
-            'handle' => $this->handle,
-            'hierarchical' => $this->hierarchical,
-            'single_select' => $this->single_select,
-        ]);
+        $taxonomy = app(UpdateTaxonomy::class)->update(
+            taxonomyData: [
+                'id' => $taxonomyId,
+                'name' => $this->name,
+                'handle' => $this->handle,
+                'hierarchical' => $this->hierarchical,
+                'single_select' => $this->single_select,
+                'terms' => $this->terms,
+            ]);
 
         Flux::toast(
             heading: 'Taxonomy Updated',

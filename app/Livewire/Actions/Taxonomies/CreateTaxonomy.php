@@ -6,11 +6,14 @@ use App\Models\Activity;
 use App\Models\Taxonomy;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class CreateTaxonomy
 {
     public function create(array $taxonomyData): Taxonomy
     {
+        Gate::authorize('create', Taxonomy::class);
+
         return DB::transaction(function () use ($taxonomyData) {
             // Create the taxonomy
             $taxonomy = Taxonomy::query()->create([
@@ -19,6 +22,8 @@ class CreateTaxonomy
                 'hierarchical' => $taxonomyData['hierarchical'],
                 'single_select' => $taxonomyData['single_select'],
             ]);
+
+            $taxonomy->terms()->createMany($taxonomyData['terms']);
 
             // Log activity
             Activity::query()->create([

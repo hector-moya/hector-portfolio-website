@@ -35,6 +35,7 @@ class Edit extends Component
     public function save(): void
     {
         $this->form->update($this->form->taxonomy_id);
+        $this->redirect(route('taxonomies.index'), navigate: true);
     }
 
     public function delete(): void

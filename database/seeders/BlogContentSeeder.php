@@ -57,8 +57,6 @@ class BlogContentSeeder extends Seeder
         $this->createBlogPosts($blogCollection, $blogBlueprint, $admin);
         $this->createPortfolioItems($portfolioCollection, $portfolioBlueprint, $admin);
         $this->createContactPage($contactCollection, $contactBlueprint, $admin);
-
-        $this->command->info('Blog content seeded successfully!');
     }
 
     private function createHomePageBlueprint(): Blueprint

@@ -17,17 +17,63 @@
                         <flux:input label="{{ __('Name') }}" placeholder="{{ __('Categories') }}" badge="{{ __('Required') }}" wire:model.live.debounce.750ms="form.name" />
 
                         {{-- Slug --}}
-                        <flux:input label="{{ __('Slug') }}" placeholder="categories" badge="{{ __('Required') }}" wire:model="form.slug" />
-
-                        {{-- Description --}}
-                        <flux:textarea label="{{ __('Description') }}" placeholder="Main categories for the blog..." badge="{{ __('Optional') }}" rows="3" wire:model="form.description" />
-
-                        {{-- Status --}}
-                        <div class="flex justify-end">
-                            <flux:switch label="{{ $form->is_active ? 'Active' : 'Draft' }}" wire:model.live="form.is_active" />
-                        </div>
+                        <flux:input label="{{ __('Slug') }}" placeholder="categories" badge="{{ __('Required') }}" wire:model="form.handle" />
                     </div>
                 </flux:card>
+            {{-- Terms Card --}}
+            <flux:card>
+                <div class="mb-4 flex items-center justify-between">
+                    <flux:heading size="lg">{{ __('Terms') }}</flux:heading>
+                    <flux:button size="sm" wire:click="addTerm" icon="plus" variant="primary">
+                        {{ __('Add Term') }}
+                    </flux:button>
+                </div>
+
+                @if (empty($this->form->terms))
+                    <div class="rounded-lg border-2 border-dashed border-zinc-300 p-8 text-center dark:border-zinc-600">
+                        <flux:text>{{ __('No terms added yet. Click "Add Term" to get started.') }}</flux:text>
+                    </div>
+                @else
+                    <div class="space-y-4">
+                        <flux:table>
+                            <flux:table.columns>
+                                <flux:table.column>{{ __('No') }}</flux:table.column>
+                                <flux:table.column>{{ __('Name') }}</flux:table.column>
+                                <flux:table.column>{{ __('Slug') }}</flux:table.column>
+                                <flux:table.column></flux:table.column>
+                            </flux:table.columns>
+                            <flux:table.rows>
+                                @foreach ($this->form->terms as $term)
+                                    <flux:table.row wire:key="term-row-{{ $term['id'] }}">
+                                        <flux:table.cell>
+                                            <flux:badge>{{ $loop->iteration }}</flux:badge>
+                                        </flux:table.cell>
+                                        <flux:table.cell>
+                                            <flux:input wire:model="form.terms.{{ $loop->index }}.name" />
+                                        </flux:table.cell>
+                                        <flux:table.cell>
+                                            <flux:input wire:model="form.terms.{{ $loop->index }}.slug" />
+                                        </flux:table.cell>
+                                        <flux:table.cell>
+                                            <flux:select wire:model="form.terms.{{ $loop->index }}.parent_id">
+                                                <flux:select.option value="">{{ __('Select Parent') }}</flux:select.option>
+                                                @foreach ($this->form->terms as $parentTerm)
+                                                    @if ($parentTerm['id'] != $term['id'])
+                                                        <flux:select.option value="{{ $parentTerm['id'] }}">{{ $parentTerm['name'] }}</flux:select.option>
+                                                    @endif
+                                                @endforeach
+                                            </flux:select>
+                                        </flux:table.cell>
+                                        <flux:table.cell class="flex justify-end">
+                                            <flux:button icon="trash" variant="danger" size="sm" wire:click="deleteTerm({{ $term['id'] }})" />
+                                        </flux:table.cell>
+                                    </flux:table.row>
+                                @endforeach
+                            </flux:table.rows>
+                        </flux:table>
+                    </div>
+                @endif
+            </flux:card>
 
                 {{-- Actions --}}
                 <div class="flex items-center justify-end gap-3">
