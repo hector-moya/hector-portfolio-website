@@ -2,8 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Taxonomy;
-use App\Models\Term;
 use Illuminate\Database\Seeder;
 
 class TaxonomySeeder extends Seeder

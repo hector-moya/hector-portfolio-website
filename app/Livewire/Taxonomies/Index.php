@@ -36,6 +36,7 @@ class Index extends Component
     public function taxonomies(): LengthAwarePaginator
     {
         return Taxonomy::query()
+            ->withCount('terms')
             ->when($this->search, fn ($query) => $query->where('name', 'like', "%{$this->search}%"))
             ->tap(fn ($query) => $this->sortBy !== '' && $this->sortBy !== '0' ? $query->orderBy($this->sortBy, $this->sortDirection) : $query)
             ->latest()

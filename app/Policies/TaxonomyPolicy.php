@@ -2,7 +2,6 @@
 
 namespace App\Policies;
 
-use App\Models\Taxonomy;
 use App\Models\User;
 
 class TaxonomyPolicy
@@ -52,9 +51,9 @@ class TaxonomyPolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Taxonomy $model): bool
+    public function delete(User $user): bool
     {
-        return $user->isAdmin() && $user->id !== $model->id; // Admins can delete others, not themselves
+        return $user->isAdmin();
     }
 
     /**
@@ -73,4 +72,3 @@ class TaxonomyPolicy
         return $user->isAdmin() && $user->id !== $model->id; // Admins can force delete others, not themselves
     }
 }
-

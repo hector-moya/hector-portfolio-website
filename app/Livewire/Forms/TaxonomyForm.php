@@ -28,6 +28,8 @@ class TaxonomyForm extends Form
     #[Validate('boolean')]
     public bool $single_select = false;
 
+    public array $terms = [];
+
     public function rules(): array
     {
         return [
@@ -47,6 +49,7 @@ class TaxonomyForm extends Form
         $this->handle = $taxonomy->handle;
         $this->hierarchical = $taxonomy->hierarchical;
         $this->single_select = $taxonomy->single_select;
+        $this->terms = $taxonomy->terms()->get()->toArray();
     }
 
     public function create(): Taxonomy

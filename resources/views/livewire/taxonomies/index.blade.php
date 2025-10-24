@@ -23,7 +23,7 @@
                     <flux:table.column sortable :sorted="$sortBy === 'name'" :direction="$sortDirection" wire:click="sort('name')">{{ __('Name') }}</flux:table.column>
                     <flux:table.column sortable :sorted="$sortBy === 'slug'" :direction="$sortDirection" wire:click="sort('slug')">{{ __('Slug') }}</flux:table.column>
                     <flux:table.column sortable :sorted="$sortBy === 'terms_count'" :direction="$sortDirection" wire:click="sort('terms_count')">{{ __('Terms') }}</flux:table.column>
-                    <flux:table.column sortable :sorted="$sortBy === 'status'" :direction="$sortDirection" wire:click="sort('status')">{{ __('Status') }}</flux:table.column>
+                    <flux:table.column sortable :sorted="$sortBy === 'created_at'" :direction="$sortDirection" wire:click="sort('created_at')">{{ __('Date') }}</flux:table.column>
                     <flux:table.column class="flex justify-end">{{ __('Actions') }}</flux:table.column>
                 </flux:table.columns>
                 <flux:table.rows>
@@ -32,21 +32,16 @@
                             <flux:table.cell class="px-6 py-4">
                                 <div>
                                     <flux:heading level="5">{{ $taxonomy->name }}</flux:heading>
-                                    @if ($taxonomy->description)
-                                        <flux:text>{{ Str::limit($taxonomy->description, 50) }}</flux:text>
-                                    @endif
                                 </div>
                             </flux:table.cell>
                             <flux:table.cell>
-                                <flux:badge>{{ $taxonomy->slug }}</flux:badge>
+                                <flux:badge>{{ $taxonomy->handle }}</flux:badge>
                             </flux:table.cell>
                             <flux:table.cell>
                                 {{ $taxonomy->terms_count }} {{ Str::plural('term', $taxonomy->terms_count) }}
                             </flux:table.cell>
                             <flux:table.cell>
-                                <flux:badge size="sm" :color="$taxonomy->is_active ? 'green' : 'zinc'">
-                                    {{ $taxonomy->is_active ? 'Active' : 'Inactive' }}
-                                </flux:badge>
+                                {{ $taxonomy->created_at->format('d M Y') }}
                             </flux:table.cell>
                             <flux:table.cell class="px-6 py-4 text-right">
                                 <flux:dropdown>
