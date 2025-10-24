@@ -20,6 +20,7 @@
                     <flux:navlist.item icon="folder" :href="route('collections.index')" :current="request()->routeIs('collections.*')" wire:navigate>{{ __('Collections') }}</flux:navlist.item>
                     <flux:navlist.item icon="document-duplicate" :href="route('entries')" :current="request()->routeIs('entries*')" wire:navigate>{{ __('Entries') }}</flux:navlist.item>
                     <flux:navlist.item icon="cube" :href="route('blueprints.index')" :current="request()->routeIs('blueprints.*')" wire:navigate>{{ __('Blueprints') }}</flux:navlist.item>
+                    <flux:navlist.item icon="tag" :href="route('taxonomies.index')" :current="request()->routeIs('taxonomies.*')" wire:navigate>{{ __('Taxonomies') }}</flux:navlist.item>
                 </flux:navlist.group>
 
                 @can('viewAny', App\Models\User::class)

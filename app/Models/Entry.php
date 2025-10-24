@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -59,6 +60,7 @@ class Entry extends Model
         'blueprint_id',
         'title',
         'slug',
+        'excerpt',
         'status',
         'author_id',
         'published_at',
@@ -91,5 +93,15 @@ class Entry extends Model
     public function elements(): HasMany
     {
         return $this->hasMany(EntryElement::class);
+    }
+
+    public function terms(): MorphToMany
+    {
+        return $this->morphToMany(Term::class, 'termable');
+    }
+
+    public function termsIn(string $taxonomyHandle)
+    {
+        return $this->terms()->whereHas('taxonomy', fn ($q) => $q->where('handle', $taxonomyHandle));
     }
 }

@@ -18,6 +18,9 @@ use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
 use App\Livewire\Settings\TwoFactor;
+use App\Livewire\Taxonomies\Create as TaxonomiesCreate;
+use App\Livewire\Taxonomies\Edit as TaxonomiesEdit;
+use App\Livewire\Taxonomies\Index as TaxonomiesIndex;
 use App\Livewire\Users\Create as UsersCreate;
 use App\Livewire\Users\Edit as UsersEdit;
 use App\Livewire\Users\Index as UsersIndex;
@@ -50,6 +53,11 @@ Route::middleware(['auth'])->group(function (): void {
     Route::get('entries', EntriesIndex::class)->name('entries');
     Route::get('entries/create', EntriesCreate::class)->name('entries.create');
     Route::get('entries/{entry}/edit', EntriesEdit::class)->name('entries.edit');
+
+    // Taxonomies Routes
+    Route::get('taxonomies', TaxonomiesIndex::class)->name('taxonomies.index');
+    Route::get('taxonomies/create', TaxonomiesCreate::class)->name('taxonomies.create');
+    Route::get('taxonomies/{taxonomy}/edit', TaxonomiesEdit::class)->name('taxonomies.edit');
 
     // Users Routes
     Route::get('users', UsersIndex::class)->name('users.index');
