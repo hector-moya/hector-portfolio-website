@@ -72,7 +72,6 @@ class UpdateEntry
             // Update existing or create new
             if ($existingElements->has($element->handle)) {
                 $existingEl = $existingElements[$element->handle];
-
                 if ($this->shouldStoreInMeta($element->type)) {
                     $existingEl->update([
                         'value' => null,
@@ -82,23 +81,22 @@ class UpdateEntry
                     $existingEl->setElementValue($sanitizedValue);
                     $existingEl->save();
                 }
+            } elseif ($this->shouldStoreInMeta($element->type)) {
+                $entry->elements()->create([
+                    'blueprint_element_id' => $element->id,
+                    'handle' => $element->handle,
+                    'value' => null,
+                    'meta' => $sanitizedValue,
+                ]);
             } else {
-                if ($this->shouldStoreInMeta($element->type)) {
-                    $entry->elements()->create([
-                        'blueprint_element_id' => $element->id,
-                        'handle' => $element->handle,
-                        'value' => null,
-                        'meta' => $sanitizedValue,
-                    ]);
-                } else {
-                    $element = $entry->elements()->create([
-                        'blueprint_element_id' => $element->id,
-                        'handle' => $element->handle,
-                    ]);
+                /** @var \App\Models\EntryElement $element */
+                $element = $entry->elements()->create([
+                    'blueprint_element_id' => $element->id,
+                    'handle' => $element->handle,
+                ]);
 
-                    $element->setElementValue($sanitizedValue);
-                    $element->save();
-                }
+                $element->setElementValue($sanitizedValue);
+                $element->save();
             }
         }
 

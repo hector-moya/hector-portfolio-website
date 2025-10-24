@@ -67,6 +67,7 @@ class CreateEntry
                     'meta' => $sanitizedValue,
                 ]);
             } else {
+                /** @var \App\Models\EntryElement $newElement */
                 $newElement = $entry->elements()->create([
                     'blueprint_element_id' => $element->id,
                     'handle' => $element->handle,

@@ -2,8 +2,6 @@
 
 namespace App\Livewire\Forms;
 
-use App\Livewire\Actions\CreateEntry;
-use App\Livewire\Actions\UpdateEntry;
 use App\Models\Blueprint;
 use App\Models\Collection;
 use App\Models\Entry;
@@ -15,7 +13,9 @@ use Livewire\Form;
 class EntryForm extends Form
 {
     public ?Entry $entry = null;
+
     public ?int $collection_id = null;
+
     public ?int $blueprint_id = null;
 
     #[Validate('required|string|max:255')]
@@ -25,6 +25,7 @@ class EntryForm extends Form
     public string $slug = '';
 
     public string $status = 'draft';
+
     public ?string $published_at = null;
 
     public array $fieldValues = [];
@@ -33,7 +34,7 @@ class EntryForm extends Form
 
     protected function blueprint(): ?Blueprint
     {
-        return $this->blueprint_id
+        return $this->blueprint_id !== null && $this->blueprint_id !== 0
             ? Blueprint::with('elements')->find($this->blueprint_id)
             : null;
     }
@@ -42,10 +43,10 @@ class EntryForm extends Form
     {
         return match ($type) {
             'checkbox' => false,
-            'number'   => null,
+            'number' => null,
             'select', 'radio', 'email', 'url' => '',
             'repeater' => ['items' => []],
-            default    => '',
+            default => '',
         };
     }
 
@@ -53,15 +54,15 @@ class EntryForm extends Form
 
     public function setEntry(Entry $entry): void
     {
-        $this->entry         = $entry;
+        $this->entry = $entry;
         $this->collection_id = $entry->collection_id;
-        $this->blueprint_id  = $entry->blueprint_id;
-        $this->title         = $entry->title;
-        $this->slug          = $entry->slug;
-        $this->status        = $entry->status;
-        $this->published_at  = $entry->published_at?->format('Y-m-d\TH:i');
+        $this->blueprint_id = $entry->blueprint_id;
+        $this->title = $entry->title;
+        $this->slug = $entry->slug;
+        $this->status = $entry->status;
+        $this->published_at = $entry->published_at?->format('Y-m-d\TH:i');
 
-                // Load field values from entry elements
+        // Load field values from entry elements
         foreach ($entry->elements as $element) {
             $this->fieldValues[$element->handle] = $element->getElementValue();
         }
@@ -72,14 +73,16 @@ class EntryForm extends Form
     public function setCollection(Collection $collection): void
     {
         $this->collection_id = $collection->id;
-        $this->blueprint_id  = $collection->blueprint_id;
+        $this->blueprint_id = $collection->blueprint_id;
         $this->initializeFieldValues();
     }
 
     public function initializeFieldValues(): void
     {
         $bp = $this->blueprint();
-        if (! $bp) return;
+        if (! $bp instanceof \App\Models\Blueprint) {
+            return;
+        }
 
         foreach ($bp->elements as $el) {
             $h = $el->handle;
@@ -99,7 +102,9 @@ class EntryForm extends Form
 
     public function removeRepeaterItem(string $handle, int $index): void
     {
-        if (! isset($this->fieldValues[$handle]['items'][$index])) return;
+        if (! isset($this->fieldValues[$handle]['items'][$index])) {
+            return;
+        }
         unset($this->fieldValues[$handle]['items'][$index]);
         $this->fieldValues[$handle]['items'] = array_values($this->fieldValues[$handle]['items']);
     }
@@ -109,21 +114,24 @@ class EntryForm extends Form
     public function rules(): array
     {
         $rules = [
-            'collection_id' => ['required','exists:collections,id'],
-            'blueprint_id'  => ['required','exists:blueprints,id'],
-            'title'         => ['required','string','max:255'],
-            'slug'          => ['required','string','max:255', Rule::unique('entries','slug')->ignore($this->entry?->id)],
-            'status'        => ['required', Rule::in(['draft','published','archived'])],
-            'published_at'  => ['nullable','date'],
+            'collection_id' => ['required', 'exists:collections,id'],
+            'blueprint_id' => ['required', 'exists:blueprints,id'],
+            'title' => ['required', 'string', 'max:255'],
+            'slug' => ['required', 'string', 'max:255', Rule::unique('entries', 'slug')->ignore($this->entry?->id)],
+            'status' => ['required', Rule::in(['draft', 'published', 'archived'])],
+            'published_at' => ['nullable', 'date'],
         ];
 
         $bp = $this->blueprint();
-        if (! $bp) return $rules;
+        if (! $bp instanceof \App\Models\Blueprint) {
+            return $rules;
+        }
 
         foreach ($bp->elements as $el) {
             $h = $el->handle;
             if ($el->type !== 'repeater') {
                 $rules["fieldValues.$h"] = $this->rulesForSimple($el->type, $el->is_required, $el->config ?? []);
+
                 continue;
             }
 
@@ -132,7 +140,9 @@ class EntryForm extends Form
             $max = $el->config['max'] ?? null;
 
             $arr = ['array', "min:$min"];
-            if ($max) $arr[] = "max:$max";
+            if ($max) {
+                $arr[] = "max:$max";
+            }
             $rules["fieldValues.$h.items"] = $arr;
 
             // children
@@ -155,19 +165,19 @@ class EntryForm extends Form
         $base = $required ? ['required'] : ['nullable'];
 
         return array_merge($base, match ($type) {
-            'text'     => ['string','max:' . ($config['max'] ?? 255)],
+            'text' => ['string', 'max:'.($config['max'] ?? 255)],
             'textarea' => ['string'],
             'richtext' => ['string'],
-            'email'    => ['email','max:255'],
-            'url'      => ['url','max:255'],
-            'number'   => ['numeric'],
-            'date'     => ['date'],
-            'time'     => ['date_format:H:i'],
+            'email' => ['email', 'max:255'],
+            'url' => ['url', 'max:255'],
+            'number' => ['numeric'],
+            'date' => ['date'],
+            'time' => ['date_format:H:i'],
             'datetime' => ['date'],
             'checkbox' => ['boolean'],
             'select', 'radio' => ['string'],
-            'image', 'file'   => ['string'], // your uploader will refine later
-            default    => ['string'],
+            'image', 'file' => ['string'], // your uploader will refine later
+            default => ['string'],
         });
     }
 
@@ -179,15 +189,16 @@ class EntryForm extends Form
 
         $entry = app(\App\Livewire\Actions\CreateEntry::class)->create([
             'collection_id' => $this->collection_id,
-            'blueprint_id'  => $this->blueprint_id,
-            'title'         => $this->title,
-            'slug'          => $this->slug,
-            'status'        => $this->status,
-            'published_at'  => $this->published_at,
-            'fieldValues'   => $this->fieldValues, // includes repeater arrays
+            'blueprint_id' => $this->blueprint_id,
+            'title' => $this->title,
+            'slug' => $this->slug,
+            'status' => $this->status,
+            'published_at' => $this->published_at,
+            'fieldValues' => $this->fieldValues, // includes repeater arrays
         ]);
 
         Flux::toast(heading: 'Entry Created', text: 'Entry created successfully.', variant: 'success');
+
         return $entry;
     }
 
@@ -196,15 +207,16 @@ class EntryForm extends Form
         $this->validate();
 
         $entry = app(\App\Livewire\Actions\UpdateEntry::class)->update([
-            'id'           => $entryId,
-            'title'        => $this->title,
-            'slug'         => $this->slug,
-            'status'       => $this->status,
+            'id' => $entryId,
+            'title' => $this->title,
+            'slug' => $this->slug,
+            'status' => $this->status,
             'published_at' => $this->published_at,
-            'fieldValues'  => $this->fieldValues,
+            'fieldValues' => $this->fieldValues,
         ]);
 
         Flux::toast(heading: 'Entry Updated', text: 'Entry updated successfully.', variant: 'success');
+
         return $entry;
     }
 
@@ -212,15 +224,17 @@ class EntryForm extends Form
     {
         $attrs = [
             'collection_id' => 'collection',
-            'blueprint_id'  => 'blueprint',
-            'title'         => 'title',
-            'slug'          => 'slug',
-            'status'        => 'status',
-            'published_at'  => 'publish date',
+            'blueprint_id' => 'blueprint',
+            'title' => 'title',
+            'slug' => 'slug',
+            'status' => 'status',
+            'published_at' => 'publish date',
         ];
 
         $bp = $this->blueprint();
-        if (! $bp) return $attrs;
+        if (! $bp instanceof \App\Models\Blueprint) {
+            return $attrs;
+        }
 
         foreach ($bp->elements as $el) {
             $attrs["fieldValues.{$el->handle}"] = $el->label;
