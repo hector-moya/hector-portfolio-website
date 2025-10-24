@@ -123,13 +123,15 @@ class BlueprintForm extends Form
 
     public function addElement(string $type): void
     {
+        $defaultConfig = app(\App\Services\FieldTypeRegistry::class)->defaultConfigFor($type);
+
         $this->elements[] = [
             'type' => $type,
             'label' => '',
             'handle' => '',
             'instructions' => '',
             'is_required' => false,
-            'config' => [],
+            'config' => $defaultConfig,
         ];
     }
 

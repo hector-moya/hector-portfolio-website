@@ -3,7 +3,7 @@
 namespace App\Livewire\Actions\Users;
 
 use App\Models\User;
-use Gate;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 
 class UpdateUser
@@ -11,8 +11,8 @@ class UpdateUser
     public function update(array $userData): User
     {
 
-        $user = \App\Models\User::query()->findOrFail($userData['id']);
-        \Illuminate\Support\Facades\Gate::authorize('update', $user);
+        $user = User::query()->findOrFail($userData['id']);
+        Gate::authorize('update', $user);
 
         $updateData = [
             'name' => $userData['name'],

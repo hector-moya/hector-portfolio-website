@@ -4,6 +4,7 @@ namespace App\Livewire\Blueprints;
 
 use App\Livewire\Forms\BlueprintForm;
 use App\Models\Blueprint;
+use App\Services\FieldTypeRegistry;
 use Flux\Flux;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -14,22 +15,23 @@ class Edit extends Component
 
     public Blueprint $blueprint;
 
-    public array $fieldTypes = [
-        'text' => 'Text',
-        'textarea' => 'Textarea',
-        'richtext' => 'Rich Text',
-        'number' => 'Number',
-        'email' => 'Email',
-        'url' => 'URL',
-        'date' => 'Date',
-        'time' => 'Time',
-        'datetime' => 'Date & Time',
-        'checkbox' => 'Checkbox',
-        'select' => 'Select',
-        'radio' => 'Radio',
-        'image' => 'Image',
-        'file' => 'File',
-    ];
+    /**
+     * Select options [value => label] built from registry.
+     */
+    #[\Livewire\Attributes\Computed]
+    public function fieldTypeOptions(): array
+    {
+        return app(FieldTypeRegistry::class)->optionsForSelect();
+    }
+
+    /**
+     * Meta for modal listing (value, label, icon).
+     */
+    #[\Livewire\Attributes\Computed]
+    public function fieldTypeMeta(): array
+    {
+        return app(FieldTypeRegistry::class)->all();
+    }
 
     public function mount(Blueprint $blueprint): void
     {

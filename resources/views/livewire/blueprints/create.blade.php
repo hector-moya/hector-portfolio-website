@@ -48,7 +48,7 @@
                                             <div class="grid grid-cols-2 gap-4">
                                                 {{-- Field Type --}}
                                                 <flux:select label="{{ __('Type') }}" wire:model="form.elements.{{ $index }}.type">
-                                                    @foreach ($fieldTypes as $value => $label)
+                                                    @foreach ($this->fieldTypeOptions as $value => $label)
                                                         <flux:select.option value="{{ $value }}">{{ $label }}</flux:select.option>
                                                     @endforeach
                                                 </flux:select>
@@ -91,9 +91,12 @@
                     <div class="space-y-6">
                         <flux:heading size="lg">{{ __('Select Field Type') }}</flux:heading>
                         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                            @foreach ($fieldTypes as $value => $label)
-                                <flux:card :key="$value" wire:click="addElement('{{ $value }}')" class="cursor-pointer hover:bg-zinc-50 dark:hover:bg-zinc-800">
-                                    <flux:text>{{ $label }}</flux:text>
+                            @foreach ($this->fieldTypeMeta as $type)
+                                <flux:card :key="$type['value']" wire:click="addElement('{{ $type['value'] }}')" class="cursor-pointer hover:bg-zinc-50 dark:hover:bg-zinc-800">
+                                    <div class="flex items-center gap-3">
+                                        <flux:icon name="{{ $type['icon'] }}" class="h-5 w-5" />
+                                        <flux:text>{{ $type['label'] }}</flux:text>
+                                    </div>
                                 </flux:card>
                             @endforeach
                         </div>
