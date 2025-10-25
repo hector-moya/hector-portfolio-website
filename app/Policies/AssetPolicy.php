@@ -28,7 +28,7 @@ class AssetPolicy
      */
     public function create(User $user): bool
     {
-        return $user->can('create', Asset::class); // Based on user role
+        return $user->canEdit();
     }
 
     /**

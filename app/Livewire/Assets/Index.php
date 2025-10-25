@@ -4,37 +4,38 @@ namespace App\Livewire\Assets;
 
 
 use App\Models\Asset;
-use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\Title;
+use Illuminate\Http\Response;
 use Livewire\Component;
+use Flux\Flux;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Computed;
+use App\Livewire\Forms\AssetForm;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Livewire\WithPagination;
 
 class Index extends Component
 {
     use WithPagination;
+
+    public AssetForm $form;
     public ?string $search = '';
 
     public ?string $folder = null;
 
-    public string $sortField = 'created_at';
+    public string $sortBy = 'date';
 
     public string $sortDirection = 'desc';
 
     public ?string $filter = null;
 
-    // Move Modal Properties
-    public bool $showMoveModal = false;
-
     public ?int $assetToMove = null;
 
     public ?string $targetFolder = null;
 
-    // Delete Confirmation Properties
-    public bool $showDeleteModal = false;
 
     public ?int $assetToDelete = null;
+    public int $uploadModalKey = 1;
 
     public function updatedSearch(): void
     {
@@ -56,93 +57,57 @@ class Index extends Component
         $this->authorize('viewAny', Asset::class);
     }
 
-    public function download(int $assetId): void
+    public function download(int $assetId): Response
     {
-        $asset = Asset::query()->findOrFail($assetId);
-        $this->authorize('view', $asset);
-
-        $path = $asset->path;
-        $disk = $asset->disk;
-
-        if (! Storage::disk($disk)->exists($path)) {
-            return;
-        }
-
-        $this->dispatch('download-file', [
-            'path' => Storage::disk($disk)->path($path),
-            'name' => $asset->original_filename,
-        ]);
+        return $this->form->download($assetId);
     }
 
-    public function confirmMove(int $assetId): void
+    public function openMoveAssetModal(int $assetId): void
     {
         $this->assetToMove = $assetId;
-        $this->targetFolder = $this->folder;
-        $this->showMoveModal = true;
+        Flux::modal('move-asset')->show();
     }
 
     public function move(): void
     {
-        $this->validate([
-            'assetToMove' => ['required', 'exists:assets,id'],
-            'targetFolder' => ['required', 'string'],
-        ]);
+        $this->form->move($this->assetToMove, $this->targetFolder);
 
-        $asset = Asset::query()->findOrFail($this->assetToMove);
-        $this->authorize('update', $asset);
-
-        $oldPath = $asset->path;
-        $newPath = trim((string) $this->targetFolder, '/').'/'.$asset->filename;
-
-        Storage::disk($asset->disk)->move($oldPath, $newPath);
-
-        $asset->update([
-            'path' => $newPath,
-            'folder' => $this->targetFolder,
-        ]);
-
-        $this->showMoveModal = false;
-        $this->assetToMove = null;
-        $this->targetFolder = null;
         $this->dispatch('asset-moved');
     }
 
-    public function confirmDelete(int $assetId): void
+    #[On('asset-uploaded')]
+    public function onAssetUploaded(): void
     {
-        $this->assetToDelete = $assetId;
-        $this->showDeleteModal = true;
+        $this->uploadModalKey++;
+        Flux::modal('upload-files')->close();
+        $this->resetPage();
     }
 
-    public function delete(): void
+    public function delete(int $assetId): void
     {
-        $this->validate([
-            'assetToDelete' => ['required', 'exists:assets,id'],
-        ]);
+        $this->form->destroy($assetId);
 
-        $asset = Asset::query()->findOrFail($this->assetToDelete);
-        $this->authorize('delete', $asset);
-
-        Storage::disk($asset->disk)->delete($asset->path);
-        $asset->delete();
-
-        $this->showDeleteModal = false;
-        $this->assetToDelete = null;
         $this->dispatch('asset-deleted');
     }
 
-    #[Computed]
+    #[On('asset-deleted')]
+    public function onAssetDeleted(): void
+    {
+        $this->resetPage();
+    }
 
+    #[Computed]
     public function assets(): LengthAwarePaginator
     {
         $query = Asset::query()
-            ->when($this->search, fn ($q) => $q->where('original_filename', 'like', "%{$this->search}%"))
-            ->when($this->folder, fn ($q) => $q->where('folder', $this->folder))
-            ->when($this->filter, fn ($q) => match ($this->filter) {
-                'images' => $q->where('mime_type', 'like', 'image/%'),
-                'documents' => $q->whereIn('mime_type', ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']),
-                default => $q,
+            ->when($this->search, fn ($query) => $query->where('original_filename', 'like', "%{$this->search}%"))
+            ->when($this->folder, fn ($query) => $query->where('folder', $this->folder))
+            ->when($this->filter, fn ($query) => match ($this->filter) {
+                'images' => $query->where('mime_type', 'like', 'image/%'),
+                'documents' => $query->whereIn('mime_type', ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']),
+                default => $query,
             })
-            ->orderBy($this->sortField, $this->sortDirection);
+            ->tap(fn ($query) => $this->sortBy !== '' && $this->sortBy !== '0' ? $query->orderBy($this->sortBy, $this->sortDirection) : $query);
 
         return $query->paginate(12);
     }

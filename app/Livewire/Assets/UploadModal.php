@@ -5,7 +5,9 @@ namespace App\Livewire\Assets;
 use App\Models\Asset;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use App\Livewire\Forms\AssetForm;
 use Livewire\Attributes\On;
+use Livewire\Attributes\Computed;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -13,7 +15,7 @@ class UploadModal extends Component
 {
     use WithFileUploads;
 
-    public $showModal = false;
+    public AssetForm $form;
 
     public $showCreateFolderModal = false;
 
@@ -32,53 +34,38 @@ class UploadModal extends Component
         $this->authorize('viewAny', Asset::class);
     }
 
-    #[On('open-asset-browser')]
-    public function openModal(): void
-    {
-        $this->showModal = true;
-    }
-
-    public function closeModal(): void
-    {
-        $this->showModal = false;
-        $this->reset(['upload']);
-    }
-
     public function uploadAsset(): void
     {
-        $this->validate([
-            'upload' => ['required', 'file', 'max:10240'], // 10MB max
-        ]);
+        foreach ($this->form->uploadedFiles as $file) {
+            $this->form->upload = $file;
+            $this->prepareAssetAttributes();
+            $asset = $this->form->create();
+        }
 
+        $this->dispatch('asset-uploaded');
+    }
+
+    private function prepareAssetAttributes(): void
+    {
         $disk = config('filesystems.default');
 
         // For S3 in staging/production
-        if ($disk === 's3') {
-            $path = $this->upload->storePublicly($this->currentFolder, 's3');
-        } else {
-            // For local development
-            $path = $this->upload->storePublicly($this->currentFolder, 'public');
-        }
+        $path = $disk === 's3' ? $this->form->upload->storePublicly($this->currentFolder, 's3') : $this->form->upload->storePublicly($this->currentFolder, 'public');
 
-        $asset = \App\Models\Asset::query()->create([
-            'filename' => basename((string) $path),
-            'original_filename' => $this->upload->getClientOriginalName(),
-            'disk' => $disk,
-            'mime_type' => $this->upload->getMimeType(),
-            'size' => $this->upload->getSize(),
-            'path' => $path,
-            'folder' => $this->currentFolder,
-            'uploaded_by' => auth()->id(),
-        ]);
-
-        $this->reset('upload');
-        $this->dispatch('asset-uploaded', $asset->id);
+        $this->form->filename = basename((string) $path);
+        $this->form->original_filename = $this->form->upload->getClientOriginalName();
+        $this->form->disk = $disk;
+        $this->form->mime_type = $this->form->upload->getMimeType();
+        $this->form->size = $this->form->upload->getSize();
+        $this->form->path = $path;
+        $this->form->folder = $this->currentFolder;
+        $this->form->uploaded_by = auth()->id();
     }
 
     public function selectAsset($assetId = null): void
     {
         if ($assetId) {
-            $this->selectedAsset = \App\Models\Asset::query()->findOrFail($assetId);
+            $this->selectedAsset = Asset::query()->findOrFail($assetId);
             $this->dispatch('asset-selected', $this->selectedAsset->id);
         }
         $this->closeModal();
@@ -102,9 +89,10 @@ class UploadModal extends Component
         $this->currentFolder = $folder;
     }
 
-    public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+    #[Computed]
+    public function assets(): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
-        $assets = Asset::query()
+        return Asset::query()
             ->when($this->searchQuery, function ($query): void {
                 $query->where(function ($q): void {
                     $q->where('filename', 'like', "%{$this->searchQuery}%")
@@ -114,9 +102,11 @@ class UploadModal extends Component
             ->where('folder', $this->currentFolder)
             ->latest()
             ->paginate(24);
+    }
 
-        return view('livewire.assets.upload-modal', [
-            'assets' => $assets,
-        ]);
+    public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+    {
+
+        return view('livewire.assets.upload-modal');
     }
 }
