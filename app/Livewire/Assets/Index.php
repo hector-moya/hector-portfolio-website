@@ -2,16 +2,18 @@
 
 namespace App\Livewire\Assets;
 
+
 use App\Models\Asset;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\Title;
 use Livewire\Component;
+use Livewire\Attributes\Computed;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Livewire\WithPagination;
 
 class Index extends Component
 {
     use WithPagination;
-
     public ?string $search = '';
 
     public ?string $folder = null;
@@ -56,7 +58,7 @@ class Index extends Component
 
     public function download(int $assetId): void
     {
-        $asset = \App\Models\Asset::query()->findOrFail($assetId);
+        $asset = Asset::query()->findOrFail($assetId);
         $this->authorize('view', $asset);
 
         $path = $asset->path;
@@ -86,7 +88,7 @@ class Index extends Component
             'targetFolder' => ['required', 'string'],
         ]);
 
-        $asset = \App\Models\Asset::query()->findOrFail($this->assetToMove);
+        $asset = Asset::query()->findOrFail($this->assetToMove);
         $this->authorize('update', $asset);
 
         $oldPath = $asset->path;
@@ -117,7 +119,7 @@ class Index extends Component
             'assetToDelete' => ['required', 'exists:assets,id'],
         ]);
 
-        $asset = \App\Models\Asset::query()->findOrFail($this->assetToDelete);
+        $asset = Asset::query()->findOrFail($this->assetToDelete);
         $this->authorize('delete', $asset);
 
         Storage::disk($asset->disk)->delete($asset->path);
@@ -128,8 +130,9 @@ class Index extends Component
         $this->dispatch('asset-deleted');
     }
 
-    #[Title('Assets')]
-    public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+    #[Computed]
+
+    public function assets(): LengthAwarePaginator
     {
         $query = Asset::query()
             ->when($this->search, fn ($q) => $q->where('original_filename', 'like', "%{$this->search}%"))
@@ -141,13 +144,13 @@ class Index extends Component
             })
             ->orderBy($this->sortField, $this->sortDirection);
 
-        return view('livewire.assets.index', [
-            'assets' => $query->paginate(12),
-            'folders' => Asset::query()
-                ->select('folder')
-                ->distinct()
-                ->whereNotNull('folder')
-                ->pluck('folder'),
-        ]);
+        return $query->paginate(12);
+    }
+
+    #[Title('Assets')]
+    public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+    {
+
+        return view('livewire.assets.index');
     }
 }
