@@ -1,5 +1,6 @@
 <?php
 
+use App\Livewire\Assets\Index as AssetsIndex;
 use App\Livewire\Blueprints\Create as BlueprintsCreate;
 use App\Livewire\Blueprints\Edit as BlueprintsEdit;
 use App\Livewire\Blueprints\Index as BlueprintsIndex;
@@ -58,6 +59,9 @@ Route::middleware(['auth'])->group(function (): void {
     Route::get('taxonomies', TaxonomiesIndex::class)->name('taxonomies.index');
     Route::get('taxonomies/create', TaxonomiesCreate::class)->name('taxonomies.create');
     Route::get('taxonomies/{taxonomy}/edit', TaxonomiesEdit::class)->name('taxonomies.edit');
+
+    // Assets Routes
+    Route::get('assets', AssetsIndex::class)->name('assets.index');
 
     // Users Routes
     Route::get('users', UsersIndex::class)->name('users.index');
