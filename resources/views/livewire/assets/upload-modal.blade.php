@@ -40,8 +40,9 @@
         </nav> --}}
         <!-- Upload -->
         <div>
-            <form wire:submit.prevent="uploadAsset">
-                <flux:file-upload wire:model="form.uploadedFiles" multiple label="{{ __('Upload files') }}">
+            <form wire:submit.prevent="uploadAsset" class="space-y-6">
+                <flux:heading size="lg" class="mb-4">{{ __('Upload Assets')}}</flux:heading>
+                <flux:file-upload wire:model="form.uploadedFiles" multiple>
                     <flux:file-upload.dropzone heading="{{ __('Drag & drop files here or click to select') }}" text="{{ __('JPG, PNG, GIF, PDF, DOCX') }}" />
                 </flux:file-upload>
                 <div class="mt-4 flex flex-col gap-2 max-h-48 overflow-y-auto">

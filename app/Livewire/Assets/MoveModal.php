@@ -3,6 +3,7 @@
 namespace App\Livewire\Assets;
 
 use App\Livewire\Forms\AssetForm;
+use App\Livewire\Forms\FolderForm;
 use App\Models\Asset;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
@@ -15,6 +16,8 @@ class MoveModal extends Component
     use WithPagination;
 
     public AssetForm $form;
+
+    public FolderForm $folderForm;
 
     public ?string $targetFolder = null;
 
@@ -59,7 +62,7 @@ class MoveModal extends Component
     {
         return \App\Models\Folder::query()
             ->with('updater')
-            ->where('parent_id', $this->currentFolderId)
+            ->where('parent_id', $this->folderForm->currentFolderId)
             ->orderBy('name')
             ->paginate(10);
     }
@@ -68,6 +71,19 @@ class MoveModal extends Component
     {
         $this->currentFolderId = $folderId;
         $this->resetPage();
+    }
+
+    #[Computed]
+    public function breadcrumbs(): array
+    {
+        return $this->folderForm->breadcrumbs();
+    }
+
+    public function openFolder(?int $id): void
+    {
+        $this->folderForm->currentFolderId = $id;
+        $this->resetPage();
+        $this->dispatch('folder-changed', $id);
     }
 
     public function up(): void

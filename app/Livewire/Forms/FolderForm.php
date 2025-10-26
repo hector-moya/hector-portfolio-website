@@ -24,10 +24,18 @@ class FolderForm extends Form
 
     public ?int $folderId = null;
 
+    public function set(int $folderId): void
+    {
+        $folder = Folder::findOrFail($folderId);
+        $this->name = $folder->name;
+        $this->folderId = $folder->id;
+        $this->parent_id = $folder->parent_id;
+    }
+
     public function create(): Folder
     {
         $folder = app(CreateFolder::class)->create([
-            'name' => $this->newFolderName,
+            'name' => $this->name,
             'parent_id' => $this->currentFolderId ?? null,
             'created_by' => auth()->id(),
             'updated_by' => auth()->id(),

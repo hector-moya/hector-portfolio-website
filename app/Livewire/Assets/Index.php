@@ -49,14 +49,21 @@ class Index extends Component
         return $this->form->download($assetId);
     }
 
-    public function openMoveAssetModal(): void
+    public function openMoveAssetModal(?int $assetId): void
     {
+        $this->selected = $assetId ? [$assetId] : $this->selected;
         Flux::modal('move-asset')->show();
+    }
+
+    public function openNewFolderModal(): void
+    {
+        $this->folderForm->reset('name', 'parent_id');
+        Flux::modal('new-folder')->show();
     }
 
     public function openRenameFolderModal(?int $folderId): void
     {
-        $this->folderForm->folderId = $folderId;
+        $this->folderForm->set($folderId);
         Flux::modal('rename-folder')->show();
     }
 
@@ -88,6 +95,13 @@ class Index extends Component
         $this->form->destroy($assetId);
 
         $this->dispatch('asset-deleted');
+    }
+
+    public function deleteFolder(int $folderId): void
+    {
+        $this->folderForm->destroy($folderId);
+
+        $this->dispatch('folder-changed');
     }
 
     #[On('asset-deleted')]
@@ -149,7 +163,7 @@ class Index extends Component
     {
         $this->folderForm->currentFolderId = $id;
         $this->resetPage();
-        $this->dispatch('folder-changed');
+        $this->dispatch('folder-changed', $id);
     }
 
     public function createFolder(): void

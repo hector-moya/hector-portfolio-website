@@ -22,7 +22,7 @@ class CreateAsset
                 'path' => $assetData['path'],
                 'alt_text' => $assetData['alt_text'],
                 'title' => $assetData['title'],
-                'folder' => $assetData['folder'],
+                'folder_id' => $assetData['folder_id'],
                 'meta' => $assetData['meta'],
                 'uploaded_by' => $assetData['uploaded_by'],
             ]);

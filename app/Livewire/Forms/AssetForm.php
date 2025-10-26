@@ -42,13 +42,13 @@ class AssetForm extends Form
     public string $path = '';
 
     #[Validate('nullable|string|max:255')]
-    public ?string $alt_text = null;
+    public string $alt_text = '';
 
     #[Validate('nullable|string|max:255')]
-    public ?string $title = null;
+    public string $title = '';
 
-    #[Validate('nullable|string|max:255')]
-    public ?string $folder = null;
+    #[Validate('nullable|integer|exists:folders,id')]
+    public ?int $folder_id = null;
 
     #[Validate('array')]
     public array $meta = [];
@@ -87,7 +87,7 @@ class AssetForm extends Form
             'path' => $this->path,
             'alt_text' => $this->alt_text,
             'title' => $this->title,
-            'folder' => $this->folder,
+            'folder_id' => $this->folder_id,
             'meta' => $this->meta,
             'uploaded_by' => $this->uploaded_by,
         ]);

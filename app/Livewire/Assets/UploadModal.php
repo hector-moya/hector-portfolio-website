@@ -6,6 +6,7 @@ use App\Livewire\Forms\AssetForm;
 use App\Models\Asset;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -27,6 +28,7 @@ class UploadModal extends Component
     public $selectedAsset;
 
     public $newFolderName = '';
+    public ?int $currentFolderId = null;
 
     public function mount(): void
     {
@@ -38,10 +40,16 @@ class UploadModal extends Component
         foreach ($this->form->uploadedFiles as $file) {
             $this->form->upload = $file;
             $this->prepareAssetAttributes();
-            $asset = $this->form->create();
+            $this->form->create();
         }
 
         $this->dispatch('asset-uploaded');
+    }
+
+    #[On('folder-changed')]
+    public function onFolderChanged($folderId): void
+    {
+        $this->currentFolderId = $folderId;
     }
 
     private function prepareAssetAttributes(): void
@@ -57,7 +65,7 @@ class UploadModal extends Component
         $this->form->mime_type = $this->form->upload->getMimeType();
         $this->form->size = $this->form->upload->getSize();
         $this->form->path = $path;
-        $this->form->folder = $this->currentFolder;
+        $this->form->folder_id = $this->currentFolderId;
         $this->form->uploaded_by = auth()->id();
     }
 

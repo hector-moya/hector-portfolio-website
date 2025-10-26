@@ -8,7 +8,7 @@
             </div>
 
             <flux:modal.trigger name="upload-files">
-                <flux:button wire:click="$dispatch('openModal', { component: 'assets.upload-modal' })" variant="primary">
+                <flux:button variant="primary">
                     {{ __('Upload Files') }}
                 </flux:button>
             </flux:modal.trigger>
@@ -27,13 +27,13 @@
                         <flux:select.option value="documents">{{ __('Documents') }}</flux:select.option>
                     </flux:select>
                 </div>
-                <flux:button :disabled="count($selected) === 0" wire:click="openMoveAssetModal" icon="folder">
+                <flux:button :disabled="count($selected) === 0" wire:click="openMoveAssetModal(null)" icon="folder">
                     {{ __('Move') }} ({{ count($selected) }})
                 </flux:button>
 
-                <flux:modal.trigger name="new-folder">
-                    <flux:button icon="folder-plus">{{ __('New Folder') }}</flux:button>
-                </flux:modal.trigger>
+                {{-- <flux:modal.trigger name="new-folder"> --}}
+                <flux:button icon="folder-plus" wire:click="openNewFolderModal">{{ __('New Folder') }}</flux:button>
+                {{-- </flux:modal.trigger> --}}
             </div>
         </div>
         {{-- Breadcrumbs --}}
@@ -48,9 +48,9 @@
             @endforeach
         </flux:breadcrumbs>
 
-        <div class="grid grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 gap-6 sm:grid-cols-3">
             {{-- Folders Table --}}
-            <flux:card class="mt-6 col-span-1">
+            <flux:card class="mt-6 sm:col-span-1">
                 <flux:heading size="lg" class="mb-4">{{ __('Folders') }}</flux:heading>
                 <flux:table :paginate="$this->folders">
                     <flux:table.columns>
@@ -76,7 +76,7 @@
                                                         {{ __('Rename') }}
                                                     </flux:menu.item>
                                                     <flux:menu.separator />
-                                                    <flux:menu.item variant="danger" icon="trash" wire:click="delete({{ $folder->id }})" wire:confirm="Are you sure you want to delete this folder?">
+                                                    <flux:menu.item variant="danger" icon="trash" wire:click="deleteFolder({{ $folder->id }})" wire:confirm="Are you sure you want to delete this folder?">
                                                         {{ __('Delete') }}
                                                     </flux:menu.item>
                                                 </flux:menu>
@@ -96,8 +96,8 @@
                 </flux:table>
             </flux:card>
             {{-- Folders Table --}}
-            <flux:card class="mt-6 col-span-2">
-                <flux:heading size="lg" class="mb-4">{{ __( $folderForm->currentFolderName() . ' Assets' ) }}</flux:heading>
+            <flux:card class="mt-6 sm:col-span-2">
+                <flux:heading size="lg" class="mb-4">{{ __($folderForm->currentFolderName() . ' Assets') }}</flux:heading>
                 <flux:table :paginate="$this->assets">
                     <flux:table.columns>
                         <flux:table.column></flux:table.column>
@@ -120,7 +120,7 @@
                                             @else
                                                 <flux:icon name="folder" size="micro" />
                                             @endif
-                                            <flux:text class="hover:underline">{{ substr($asset->original_filename, 0, 20) . (strlen($asset->original_filename) > 20 ? '...' : '') }}</flux:text>
+                                            <flux:text class="hover:underline">{{ substr($asset->original_filename, 0, 15) . (strlen($asset->original_filename) > 15 ? '...' : '') }}</flux:text>
                                         </div>
                                         <div class="group-focus-within:block group-hover:block">
                                             <flux:dropdown>
@@ -146,7 +146,7 @@
                                     {{ $asset->updated_at?->diffForHumans() }}
                                 </flux:table.cell>
                                 <flux:table.cell>
-                                    {{ $asset->updater?->name ?? '—' }}
+                                    {{ $asset->updater?->name ? $asset->updater?->name : $asset->uploader->name }}
                                 </flux:table.cell>
                             </flux:table.row>
                         @endforeach
@@ -156,7 +156,9 @@
         </div>
     </div>
     <flux:modal name="upload-files">
-        <livewire:assets.upload-modal :key="'upload-modal-' . $uploadModalKey" />
+        @if ($folderForm->currentFolderId)
+            <livewire:assets.upload-modal :key="'upload-modal-' . $uploadModalKey" :currentFolderId="$folderForm->currentFolderId" />
+        @endif
     </flux:modal>
 
     <!-- Move Asset Modal -->
@@ -168,7 +170,7 @@
 
     <flux:modal name="new-folder" class="min-h-48 md:w-96">
         <form wire:submit.prevent="createFolder" class="mt-2">
-            <flux:input wire:model="folderForm.newFolderName" placeholder="{{ __('Folder name') }}" />
+            <flux:input wire:model="folderForm.name" placeholder="{{ __('Folder name') }}" />
             <div class="mt-4 flex justify-end">
                 <flux:button type="submit" variant="primary">{{ __('Create') }}</flux:button>
             </div>
@@ -177,9 +179,14 @@
 
     <flux:modal name="rename-folder" class="min-h-48 md:w-96">
         <form wire:submit.prevent="renameFolder({{ $folderForm->folderId }})" class="mt-2">
-            <flux:input wire:model="folderForm.name" placeholder="{{ __('Folder name') }}" />
-            <div class="mt-4 flex justify-end">
-                <flux:button type="submit" variant="primary">{{ __('Rename') }}</flux:button>
+            <div class="space-y-6">
+                <flux:heading size="lg">{{ __('Rename Folder') }}</flux:heading>
+                <flux:input wire:model="folderForm.name" placeholder="{{ __('Folder name') }}" />
+            </div>
+            <div class="absolute bottom-4 right-4">
+                <div class="mt-4 flex justify-end">
+                    <flux:button type="submit" variant="primary">{{ __('Rename') }}</flux:button>
+                </div>
             </div>
         </form>
     </flux:modal>
