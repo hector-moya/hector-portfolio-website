@@ -61,6 +61,7 @@ class MoveModal extends Component
     public function folders(): LengthAwarePaginator
     {
         return \App\Models\Folder::query()
+            ->with('assets')
             ->with('updater')
             ->where('parent_id', $this->folderForm->currentFolderId)
             ->orderBy('name')

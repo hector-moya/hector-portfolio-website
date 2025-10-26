@@ -37,6 +37,20 @@
                             <flux:table.cell>{{ $folder->updated_at?->diffForHumans() }}</flux:table.cell>
                             <flux:table.cell>{{ $folder->updater?->name ?? '—' }}</flux:table.cell>
                         </flux:table.row>
+                        @if ($folder->assets->count() > 0)
+                            @foreach ($folder->assets as $asset)
+                                <flux:table.row :key="$asset->id" class="bg-gray-50">
+                                    <flux:table.cell>
+                                        <div class="flex items-center space-x-2">
+                                            <flux:icon name="folder" size="micro" />
+                                            <flux:text>{{ $asset->original_filename }}</flux:text>
+                                        </div>
+                                    </flux:table.cell>
+                                    <flux:table.cell>{{ $asset->updated_at?->diffForHumans() }}</flux:table.cell>
+                                    <flux:table.cell>{{ $asset->updater?->name ?? '—' }}</flux:table.cell>
+                                </flux:table.row>
+                            @endforeach
+                        @endif
                     @endforeach
                 </flux:table.rows>
             </flux:table>
