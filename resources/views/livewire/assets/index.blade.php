@@ -83,7 +83,9 @@
     </flux:modal>
 
     <!-- Move Asset Modal -->
-    <flux:modal title="Move Asset" name="move-asset">
-            <livewire:assets.move-modal/>
+    <flux:modal name="move-asset" :closable="false">
+        @if($assetToMoveId)
+            <livewire:assets.move-modal :assetId="$assetToMoveId" :key="'move-asset-' . $assetToMoveId" />
+        @endif
     </flux:modal>
 </div>

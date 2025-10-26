@@ -29,12 +29,8 @@ class Index extends Component
 
     public ?string $filter = null;
 
-    public ?int $assetToMove = null;
+    public ?int $assetToMoveId = null;
 
-    public ?string $targetFolder = null;
-
-
-    public ?int $assetToDelete = null;
     public int $uploadModalKey = 1;
 
     public function updatedSearch(): void
@@ -64,15 +60,15 @@ class Index extends Component
 
     public function openMoveAssetModal(int $assetId): void
     {
-        $this->assetToMove = $assetId;
+        $this->assetToMoveId = $assetId;
         Flux::modal('move-asset')->show();
     }
 
-    public function move(): void
+    #[On('asset-moved')]
+    public function onAssetMoved(): void
     {
-        $this->form->move($this->assetToMove, $this->targetFolder);
-
-        $this->dispatch('asset-moved');
+        Flux::modal('move-asset')->close();
+        $this->resetPage();
     }
 
     #[On('asset-uploaded')]

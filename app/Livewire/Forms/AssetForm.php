@@ -18,6 +18,8 @@ class AssetForm extends Form
     #[Validate('required', 'file', 'max:10240')]
     public  $upload = null;
 
+    public ?int $assetId = null;
+
     #[Validate('required', 'array')]
     public array $uploadedFiles = [];
 
@@ -49,8 +51,11 @@ class AssetForm extends Form
     #[Validate('required|integer')]
     public ?int $uploaded_by = null;
 
-    public function setAsset(Asset $asset): void
+    public function setAsset(int $assetId): void
     {
+        $asset = Asset::findOrFail($assetId);
+
+        $this->assetId = $asset->id;
         $this->filename = $asset->filename;
         $this->original_filename = $asset->original_filename;
         $this->disk = $asset->disk;
