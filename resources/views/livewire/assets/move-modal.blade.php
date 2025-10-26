@@ -18,7 +18,7 @@
     </div>
     <div class="mt-6 space-y-4">
         <flux:card class="min-h-[24rem]">
-            <flux:table :paginate="$this->folders" class="mt-4">
+            <flux:table class="mt-4">
                 <flux:table.columns>
                     <flux:table.column>{{ __('Name') }}</flux:table.column>
                     <flux:table.column sortable>{{ __('Modified') }}</flux:table.column>
@@ -26,31 +26,23 @@
                 </flux:table.columns>
 
                 <flux:table.rows>
-                    @foreach ($this->folders as $folder)
-                        <flux:table.row :key="$folder->id">
+                    @foreach ($this->folders['items'] as $item)
+                        <flux:table.row :key="$item->id">
                             <flux:table.cell>
-                                <div wire:click="openFolder({{ $folder->id }})" class="flex cursor-pointer items-center space-x-2">
-                                    <flux:icon name="folder" size="micro" />
-                                    <flux:text class="hover:underline">{{ $folder->name }}</flux:text>
+                                <div
+                                     @if ($item instanceof \App\Models\Folder) wire:click="openFolder({{ $item->id }})"
+                            class="flex cursor-pointer items-center space-x-2"
+                         @else
+                            class="flex items-center space-x-2" @endif>
+                                    <flux:icon name="{{ $item instanceof \App\Models\Folder ? 'folder' : 'document' }}" size="micro" />
+                                    <flux:text class="{{ $item instanceof \App\Models\Folder ? 'hover:underline' : '' }}">
+                                        {{ $item instanceof \App\Models\Folder ? $item->name : $item->original_filename }}
+                                    </flux:text>
                                 </div>
                             </flux:table.cell>
-                            <flux:table.cell>{{ $folder->updated_at?->diffForHumans() }}</flux:table.cell>
-                            <flux:table.cell>{{ $folder->updater?->name ?? '—' }}</flux:table.cell>
+                            <flux:table.cell>{{ $item->updated_at?->diffForHumans() }}</flux:table.cell>
+                            <flux:table.cell>{{ $item->updater?->name ?? '—' }}</flux:table.cell>
                         </flux:table.row>
-                        @if ($folder->assets->count() > 0)
-                            @foreach ($folder->assets as $asset)
-                                <flux:table.row :key="$asset->id" class="bg-gray-50">
-                                    <flux:table.cell>
-                                        <div class="flex items-center space-x-2">
-                                            <flux:icon name="folder" size="micro" />
-                                            <flux:text>{{ $asset->original_filename }}</flux:text>
-                                        </div>
-                                    </flux:table.cell>
-                                    <flux:table.cell>{{ $asset->updated_at?->diffForHumans() }}</flux:table.cell>
-                                    <flux:table.cell>{{ $asset->updater?->name ?? '—' }}</flux:table.cell>
-                                </flux:table.row>
-                            @endforeach
-                        @endif
                     @endforeach
                 </flux:table.rows>
             </flux:table>

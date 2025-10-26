@@ -58,14 +58,24 @@ class MoveModal extends Component
     }
 
     #[Computed]
-    public function folders(): LengthAwarePaginator
+    public function folders(): array
     {
-        return \App\Models\Folder::query()
-            ->with('assets')
+        $folders = \App\Models\Folder::query()
             ->with('updater')
             ->where('parent_id', $this->folderForm->currentFolderId)
             ->orderBy('name')
-            ->paginate(10);
+            ->get();
+
+        $assets = Asset::query()
+            ->with('updater')
+            ->where('folder_id', $this->folderForm->currentFolderId)
+            ->orderBy('original_filename')
+            ->get();
+
+        return [
+            'items' => $folders->concat($assets),
+            'total' => $folders->count() + $assets->count(),
+        ];
     }
 
     public function enter(int $folderId): void
