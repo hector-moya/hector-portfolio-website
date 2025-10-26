@@ -36,6 +36,7 @@ class Asset extends Model
     {
         return $this->belongsTo(User::class, 'uploaded_by');
     }
+
     public function updater(): BelongsTo
     {
         return $this->belongsTo(User::class, 'updated_by');

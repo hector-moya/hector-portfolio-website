@@ -58,20 +58,24 @@ class Folder extends Model
     public static function makePath(?Folder $parent, string $name): string
     {
         $segment = trim($name, '/');
-        return $parent ? rtrim($parent->path, '/') . '/' . $segment : $segment;
+
+        return $parent ? rtrim($parent->path, '/').'/'.$segment : $segment;
     }
 
     public function ancestors(): array
     {
         $trim = trim($this->path, '/');
-        if ($trim === '') return [];
+        if ($trim === '') {
+            return [];
+        }
         $bits = explode('/', $trim);
         $paths = [];
         $accum = '';
         foreach ($bits as $bit) {
-        $accum = $accum === '' ? $bit : $accum . '/' . $bit;
+            $accum = $accum === '' ? $bit : $accum.'/'.$bit;
             $paths[] = $accum;
         }
+
         return static::whereIn('path', $paths)->orderByRaw('LENGTH(path)')->get()->all();
     }
 }

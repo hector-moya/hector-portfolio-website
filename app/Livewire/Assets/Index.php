@@ -2,19 +2,17 @@
 
 namespace App\Livewire\Assets;
 
-
+use App\Livewire\Forms\AssetForm;
+use App\Livewire\Forms\FolderForm;
 use App\Models\Asset;
-use Livewire\Attributes\Title;
-use Illuminate\Http\Response;
-use Livewire\Component;
 use App\Models\Folder;
 use Flux\Flux;
-use App\Livewire\Forms\FolderForm;
-use Livewire\Attributes\On;
-use Livewire\Attributes\Computed;
-use App\Livewire\Forms\AssetForm;
+use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
-use App\Actions\Folders\CreateFolder;
+use Livewire\Attributes\Computed;
+use Livewire\Attributes\On;
+use Livewire\Attributes\Title;
+use Livewire\Component;
 use Livewire\WithPagination;
 
 class Index extends Component
@@ -22,7 +20,9 @@ class Index extends Component
     use WithPagination;
 
     public AssetForm $form;
+
     public FolderForm $folderForm;
+
     public ?string $search = '';
 
     public ?string $folder = null;
@@ -34,6 +34,7 @@ class Index extends Component
     public ?string $filter = null;
 
     public ?int $assetToMoveId = null;
+
     public array $selected = [];
 
     public int $uploadModalKey = 1;
@@ -128,6 +129,7 @@ class Index extends Component
     {
         return $this->folderForm->breadcrumbs();
     }
+
     public function sort($column): void
     {
         if ($this->sortBy === $column) {
@@ -137,6 +139,7 @@ class Index extends Component
             $this->sortDirection = 'asc';
         }
     }
+
     public function updatedSearch(): void
     {
         $this->resetPage();

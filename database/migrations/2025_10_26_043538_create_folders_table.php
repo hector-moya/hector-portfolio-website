@@ -26,7 +26,7 @@ return new class extends Migration
 
         Schema::table('assets', function (Blueprint $table): void {
             $table->foreignId('folder_id')->nullable()->constrained('folders')->cascadeOnDelete()->after('id');
-            //Remove the old folder column
+            // Remove the old folder column
             $table->dropColumn('folder');
 
             $table->index('folder_id');

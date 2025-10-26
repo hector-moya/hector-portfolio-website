@@ -4,8 +4,8 @@ namespace App\Actions\Assets;
 
 use App\Models\Asset;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 
 class DeleteAsset
 {

@@ -2,25 +2,34 @@
 
 namespace App\Livewire\Assets;
 
-use Livewire\Component;
 use App\Livewire\Forms\AssetForm;
-use Livewire\WithPagination;
 use App\Models\Asset;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Computed;
+use Livewire\Component;
+use Livewire\WithPagination;
 
 class MoveModal extends Component
 {
     use WithPagination;
+
     public AssetForm $form;
+
     public ?string $targetFolder = null;
+
     public array $currentFolderPath = [];
+
     public ?int $assetId = null;
+
     public $sortBy = 'date';
+
     public $sortDirection = 'desc';
+
     public ?int $currentFolderId = null;
+
     public array $assetIds = [];
+
     public array $selected = [];
 
     public function mount(): void
@@ -34,6 +43,7 @@ class MoveModal extends Component
     {
         return explode('/', trim($this->form->folder ?? '', '/'));
     }
+
     public function sort($column)
     {
         if ($this->sortBy === $column) {
@@ -53,6 +63,7 @@ class MoveModal extends Component
             ->orderBy('name')
             ->paginate(10);
     }
+
     public function enter(int $folderId): void
     {
         $this->currentFolderId = $folderId;
@@ -61,8 +72,9 @@ class MoveModal extends Component
 
     public function up(): void
     {
-        if (! $this->currentFolderId)
+        if (! $this->currentFolderId) {
             return;
+        }
         $parentId = \App\Models\Folder::query()->whereKey($this->currentFolderId)->value('parent_id');
         $this->currentFolderId = $parentId; // may become null (root)
         $this->resetPage();
@@ -74,7 +86,6 @@ class MoveModal extends Component
 
     //     $this->dispatch('asset-moved');
     // }
-
 
     public function move(): void
     {

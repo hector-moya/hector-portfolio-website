@@ -2,11 +2,10 @@
 
 namespace App\Livewire\Assets;
 
+use App\Livewire\Forms\AssetForm;
 use App\Models\Asset;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use App\Livewire\Forms\AssetForm;
-use Livewire\Attributes\On;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 use Livewire\WithFileUploads;

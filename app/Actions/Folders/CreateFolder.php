@@ -3,8 +3,8 @@
 namespace App\Actions\Folders;
 
 use App\Models\Folder;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class CreateFolder
 {
@@ -24,5 +24,4 @@ class CreateFolder
             ]);
         });
     }
-
 }

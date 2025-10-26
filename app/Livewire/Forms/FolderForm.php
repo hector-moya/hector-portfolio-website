@@ -2,13 +2,13 @@
 
 namespace App\Livewire\Forms;
 
-use Livewire\Attributes\Validate;
-use Flux\Flux;
 use App\Actions\Folders\CreateFolder;
-use App\Actions\Folders\UpdateFolder;
 use App\Actions\Folders\DeleteFolder;
-use Livewire\Form;
+use App\Actions\Folders\UpdateFolder;
 use App\Models\Folder;
+use Flux\Flux;
+use Livewire\Attributes\Validate;
+use Livewire\Form;
 
 class FolderForm extends Form
 {
@@ -19,7 +19,9 @@ class FolderForm extends Form
     public ?int $parent_id = null;
 
     public string $newFolderName = '';
+
     public ?int $currentFolderId = null;
+
     public ?int $folderId = null;
 
     public function create(): Folder
@@ -71,26 +73,30 @@ class FolderForm extends Form
 
         Flux::toast(
             heading: 'Folder Deleted',
-            text: "The folder has been deleted successfully.",
+            text: 'The folder has been deleted successfully.',
             variant: 'success'
         );
     }
 
     public function breadcrumbs(): array
     {
-        if (! $this->currentFolderId)
+        if (! $this->currentFolderId) {
             return [];
+        }
 
         $folder = Folder::findOrFail($this->currentFolderId);
+
         return $folder->ancestors() ?? [];
     }
 
     public function currentFolderName(): ?string
     {
-        if (! $this->currentFolderId)
+        if (! $this->currentFolderId) {
             return null;
+        }
 
         $folder = Folder::findOrFail($this->currentFolderId);
+
         return $folder->name;
     }
 }

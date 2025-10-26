@@ -2,21 +2,21 @@
 
 namespace App\Livewire\Forms;
 
-use Livewire\Attributes\Validate;
-use App\Models\Asset;
 use App\Actions\Assets\CreateAsset;
-use App\Actions\Assets\UpdateAsset;
 use App\Actions\Assets\DeleteAsset;
-use App\Actions\Assets\MoveAsset;
 use App\Actions\Assets\DownloadAsset;
-use Illuminate\Http\Response;
+use App\Actions\Assets\MoveAsset;
+use App\Actions\Assets\UpdateAsset;
+use App\Models\Asset;
 use Flux\Flux;
+use Illuminate\Http\Response;
+use Livewire\Attributes\Validate;
 use Livewire\Form;
 
 class AssetForm extends Form
 {
     #[Validate('required', 'file', 'max:10240')]
-    public  $upload = null;
+    public $upload = null;
 
     public ?int $assetId = null;
 
@@ -40,14 +40,19 @@ class AssetForm extends Form
 
     #[Validate('required|string|max:255')]
     public string $path = '';
+
     #[Validate('nullable|string|max:255')]
     public ?string $alt_text = null;
+
     #[Validate('nullable|string|max:255')]
     public ?string $title = null;
+
     #[Validate('nullable|string|max:255')]
     public ?string $folder = null;
+
     #[Validate('array')]
     public array $meta = [];
+
     #[Validate('required|integer')]
     public ?int $uploaded_by = null;
 
