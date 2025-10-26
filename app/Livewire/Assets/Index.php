@@ -7,11 +7,14 @@ use App\Models\Asset;
 use Livewire\Attributes\Title;
 use Illuminate\Http\Response;
 use Livewire\Component;
+use App\Models\Folder;
 use Flux\Flux;
+use App\Livewire\Forms\FolderForm;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Computed;
 use App\Livewire\Forms\AssetForm;
 use Illuminate\Pagination\LengthAwarePaginator;
+use App\Actions\Folders\CreateFolder;
 use Livewire\WithPagination;
 
 class Index extends Component
@@ -19,6 +22,7 @@ class Index extends Component
     use WithPagination;
 
     public AssetForm $form;
+    public FolderForm $folderForm;
     public ?string $search = '';
 
     public ?string $folder = null;
@@ -30,23 +34,9 @@ class Index extends Component
     public ?string $filter = null;
 
     public ?int $assetToMoveId = null;
+    public array $selected = [];
 
     public int $uploadModalKey = 1;
-
-    public function updatedSearch(): void
-    {
-        $this->resetPage();
-    }
-
-    public function sortBy(string $field): void
-    {
-        if ($this->sortField === $field) {
-            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
-        } else {
-            $this->sortField = $field;
-            $this->sortDirection = 'asc';
-        }
-    }
 
     public function mount(): void
     {
@@ -58,10 +48,23 @@ class Index extends Component
         return $this->form->download($assetId);
     }
 
-    public function openMoveAssetModal(int $assetId): void
+    public function openMoveAssetModal(): void
     {
-        $this->assetToMoveId = $assetId;
         Flux::modal('move-asset')->show();
+    }
+
+    public function openRenameFolderModal(?int $folderId): void
+    {
+        $this->folderForm->folderId = $folderId;
+        Flux::modal('rename-folder')->show();
+    }
+
+    public function renameFolder(int $folderId): void
+    {
+        $this->folderForm->update($folderId);
+        Flux::modal('rename-folder')->close();
+
+        $this->dispatch('folder-changed');
     }
 
     #[On('asset-moved')]
@@ -97,7 +100,7 @@ class Index extends Component
     {
         $query = Asset::query()
             ->when($this->search, fn ($query) => $query->where('original_filename', 'like', "%{$this->search}%"))
-            ->when($this->folder, fn ($query) => $query->where('folder', $this->folder))
+            ->where('folder_id', $this->folderForm->currentFolderId)
             ->when($this->filter, fn ($query) => match ($this->filter) {
                 'images' => $query->where('mime_type', 'like', 'image/%'),
                 'documents' => $query->whereIn('mime_type', ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']),
@@ -106,6 +109,53 @@ class Index extends Component
             ->tap(fn ($query) => $this->sortBy !== '' && $this->sortBy !== '0' ? $query->orderBy($this->sortBy, $this->sortDirection) : $query);
 
         return $query->paginate(12);
+    }
+
+    #[Computed]
+    public function folders(): LengthAwarePaginator
+    {
+        return Folder::query()
+            ->with(['updater'])
+            ->when($this->search, fn ($query) => $query->where('name', 'like', "%{$this->search}%"))
+            ->where('parent_id', $this->folderForm->currentFolderId)
+            ->tap(fn ($query) => $this->sortBy ? $query->orderBy($this->sortBy, $this->sortDirection) : $query)
+            ->orderBy('name', 'asc')
+            ->paginate(12);
+    }
+
+    #[Computed]
+    public function breadcrumbs(): array
+    {
+        return $this->folderForm->breadcrumbs();
+    }
+    public function sort($column): void
+    {
+        if ($this->sortBy === $column) {
+            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortBy = $column;
+            $this->sortDirection = 'asc';
+        }
+    }
+    public function updatedSearch(): void
+    {
+        $this->resetPage();
+    }
+
+    public function openFolder(?int $id): void
+    {
+        $this->folderForm->currentFolderId = $id;
+        $this->resetPage();
+        $this->dispatch('folder-changed');
+    }
+
+    public function createFolder(): void
+    {
+        $this->folderForm->create();
+
+        Flux::modal('new-folder')->close();
+
+        $this->dispatch('folder-changed');
     }
 
     #[Title('Assets')]

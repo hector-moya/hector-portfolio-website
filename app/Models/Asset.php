@@ -21,9 +21,10 @@ class Asset extends Model
         'path',
         'alt_text',
         'title',
-        'folder',
+        'folder_id',
         'meta',
         'uploaded_by',
+        'updated_by',
     ];
 
     protected $casts = [
@@ -34,6 +35,10 @@ class Asset extends Model
     public function uploader(): BelongsTo
     {
         return $this->belongsTo(User::class, 'uploaded_by');
+    }
+    public function updater(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'updated_by');
     }
 
     /**
@@ -70,5 +75,10 @@ class Asset extends Model
         Storage::disk($this->disk)->delete($this->path);
 
         return parent::delete();
+    }
+
+    public function folder(): BelongsTo
+    {
+        return $this->belongsTo(Folder::class, 'folder_id');
     }
 }
