@@ -12,22 +12,20 @@ class CreateAsset
     {
         Gate::authorize('create', Asset::class);
 
-        return DB::transaction(function () use ($assetData) {
-            return Asset::create([
-                'filename' => $assetData['filename'],
-                'original_filename' => $assetData['original_filename'],
-                'disk' => $assetData['disk'],
-                'mime_type' => $assetData['mime_type'],
-                'size' => $assetData['size'],
-                'path' => $assetData['path'],
-                'alt_text' => $assetData['alt_text'],
-                'title' => $assetData['title'],
-                'folder_id' => $assetData['folder_id'],
-                'meta' => $assetData['meta'],
-                'uploaded_by' => $assetData['uploaded_by'],
-                'updated_by' => $assetData['updated_by'],
-            ]);
-        });
+        return DB::transaction(fn() => \App\Models\Asset::query()->create([
+            'filename' => $assetData['filename'],
+            'original_filename' => $assetData['original_filename'],
+            'disk' => $assetData['disk'],
+            'mime_type' => $assetData['mime_type'],
+            'size' => $assetData['size'],
+            'path' => $assetData['path'],
+            'alt_text' => $assetData['alt_text'],
+            'title' => $assetData['title'],
+            'folder_id' => $assetData['folder_id'],
+            'meta' => $assetData['meta'],
+            'uploaded_by' => $assetData['uploaded_by'],
+            'updated_by' => $assetData['updated_by'],
+        ]));
 
     }
 }

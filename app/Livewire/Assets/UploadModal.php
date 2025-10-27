@@ -6,8 +6,8 @@ use App\Livewire\Forms\AssetForm;
 use App\Models\Asset;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Livewire\Attributes\On;
 use Livewire\Attributes\Computed;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -28,6 +28,7 @@ class UploadModal extends Component
     public $selectedAsset;
 
     public $newFolderName = '';
+
     public ?int $currentFolderId = null;
 
     public function mount(): void

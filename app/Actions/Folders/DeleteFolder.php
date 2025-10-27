@@ -9,7 +9,7 @@ class DeleteFolder
 {
     public function delete(int $folderId): void
     {
-        $folder = Folder::findOrFail($folderId);
+        $folder = \App\Models\Folder::query()->findOrFail($folderId);
 
         Gate::authorize('delete', $folder);
 

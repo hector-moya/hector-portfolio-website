@@ -11,12 +11,12 @@ class DeleteAsset
 {
     public function delete(array $assetData): void
     {
-        $asset = Asset::findOrFail($assetData['id']);
+        $asset = \App\Models\Asset::query()->findOrFail($assetData['id']);
         Gate::authorize('delete', $asset);
 
         Storage::disk($asset->disk)->delete($asset->path);
 
-        DB::transaction(function () use ($asset) {
+        DB::transaction(function () use ($asset): void {
             $asset->delete();
         });
     }

@@ -10,13 +10,12 @@ class UpdateFolder
 {
     public function update(array $folderData): Folder
     {
-        $folder = Folder::findOrFail($folderData['id']);
+        $folder = \App\Models\Folder::query()->findOrFail($folderData['id']);
 
         Gate::authorize('update', $folder);
 
         return DB::transaction(function () use ($folderData, $folder) {
-            $parent = Folder::find($folderData['parent_id'] ?? null);
-
+            $parent = \App\Models\Folder::query()->find($folderData['parent_id'] ?? null);
 
             $oldPath = $folder->path;
             $newPath = Folder::makePath($parent, $folderData['name']);
@@ -30,10 +29,10 @@ class UpdateFolder
 
             // Cascade update descendant paths if path changed
             if ($oldPath !== $newPath) {
-                Folder::where('path', 'like', "$oldPath/%")->get()
-                    ->each(function ($child) use ($oldPath, $newPath) {
+                \App\Models\Folder::query()->where('path', 'like', "$oldPath/%")->get()
+                    ->each(function ($child) use ($oldPath, $newPath): void {
                         $child->update([
-                            'path' => preg_replace("#^{$oldPath}#", $newPath, $child->path),
+                            'path' => preg_replace("#^{$oldPath}#", $newPath, (string) $child->path),
                         ]);
                     });
             }

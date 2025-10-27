@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('folders', function (Blueprint $table) {
+        Schema::create('folders', function (Blueprint $table): void {
             $table->id();
             $table->string('name');
             $table->foreignId('parent_id')->nullable()->constrained('folders')->cascadeOnDelete();

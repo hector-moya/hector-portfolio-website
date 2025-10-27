@@ -8,9 +8,8 @@ use App\Models\Asset;
 use App\Models\Folder;
 use Flux\Flux;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Response;
-use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
@@ -53,7 +52,7 @@ class Index extends Component
 
     public function openMoveAssetModal(?int $assetId): void
     {
-        $this->selected = $assetId ? [$assetId] : $this->selected;
+        $this->selected = $assetId !== null && $assetId !== 0 ? [$assetId] : $this->selected;
         Flux::modal('move-asset')->show();
     }
 
@@ -111,6 +110,7 @@ class Index extends Component
     {
         $this->resetPage();
     }
+
     #[Computed]
     public function items(): Collection
     {
@@ -128,8 +128,7 @@ class Index extends Component
             ])
             ->with(['updater'])
             ->where('parent_id', $this->folderForm->currentFolderId)
-            ->when($this->search, fn ($query) =>
-                $query->where('name', 'like', "%{$this->search}%")
+            ->when($this->search, fn ($query) => $query->where('name', 'like', "%{$this->search}%")
             );
 
         // Assets query
@@ -142,19 +141,18 @@ class Index extends Component
                 DB::raw('"asset" as type'),
                 'mime_type',
                 'path',
-                'size'
+                'size',
             ])
             ->with(['updater'])
             ->where('folder_id', $this->folderForm->currentFolderId)
-            ->when($this->search, fn ($query) =>
-                $query->where('original_filename', 'like', "%{$this->search}%")
+            ->when($this->search, fn ($query) => $query->where('original_filename', 'like', "%{$this->search}%")
             )
             ->when($this->filter, fn ($query) => match ($this->filter) {
                 'images' => $query->where('mime_type', 'like', 'image/%'),
                 'documents' => $query->whereIn('mime_type', [
                     'application/pdf',
                     'application/msword',
-                    'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+                    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
                 ]),
                 default => $query,
             });

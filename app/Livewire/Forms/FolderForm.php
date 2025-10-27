@@ -26,7 +26,7 @@ class FolderForm extends Form
 
     public function set(int $folderId): void
     {
-        $folder = Folder::findOrFail($folderId);
+        $folder = \App\Models\Folder::query()->findOrFail($folderId);
         $this->name = $folder->name;
         $this->folderId = $folder->id;
         $this->parent_id = $folder->parent_id;
@@ -88,22 +88,22 @@ class FolderForm extends Form
 
     public function breadcrumbs(): array
     {
-        if (! $this->currentFolderId) {
+        if ($this->currentFolderId === null || $this->currentFolderId === 0) {
             return [];
         }
 
-        $folder = Folder::findOrFail($this->currentFolderId);
+        $folder = \App\Models\Folder::query()->findOrFail($this->currentFolderId);
 
         return $folder->ancestors() ?? [];
     }
 
     public function currentFolderName(): ?string
     {
-        if (! $this->currentFolderId) {
+        if ($this->currentFolderId === null || $this->currentFolderId === 0) {
             return null;
         }
 
-        $folder = Folder::findOrFail($this->currentFolderId);
+        $folder = \App\Models\Folder::query()->findOrFail($this->currentFolderId);
 
         return $folder->name;
     }

@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Folder extends Model
 {
+    use \Illuminate\Database\Eloquent\Factories\HasFactory;
+    use \Illuminate\Database\Eloquent\Factories\HasFactory;
     use SoftDeletes;
 
     protected $fillable = [
@@ -50,7 +52,8 @@ class Folder extends Model
         return $this->belongsTo(User::class, 'updated_by');
     }
 
-    public function scopeRoot($query): mixed
+    #[\Illuminate\Database\Eloquent\Attributes\Scope]
+    protected function root($query): mixed
     {
         return $query->whereNull('parent_id');
     }
@@ -59,7 +62,7 @@ class Folder extends Model
     {
         $segment = trim($name, '/');
 
-        return $parent ? rtrim($parent->path, '/').'/'.$segment : $segment;
+        return $parent instanceof \App\Models\Folder ? rtrim($parent->path, '/').'/'.$segment : $segment;
     }
 
     public function ancestors(): array
@@ -76,6 +79,6 @@ class Folder extends Model
             $paths[] = $accum;
         }
 
-        return static::whereIn('path', $paths)->orderByRaw('LENGTH(path)')->get()->all();
+        return static::query()->whereIn('path', $paths)->orderByRaw('LENGTH(path)')->get()->all();
     }
 }

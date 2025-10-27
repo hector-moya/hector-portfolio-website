@@ -15,8 +15,9 @@ use Livewire\Form;
 
 class AssetForm extends Form
 {
+    public $folder;
     #[Validate('required', 'file', 'max:10240')]
-    public $upload = null;
+    public $upload;
 
     public ?int $assetId = null;
 
@@ -58,7 +59,7 @@ class AssetForm extends Form
 
     public function setAsset(int $assetId): void
     {
-        $asset = Asset::findOrFail($assetId);
+        $asset = \App\Models\Asset::query()->findOrFail($assetId);
 
         $this->assetId = $asset->id;
         $this->filename = $asset->filename;

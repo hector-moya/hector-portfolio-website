@@ -14,7 +14,7 @@ class MoveAsset
         Gate::authorize('update', $asset);
 
         $oldPath = $asset->path;
-        $newPath = trim((string) $targetFolder, '/').'/'.$asset->filename;
+        $newPath = trim($targetFolder, '/').'/'.$asset->filename;
 
         Storage::disk($asset->disk)->move($oldPath, $newPath);
 
