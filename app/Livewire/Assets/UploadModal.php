@@ -47,7 +47,7 @@ class UploadModal extends Component
     }
 
     #[On('folder-changed')]
-    public function onFolderChanged($folderId): void
+    public function onFolderChanged(?int $folderId): void
     {
         $this->currentFolderId = $folderId;
     }
@@ -67,6 +67,7 @@ class UploadModal extends Component
         $this->form->path = $path;
         $this->form->folder_id = $this->currentFolderId;
         $this->form->uploaded_by = auth()->id();
+        $this->form->updated_by = auth()->id();
     }
 
     public function selectAsset($assetId = null): void

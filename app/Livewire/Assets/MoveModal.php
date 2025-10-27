@@ -5,7 +5,9 @@ namespace App\Livewire\Assets;
 use App\Livewire\Forms\AssetForm;
 use App\Livewire\Forms\FolderForm;
 use App\Models\Asset;
+use App\Models\Folder;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
@@ -24,10 +26,12 @@ class MoveModal extends Component
     public array $currentFolderPath = [];
 
     public ?int $assetId = null;
+    public ?string $search = '';
+    public ?string $filter = null;
 
-    public $sortBy = 'date';
+    public $sortBy = 'display_name';
 
-    public $sortDirection = 'desc';
+    public $sortDirection = 'asc';
 
     public ?int $currentFolderId = null;
 
@@ -57,25 +61,66 @@ class MoveModal extends Component
         }
     }
 
+
     #[Computed]
-    public function folders(): array
+    public function items(): Collection
     {
-        $folders = \App\Models\Folder::query()
+        // Folders query
+        $folders = Folder::query()
+            ->select([
+                'id',
+                'name as display_name',
+                'updated_at',
+                'updated_by',
+                DB::raw('"folder" as type'),
+                DB::raw('NULL as mime_type'),
+                DB::raw('NULL as path'),
+                DB::raw('NULL as size')
+            ])
             ->with('updater')
             ->where('parent_id', $this->folderForm->currentFolderId)
-            ->orderBy('name')
-            ->get();
+            ->when($this->search, fn ($query) =>
+                $query->where('name', 'like', "%{$this->search}%")
+            );
 
+        // Assets query
         $assets = Asset::query()
+            ->select([
+                'id',
+                'original_filename as display_name',
+                'updated_at',
+                'updated_by',
+                DB::raw('"asset" as type'),
+                'mime_type',
+                'path',
+                'size'
+            ])
             ->with('updater')
             ->where('folder_id', $this->folderForm->currentFolderId)
-            ->orderBy('original_filename')
-            ->get();
+            ->when($this->search, fn ($query) =>
+                $query->where('original_filename', 'like', "%{$this->search}%")
+            )
+            ->when($this->filter, fn ($query) => match ($this->filter) {
+                'images' => $query->where('mime_type', 'like', 'image/%'),
+                'documents' => $query->whereIn('mime_type', [
+                    'application/pdf',
+                    'application/msword',
+                    'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+                ]),
+                default => $query,
+            });
 
-        return [
-            'items' => $folders->concat($assets),
-            'total' => $folders->count() + $assets->count(),
-        ];
+        // Combine queries and paginate
+        $combinedQuery = $folders->union($assets);
+
+        if ($this->sortBy && $this->sortBy !== '0') {
+            $combinedQuery->orderBy($this->sortBy, $this->sortDirection);
+        } else {
+            // Default sorting: folders first, then by name
+            $combinedQuery->orderByRaw("type = 'folder' DESC, display_name ASC");
+        }
+
+        return $combinedQuery->get();
     }
 
     public function enter(int $folderId): void

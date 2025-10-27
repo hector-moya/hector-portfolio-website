@@ -90,6 +90,7 @@ class AssetForm extends Form
             'folder_id' => $this->folder_id,
             'meta' => $this->meta,
             'uploaded_by' => $this->uploaded_by,
+            'updated_by' => $this->uploaded_by,
         ]);
 
         Flux::toast(

@@ -7,6 +7,8 @@ use App\Livewire\Forms\FolderForm;
 use App\Models\Asset;
 use App\Models\Folder;
 use Flux\Flux;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Livewire\Attributes\Computed;
@@ -27,9 +29,9 @@ class Index extends Component
 
     public ?string $folder = null;
 
-    public string $sortBy = 'date';
+    public string $sortBy = 'display_name';
 
-    public string $sortDirection = 'desc';
+    public string $sortDirection = 'asc';
 
     public ?string $filter = null;
 
@@ -72,7 +74,7 @@ class Index extends Component
         $this->folderForm->update($folderId);
         Flux::modal('rename-folder')->close();
 
-        $this->dispatch('folder-changed');
+        $this->dispatch('folder-changed', $this->folderForm->currentFolderId);
     }
 
     #[On('asset-moved')]
@@ -101,7 +103,7 @@ class Index extends Component
     {
         $this->folderForm->destroy($folderId);
 
-        $this->dispatch('folder-changed');
+        $this->dispatch('folder-changed', $this->folderForm->currentFolderId);
     }
 
     #[On('asset-deleted')]
@@ -109,33 +111,65 @@ class Index extends Component
     {
         $this->resetPage();
     }
-
     #[Computed]
-    public function assets(): LengthAwarePaginator
+    public function items(): Collection
     {
-        $query = Asset::query()
-            ->when($this->search, fn ($query) => $query->where('original_filename', 'like', "%{$this->search}%"))
+        // Folders query
+        $folders = Folder::query()
+            ->select([
+                'id',
+                'name as display_name',
+                'updated_at',
+                'updated_by',
+                DB::raw('"folder" as type'),
+                DB::raw('NULL as mime_type'),
+                DB::raw('NULL as path'),
+                DB::raw('NULL as size'),
+            ])
+            ->with(['updater'])
+            ->where('parent_id', $this->folderForm->currentFolderId)
+            ->when($this->search, fn ($query) =>
+                $query->where('name', 'like', "%{$this->search}%")
+            );
+
+        // Assets query
+        $assets = Asset::query()
+            ->select([
+                'id',
+                'original_filename as display_name',
+                'updated_at',
+                'updated_by',
+                DB::raw('"asset" as type'),
+                'mime_type',
+                'path',
+                'size'
+            ])
+            ->with(['updater'])
             ->where('folder_id', $this->folderForm->currentFolderId)
+            ->when($this->search, fn ($query) =>
+                $query->where('original_filename', 'like', "%{$this->search}%")
+            )
             ->when($this->filter, fn ($query) => match ($this->filter) {
                 'images' => $query->where('mime_type', 'like', 'image/%'),
-                'documents' => $query->whereIn('mime_type', ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']),
+                'documents' => $query->whereIn('mime_type', [
+                    'application/pdf',
+                    'application/msword',
+                    'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+                ]),
                 default => $query,
-            })
-            ->tap(fn ($query) => $this->sortBy !== '' && $this->sortBy !== '0' ? $query->orderBy($this->sortBy, $this->sortDirection) : $query);
+            });
 
-        return $query->paginate(12);
-    }
+        // Combine queries and paginate
+        $combinedQuery = $folders->union($assets);
 
-    #[Computed]
-    public function folders(): LengthAwarePaginator
-    {
-        return Folder::query()
-            ->with(['updater'])
-            ->when($this->search, fn ($query) => $query->where('name', 'like', "%{$this->search}%"))
-            ->where('parent_id', $this->folderForm->currentFolderId)
-            ->tap(fn ($query) => $this->sortBy ? $query->orderBy($this->sortBy, $this->sortDirection) : $query)
-            ->orderBy('name', 'asc')
-            ->paginate(12);
+        if ($this->sortBy && $this->sortBy !== '0') {
+            $combinedQuery->orderBy($this->sortBy, $this->sortDirection);
+        } else {
+            // Default sorting: folders first, then by name
+            $combinedQuery->orderByRaw("type = 'folder' DESC, display_name ASC");
+        }
+
+        return $combinedQuery->get();
     }
 
     #[Computed]
@@ -172,7 +206,7 @@ class Index extends Component
 
         Flux::modal('new-folder')->close();
 
-        $this->dispatch('folder-changed');
+        $this->dispatch('folder-changed', $this->folderForm->currentFolderId);
     }
 
     #[Title('Assets')]

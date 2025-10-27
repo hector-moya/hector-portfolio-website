@@ -25,6 +25,7 @@ class CreateAsset
                 'folder_id' => $assetData['folder_id'],
                 'meta' => $assetData['meta'],
                 'uploaded_by' => $assetData['uploaded_by'],
+                'updated_by' => $assetData['updated_by'],
             ]);
         });
 
