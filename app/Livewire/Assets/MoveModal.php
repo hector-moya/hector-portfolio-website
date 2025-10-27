@@ -173,6 +173,7 @@ class MoveModal extends Component
         \Flux\Flux::modal('move-asset')->close();
         $this->assetIds = [];
     }
+
     public function createFolder(): void
     {
         $this->folderForm->create();
@@ -181,6 +182,7 @@ class MoveModal extends Component
 
         $this->dispatch('folder-changed', $this->folderForm->currentFolderId);
     }
+
     public function newFolderModal(): void
     {
         $this->folderForm->reset('name', 'parent_id');

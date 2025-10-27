@@ -2,7 +2,6 @@
 
 namespace App\Actions\Folders;
 
-use App\Models\Folder;
 use Illuminate\Support\Facades\Gate;
 
 class DeleteFolder

@@ -16,6 +16,7 @@ use Livewire\Form;
 class AssetForm extends Form
 {
     public $folder;
+
     #[Validate('required', 'file', 'max:10240')]
     public $upload;
 

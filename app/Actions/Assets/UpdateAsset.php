@@ -13,7 +13,7 @@ class UpdateAsset
         $asset = \App\Models\Asset::query()->findOrFail($assetData['id']);
         Gate::authorize('update', $asset);
 
-        return DB::transaction(fn() => $asset->update([
+        return DB::transaction(fn () => $asset->update([
             'filename' => $assetData['filename'],
             'original_filename' => $assetData['original_filename'],
             'disk' => $assetData['disk'],
