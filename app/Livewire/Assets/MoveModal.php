@@ -6,6 +6,7 @@ use App\Livewire\Forms\AssetForm;
 use App\Livewire\Forms\FolderForm;
 use App\Models\Asset;
 use App\Models\Folder;
+use Flux\Flux;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Computed;
@@ -171,6 +172,19 @@ class MoveModal extends Component
         $this->dispatch('assets-moved', count: count($this->assetIds));
         \Flux\Flux::modal('move-asset')->close();
         $this->assetIds = [];
+    }
+    public function createFolder(): void
+    {
+        $this->folderForm->create();
+
+        Flux::modal('new-folder-modal')->close();
+
+        $this->dispatch('folder-changed', $this->folderForm->currentFolderId);
+    }
+    public function newFolderModal(): void
+    {
+        $this->folderForm->reset('name', 'parent_id');
+        Flux::modal('new-folder-modal')->show();
     }
 
     public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
