@@ -18,6 +18,8 @@ class DownloadAsset
         $disk = $asset->disk;
 
         if (! Storage::disk($disk)->exists($path)) {
+            // dd(Storage::disk($disk));
+
             return response('File not found.', 404);
         }
 

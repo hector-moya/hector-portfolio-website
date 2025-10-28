@@ -48,7 +48,6 @@ class Index extends Component
 
     public function download(int $assetId): Response
     {
-        dd(123);
         return $this->form->download($assetId);
     }
 
