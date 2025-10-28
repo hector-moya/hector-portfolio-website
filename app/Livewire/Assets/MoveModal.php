@@ -31,13 +31,14 @@ class MoveModal extends Component
 
     // public ?int $currentFolderId = null;
 
-    public array $assetIds = [];
+    // public array $assetIds = [];
 
     public array $selected = [];
 
     public function mount(): void
     {
-        $this->assetIds = $this->selected;
+        // $this->assetIds = $this->selected;
+        // dd($this->selected);
     }
 
     public function sort($column): void
@@ -126,13 +127,12 @@ class MoveModal extends Component
     {
         $this->authorize('update', [auth()->user(), Asset::class]);
 
-        foreach ($this->assetIds as $assetId) {
+        foreach ($this->selected as $assetId) {
             $this->form->setAsset($assetId);
             $this->form->update($assetId, $this->folderForm->currentFolderId);
         }
-        $this->assetIds = [];
 
-        $this->dispatch('assets-moved', count: count($this->assetIds));
+        $this->dispatch('assets-moved');
         // Flux::modal('move-asset')->close();
     }
 

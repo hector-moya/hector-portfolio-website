@@ -50,8 +50,8 @@
 
     <!-- Move Asset Modal -->
     <flux:modal name="move-asset" :closable="false">
-        @if (count($selected) > 0)
-            <livewire:assets.move-modal :selected="$selected" :key="'move-asset-' . $folderForm->currentFolderId" />
+        @if (count($assetIds) > 0)
+            <livewire:assets.move-modal :selected="$assetIds" :key="'move-asset-' . $folderForm->currentFolderId" />
         @endif
     </flux:modal>
 
