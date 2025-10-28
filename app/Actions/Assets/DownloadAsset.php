@@ -3,30 +3,35 @@
 namespace App\Actions\Assets;
 
 use App\Models\Asset;
-use Illuminate\Http\Response;
+use Illuminate\Support\Str;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 
 class DownloadAsset
 {
-    public function download(int $assetId): Response
+    public function download(int $assetId): StreamedResponse
     {
         $asset = Asset::query()->findOrFail($assetId);
         Gate::authorize('view', $asset);
 
+        $disk = $asset->disk === 'local' ? 'public' : $asset->disk;
         $path = $asset->path;
-        $disk = $asset->disk;
 
         if (! Storage::disk($disk)->exists($path)) {
-            // dd(Storage::disk($disk));
-
-            return response('File not found.', 404);
+            abort(404, 'File not found.');
         }
 
-        $fileContent = Storage::disk($disk)->get($path);
+        // Sanitize/encode the filename for headers
+        $name = $asset->original_filename ?: basename($path);
+        if (! mb_check_encoding($name, 'UTF-8')) {
+            // fallback: coerce to UTF-8; if still messy, fall back to ASCII
+            $name = @mb_convert_encoding($name, 'UTF-8', 'UTF-8, ISO-8859-1, Windows-1252') ?: Str::ascii($name);
+        }
 
-        return response($fileContent)
-            ->header('Content-Type', $asset->mime_type)
-            ->header('Content-Disposition', 'attachment; filename="'.$asset->original_filename.'"');
+        return Storage::disk($disk)->response($path, $name, [
+            'Content-Type' => $asset->mime_type,
+            'Content-Disposition' => 'attachment; filename="' . $name . '"'
+        ]);
     }
 }

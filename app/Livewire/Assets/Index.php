@@ -8,7 +8,7 @@ use App\Models\Asset;
 use App\Models\Folder;
 use Flux\Flux;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Http\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
@@ -46,7 +46,7 @@ class Index extends Component
         $this->authorize('viewAny', Asset::class);
     }
 
-    public function download(int $assetId): Response
+    public function download(int $assetId): StreamedResponse
     {
         return $this->form->download($assetId);
     }

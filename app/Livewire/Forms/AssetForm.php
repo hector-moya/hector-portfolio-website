@@ -9,7 +9,7 @@ use App\Actions\Assets\MoveAsset;
 use App\Actions\Assets\UpdateAsset;
 use App\Models\Asset;
 use Flux\Flux;
-use Illuminate\Http\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Livewire\Attributes\Validate;
 use Livewire\Form;
 
@@ -161,7 +161,7 @@ class AssetForm extends Form
         );
     }
 
-    public function download(int $assetId): Response
+    public function download(int $assetId): StreamedResponse
     {
         return app(DownloadAsset::class)->download(
             assetId: $assetId,
