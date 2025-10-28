@@ -32,11 +32,11 @@ class AssetPolicy
     }
 
     /**
-     * Determine whether the user can update the model.
+     * Determine whether the user can update the asset.
      */
     public function update(User $user, Asset $asset): bool
     {
-        return $user->role === 'admin' || $asset->uploaded_by === $user->id;
+        return $user->isAdmin() || $asset->uploaded_by === $user->id;
     }
 
     /**

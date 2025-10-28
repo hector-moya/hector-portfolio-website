@@ -41,7 +41,7 @@
 
         <div>
             {{-- Files Table --}}
-            <x-files-table />
+            <x-files-table :actions="true" />
         </div>
     </div>
     <flux:modal name="upload-files">
@@ -51,7 +51,7 @@
     <!-- Move Asset Modal -->
     <flux:modal name="move-asset" :closable="false">
         @if (count($selected) > 0)
-            <livewire:assets.move-modal :selected="$selected" :currentFolderId="$folderForm->currentFolderId" :key="'move-asset-' . $folderForm->currentFolderId" />
+            <livewire:assets.move-modal :selected="$selected" :key="'move-asset-' . $folderForm->currentFolderId" />
         @endif
     </flux:modal>
 

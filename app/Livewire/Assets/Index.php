@@ -76,9 +76,11 @@ class Index extends Component
         $this->dispatch('folder-changed', $this->folderForm->currentFolderId);
     }
 
-    #[On('asset-moved')]
-    public function onAssetMoved(): void
+    #[On('assets-moved')]
+    public function onAssetsMoved(): void
     {
+        $this->selected = [];
+        $this->folderForm->currentFolderId = null;
         Flux::modal('move-asset')->close();
         $this->resetPage();
     }

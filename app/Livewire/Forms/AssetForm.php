@@ -60,20 +60,20 @@ class AssetForm extends Form
 
     public function setAsset(int $assetId): void
     {
-        $asset = \App\Models\Asset::query()->findOrFail($assetId);
+        $asset = Asset::query()->findOrFail($assetId);
 
         $this->assetId = $asset->id;
-        $this->filename = $asset->filename;
-        $this->original_filename = $asset->original_filename;
-        $this->disk = $asset->disk;
-        $this->mime_type = $asset->mime_type;
-        $this->size = $asset->size;
-        $this->path = $asset->path;
-        $this->alt_text = $asset->alt_text;
-        $this->title = $asset->title;
-        $this->folder = $asset->folder;
-        $this->meta = $asset->meta;
-        $this->uploaded_by = $asset->uploaded_by;
+        $this->filename = $asset->filename ?? '';
+        $this->original_filename = $asset->original_filename ?? '';
+        $this->disk = $asset->disk ?? '';
+        $this->mime_type = $asset->mime_type ?? '';
+        $this->size = $asset->size ?? '';
+        $this->path = $asset->path ?? '';
+        $this->alt_text = $asset->alt_text ?? '';
+        $this->title = $asset->title ?? '';
+        $this->folder_id = $asset->folder_id ?? null;
+        $this->meta = $asset->meta ?? [];
+        $this->uploaded_by = $asset->uploaded_by ?? null;
     }
 
     public function create(): Asset
@@ -106,10 +106,8 @@ class AssetForm extends Form
         return $asset;
     }
 
-    public function update(int $assetId): Asset
+    public function update(int $assetId, ?int $folderId): Asset
     {
-        $this->validate();
-
         $asset = app(UpdateAsset::class)->update([
             'id' => $assetId,
             'filename' => $this->filename,
@@ -120,7 +118,7 @@ class AssetForm extends Form
             'path' => $this->path,
             'alt_text' => $this->alt_text,
             'title' => $this->title,
-            'folder' => $this->folder,
+            'folder_id' => $folderId,
             'meta' => $this->meta,
             'uploaded_by' => $this->uploaded_by,
         ]);

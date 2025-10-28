@@ -1,6 +1,7 @@
 @props([
     'sortBy' => 'display_name',
     'sortDirection' => 'asc',
+    'actions' => false,
 ])
 
 <flux:card class="!p-0">
@@ -34,39 +35,41 @@
                                     {{ $item->type === 'asset' ? substr($item->display_name, 0, 15) . (strlen($item->display_name) > 15 ? '...' : '') : $item->display_name }}
                                 </flux:text>
                             </div>
-                            <div class="group-focus-within:block group-hover:block">
-                                @if ($item->type === 'asset')
-                                    <flux:dropdown>
-                                        <flux:button variant="ghost" size="xs" icon="ellipsis-horizontal" inset />
-                                        <flux:menu>
-                                            <flux:menu.item wire:click="download({{ $item->id }})" icon="arrow-down-tray">
-                                                {{ __('Download') }}
-                                            </flux:menu.item>
-                                            <flux:menu.separator />
-                                            <flux:menu.item wire:click="openMoveAssetModal({{ $item->id }})" icon="folder">
-                                                {{ __('Move') }}
-                                            </flux:menu.item>
-                                            <flux:menu.separator />
-                                            <flux:menu.item wire:click="delete({{ $item->id }})" icon="trash" variant="danger" wire:confirm="{{ __('Are you sure you want to delete asset ') . $item->display_name . '?' }}">
-                                                {{ __('Delete') }}
-                                            </flux:menu.item>
-                                        </flux:menu>
-                                    </flux:dropdown>
-                                @else
-                                    <flux:dropdown>
-                                        <flux:button variant="ghost" size="xs" icon="ellipsis-horizontal" inset />
-                                        <flux:menu>
-                                            <flux:menu.item icon="pencil" wire:click="openRenameFolderModal({{ $item->id }})">
-                                                {{ __('Rename') }}
-                                            </flux:menu.item>
-                                            <flux:menu.separator />
-                                            <flux:menu.item variant="danger" icon="trash" wire:click="deleteFolder({{ $item->id }})" wire:confirm="Are you sure you want to delete this folder?">
-                                                {{ __('Delete') }}
-                                            </flux:menu.item>
-                                        </flux:menu>
-                                    </flux:dropdown>
-                                @endif
-                            </div>
+                            @if ($actions)
+                                <div class="group-focus-within:block group-hover:block">
+                                    @if ($item->type === 'asset')
+                                        <flux:dropdown>
+                                            <flux:button variant="ghost" size="xs" icon="ellipsis-horizontal" inset />
+                                            <flux:menu>
+                                                <flux:menu.item wire:click="download({{ $item->id }})" icon="arrow-down-tray">
+                                                    {{ __('Download') }}
+                                                </flux:menu.item>
+                                                <flux:menu.separator />
+                                                <flux:menu.item wire:click="openMoveAssetModal({{ $item->id }})" icon="folder">
+                                                    {{ __('Move') }}
+                                                </flux:menu.item>
+                                                <flux:menu.separator />
+                                                <flux:menu.item wire:click="delete({{ $item->id }})" icon="trash" variant="danger" wire:confirm="{{ __('Are you sure you want to delete asset ') . $item->display_name . '?' }}">
+                                                    {{ __('Delete') }}
+                                                </flux:menu.item>
+                                            </flux:menu>
+                                        </flux:dropdown>
+                                    @else
+                                        <flux:dropdown>
+                                            <flux:button variant="ghost" size="xs" icon="ellipsis-horizontal" inset />
+                                            <flux:menu>
+                                                <flux:menu.item icon="pencil" wire:click="openRenameFolderModal({{ $item->id }})">
+                                                    {{ __('Rename') }}
+                                                </flux:menu.item>
+                                                <flux:menu.separator />
+                                                <flux:menu.item variant="danger" icon="trash" wire:click="deleteFolder({{ $item->id }})" wire:confirm="Are you sure you want to delete this folder?">
+                                                    {{ __('Delete') }}
+                                                </flux:menu.item>
+                                            </flux:menu>
+                                        </flux:dropdown>
+                                    @endif
+                                </div>
+                            @endif
                         </div>
                     </flux:table.cell>
                     <flux:table.cell class="whitespace-nowrap">

@@ -21,12 +21,6 @@ class MoveModal extends Component
 
     public FolderForm $folderForm;
 
-    public ?string $targetFolder = null;
-
-    public array $currentFolderPath = [];
-
-    public ?int $assetId = null;
-
     public ?string $search = '';
 
     public ?string $filter = null;
@@ -35,7 +29,7 @@ class MoveModal extends Component
 
     public $sortDirection = 'asc';
 
-    public ?int $currentFolderId = null;
+    // public ?int $currentFolderId = null;
 
     public array $assetIds = [];
 
@@ -43,14 +37,7 @@ class MoveModal extends Component
 
     public function mount(): void
     {
-        // $this->form->setAsset($this->assetId);
         $this->assetIds = $this->selected;
-        $this->currentFolderPath = $this->buildCurrentPath();
-    }
-
-    public function buildCurrentPath(): array
-    {
-        return explode('/', trim($this->form->folder ?? '', '/'));
     }
 
     public function sort($column): void
@@ -122,12 +109,6 @@ class MoveModal extends Component
         return $combinedQuery->get();
     }
 
-    public function enter(int $folderId): void
-    {
-        $this->currentFolderId = $folderId;
-        $this->resetPage();
-    }
-
     #[Computed]
     public function breadcrumbs(): array
     {
@@ -141,43 +122,23 @@ class MoveModal extends Component
         $this->dispatch('folder-changed', $id);
     }
 
-    public function up(): void
-    {
-        if ($this->currentFolderId === null || $this->currentFolderId === 0) {
-            return;
-        }
-        $parentId = \App\Models\Folder::query()->whereKey($this->currentFolderId)->value('parent_id');
-        $this->currentFolderId = $parentId; // may become null (root)
-        $this->resetPage();
-    }
-
-    // public function move(): void
-    // {
-    //     $this->form->move($this->form->assetId, $this->targetFolder);
-
-    //     $this->dispatch('asset-moved');
-    // }
-
     public function move(): void
     {
-        $this->authorize('update', Asset::class); // or per-asset check
+        $this->authorize('update', [auth()->user(), Asset::class]);
 
-        DB::transaction(function (): void {
-            \App\Models\Asset::query()->whereIn('id', $this->assetIds)->update([
-                'folder_id' => $this->currentFolderId,
-                // optionally update `path` if you mirror storage folders
-            ]);
-        });
+        foreach ($this->assetIds as $assetId) {
+            $this->form->setAsset($assetId);
+            $this->form->update($assetId, $this->folderForm->currentFolderId);
+        }
+        $this->assetIds = [];
 
         $this->dispatch('assets-moved', count: count($this->assetIds));
-        \Flux\Flux::modal('move-asset')->close();
-        $this->assetIds = [];
+        // Flux::modal('move-asset')->close();
     }
 
     public function createFolder(): void
     {
         $this->folderForm->create();
-
         Flux::modal('new-folder-modal')->close();
 
         $this->dispatch('folder-changed', $this->folderForm->currentFolderId);
