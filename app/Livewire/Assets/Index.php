@@ -37,6 +37,7 @@ class Index extends Component
     public ?int $assetToMoveId = null;
 
     public array $selected = [];
+
     public array $assetIds = [];
 
     public int $uploadModalKey = 1;

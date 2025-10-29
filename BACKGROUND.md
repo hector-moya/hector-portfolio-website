@@ -28,6 +28,13 @@ Hector CMS is a modern, flexible Content Management System built with the TALL s
 - **Entry Rendering**: Basic frontend view system
 - **Preview System**: View entries before publishing
 
+### Globals System
+- **Global Sets**: Organize site-wide variables into logical groups
+- **Blueprint Integration**: Use flexible field types for global variables
+- **Caching**: Efficient caching with automatic invalidation
+- **Facade Access**: Clean API through Laravel Facades
+- **Policy Control**: Role-based access to global settings
+
 ## Feature Implementation Status
 
 | Feature                    | Status      | Progress | Notes                                          |
@@ -39,7 +46,7 @@ Hector CMS is a modern, flexible Content Management System built with the TALL s
 | User Management           | ✅ Complete  | 100%     | Includes roles and policies                    |
 | Frontend Rendering        | ⚠️ Partial   | 70%      | Basic implementation, needs enhancement        |
 | Asset Management          | ✅ Complete  | 100%     | File upload, organization, S3 support         |
-| Global Settings          | 🔄 Planned  | 0%       | Configuration management                       |
+| Globals                  | ✅ Complete  | 100%     | Implemented with Facades, caching, and sets    |
 | Contact Forms            | 🔄 Planned  | 0%       | With SES integration                          |
 | Publishing Workflow      | 🔄 Planned  | 0%       | Draft/published states + scheduling            |
 | Navigation Builder       | 🔄 Planned  | 0%       | Menu management system                        |

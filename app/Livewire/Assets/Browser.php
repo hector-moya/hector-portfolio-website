@@ -29,7 +29,7 @@ class Browser extends Component
         ]);
 
         // Close the modal
-        Flux::modal('asset-browser-' . $this->fieldHandle)->close();
+        Flux::modal('asset-browser-'.$this->fieldHandle)->close();
     }
 
     public function render()

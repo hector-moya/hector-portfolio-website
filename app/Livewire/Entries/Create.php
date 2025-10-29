@@ -84,7 +84,7 @@ class Create extends Component
     public function openAssetBrowser(string $handle): void
     {
         // Open the modal for the specific field
-        Flux::modal('asset-browser-' . $handle)->show();
+        Flux::modal('asset-browser-'.$handle)->show();
     }
 
     #[On('asset-selected')]

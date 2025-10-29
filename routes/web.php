@@ -68,6 +68,11 @@ Route::middleware(['auth'])->group(function (): void {
     Route::get('users/create', UsersCreate::class)->name('users.create');
     Route::get('users/{user}/edit', UsersEdit::class)->name('users.edit');
 
+    // Globals Routes
+    Route::prefix('admin')->group(function () {
+        require __DIR__.'/globals.php';
+    });
+
     // Settings Routes
     Route::redirect('settings', 'settings/profile');
 
