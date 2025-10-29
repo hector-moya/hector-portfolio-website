@@ -15,6 +15,9 @@ use App\Livewire\Frontend\BlogShow;
 use App\Livewire\Frontend\ContactPage;
 use App\Livewire\Frontend\Home;
 use App\Livewire\Frontend\PortfolioIndex;
+use App\Livewire\Navigation\Create as NavigationCreate;
+use App\Livewire\Navigation\Edit as NavigationEdit;
+use App\Livewire\Navigation\Index as NavigationIndex;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
@@ -54,6 +57,11 @@ Route::middleware(['auth'])->group(function (): void {
     Route::get('entries', EntriesIndex::class)->name('entries');
     Route::get('entries/create', EntriesCreate::class)->name('entries.create');
     Route::get('entries/{entry}/edit', EntriesEdit::class)->name('entries.edit');
+
+    // Navigation Routes
+    Route::get('navigation', NavigationIndex::class)->name('navigation.index');
+    Route::get('navigation/create', NavigationCreate::class)->name('navigation.create');
+    Route::get('navigation/{navigation}/edit', NavigationEdit::class)->name('navigation.edit');
 
     // Taxonomies Routes
     Route::get('taxonomies', TaxonomiesIndex::class)->name('taxonomies.index');
