@@ -15,6 +15,9 @@ use App\Livewire\Frontend\BlogShow;
 use App\Livewire\Frontend\ContactPage;
 use App\Livewire\Frontend\Home;
 use App\Livewire\Frontend\PortfolioIndex;
+use App\Livewire\Navigation\Create as NavigationCreate;
+use App\Livewire\Navigation\Edit as NavigationEdit;
+use App\Livewire\Navigation\Index as NavigationIndex;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
@@ -55,6 +58,11 @@ Route::middleware(['auth'])->group(function (): void {
     Route::get('entries/create', EntriesCreate::class)->name('entries.create');
     Route::get('entries/{entry}/edit', EntriesEdit::class)->name('entries.edit');
 
+    // Navigation Routes
+    Route::get('navigation', NavigationIndex::class)->name('navigation.index');
+    Route::get('navigation/create', NavigationCreate::class)->name('navigation.create');
+    Route::get('navigation/{navigation}/edit', NavigationEdit::class)->name('navigation.edit');
+
     // Taxonomies Routes
     Route::get('taxonomies', TaxonomiesIndex::class)->name('taxonomies.index');
     Route::get('taxonomies/create', TaxonomiesCreate::class)->name('taxonomies.create');
@@ -67,6 +75,11 @@ Route::middleware(['auth'])->group(function (): void {
     Route::get('users', UsersIndex::class)->name('users.index');
     Route::get('users/create', UsersCreate::class)->name('users.create');
     Route::get('users/{user}/edit', UsersEdit::class)->name('users.edit');
+
+    // Globals Routes
+    Route::prefix('admin')->group(function () {
+        require __DIR__.'/globals.php';
+    });
 
     // Settings Routes
     Route::redirect('settings', 'settings/profile');

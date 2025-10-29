@@ -28,6 +28,37 @@ Hector CMS is a modern, flexible Content Management System built with the TALL s
 - **Entry Rendering**: Basic frontend view system
 - **Preview System**: View entries before publishing
 
+### Globals System
+- **Global Sets**: Organize site-wide variables into logical groups
+- **Blueprint Integration**: Use flexible field types for global variables
+- **Caching**: Efficient caching with automatic invalidation
+- **Facade Access**: Clean API through Laravel Facades
+- **Policy Control**: Role-based access to global settings
+
+### Navigation Builder System (✅ Complete)
+- **Menu Management**:
+  - CRUD operations for navigation menus
+  - Handle-based access for efficient lookups
+  - Hierarchical structure with nested items
+  - Polymorphic relationships for dynamic linking
+- **Admin Interface**:
+  - Drag & Drop organization with Livewire + AlpineJS
+  - Nested sorting with parent-child relationships 
+  - Visual indication of menu structure
+  - Item properties editor (URL, title, target, etc.)
+- **Frontend Features**:
+  - Blade components for menu rendering
+  - Active state tracking based on current URL
+  - Support for nested dropdowns
+  - Flexible styling with Tailwind classes
+  - Dark mode support out of the box
+- **Developer Tools**:
+  - Navigation facade for easy access
+  - Service layer for business logic
+  - Cache integration for performance
+  - Full test coverage with Pest
+  - Frontend and backend component tests
+
 ## Feature Implementation Status
 
 | Feature                    | Status      | Progress | Notes                                          |
@@ -39,10 +70,10 @@ Hector CMS is a modern, flexible Content Management System built with the TALL s
 | User Management           | ✅ Complete  | 100%     | Includes roles and policies                    |
 | Frontend Rendering        | ⚠️ Partial   | 70%      | Basic implementation, needs enhancement        |
 | Asset Management          | ✅ Complete  | 100%     | File upload, organization, S3 support         |
-| Global Settings          | 🔄 Planned  | 0%       | Configuration management                       |
+| Globals                  | ✅ Complete  | 100%     | Implemented with Facades, caching, and sets    |
+| Navigation Builder       | ✅ Complete    | 100%   | Full menu management system with frontend rendering |
 | Contact Forms            | 🔄 Planned  | 0%       | With SES integration                          |
 | Publishing Workflow      | 🔄 Planned  | 0%       | Draft/published states + scheduling            |
-| Navigation Builder       | 🔄 Planned  | 0%       | Menu management system                        |
 | Revisions               | 🔄 Planned  | 0%       | Content version control                        |
 | Relationships           | 🔄 Planned  | 0%       | Content relationships/references               |
 | Fieldsets               | 🔄 Planned  | 0%       | Reusable field groups                         |

@@ -24,6 +24,8 @@
                 <flux:navlist.item icon="cube" :href="route('blueprints.index')" :current="request()->routeIs('blueprints.*')" wire:navigate>{{ __('Blueprints') }}</flux:navlist.item>
                 <flux:navlist.item icon="tag" :href="route('taxonomies.index')" :current="request()->routeIs('taxonomies.*')" wire:navigate>{{ __('Taxonomies') }}</flux:navlist.item>
                 <flux:navlist.item icon="photo" :href="route('assets.index')" :current="request()->routeIs('assets.*')" wire:navigate>{{ __('Assets') }}</flux:navlist.item>
+                <flux:navlist.item icon="adjustments-vertical" :href="route('admin.globals.index')" :current="request()->routeIs('admin.globals.*')" wire:navigate>{{ __('Globals') }}</flux:navlist.item>
+                <flux:navlist.item icon="bars-4" :href="route('navigation.index')" :current="request()->routeIs('navigation.*')" wire:navigate>{{ __('Navigation') }}</flux:navlist.item>
             </flux:navlist.group>
 
             @can('viewAny', App\Models\User::class)

@@ -5,9 +5,11 @@ namespace App\Livewire\Entries;
 use App\Livewire\Forms\EntryForm;
 use App\Models\Blueprint;
 use App\Models\Collection as ModelsCollection;
+use Flux\Flux;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Computed;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 class Create extends Component
@@ -77,6 +79,19 @@ class Create extends Component
     public function removeRepeaterItem(string $handle, int $index): void
     {
         $this->form->removeRepeaterItem($handle, $index);
+    }
+
+    public function openAssetBrowser(string $handle): void
+    {
+        // Open the modal for the specific field
+        Flux::modal('asset-browser-'.$handle)->show();
+    }
+
+    #[On('asset-selected')]
+    public function onAssetSelected($data): void
+    {
+        // Update the form field value
+        $this->form->fieldValues[$data['handle']] = $data['value'];
     }
 
     public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory

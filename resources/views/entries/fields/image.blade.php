@@ -1,0 +1,1 @@
+../../field-types/image.blade.php

@@ -132,8 +132,8 @@ class MoveModal extends Component
             $this->form->update($assetId, $this->folderForm->currentFolderId);
         }
 
+        $this->selected = [];
         $this->dispatch('assets-moved');
-        // Flux::modal('move-asset')->close();
     }
 
     public function createFolder(): void

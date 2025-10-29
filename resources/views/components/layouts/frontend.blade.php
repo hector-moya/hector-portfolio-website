@@ -24,10 +24,7 @@
                 </button>
             </div>
             <div class="hidden lg:flex lg:gap-x-12">
-                <a href="/" class="text-sm/6 font-semibold text-white">{{ __('Home') }}</a>
-                <a href="/blog" class="text-sm/6 font-semibold text-white">{{ __('Blog') }}</a>
-                <a href="/portfolio" class="text-sm/6 font-semibold text-white">{{ __('Portfolio') }}</a>
-                <a href="/contact" class="text-sm/6 font-semibold text-white">{{ __('Contact') }}</a>
+                <x-menu handle="main-menu" class="text-sm/6 font-semibold text-white" />
             </div>
             {{-- <div class="hidden lg:flex lg:flex-1 lg:justify-end">
                 <a href="/dashboard" class="text-sm/6 font-semibold text-white">{{ __('Log in') }} <span aria-hidden="true">&rarr;</span></a>
@@ -52,14 +49,8 @@
                         <div class="mt-6 flow-root">
                             <div class="-my-6 divide-y divide-white/10">
                                 <div class="space-y-2 py-6">
-                                    <a href="/" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5">{{ __('Home') }}</a>
-                                    <a href="/blog" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5">{{ __('Blog') }}</a>
-                                    <a href="/portfolio" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5">{{ __('Portfolio') }}</a>
-                                    <a href="/contact" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5">{{ __('Contact') }}</a>
+                                    <x-menu handle="main-menu" class="flex flex-col" />
                                 </div>
-                                {{-- <div class="py-6">
-                                    <a href="/dashboard" class="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-white hover:bg-white/5">{{ __('Log in') }}</a>
-                                </div> --}}
                             </div>
                         </div>
                     </el-dialog-panel>

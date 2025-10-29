@@ -17,8 +17,10 @@
             @foreach ($this->items as $item)
                 <flux:table.row :key="$item->type . '-' . $item->id">
                     <flux:table.cell class="w-2">
-                        @if ($item->type === 'asset')
-                            <flux:checkbox wire:model.live="selected" value="{{ $item->id }}" class="ml-2" />
+                        @if ($actions)
+                            @if ($item->type === 'asset')
+                                <flux:checkbox wire:model.live="selected" value="{{ $item->id }}" class="ml-2" />
+                            @endif
                         @endif
                     </flux:table.cell>
                     <flux:table.cell class="group">

@@ -14,7 +14,7 @@ class UpdateAsset
         // Gate::authorize('update', $asset);
 
         return DB::transaction(function () use ($asset, $assetData) {
-            
+
             $asset->update([
                 'filename' => $assetData['filename'],
                 'original_filename' => $assetData['original_filename'],
@@ -31,7 +31,6 @@ class UpdateAsset
 
             return $asset;
         });
-
 
     }
 }

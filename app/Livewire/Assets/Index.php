@@ -37,6 +37,7 @@ class Index extends Component
     public ?int $assetToMoveId = null;
 
     public array $selected = [];
+
     public array $assetIds = [];
 
     public int $uploadModalKey = 1;
@@ -51,9 +52,9 @@ class Index extends Component
         return $this->form->download($assetId);
     }
 
-    public function openMoveAssetModal(): void
+    public function openMoveAssetModal(?int $assetId): void
     {
-        $this->assetIds = $this->selected;
+        $this->assetIds = $assetId ? [$assetId] : $this->selected;
         Flux::modal('move-asset')->show();
     }
 
@@ -81,6 +82,7 @@ class Index extends Component
     public function onAssetsMoved(): void
     {
         $this->selected = [];
+        $this->assetIds = [];
         $this->folderForm->currentFolderId = null;
         Flux::modal('move-asset')->close();
         $this->resetPage();
