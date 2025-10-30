@@ -73,7 +73,7 @@
                                 @foreach($items as $item)
                                     <div wire:key="item-{{ $item->id }}" wire:sortable.item="{{ $item->id }}" class="relative flex items-center gap-4 rounded-lg border border-neutral-200 bg-neutral-50 p-4 dark:border-neutral-700 dark:bg-neutral-800">
                                         <div wire:sortable.handle class="cursor-move">
-                                            <flux:icon name="grip-vertical" class="h-5 w-5 text-neutral-400" />
+                                            <flux:icon.chevron-up-down class="h-5 w-5 text-neutral-400" />
                                         </div>
 
                                         @if($editingItem?->is($item))
@@ -94,7 +94,7 @@
 
                                             <div class="flex items-center gap-2">
                                                 <flux:button size="sm" variant="ghost" wire:click="editItem({{ $item->id }})">
-                                                    <flux:icon name="edit" class="h-4 w-4" />
+                                                    <flux:icon name="pencil" class="h-4 w-4" />
                                                 </flux:button>
 
                                                 <flux:button size="sm" variant="ghost" wire:click="deleteItem({{ $item->id }})" wire:confirm="{{ __('Are you sure you want to delete this item?') }}">

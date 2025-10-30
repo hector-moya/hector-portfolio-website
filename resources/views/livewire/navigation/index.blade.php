@@ -41,11 +41,11 @@
 
                                     <flux:dropdown position="bottom" align="end">
                                         <flux:button variant="ghost" size="sm">
-                                            <flux:icon name="more-vertical" />
+                                            <flux:icon.ellipsis-vertical />
                                         </flux:button>
 
                                         <flux:menu>
-                                            <flux:menu.item icon="edit" :href="route('navigation.edit', $navigation)" wire:navigate>
+                                            <flux:menu.item icon="pencil" :href="route('navigation.edit', $navigation)" wire:navigate>
                                                 {{ __('Edit') }}
                                             </flux:menu.item>
 
