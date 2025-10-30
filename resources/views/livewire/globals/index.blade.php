@@ -17,7 +17,7 @@
             </div>
         </div>
 
-        <div class="border border-zinc-200 rounded-lg bg-white">
+        <flux:card>
             @if($globalSets->count())
                 <div class="divide-y divide-zinc-200">
                     @foreach($globalSets as $set)
@@ -55,6 +55,6 @@
                     <flux:text>No global sets found.</flux:text>
                 </div>
             @endif
-        </div>
+        </flux:card>
     </div>
 </div>

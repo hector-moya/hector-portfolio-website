@@ -6,7 +6,7 @@
         </div>
 
         <form wire:submit="save" class="space-y-6">
-            <div class="border border-zinc-200 rounded-lg bg-white divide-y divide-zinc-200">
+            <flux:card>
                 <div class="p-4 space-y-4">
                     <div>
                         <flux:input
@@ -72,7 +72,7 @@
                         Update Set
                     </flux:button>
                 </div>
-            </div>
+            </flux:card>
         </form>
     </div>
 </div>
