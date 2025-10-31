@@ -4,6 +4,7 @@ namespace App\Livewire\Assets;
 
 use App\Livewire\Forms\AssetForm;
 use App\Models\Asset;
+use Flux\Flux;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Computed;
@@ -76,8 +77,8 @@ class UploadModal extends Component
         if ($assetId) {
             $this->selectedAsset = Asset::query()->findOrFail($assetId);
             $this->dispatch('asset-selected', $this->selectedAsset->id);
+            Flux::modal('upload-files')->close();
         }
-        $this->closeModal();
     }
 
     public function createFolder(): void
@@ -108,7 +109,7 @@ class UploadModal extends Component
                         ->orWhere('original_filename', 'like', "%{$this->searchQuery}%");
                 });
             })
-            ->where('folder', $this->currentFolder)
+            ->when($this->currentFolderId, fn ($query) => $query->where('folder_id', $this->currentFolderId))
             ->latest()
             ->paginate(24);
     }

@@ -39,7 +39,7 @@ class GlobalsService
             fn () => GlobalVariable::query()
                 ->whereHas('globalSet', fn ($q) => $q->where('handle', $set))
                 ->where('handle', $variable)
-                ->first()?->value ?? $default
+                ->first()->value ?? $default
         );
     }
 
@@ -48,12 +48,9 @@ class GlobalsService
      */
     public function setValue(string $set, string $variable, mixed $value): void
     {
-        $globalSet = GlobalSet::firstOrCreate(['handle' => $set]);
+        $globalSet = \App\Models\GlobalSet::query()->firstOrCreate(['handle' => $set]);
 
-        $globalVariable = GlobalVariable::updateOrCreate(
-            ['global_set_id' => $globalSet->id, 'handle' => $variable],
-            ['value' => $value]
-        );
+        \App\Models\GlobalVariable::query()->updateOrCreate(['global_set_id' => $globalSet->id, 'handle' => $variable], ['value' => $value]);
 
         Cache::forget("globals.{$set}.{$variable}");
     }

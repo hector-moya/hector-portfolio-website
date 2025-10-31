@@ -38,6 +38,8 @@
         <flux:spacer />
 
         <flux:navlist variant="outline">
+            <livewire:language-switcher />
+
             <flux:navlist.item icon="folder-git-2" href="https://github.com/hector-moya/hector-portfolio-website" target="_blank">
                 {{ __('Repository') }}
             </flux:navlist.item>

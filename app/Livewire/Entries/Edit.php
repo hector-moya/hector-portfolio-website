@@ -65,7 +65,7 @@ class Edit extends Component
     }
 
     #[On('asset-selected')]
-    public function onAssetSelected($data): void
+    public function onAssetSelected(array $data): void
     {
         // Update the form field value
         $this->form->fieldValues[$data['handle']] = $data['value'];

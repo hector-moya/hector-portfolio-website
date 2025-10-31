@@ -58,6 +58,9 @@ class AssetForm extends Form
     #[Validate('required|integer')]
     public ?int $uploaded_by = null;
 
+    #[Validate('required|integer')]
+    public ?int $updated_by = null;
+
     public function setAsset(int $assetId): void
     {
         $asset = Asset::query()->findOrFail($assetId);

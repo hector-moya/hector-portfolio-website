@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('navigation_items', function (Blueprint $table) {
+        Schema::create('navigation_items', function (Blueprint $table): void {
             $table->id();
             $table->foreignId('navigation_id')->constrained()->cascadeOnDelete();
             $table->foreignId('parent_id')->nullable()->constrained('navigation_items')->nullOnDelete();

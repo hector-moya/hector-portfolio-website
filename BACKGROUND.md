@@ -35,7 +35,7 @@ Hector CMS is a modern, flexible Content Management System built with the TALL s
 - **Facade Access**: Clean API through Laravel Facades
 - **Policy Control**: Role-based access to global settings
 
-### Navigation Builder System (✅ Complete)
+### Navigation Builder System
 - **Menu Management**:
   - CRUD operations for navigation menus
   - Handle-based access for efficient lookups
@@ -59,6 +59,20 @@ Hector CMS is a modern, flexible Content Management System built with the TALL s
   - Full test coverage with Pest
   - Frontend and backend component tests
 
+
+### Asset Management System
+- **File Management**: Upload, move, delete, and organize files
+- **Storage Options**: Local disk and S3 support
+- **Organization**: Folder-based organization with search
+- **Integration**: Image and File field types for content
+- **Security**: Role-based access control with policies
+- **Browser Component**: Reusable asset browser modal
+- **Field Types**: Asset browser integration with form fields
+- **Type Support**: Image, document, and general file support
+- **Search**: Filename and metadata search capability
+- **Upload Flow**: Visual upload progress with validation
+   - Secure URL generation for assets
+
 ## Feature Implementation Status
 
 | Feature                    | Status      | Progress | Notes                                          |
@@ -80,17 +94,5 @@ Hector CMS is a modern, flexible Content Management System built with the TALL s
 | Search & API            | 🔄 Planned  | 0%       | Search functionality and API access            |
 | Localization            | 🔄 Planned  | 0%       | Multi-language support                        |
 
-### Asset Management System
-- **File Management**: Upload, move, delete, and organize files
-- **Storage Options**: Local disk and S3 support
-- **Organization**: Folder-based organization with search
-- **Integration**: Image and File field types for content
-- **Security**: Role-based access control with policies
-- **Browser Component**: Reusable asset browser modal
-- **Field Types**: Asset browser integration with form fields
-- **Type Support**: Image, document, and general file support
-- **Search**: Filename and metadata search capability
-- **Upload Flow**: Visual upload progress with validation
-   - Secure URL generation for assets
 
 The focus is on completing the core asset management interface and field type integration first, followed by the more advanced features like CDN integration and image transformations.

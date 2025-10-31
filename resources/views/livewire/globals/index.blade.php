@@ -2,17 +2,13 @@
     <div class="flex flex-col gap-6">
         <div class="flex items-center justify-between">
             <div>
-                <flux:heading size="2xl">Globals</flux:heading>
-                <flux:text class="mt-2">Manage site-wide variables organized in sets.</flux:text>
+                <flux:heading size="2xl">{{ __('Globals') }}</flux:heading>
+                <flux:text class="mt-2">{{ __('Manage site-wide variables organized in sets.') }}</flux:text>
             </div>
 
             <div class="flex items-center gap-4">
-                <flux:button
-                    wire:navigate
-                    href="{{ route('admin.globals.create') }}"
-                    variant="primary"
-                >
-                    New Set
+                <flux:button wire:navigate href="{{ route('admin.globals.create') }}" variant="primary">
+                    {{ __('New Set') }}
                 </flux:button>
             </div>
         </div>
@@ -27,18 +23,13 @@
                                 <div class="mt-1 text-sm text-zinc-500">
                                     {{ $set->handle }}
                                     @if($set->blueprint)
-                                        · Uses {{ $set->blueprint->name }} blueprint
+                                        {{ __('Uses ') . $set->blueprint->name . __(' blueprint') }}
                                     @endif
                                 </div>
                             </div>
                             <div class="flex items-center gap-2">
-                                <flux:button
-                                    wire:navigate
-                                    href="{{ route('admin.globals.edit', $set) }}"
-                                    variant="ghost"
-                                    size="sm"
-                                >
-                                    Edit
+                                <flux:button wire:navigate href="{{ route('admin.globals.edit', $set) }}" variant="ghost" size="sm">
+                                    {{ __('Edit') }}
                                 </flux:button>
                             </div>
                         </div>
@@ -52,7 +43,7 @@
                 @endif
             @else
                 <div class="p-4 text-center">
-                    <flux:text>No global sets found.</flux:text>
+                    <flux:text>{{ __('No global sets found.') }}</flux:text>
                 </div>
             @endif
         </flux:card>

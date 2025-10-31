@@ -22,11 +22,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property string|null $excerpt
  * @property-read \App\Models\User $author
  * @property-read \App\Models\Blueprint $blueprint
  * @property-read \App\Models\Collection $collection
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\EntryElement> $elements
  * @property-read int|null $elements_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Term> $terms
+ * @property-read int|null $terms_count
  *
  * @method static \Database\Factories\EntryFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Entry newModelQuery()
@@ -38,6 +41,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Entry whereCollectionId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Entry whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Entry whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Entry whereExcerpt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Entry whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Entry whereLayout($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Entry wherePublishedAt($value)

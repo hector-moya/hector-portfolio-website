@@ -21,22 +21,22 @@ test('index shows list of assets', function () {
 
     Livewire::actingAs($user)
         ->test(Index::class)
-        ->assertViewHas('assets')
-        ->assertSeeHtml('test-file.jpg');
+        ->assertSee('test-file.jpg');
 });
 
 test('can filter assets by folder', function () {
     $user = User::factory()->create();
-    $asset1 = Asset::factory()->create(['folder' => '/images', 'uploaded_by' => $user->id]);
-    $asset2 = Asset::factory()->create(['folder' => '/documents', 'uploaded_by' => $user->id]);
+    $imagesFolder = \App\Models\Folder::factory()->create(['path' => '/images']);
+    $documentsFolder = \App\Models\Folder::factory()->create(['path' => '/documents']);
 
-    $component = Livewire::actingAs($user)
+    $asset1 = Asset::factory()->create(['folder_id' => $imagesFolder->id, 'uploaded_by' => $user->id]);
+    $asset2 = Asset::factory()->create(['folder_id' => $documentsFolder->id, 'uploaded_by' => $user->id]);
+
+    Livewire::actingAs($user)
         ->test(Index::class)
-        ->set('folder', '/images');
-
-    $assets = $component->viewData('assets');
-    expect($assets)->toHaveCount(1)
-        ->and($assets[0]->id)->toBe($asset1->id);
+        ->call('openFolder', $imagesFolder->id)
+        ->assertSee($asset1->filename)
+        ->assertDontSee($asset2->filename);
 });
 
 test('can search assets', function () {
@@ -44,13 +44,11 @@ test('can search assets', function () {
     $asset1 = Asset::factory()->create(['original_filename' => 'findme.jpg', 'uploaded_by' => $user->id]);
     $asset2 = Asset::factory()->create(['original_filename' => 'other.jpg', 'uploaded_by' => $user->id]);
 
-    $component = Livewire::actingAs($user)
+    Livewire::actingAs($user)
         ->test(Index::class)
-        ->set('search', 'findme');
-
-    $assets = $component->viewData('assets');
-    expect($assets)->toHaveCount(1)
-        ->and($assets[0]->id)->toBe($asset1->id);
+        ->set('search', 'findme')
+        ->assertSee($asset1->filename)
+        ->assertDontSee($asset2->filename);
 });
 
 test('can download asset', function () {
@@ -79,25 +77,28 @@ test('can move asset to different folder', function () {
     $file = UploadedFile::fake()->create('test.pdf');
     Storage::disk('public')->putFileAs('/', $file, $file->hashName());
 
+    $rootFolder = \App\Models\Folder::factory()->create(['path' => '/']);
+    $documentsFolder = \App\Models\Folder::factory()->create(['path' => '/documents']);
+
     $asset = Asset::factory()->create([
         'filename' => $file->hashName(),
         'path' => $file->hashName(),
-        'folder' => '/',
+        'folder_id' => $rootFolder->id,
         'disk' => 'public',
         'uploaded_by' => $user->id,
     ]);
 
-    Livewire::actingAs($user)
+    $component = Livewire::actingAs($user)
         ->test(Index::class)
-        ->call('confirmMove', $asset->id)
-        ->assertSet('assetToMove', $asset->id)
-        ->assertSet('showMoveModal', true)
-        ->set('targetFolder', '/documents')
-        ->call('move')
-        ->assertDispatched('asset-moved');
+        ->call('openMoveAssetModal', $asset->id);
+
+    // Test the MoveModal component separately since it handles the actual move
+    Livewire::test(\App\Livewire\Assets\MoveModal::class, ['selected' => [$asset->id]])
+        ->set('folderForm.currentFolderId', $documentsFolder->id)
+        ->call('move');
 
     $asset->refresh();
-    expect($asset->folder)->toBe('/documents')
+    expect($asset->folder->path)->toBe('/documents')
         ->and($asset->path)->toBe('documents/'.$file->hashName());
 });
 
@@ -115,10 +116,7 @@ test('can delete asset', function () {
 
     Livewire::actingAs($user)
         ->test(Index::class)
-        ->call('confirmDelete', $asset->id)
-        ->assertSet('assetToDelete', $asset->id)
-        ->assertSet('showDeleteModal', true)
-        ->call('delete');
+        ->call('delete', $asset->id);
 
     expect(Asset::count())->toBe(0);
     expect(Storage::disk('public')->exists($file->hashName()))->toBeFalse();

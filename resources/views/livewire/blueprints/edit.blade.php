@@ -13,14 +13,29 @@
                     <flux:heading size="lg" class="mb-4">{{ __('Basic Information') }}</flux:heading>
 
                     <div class="flex flex-col gap-6">
-                        {{-- Name --}}
-                        <flux:input label="{{ __('Name') }}" placeholder="{{ __('Blog Post') }}" badge="{{ __('Required') }}" wire:model.live.debounce.750ms="form.name" />
+                        {{-- Name with Translations --}}
+                        <div class="space-y-4">
+                            <flux:input label="{{ __('Name') }}" placeholder="{{ __('Blog Post') }}" badge="{{ __('Required') }}" wire:model.live.debounce.750ms="form.name" />
+
+                            <div>
+                                <flux:heading size="sm">{{ __('Translations') }}</flux:heading>
+                                @livewire('translation-editor', ['model' => $blueprint, 'field' => 'name'])
+                            </div>
+                        </div>
 
                         {{-- Slug --}}
                         <flux:input label="{{ __('Slug') }}" placeholder="blog-post" badge="{{ __('Required') }}" wire:model="form.slug" />
 
                         {{-- Description --}}
-                        <flux:input label="{{ __('Description') }}" placeholder="{{ __('Structure for blog posts...') }}" badge="{{ __('Optional') }}" rows="3" wire:model="form.description" />
+                                                {{-- Description with Translations --}}
+                        <div class="space-y-4">
+                            <flux:textarea label="{{ __('Description') }}" placeholder="{{ __('Define what this blueprint is about') }}" rows="3" wire:model="form.description" />
+
+                            <div>
+                                <flux:heading size="sm">{{ __('Translations') }}</flux:heading>
+                                @livewire('translation-editor', ['model' => $blueprint, 'field' => 'description'])
+                            </div>
+                        </div>
 
                         {{-- Status --}}
                         <div class="flex justify-end">

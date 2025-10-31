@@ -27,7 +27,7 @@ class AssetFactory extends Factory
             'path' => $filename,
             'alt_text' => fake()->sentence(),
             'title' => fake()->words(3, true),
-            'folder' => '/',
+            'folder_id' => null,
             'meta' => [],
             'uploaded_by' => \App\Models\User::factory(),
         ];

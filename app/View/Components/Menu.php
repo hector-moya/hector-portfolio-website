@@ -2,7 +2,6 @@
 
 namespace App\View\Components;
 
-use App\Models\Navigation;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\View\Component;
 
@@ -25,7 +24,7 @@ class Menu extends Component
         $navigation = Cache::remember(
             "navigation.{$this->handle}",
             now()->addHour(),
-            fn () => Navigation::where('handle', $this->handle)
+            fn () => \App\Models\Navigation::query()->where('handle', $this->handle)
                 ->with('items.linkable')
                 ->first()
         );

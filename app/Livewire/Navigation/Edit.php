@@ -7,7 +7,6 @@ use App\Models\Navigation as NavigationModel;
 use App\Models\NavigationItem;
 use Illuminate\Support\Str;
 use Livewire\Component;
-use Livewire\Attributes\Rule;
 
 class Edit extends Component
 {
@@ -20,28 +19,28 @@ class Edit extends Component
         'is_active' => true,
     ];
 
-    #[Rule(['required', 'string', 'max:255'])]
+    #[\Livewire\Attributes\Validate(['required', 'string', 'max:255'])]
     public string $newItemTitle = '';
 
-    #[Rule(['required', 'string', 'max:255'])]
+    #[\Livewire\Attributes\Validate(['required', 'string', 'max:255'])]
     public string $newItemUrl = '';
 
     public ?NavigationItem $editingItem = null;
 
-    public function mount(NavigationModel $navigation)
+    public function mount(NavigationModel $navigation): void
     {
         $this->navigation = $navigation;
         $this->form = $navigation->toArray();
     }
 
-    public function updatedFormName($value)
+    public function updatedFormName($value): void
     {
         if ($this->form['handle'] === $this->navigation->handle) {
             $this->form['handle'] = Str::slug($value);
         }
     }
 
-    public function save()
+    public function save(): void
     {
         $validated = $this->validate([
             'form.name' => ['required', 'string', 'max:255'],
@@ -60,7 +59,7 @@ class Edit extends Component
         ]);
     }
 
-    public function addItem()
+    public function addItem(): void
     {
         $this->validateOnly('newItemTitle');
         $this->validateOnly('newItemUrl');
@@ -82,12 +81,12 @@ class Edit extends Component
         ]);
     }
 
-    public function editItem(NavigationItem $item)
+    public function editItem(NavigationItem $item): void
     {
         $this->editingItem = $item;
     }
 
-    public function updateItem()
+    public function updateItem(): void
     {
         $this->validateOnly('editingItem.title', ['editingItem.title' => ['required', 'string', 'max:255']]);
         $this->validateOnly('editingItem.url', ['editingItem.url' => ['required', 'string', 'max:255']]);
@@ -104,7 +103,7 @@ class Edit extends Component
         ]);
     }
 
-    public function deleteItem(NavigationItem $item)
+    public function deleteItem(NavigationItem $item): void
     {
         $item->delete();
 
@@ -116,7 +115,7 @@ class Edit extends Component
         ]);
     }
 
-    public function reorder($items)
+    public function reorder($items): void
     {
         Navigation::reorder($items);
 
@@ -126,7 +125,7 @@ class Edit extends Component
         ]);
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
     {
         return view('livewire.navigation.edit', [
             'items' => $this->navigation->items()->with('children')->whereNull('parent_id')->orderBy('order')->get(),

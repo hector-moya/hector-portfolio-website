@@ -6,7 +6,6 @@ namespace App\Livewire\Globals;
 
 use App\Models\Blueprint;
 use App\Models\GlobalSet;
-use App\Models\GlobalVariable;
 use Illuminate\View\View;
 use Livewire\Component;
 
@@ -41,6 +40,11 @@ class Edit extends Component
         ];
     }
 
+    public function updatedBlueprintId(): void
+    {
+        $this->globalSet->blueprint_id = $this->blueprint_id;
+    }
+
     public function save(): void
     {
         $this->validate();
@@ -52,10 +56,7 @@ class Edit extends Component
         ]);
 
         foreach ($this->variables as $handle => $value) {
-            GlobalVariable::updateOrCreate(
-                ['global_set_id' => $this->globalSet->id, 'handle' => $handle],
-                ['value' => $value]
-            );
+            \App\Models\GlobalVariable::query()->updateOrCreate(['global_set_id' => $this->globalSet->id, 'handle' => $handle], ['value' => $value]);
         }
 
         $this->dispatch('notify', [

@@ -100,7 +100,7 @@ class MoveModal extends Component
         // Combine queries and paginate
         $combinedQuery = $folders->union($assets);
 
-        if ($this->sortBy && $this->sortBy !== '0') {
+        if ($this->sortBy) {
             $combinedQuery->orderBy($this->sortBy, $this->sortDirection);
         } else {
             // Default sorting: folders first, then by name
@@ -127,8 +127,12 @@ class MoveModal extends Component
     {
         $this->authorize('update', [auth()->user(), Asset::class]);
 
+        $folder = $this->folderForm->currentFolderId !== null && $this->folderForm->currentFolderId !== 0 ? \App\Models\Folder::query()->findOrFail($this->folderForm->currentFolderId) : null;
+        $folderPath = $folder ? trim((string) $folder->path, '/').'/' : '';
+
         foreach ($this->selected as $assetId) {
             $this->form->setAsset($assetId);
+            $this->form->path = $folderPath.basename($this->form->path);
             $this->form->update($assetId, $this->folderForm->currentFolderId);
         }
 

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('parent_id')->nullable()->constrained('folders')->cascadeOnDelete();
             $table->string('path')->index();
             $table->foreignId('created_by')->constrained('users')->cascadeOnDelete();
-            $table->foreignId('updated_by')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('updated_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();
             $table->softDeletes();
 
