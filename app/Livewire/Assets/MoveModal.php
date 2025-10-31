@@ -127,8 +127,12 @@ class MoveModal extends Component
     {
         $this->authorize('update', [auth()->user(), Asset::class]);
 
+        $folder = $this->folderForm->currentFolderId ? Folder::findOrFail($this->folderForm->currentFolderId) : null;
+        $folderPath = $folder ? trim($folder->path, '/') . '/' : '';
+
         foreach ($this->selected as $assetId) {
             $this->form->setAsset($assetId);
+            $this->form->path = $folderPath . basename($this->form->path);
             $this->form->update($assetId, $this->folderForm->currentFolderId);
         }
 

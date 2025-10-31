@@ -49,6 +49,7 @@ class Index extends Component
 
     public function download(int $assetId): Response
     {
+        $this->dispatch('download-file');
         return $this->form->download($assetId);
     }
 

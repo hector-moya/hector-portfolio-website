@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\Concerns\HasTranslations;
 
 /**
  * @property int $id
@@ -44,7 +45,17 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Blueprint extends Model
 {
     /** @use HasFactory<\Database\Factories\BlueprintFactory> */
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, HasTranslations;
+
+    /**
+     * The attributes that are translatable.
+     *
+     * @var array<string>
+     */
+    protected $translatable = [
+        'name',
+        'description',
+    ];
 
     protected $fillable = [
         'name',
