@@ -50,12 +50,13 @@ class Index extends Component
     public function download(int $assetId): Response
     {
         $this->dispatch('download-file');
+
         return $this->form->download($assetId);
     }
 
     public function openMoveAssetModal(?int $assetId): void
     {
-        $this->assetIds = $assetId ? [$assetId] : $this->selected;
+        $this->assetIds = $assetId !== null && $assetId !== 0 ? [$assetId] : $this->selected;
         Flux::modal('move-asset')->show();
     }
 
@@ -166,7 +167,7 @@ class Index extends Component
         // Combine queries and paginate
         $combinedQuery = $folders->union($assets);
 
-        if ($this->sortBy && $this->sortBy !== '0') {
+        if ($this->sortBy !== '' && $this->sortBy !== '0') {
             $combinedQuery->orderBy($this->sortBy, $this->sortDirection);
         } else {
             // Default sorting: folders first, then by name

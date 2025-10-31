@@ -36,7 +36,11 @@ class AssetPolicy
      */
     public function update(User $user, Asset $asset): bool
     {
-        return $user->isAdmin() || $asset->uploaded_by === $user->id;
+        if ($user->isAdmin()) {
+            return true;
+        }
+
+        return $asset->uploaded_by === $user->id;
     }
 
     /**

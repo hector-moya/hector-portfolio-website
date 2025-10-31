@@ -1,68 +1,67 @@
 <?php
 
 use App\Livewire\TranslationEditor;
-use App\Models\Concerns\HasTranslations;
-use App\Models\Entry;
+use App\Models\Blueprint;
 use App\Models\Translation;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\App;
 use Livewire\Livewire;
 
-class TranslatableModel extends Model
-{
-    use HasTranslations;
-
-    protected $fillable = ['title'];
-    protected $table = 'entries';
-}
-
 test('translation editor can be rendered', function () {
-    $model = Entry::factory()->create(['title' => 'Test Title']);
+    $blueprint = Blueprint::factory()->create([
+        'name' => 'Test Blueprint',
+    ]);
 
     Livewire::test(TranslationEditor::class, [
-        'model' => $model,
-        'field' => 'title'
+        'model' => $blueprint,
+        'field' => 'name',
     ])->assertStatus(200);
 });
 
 test('translations can be updated', function () {
-    $model = Entry::factory()->create(['title' => 'Test Title']);
+    $blueprint = Blueprint::factory()->create([
+        'name' => 'Test Blueprint',
+    ]);
 
     Livewire::test(TranslationEditor::class, [
-        'model' => $model,
-        'field' => 'title'
-    ])->call('updateTranslation', 'es', 'Título de Prueba');
+        'model' => $blueprint,
+        'field' => 'name',
+    ])->call('updateTranslation', 'es', 'Blueprint de Prueba');
 
-    $translation = Translation::where('translatable_id', $model->id)
+    $translation = Translation::where('translatable_id', $blueprint->id)
+        ->where('translatable_type', $blueprint::class)
         ->where('locale', 'es')
-        ->where('field', 'title')
+        ->where('field', 'name')
         ->first();
 
     expect($translation)->not->toBeNull()
-        ->and($translation->value)->toBe('Título de Prueba');
+        ->and($translation->value)->toBe('Blueprint de Prueba');
 });
 
 test('translations are loaded correctly', function () {
-    $model = Entry::factory()->create(['title' => 'Test Title']);
-    $model->setTranslation('title', 'es', 'Título de Prueba');
+    $blueprint = Blueprint::factory()->create([
+        'name' => 'Test Blueprint',
+    ]);
+    $blueprint->setTranslation('name', 'es', 'Blueprint de Prueba');
 
     $component = Livewire::test(TranslationEditor::class, [
-        'model' => $model,
-        'field' => 'title'
+        'model' => $blueprint,
+        'field' => 'name',
     ]);
 
-    expect($component->get('translations'))->toBe([
-        'en' => 'Test Title',
-        'es' => 'Título de Prueba'
-    ]);
+    expect($component->get('translations'))->toHaveCount(2)
+        ->and($component->get('translations'))->toMatchArray([
+            'en' => 'Test Blueprint',
+            'es' => 'Blueprint de Prueba',
+        ]);
 });
 
 test('translation changes dispatch event', function () {
-    $model = Entry::factory()->create(['title' => 'Test Title']);
+    $blueprint = Blueprint::factory()->create([
+        'name' => 'Test Blueprint',
+    ]);
 
     Livewire::test(TranslationEditor::class, [
-        'model' => $model,
-        'field' => 'title'
-    ])->call('updateTranslation', 'es', 'Título de Prueba')
-      ->assertDispatched('translation-updated');
+        'model' => $blueprint,
+        'field' => 'name',
+    ])->call('updateTranslation', 'es', 'Blueprint de Prueba')
+        ->assertDispatched('translation-updated');
 });

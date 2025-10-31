@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('global_sets', function (Blueprint $table) {
+        Schema::create('global_sets', function (Blueprint $table): void {
             $table->ulid('id')->primary();
             $table->string('handle')->unique();
             $table->string('name');
@@ -19,7 +19,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('global_variables', function (Blueprint $table) {
+        Schema::create('global_variables', function (Blueprint $table): void {
             $table->ulid('id')->primary();
             $table->string('handle');
             $table->json('value')->nullable();

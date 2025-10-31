@@ -94,7 +94,7 @@ class FolderForm extends Form
 
         $folder = \App\Models\Folder::query()->findOrFail($this->currentFolderId);
 
-        return $folder->ancestors() ?? [];
+        return $folder->ancestors();
     }
 
     public function currentFolderName(): ?string

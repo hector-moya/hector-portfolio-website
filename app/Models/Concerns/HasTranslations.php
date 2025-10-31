@@ -15,7 +15,7 @@ trait HasTranslations
 
     public function translate(string $field, ?string $locale = null): ?string
     {
-        $locale = $locale ?? App::getLocale();
+        $locale ??= App::getLocale();
 
         if ($locale === config('app.fallback_locale')) {
             return $this->getAttribute($field);

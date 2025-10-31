@@ -13,10 +13,13 @@ class Index extends Component
 
     public string $search = '';
 
-    public function getNavigationsProperty()
+    public mixed $navigations;
+
+    #[\Livewire\Attributes\Computed]
+    public function navigations()
     {
         return NavigationModel::query()
-            ->when($this->search, function ($query) {
+            ->when($this->search, function ($query): void {
                 $query->where('name', 'like', "%{$this->search}%")
                     ->orWhere('handle', 'like', "%{$this->search}%");
             })
@@ -24,7 +27,7 @@ class Index extends Component
             ->paginate(10);
     }
 
-    public function delete(NavigationModel $navigation)
+    public function delete(NavigationModel $navigation): void
     {
         $navigation->delete();
         Navigation::flush();
@@ -35,7 +38,7 @@ class Index extends Component
         ]);
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
     {
         return view('livewire.navigation.index', [
             'navigations' => $this->navigations,

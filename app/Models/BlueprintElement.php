@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $order
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string|null $deleted_at
  * @property-read \App\Models\Blueprint $blueprint
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\EntryElement> $entryElements
  * @property-read int|null $entry_elements_count
@@ -31,6 +32,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|BlueprintElement whereBlueprintId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|BlueprintElement whereConfig($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|BlueprintElement whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BlueprintElement whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|BlueprintElement whereHandle($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|BlueprintElement whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|BlueprintElement whereInstructions($value)

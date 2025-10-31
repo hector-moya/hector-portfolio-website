@@ -16,7 +16,7 @@ class FolderFactory extends Factory
      */
     public function definition(): array
     {
-        $path = '/' . fake()->word();
+        $path = '/'.fake()->word();
 
         return [
             'name' => trim($path, '/'),

@@ -18,7 +18,7 @@ class NavigationItemFactory extends Factory
     {
         return [
             'title' => $this->faker->words(3, true),
-            'url' => '/' . $this->faker->slug(),
+            'url' => '/'.$this->faker->slug(),
             'order' => $this->faker->numberBetween(1, 100),
             'target' => '_self',
             'class' => null,

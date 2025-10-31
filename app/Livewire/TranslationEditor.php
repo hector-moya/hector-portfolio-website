@@ -16,7 +16,7 @@ class TranslationEditor extends Component
 
     public array $locales = [
         'en' => 'English',
-        'es' => 'Español'
+        'es' => 'Español',
     ];
 
     public function mount(Model $model, string $field): void
@@ -28,10 +28,11 @@ class TranslationEditor extends Component
 
     public function loadTranslations(): void
     {
-        if (!method_exists($this->model, 'getTranslations')) {
+        if (! method_exists($this->model, 'getTranslations')) {
             $this->translations = [
-                App::getLocale() => $this->model->{$this->field}
+                App::getLocale() => $this->model->{$this->field},
             ];
+
             return;
         }
 
@@ -51,7 +52,7 @@ class TranslationEditor extends Component
         $this->dispatch('translation-updated');
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
     {
         return view('livewire.translation-editor');
     }

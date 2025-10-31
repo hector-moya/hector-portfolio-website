@@ -7,6 +7,44 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * @property int $id
+ * @property string $name
+ * @property int|null $parent_id
+ * @property string $path
+ * @property int $created_by
+ * @property int|null $updated_by
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Asset> $assets
+ * @property-read int|null $assets_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Folder> $children
+ * @property-read int|null $children_count
+ * @property-read \App\Models\User $creator
+ * @property-read Folder|null $parent
+ * @property-read \App\Models\User|null $updater
+ *
+ * @method static \Database\Factories\FolderFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Folder newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Folder newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Folder onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Folder query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Folder root()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Folder whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Folder whereCreatedBy($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Folder whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Folder whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Folder whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Folder whereParentId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Folder wherePath($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Folder whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Folder whereUpdatedBy($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Folder withTrashed(bool $withTrashed = true)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Folder withoutTrashed()
+ *
+ * @mixin \Illuminate\Database\Eloquent\Model
+ */
 class Folder extends Model
 {
     use \Illuminate\Database\Eloquent\Factories\HasFactory;

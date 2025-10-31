@@ -109,7 +109,7 @@ class UploadModal extends Component
                         ->orWhere('original_filename', 'like', "%{$this->searchQuery}%");
                 });
             })
-            ->when($this->currentFolderId, fn($query) => $query->where('folder_id', $this->currentFolderId))
+            ->when($this->currentFolderId, fn ($query) => $query->where('folder_id', $this->currentFolderId))
             ->latest()
             ->paginate(24);
     }

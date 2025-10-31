@@ -2,11 +2,11 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasTranslations;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Models\Concerns\HasTranslations;
 
 /**
  * @property int $id
@@ -23,6 +23,8 @@ use App\Models\Concerns\HasTranslations;
  * @property-read int|null $elements_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Entry> $entries
  * @property-read int|null $entries_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Translation> $translations
+ * @property-read int|null $translations_count
  *
  * @method static \Database\Factories\BlueprintFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Blueprint newModelQuery()
@@ -45,7 +47,7 @@ use App\Models\Concerns\HasTranslations;
 class Blueprint extends Model
 {
     /** @use HasFactory<\Database\Factories\BlueprintFactory> */
-    use HasFactory, SoftDeletes, HasTranslations;
+    use HasFactory, HasTranslations, SoftDeletes;
 
     /**
      * The attributes that are translatable.

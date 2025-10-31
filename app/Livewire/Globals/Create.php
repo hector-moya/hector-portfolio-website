@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Livewire\Globals;
 
 use App\Models\Blueprint;
-use App\Models\GlobalSet;
 use Illuminate\View\View;
 use Livewire\Component;
 
@@ -27,7 +26,7 @@ class Create extends Component
     {
         $this->validate();
 
-        $set = GlobalSet::create([
+        $set = \App\Models\GlobalSet::query()->create([
             'name' => $this->name,
             'handle' => $this->handle,
             'blueprint_id' => $this->blueprint_id,

@@ -3,9 +3,8 @@
 namespace App\Livewire\Navigation;
 
 use App\Facades\Navigation;
-use App\Models\Navigation as NavigationModel;
-use Livewire\Component;
 use Illuminate\Support\Str;
+use Livewire\Component;
 
 class Create extends Component
 {
@@ -16,12 +15,12 @@ class Create extends Component
         'is_active' => true,
     ];
 
-    public function updatedFormName($value)
+    public function updatedFormName($value): void
     {
         $this->form['handle'] = Str::slug($value);
     }
 
-    public function save()
+    public function save(): void
     {
         $validated = $this->validate([
             'form.name' => ['required', 'string', 'max:255'],
@@ -30,7 +29,7 @@ class Create extends Component
             'form.is_active' => ['required', 'boolean'],
         ]);
 
-        $navigation = NavigationModel::create($validated['form']);
+        $navigation = \App\Models\Navigation::query()->create($validated['form']);
 
         Navigation::flush();
 
@@ -42,7 +41,7 @@ class Create extends Component
         ]);
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
     {
         return view('livewire.navigation.create');
     }

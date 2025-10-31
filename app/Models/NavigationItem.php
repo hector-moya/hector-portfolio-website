@@ -8,6 +8,46 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
+/**
+ * @property int $id
+ * @property int $navigation_id
+ * @property int|null $parent_id
+ * @property string $title
+ * @property string|null $url
+ * @property int $order
+ * @property string $target
+ * @property string|null $linkable_type
+ * @property int|null $linkable_id
+ * @property string|null $class
+ * @property bool $is_active
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, NavigationItem> $children
+ * @property-read int|null $children_count
+ * @property-read Model|\Illuminate\Database\Eloquent\Model|null $linkable
+ * @property-read \App\Models\Navigation $navigation
+ * @property-read NavigationItem|null $parent
+ *
+ * @method static \Database\Factories\NavigationItemFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|NavigationItem newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|NavigationItem newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|NavigationItem query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|NavigationItem whereClass($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|NavigationItem whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|NavigationItem whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|NavigationItem whereIsActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|NavigationItem whereLinkableId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|NavigationItem whereLinkableType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|NavigationItem whereNavigationId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|NavigationItem whereOrder($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|NavigationItem whereParentId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|NavigationItem whereTarget($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|NavigationItem whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|NavigationItem whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|NavigationItem whereUrl($value)
+ *
+ * @mixin \Illuminate\Database\Eloquent\Model
+ */
 class NavigationItem extends Model
 {
     /** @use HasFactory<\Database\Factories\NavigationItemFactory> */
@@ -16,7 +56,7 @@ class NavigationItem extends Model
     /**
      * The attributes that are mass assignable.
      *
-     * @var array<string>
+     * @var list<string>
      */
     protected $fillable = [
         'navigation_id',

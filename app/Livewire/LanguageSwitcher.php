@@ -12,7 +12,7 @@ class LanguageSwitcher extends Component
 
     public array $locales = [
         'en' => 'English',
-        'es' => 'Español'
+        'es' => 'Español',
     ];
 
     public function mount(): void
@@ -30,7 +30,7 @@ class LanguageSwitcher extends Component
         }
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
     {
         return view('livewire.language-switcher');
     }

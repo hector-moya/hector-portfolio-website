@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('translations', function (Blueprint $table) {
+        Schema::create('translations', function (Blueprint $table): void {
             $table->id();
             $table->string('locale', 10);
             $table->morphs('translatable'); // This will create translatable_type and translatable_id columns

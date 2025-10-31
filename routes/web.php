@@ -77,7 +77,7 @@ Route::middleware(['auth'])->group(function (): void {
     Route::get('users/{user}/edit', UsersEdit::class)->name('users.edit');
 
     // Globals Routes
-    Route::prefix('admin')->group(function () {
+    Route::prefix('admin')->group(function (): void {
         require __DIR__.'/globals.php';
     });
 

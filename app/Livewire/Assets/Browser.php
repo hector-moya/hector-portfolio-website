@@ -32,11 +32,11 @@ class Browser extends Component
         Flux::modal('asset-browser-'.$this->fieldHandle)->close();
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
     {
         return view('livewire.assets.browser', [
             'assets' => Asset::query()
-                ->when($this->search, function ($query) {
+                ->when($this->search, function ($query): void {
                     $query->where('original_filename', 'like', "%{$this->search}%")
                         ->orWhere('mime_type', 'like', "%{$this->search}%");
                 })
