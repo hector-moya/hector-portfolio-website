@@ -41,6 +41,11 @@ class Edit extends Component
         ];
     }
 
+    public function updatedBlueprintId(): void
+    {
+        $this->globalSet->blueprint_id = $this->blueprint_id;
+    }
+
     public function save(): void
     {
         $this->validate();

@@ -1,19 +1,15 @@
 <div>
     <div class="flex flex-col gap-6">
         <div>
-            <flux:heading size="2xl">New Global Set</flux:heading>
-            <flux:text class="mt-2">Create a new global variables set.</flux:text>
+            <flux:heading size="2xl">{{ __('New Global Set') }}</flux:heading>
+            <flux:text class="mt-2">{{ __('Create a new global variables set.') }}</flux:text>
         </div>
 
         <form wire:submit="save" class="space-y-6">
             <flux:card>
                 <div class="p-4 space-y-4">
                     <div>
-                        <flux:input
-                            wire:model="name"
-                            label="Name"
-                            placeholder="Company Information"
-                        />
+                        <flux:input wire:model="name" label="Name" placeholder="Company Information" />
                     </div>
 
                     <div>
