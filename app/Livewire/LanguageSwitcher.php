@@ -9,6 +9,7 @@ use Livewire\Component;
 class LanguageSwitcher extends Component
 {
     public string $currentLocale;
+    public string $currentRoute;
 
     public array $locales = [
         'en' => 'English',
@@ -26,6 +27,7 @@ class LanguageSwitcher extends Component
             Session::put('locale', $locale);
             App::setLocale($locale);
             $this->currentLocale = $locale;
+            $this->redirect(route($this->currentRoute));
             $this->dispatch('language-changed');
         }
     }

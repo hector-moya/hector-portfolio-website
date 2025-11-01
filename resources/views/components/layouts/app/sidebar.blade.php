@@ -38,7 +38,6 @@
         <flux:spacer />
 
         <flux:navlist variant="outline">
-            <livewire:language-switcher />
 
             <flux:navlist.item icon="folder-git-2" href="https://github.com/hector-moya/hector-portfolio-website" target="_blank">
                 {{ __('Repository') }}
@@ -76,6 +75,12 @@
                 <flux:menu.radio.group>
                     <flux:menu.item :href="route('settings.profile')" icon="cog" wire:navigate>{{ __('Settings') }}</flux:menu.item>
                 </flux:menu.radio.group>
+
+                <flux:menu.separator />
+
+                <flux:menu.submenu icon="language"  heading="{{ __('Language') }}">
+                    <livewire:language-switcher :currentRoute="request()->route()->getName()" />
+                </flux:menu.submenu>
 
                 <flux:menu.separator />
 
@@ -121,6 +126,12 @@
                 <flux:menu.radio.group>
                     <flux:menu.item :href="route('settings.profile')" icon="cog" wire:navigate>{{ __('Settings') }}</flux:menu.item>
                 </flux:menu.radio.group>
+
+                <flux:menu.separator />
+
+                <flux:menu.submenu icon="language"  heading="{{ __('Language') }}">
+                    <livewire:language-switcher />
+                </flux:menu.submenu>
 
                 <flux:menu.separator />
 
