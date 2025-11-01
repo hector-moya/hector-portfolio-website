@@ -55,9 +55,11 @@ jobs:
 
       - name: Create Storage Directories
         run: |
-          mkdir -p storage/app/public
-          mkdir -p storage/framework/{sessions,views,cache}
-          chmod -R 775 storage
+          sudo mkdir -p storage/app/public
+          sudo mkdir -p storage/framework/{sessions,views,cache}
+          sudo mkdir -p public/storage
+          sudo chmod -R 777 storage public/storage
+          sudo chown -R $USER:$USER storage public/storage
 
       - name: Run Tests
         run: ./vendor/bin/pest
