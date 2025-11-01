@@ -4,24 +4,28 @@ namespace App\Livewire\Fields;
 
 use App\Models\Asset;
 use App\Models\BlueprintElement;
+use Livewire\Attributes\Modelable;
 use Livewire\Component;
-use Livewire\Form;
 
+/** @property array $fieldValues */
 class ImageField extends Component
 {
     public BlueprintElement $element;
-    public Form $form;
+
+    #[Modelable]
+    public array $fieldValues = [];
+
     public ?Asset $asset = null;
 
-    public function mount(BlueprintElement $element, Form $form)
+    public function mount(BlueprintElement $element, array $fieldValues = []): void
     {
         $this->element = $element;
-        $this->form = $form;
+        $this->fieldValues = $fieldValues;
 
         // Load the asset if we have one
-        $value = $form->fieldValues[$element->handle] ?? null;
+        $value = $fieldValues[$element->handle] ?? null;
         if ($value) {
-            $this->asset = Asset::find($value);
+            $this->asset = Asset::query()->find($value);
         }
     }
 
@@ -32,11 +36,11 @@ class ImageField extends Component
 
     public function removeImage(): void
     {
-        $this->form->fieldValues[$this->element->handle] = null;
+        $this->fieldValues[$this->element->handle] = null;
         $this->asset = null;
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
     {
         return view('livewire.fields.image-field');
     }

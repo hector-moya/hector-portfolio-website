@@ -8,7 +8,7 @@ return new class extends Migration
     public function up(): void
     {
         // Migrate existing blueprints
-        Blueprint::all()->each(function ($blueprint) {
+        Blueprint::all()->each(function ($blueprint): void {
             try {
                 // Get the blueprint type (default to 'collection' if not set)
                 $type = $blueprint->type ?? 'collection';
@@ -113,7 +113,7 @@ return new class extends Migration
                 }
             } catch (\Exception $e) {
                 // Log the error but continue with other blueprints
-                \Log::error("Error migrating blueprint {$blueprint->id}: " . $e->getMessage());
+                \Illuminate\Support\Facades\Log::error("Error migrating blueprint {$blueprint->id}: ".$e->getMessage());
             }
         });
     }

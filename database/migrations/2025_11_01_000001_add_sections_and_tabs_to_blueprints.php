@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('blueprint_tabs', function (Blueprint $table) {
+        Schema::create('blueprint_tabs', function (Blueprint $table): void {
             $table->ulid('id')->primary();
             $table->ulid('blueprint_id');
             $table->string('name');
@@ -22,7 +22,7 @@ return new class extends Migration
                 ->onDelete('cascade');
         });
 
-        Schema::create('blueprint_sections', function (Blueprint $table) {
+        Schema::create('blueprint_sections', function (Blueprint $table): void {
             $table->ulid('id')->primary();
             $table->ulid('blueprint_id');
             $table->ulid('tab_id')->nullable();
@@ -44,7 +44,7 @@ return new class extends Migration
         });
 
         // Update blueprint_elements to reference sections
-        Schema::table('blueprint_elements', function (Blueprint $table) {
+        Schema::table('blueprint_elements', function (Blueprint $table): void {
             $table->ulid('section_id')->nullable()->after('blueprint_id');
 
             $table->foreign('section_id')
@@ -56,7 +56,7 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::table('blueprint_elements', function (Blueprint $table) {
+        Schema::table('blueprint_elements', function (Blueprint $table): void {
             $table->dropForeign(['section_id']);
             $table->dropColumn('section_id');
         });

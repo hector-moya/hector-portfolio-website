@@ -19,7 +19,10 @@ test('current locale is set correctly', function () {
 });
 
 test('switching language updates locale and session', function () {
-    $component = Livewire::test(LanguageSwitcher::class)
+
+    $component = Livewire::test(LanguageSwitcher::class, [
+        'currentRoute' => 'blueprints.index',
+    ])
         ->call('switchLocale', 'es');
 
     expect(App::getLocale())->toBe('es')
@@ -39,7 +42,9 @@ test('switching to invalid locale does nothing', function () {
 });
 
 test('switching language dispatches event', function () {
-    Livewire::test(LanguageSwitcher::class)
+    Livewire::test(LanguageSwitcher::class, [
+        'currentRoute' => 'blueprints.index',
+    ])
         ->call('switchLocale', 'es')
         ->assertDispatched('language-changed');
 });

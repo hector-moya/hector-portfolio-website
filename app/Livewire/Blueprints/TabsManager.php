@@ -18,20 +18,20 @@ class TabsManager extends Component
 
         $this->blueprint->tabs()->create([
             'name' => 'New Tab',
-            'handle' => 'new_tab_' . Str::random(6),
+            'handle' => 'new_tab_'.Str::random(6),
             'sort_order' => $nextOrder,
         ]);
     }
 
-    public function addSection(BlueprintTab $tab = null): void
+    public function addSection(?BlueprintTab $tab = null): void
     {
         $nextOrder = $this->blueprint->sections()
-            ->when($tab, fn($q) => $q->where('tab_id', $tab->id))
+            ->when($tab, fn ($q) => $q->where('tab_id', $tab->id))
             ->max('sort_order') + 1;
 
         $this->blueprint->sections()->create([
             'name' => 'New Section',
-            'handle' => 'new_section_' . Str::random(6),
+            'handle' => 'new_section_'.Str::random(6),
             'tab_id' => $tab?->id,
             'sort_order' => $nextOrder,
         ]);
@@ -50,18 +50,18 @@ class TabsManager extends Component
     public function updateTabOrder($orderedIds): void
     {
         foreach ($orderedIds as $order => $id) {
-            BlueprintTab::where('id', $id)->update(['sort_order' => $order]);
+            \App\Models\BlueprintTab::query()->where('id', $id)->update(['sort_order' => $order]);
         }
     }
 
     public function updateSectionOrder($orderedIds): void
     {
         foreach ($orderedIds as $order => $id) {
-            BlueprintSection::where('id', $id)->update(['sort_order' => $order]);
+            \App\Models\BlueprintSection::query()->where('id', $id)->update(['sort_order' => $order]);
         }
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
     {
         return view('livewire.blueprints.tabs-manager', [
             'tabs' => $this->blueprint->tabs()->with('sections.elements')->get(),

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Livewire\Globals;
 
+use App\Livewire\Forms\GlobalForm;
 use App\Models\Blueprint;
 use App\Traits\HasSlug;
-use App\Livewire\Forms\GlobalForm;
 use Illuminate\View\View;
 use Livewire\Component;
 
@@ -15,6 +15,7 @@ class Create extends Component
     use HasSlug;
 
     public GlobalForm $form;
+
     public string $name = '';
 
     public string $handle = '';

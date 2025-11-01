@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasBlueprintFields;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -57,7 +58,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Entry extends Model
 {
     /** @use HasFactory<\Database\Factories\EntryFactory> */
-    use HasFactory, SoftDeletes;
+    use HasBlueprintFields, HasFactory, SoftDeletes;
 
     protected $fillable = [
         'collection_id',

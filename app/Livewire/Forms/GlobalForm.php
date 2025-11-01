@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Livewire\Forms;
 
-use Livewire\Attributes\Validate;
-use App\Models\GlobalSet;
 use App\Actions\Globals\CreateGlobal;
+use App\Models\GlobalSet;
 use Flux\Flux;
+use Livewire\Attributes\Validate;
 use Livewire\Form;
 
 class GlobalForm extends Form
@@ -20,7 +20,6 @@ class GlobalForm extends Form
 
     #[Validate('required|integer|exists:blueprints,id')]
     public ?int $blueprint_id = null;
-
 
     public function create(): GlobalSet
     {

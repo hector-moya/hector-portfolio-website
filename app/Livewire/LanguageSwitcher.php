@@ -9,6 +9,7 @@ use Livewire\Component;
 class LanguageSwitcher extends Component
 {
     public string $currentLocale;
+
     public string $currentRoute;
 
     public array $locales = [

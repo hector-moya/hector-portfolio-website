@@ -6,8 +6,8 @@ namespace App\Livewire\Globals;
 
 use App\Models\GlobalSet;
 use Illuminate\View\View;
-use Livewire\Component;
 use Livewire\Attributes\Computed;
+use Livewire\Component;
 use Livewire\WithPagination;
 
 class Index extends Component
