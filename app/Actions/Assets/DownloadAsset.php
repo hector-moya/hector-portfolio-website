@@ -3,10 +3,10 @@
 namespace App\Actions\Assets;
 
 use App\Models\Asset;
-use Illuminate\Support\Str;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class DownloadAsset
 {
@@ -18,9 +18,7 @@ class DownloadAsset
         $disk = $asset->disk === 'local' ? 'public' : $asset->disk;
         $path = $asset->path;
 
-        if (! Storage::disk($disk)->exists($path)) {
-            abort(404, 'File not found.');
-        }
+        abort_unless(Storage::disk($disk)->exists($path), 404, 'File not found.');
 
         // Sanitize/encode the filename for headers
         $name = $asset->original_filename ?: basename($path);
@@ -31,7 +29,7 @@ class DownloadAsset
 
         return Storage::disk($disk)->response($path, $name, [
             'Content-Type' => $asset->mime_type,
-            'Content-Disposition' => 'attachment; filename="' . $name . '"'
+            'Content-Disposition' => 'attachment; filename="'.$name.'"',
         ]);
     }
 }

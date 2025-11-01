@@ -50,5 +50,14 @@ jobs:
       - name: Build Assets
         run: npm run build
 
+      - name: Create Storage Link
+        run: php artisan storage:link
+
+      - name: Create Storage Directories
+        run: |
+          mkdir -p storage/app/public
+          mkdir -p storage/framework/{sessions,views,cache}
+          chmod -R 775 storage
+
       - name: Run Tests
         run: ./vendor/bin/pest
