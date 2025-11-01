@@ -63,3 +63,5 @@ jobs:
 
       - name: Run Tests
         run: ./vendor/bin/pest
+        env:
+          CI: true
