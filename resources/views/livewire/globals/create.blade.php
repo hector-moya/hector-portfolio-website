@@ -1,15 +1,21 @@
 <div>
-    <div class="flex flex-col gap-6">
-        <div>
-            <flux:heading size="2xl">{{ __('New Global Set') }}</flux:heading>
-            <flux:text class="mt-2">{{ __('Create a new global variables set.') }}</flux:text>
+    <div class="mx-auto flex h-full w-full max-w-4xl flex-1 flex-col gap-6">
+        {{-- Header --}}
+        <div class="flex items-center justify-between">
+            <div>
+                <flux:heading size="xl">{{ __('New Global Set') }}</flux:heading>
+                <flux:text>{{ __('Create a new global variables set.') }}</flux:text>
+            </div>
+            <flux:button wire:navigate href="{{ route('admin.globals.index') }}" icon="arrow-uturn-left">
+                {{ __('Back') }}
+            </flux:button>
         </div>
 
         <form wire:submit="save" class="space-y-6">
             <flux:card>
                 <div class="space-y-4 p-4">
                     <div>
-                        <flux:input wire:model="name" label="Name" placeholder="Company Information" />
+                        <flux:input wire:model.live.debounce.750ms="name" label="Name" placeholder="Company Information" />
                     </div>
 
                     <div>
@@ -26,8 +32,9 @@
                         </flux:select>
                     </div>
                 </div>
+            </flux:card>
 
-                <div class="flex items-center justify-between p-4">
+                <div class="flex items-center justify-end gap-3">
                     <flux:button wire:navigate href="{{ route('admin.globals.index') }}" variant="ghost">
                         {{ __('Cancel') }}
                     </flux:button>
@@ -36,7 +43,6 @@
                         {{ __('Create Set') }}
                     </flux:button>
                 </div>
-            </flux:card>
         </form>
     </div>
 </div>

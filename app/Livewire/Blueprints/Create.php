@@ -5,6 +5,7 @@ namespace App\Livewire\Blueprints;
 use App\Livewire\Forms\BlueprintForm;
 use App\Services\FieldTypeRegistry;
 use Flux\Flux;
+use App\Traits\HasSlug;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Title;
 use Livewire\Component;

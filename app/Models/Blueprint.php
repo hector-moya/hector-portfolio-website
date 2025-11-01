@@ -49,6 +49,16 @@ class Blueprint extends Model
     /** @use HasFactory<\Database\Factories\BlueprintFactory> */
     use HasFactory, HasTranslations, SoftDeletes;
 
+    public function tabs(): HasMany
+    {
+        return $this->hasMany(BlueprintTab::class)->orderBy('sort_order');
+    }
+
+    public function sections(): HasMany
+    {
+        return $this->hasMany(BlueprintSection::class)->orderBy('sort_order');
+    }
+
     /**
      * The attributes that are translatable.
      *

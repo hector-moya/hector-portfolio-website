@@ -13,7 +13,7 @@ enum FieldType: string
     case Date = 'date';
     case Time = 'time';
     case DateTime = 'datetime';
-    case Checkbox = 'checkbox';
+    case Toggle = 'toggle';
     case Select = 'select';
     case Radio = 'radio';
     case Image = 'image';
@@ -32,7 +32,7 @@ enum FieldType: string
             self::Date => 'Date',
             self::Time => 'Time',
             self::DateTime => 'Date & Time',
-            self::Checkbox => 'Toggle',
+            self::Toggle => 'Toggle',
             self::Select => 'Select',
             self::Radio => 'Radio',
             self::Image => 'Image',
@@ -53,7 +53,7 @@ enum FieldType: string
             self::Date => 'calendar',
             self::Time => 'clock',
             self::DateTime => 'calendar-date-range',
-            self::Checkbox => 'document-check',
+            self::Toggle => 'document-check',
             self::Select => 'chevrons-up-down',
             self::Radio => 'list-bullet',
             self::Image => 'photo',
@@ -74,7 +74,7 @@ enum FieldType: string
             self::Date => ['format' => 'Y-m-d'],
             self::Time => ['format' => 'H:i'],
             self::DateTime => ['format' => 'Y-m-d H:i'],
-            self::Checkbox => ['on_label' => 'Yes', 'off_label' => 'No'],
+            self::Toggle => ['on_label' => 'Yes', 'off_label' => 'No'],
             self::Select => ['options' => []],
             self::Radio => ['options' => []],
             self::Image => ['max_size_mb' => 5, 'mimes' => ['jpg', 'jpeg', 'png', 'webp']],
@@ -114,7 +114,7 @@ enum FieldType: string
             self::Date, self::Time, self::DateTime => [
                 'format' => ['required', 'string', 'max:50'],
             ],
-            self::Checkbox => [
+            self::Toggle => [
                 'on_label' => ['required', 'string', 'max:50'],
                 'off_label' => ['required', 'string', 'max:50'],
             ],

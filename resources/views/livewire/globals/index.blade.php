@@ -1,22 +1,23 @@
 <div>
-    <div class="flex flex-col gap-6">
+    <div class="flex h-full w-full max-w-4xl mx-auto flex-1 flex-col gap-6">
+        {{-- Header --}}
         <div class="flex items-center justify-between">
             <div>
-                <flux:heading size="2xl">{{ __('Globals') }}</flux:heading>
-                <flux:text class="mt-2">{{ __('Manage site-wide variables organized in sets.') }}</flux:text>
+                <flux:heading size="xl">{{ __('Globals') }}</flux:heading>
+                <flux:text>{{ __('Manage site-wide variables organised in globals.') }}</flux:text>
             </div>
 
             <div class="flex items-center gap-4">
                 <flux:button wire:navigate href="{{ route('admin.globals.create') }}" variant="primary">
-                    {{ __('New Set') }}
+                    {{ __('Create Global Set') }}
                 </flux:button>
             </div>
         </div>
 
         <flux:card>
-            @if($globalSets->count())
+            @if($this->globalSets->count())
                 <div class="divide-y divide-zinc-200">
-                    @foreach($globalSets as $set)
+                    @foreach($this->globalSets as $set)
                         <div class="flex items-center justify-between p-4">
                             <div>
                                 <div class="font-medium">{{ $set->name }}</div>
@@ -36,9 +37,9 @@
                     @endforeach
                 </div>
 
-                @if($globalSets->hasPages())
+                @if($this->globalSets->hasPages())
                     <div class="p-4 border-t border-zinc-200">
-                        {{ $globalSets->links() }}
+                        {{ $this->globalSets->links() }}
                     </div>
                 @endif
             @else
