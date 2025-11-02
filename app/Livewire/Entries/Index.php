@@ -56,7 +56,6 @@ class Index extends Component
         $this->resetPage();
     }
 
-
     #[Computed]
     public function entries(): LengthAwarePaginator
     {
