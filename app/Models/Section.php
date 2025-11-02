@@ -4,11 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Section extends Model
 {
-    use \Illuminate\Database\Eloquent\Factories\HasFactory;
+    use HasFactory;
 
     protected $fillable = [
         'name',
@@ -24,7 +25,7 @@ class Section extends Model
 
     public function tab(): BelongsTo
     {
-        return $this->belongsTo(BlueprintTab::class);
+        return $this->belongsTo(Tab::class);
     }
 
     public function elements(): HasMany

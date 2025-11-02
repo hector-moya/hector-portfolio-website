@@ -5,19 +5,30 @@ namespace App\Livewire\Blueprints;
 use App\Livewire\Forms\BlueprintForm;
 use App\Services\FieldTypeRegistry;
 use Flux\Flux;
+use App\Traits\HasSlug;
 use Livewire\Attributes\Computed;
+use Illuminate\Support\Collection;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
 class Create extends Component
 {
+    use HasSlug;
     public BlueprintForm $form;
 
+    public string $newTabName = '';
+
     public array $tabs = [
-        'tab-1' => 'Tab #1',
-        'tab-2' => 'Tab #2',
+        'main' => 'Main',
+        'side' => 'Side',
     ];
 
+
+    public function mount(): void
+    {
+        // Start with one empty element
+        $this->form->addElement('text');
+    }
     /**
      * Select options [value => label] built from registry.
      */
@@ -36,16 +47,21 @@ class Create extends Component
         return app(FieldTypeRegistry::class)->all();
     }
 
-    public function mount(): void
+    #[Computed]
+    public function sections(): ?Collection
     {
-        // Start with one empty element
-        $this->form->addElement('text');
+        return $this->form->sections ??= collect([
+            (object) ['name' => 'Main'],
+            (object) ['name' => 'Side'],
+        ]);
     }
 
     public function addTab(): void
     {
-        $id = 'tab-'.str()->random();
-        $this->tabs[$id] = 'Tab #'.count($this->tabs) + 1;
+        $id = $this->generateSlug($this->newTabName) ?: 'tab-'.str()->random();
+        $this->tabs[$id] = $this->newTabName ?: 'Tab #'.(count($this->tabs) + 1);
+        $this->newTabName = '';
+        Flux::modal('add-tab-modal')->close();
     }
 
     public function updatedFormName(): void
