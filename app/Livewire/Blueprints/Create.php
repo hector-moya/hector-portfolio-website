@@ -51,8 +51,7 @@ class Create extends Component
     public function sections(): ?Collection
     {
         return $this->form->sections ??= collect([
-            (object) ['name' => 'Main'],
-            (object) ['name' => 'Side'],
+            (object) ['id' => 1, 'name' => 'Section 1'],
         ]);
     }
 
