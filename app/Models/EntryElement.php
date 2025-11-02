@@ -9,21 +9,21 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * @property int $id
  * @property int $entry_id
- * @property int $blueprint_element_id
+ * @property int $field_id
  * @property string $handle
  * @property string|null $value
  * @property array<array-key, mixed>|null $meta
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property string|null $deleted_at
- * @property-read \App\Models\BlueprintElement $blueprintElement
+ * @property-read \App\Models\Field $Field
  * @property-read \App\Models\Entry $entry
  *
  * @method static \Database\Factories\EntryElementFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|EntryElement newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|EntryElement newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|EntryElement query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|EntryElement whereBlueprintElementId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|EntryElement whereFieldId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|EntryElement whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|EntryElement whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|EntryElement whereEntryId($value)
@@ -42,7 +42,7 @@ class EntryElement extends Model
 
     protected $fillable = [
         'entry_id',
-        'blueprint_element_id',
+        'field_id',
         'handle',
         'value',
         'meta',
@@ -100,8 +100,8 @@ class EntryElement extends Model
         return $this->belongsTo(Entry::class);
     }
 
-    public function blueprintElement(): BelongsTo
+    public function Field(): BelongsTo
     {
-        return $this->belongsTo(BlueprintElement::class);
+        return $this->belongsTo(Field::class);
     }
 }

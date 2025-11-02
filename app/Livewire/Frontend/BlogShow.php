@@ -14,7 +14,7 @@ class BlogShow extends Component
     {
         $this->entry = \App\Models\Entry::query()->where('slug', $slug)
             ->where('status', 'published')
-            ->with(['elements.blueprintElement', 'author', 'collection'])
+            ->with(['elements.Field', 'author', 'collection'])
             ->firstOrFail();
     }
 

@@ -19,7 +19,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property \Illuminate\Support\Carbon|null $deleted_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Collection> $collections
  * @property-read int|null $collections_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\BlueprintElement> $elements
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Field> $elements
  * @property-read int|null $elements_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Entry> $entries
  * @property-read int|null $entries_count
@@ -51,12 +51,12 @@ class Blueprint extends Model
 
     public function tabs(): HasMany
     {
-        return $this->hasMany(BlueprintTab::class)->orderBy('sort_order');
+        return $this->hasMany(Tab::class)->orderBy('sort_order');
     }
 
     public function sections(): HasMany
     {
-        return $this->hasMany(BlueprintSection::class)->orderBy('sort_order');
+        return $this->hasMany(Section::class)->orderBy('sort_order');
     }
 
     /**
@@ -85,7 +85,7 @@ class Blueprint extends Model
 
     public function elements(): HasMany
     {
-        return $this->hasMany(BlueprintElement::class)->orderBy('order');
+        return $this->hasMany(Field::class)->orderBy('order');
     }
 
     public function collections(): HasMany

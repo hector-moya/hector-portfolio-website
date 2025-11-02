@@ -7,12 +7,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property int $id
- * @property int $collection_id
  * @property int $blueprint_id
  * @property string $title
  * @property string $slug
@@ -61,7 +62,6 @@ class Entry extends Model
     use HasBlueprintFields, HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'collection_id',
         'blueprint_id',
         'title',
         'slug',
@@ -80,14 +80,14 @@ class Entry extends Model
         ];
     }
 
-    public function collection(): BelongsTo
-    {
-        return $this->belongsTo(Collection::class);
-    }
-
     public function blueprint(): BelongsTo
     {
         return $this->belongsTo(Blueprint::class);
+    }
+
+    public function collection(): HasOne
+    {
+        return $this->hasOne(Collection::class, 'blueprint_id', 'blueprint_id');
     }
 
     public function author(): BelongsTo

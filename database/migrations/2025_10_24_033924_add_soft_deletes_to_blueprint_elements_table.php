@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('blueprint_elements', function (Blueprint $table): void {
+        Schema::table('fields', function (Blueprint $table): void {
             $table->softDeletes();
         });
     }
@@ -21,7 +21,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('blueprint_elements', function (Blueprint $table): void {
+        Schema::table('fields', function (Blueprint $table): void {
             $table->dropSoftDeletes();
         });
     }

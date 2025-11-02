@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('entries', function (Blueprint $table): void {
             $table->id();
-            $table->foreignId('collection_id')->constrained()->cascadeOnDelete();
             $table->foreignId('blueprint_id')->constrained()->cascadeOnDelete();
             $table->string('title');
             $table->string('slug')->unique();
@@ -24,7 +23,7 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->index(['collection_id', 'status']);
+            $table->index(['status']);
             $table->index('slug');
             $table->index('published_at');
         });

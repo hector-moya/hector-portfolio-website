@@ -1,7 +1,7 @@
 <?php
 
 use App\Models\Blueprint;
-use App\Models\BlueprintElement;
+use App\Models\Field;
 use App\Models\Collection;
 use App\Models\Entry;
 use App\Models\User;
@@ -20,7 +20,7 @@ beforeEach(function () {
     ]);
 
     // Create blueprint elements
-    BlueprintElement::create([
+    Field::create([
         'blueprint_id' => $this->blueprint->id,
         'type' => 'text',
         'label' => 'Subtitle',
@@ -29,7 +29,7 @@ beforeEach(function () {
         'order' => 1,
     ]);
 
-    BlueprintElement::create([
+    Field::create([
         'blueprint_id' => $this->blueprint->id,
         'type' => 'textarea',
         'label' => 'Excerpt',
@@ -258,7 +258,7 @@ test('can update entry field values', function () {
 
     // Create initial elements
     $entry->elements()->create([
-        'blueprint_element_id' => $this->blueprint->elements->first()->id,
+        'field_id' => $this->blueprint->elements->first()->id,
         'handle' => 'subtitle',
         'value' => 'Original Subtitle',
     ]);
@@ -307,7 +307,7 @@ test('entry status can be changed to published', function () {
 
     // Create entry elements for required fields
     $entry->elements()->create([
-        'blueprint_element_id' => $this->blueprint->elements->where('handle', 'excerpt')->first()->id,
+        'field_id' => $this->blueprint->elements->where('handle', 'excerpt')->first()->id,
         'handle' => 'excerpt',
         'value' => 'Test excerpt content',
     ]);

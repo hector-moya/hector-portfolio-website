@@ -106,7 +106,7 @@
                             </flux:card>
                     <flux:card class="border-2 border-dashed px-16 max-w-1/2 mx-auto justify-center flex">
 
-                        <flux:button icon="plus" variant="ghost">{{ __('Add Section') }}</flux:button>
+                        <flux:button icon="plus" variant="ghost" wire:click="addSection">{{ __('Add Section') }}</flux:button>
                     </flux:card>
                         </flux:tab.panel>
                     @endforeach

@@ -1,0 +1,88 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
+/**
+ * @property int $id
+ * @property int $blueprint_id
+ * @property string $type
+ * @property string $label
+ * @property string $handle
+ * @property string|null $instructions
+ * @property array<array-key, mixed>|null $config
+ * @property bool $is_required
+ * @property int $order
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string|null $deleted_at
+ * @property-read \App\Models\Blueprint $blueprint
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\EntryElement> $entryElements
+ * @property-read int|null $entry_elements_count
+ *
+ * @method static \Database\Factories\FieldFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Field newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Field newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Field ordered()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Field query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Field whereBlueprintId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Field whereConfig($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Field whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Field whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Field whereHandle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Field whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Field whereInstructions($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Field whereIsRequired($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Field whereLabel($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Field whereOrder($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Field whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Field whereUpdatedAt($value)
+ *
+ * @mixin \Illuminate\Database\Eloquent\Model
+ */
+class Field extends Model
+{
+    /** @use HasFactory<\Database\Factories\FieldFactory> */
+    use HasFactory;
+
+    protected $fillable = [
+        'blueprint_id',
+        'type',
+        'label',
+        'handle',
+        'instructions',
+        'config',
+        'is_required',
+        'order',
+    ];
+
+    protected function casts(): array
+    {
+        return [
+            'config' => 'array',
+            'is_required' => 'boolean',
+            'order' => 'integer',
+        ];
+    }
+
+    public function blueprint(): BelongsTo
+    {
+        return $this->belongsTo(Blueprint::class);
+    }
+
+    public function entryElements(): HasMany
+    {
+        return $this->hasMany(EntryElement::class);
+    }
+
+    #[Scope]
+    protected function ordered($query)
+    {
+        return $query->orderBy('order');
+    }
+}

@@ -56,6 +56,7 @@ class Index extends Component
         $this->resetPage();
     }
 
+
     #[Computed]
     public function entries(): LengthAwarePaginator
     {
@@ -67,14 +68,21 @@ class Index extends Component
                         ->orWhere('slug', 'like', "%{$this->search}%");
                 });
             })
-            ->when($this->collectionFilter, function ($query): void {
-                $query->where('collection_id', $this->collectionFilter);
-            })
             ->when($this->statusFilter, function ($query): void {
                 $query->where('status', $this->statusFilter);
             })
-            ->tap(fn ($query) => $this->sortBy !== '' && $this->sortBy !== '0' ? $query->orderBy($this->sortBy, $this->sortDirection) : $query)
-            ->latest()
+            ->when($this->sortBy === 'collection.name', function ($query) {
+                $query->join('collections', 'collections.blueprint_id', '=', 'entries.blueprint_id')
+                    ->select('entries.*')
+                    ->orderBy('collections.name', $this->sortDirection);
+            }, function ($query) {
+                if ($this->sortBy && $this->sortBy !== '0') {
+                    $query->orderBy($this->sortBy, $this->sortDirection);
+                }
+            })
+            ->when(! $this->sortBy || $this->sortBy === '0', function ($query) {
+                $query->latest();
+            })
             ->paginate(15);
     }
 

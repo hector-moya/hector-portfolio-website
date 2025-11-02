@@ -4,6 +4,9 @@ namespace Database\Seeders;
 
 use App\Models\Blueprint;
 use App\Models\Collection;
+use App\Models\Field;
+use App\Models\Entry;
+use App\Models\EntryElement;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -15,7 +18,7 @@ class BlogContentSeeder extends Seeder
     public function run(): void
     {
         // Get or create admin user
-        $admin = \App\Models\User::query()->where('role', 'admin')->first();
+        $admin = User::query()->where('role', 'admin')->first();
 
         // Create Blueprints
         $pageBlueprint = $this->createHomePageBlueprint();
@@ -24,28 +27,28 @@ class BlogContentSeeder extends Seeder
         $contactBlueprint = $this->createContactBlueprint();
 
         // Create Collections
-        $pagesCollection = \App\Models\Collection::query()->create([
+        $pagesCollection = Collection::query()->create([
             'name' => 'Pages',
             'slug' => 'pages',
             'description' => 'Static pages for the website',
             'blueprint_id' => $pageBlueprint->id,
         ]);
 
-        $blogCollection = \App\Models\Collection::query()->create([
+        $blogCollection = Collection::query()->create([
             'name' => 'Blog',
             'slug' => 'blog',
             'description' => 'Blog posts and articles',
             'blueprint_id' => $blogBlueprint->id,
         ]);
 
-        $portfolioCollection = \App\Models\Collection::query()->create([
+        $portfolioCollection = Collection::query()->create([
             'name' => 'Portfolio',
             'slug' => 'portfolio',
             'description' => 'Portfolio projects and work samples',
             'blueprint_id' => $portfolioBlueprint->id,
         ]);
 
-        $contactCollection = \App\Models\Collection::query()->create([
+        $contactCollection = Collection::query()->create([
             'name' => 'Contact',
             'slug' => 'contact',
             'description' => 'Contact page content',
@@ -61,7 +64,7 @@ class BlogContentSeeder extends Seeder
 
     private function createHomePageBlueprint(): Blueprint
     {
-        $blueprint = \App\Models\Blueprint::query()->create([
+        $blueprint = Blueprint::query()->create([
             'name' => 'Home Page',
             'slug' => 'home-page',
             'description' => 'Home page template',
@@ -79,7 +82,7 @@ class BlogContentSeeder extends Seeder
         ];
 
         foreach ($elements as $element) {
-            \App\Models\BlueprintElement::query()->create(array_merge(['blueprint_id' => $blueprint->id], $element));
+            Field::query()->create(array_merge(['blueprint_id' => $blueprint->id], $element));
         }
 
         return $blueprint;
@@ -87,7 +90,7 @@ class BlogContentSeeder extends Seeder
 
     private function createBlogBlueprint(): Blueprint
     {
-        $blueprint = \App\Models\Blueprint::query()->create([
+        $blueprint = Blueprint::query()->create([
             'name' => 'Blog Post',
             'slug' => 'blog-post',
             'description' => 'Blog post template',
@@ -103,7 +106,7 @@ class BlogContentSeeder extends Seeder
         ];
 
         foreach ($elements as $element) {
-            \App\Models\BlueprintElement::query()->create(array_merge(['blueprint_id' => $blueprint->id], $element));
+            Field::query()->create(array_merge(['blueprint_id' => $blueprint->id], $element));
         }
 
         return $blueprint;
@@ -111,7 +114,7 @@ class BlogContentSeeder extends Seeder
 
     private function createPortfolioBlueprint(): Blueprint
     {
-        $blueprint = \App\Models\Blueprint::query()->create([
+        $blueprint = Blueprint::query()->create([
             'name' => 'Portfolio Item',
             'slug' => 'portfolio-item',
             'description' => 'Portfolio project template',
@@ -128,7 +131,7 @@ class BlogContentSeeder extends Seeder
         ];
 
         foreach ($elements as $element) {
-            \App\Models\BlueprintElement::query()->create(array_merge(['blueprint_id' => $blueprint->id], $element));
+            Field::query()->create(array_merge(['blueprint_id' => $blueprint->id], $element));
         }
 
         return $blueprint;
@@ -136,7 +139,7 @@ class BlogContentSeeder extends Seeder
 
     private function createContactBlueprint(): Blueprint
     {
-        $blueprint = \App\Models\Blueprint::query()->create([
+        $blueprint = Blueprint::query()->create([
             'name' => 'Contact Page',
             'slug' => 'contact-page',
             'description' => 'Contact page template',
@@ -151,7 +154,7 @@ class BlogContentSeeder extends Seeder
         ];
 
         foreach ($elements as $element) {
-            \App\Models\BlueprintElement::query()->create(array_merge(['blueprint_id' => $blueprint->id], $element));
+            Field::query()->create(array_merge(['blueprint_id' => $blueprint->id], $element));
         }
 
         return $blueprint;
@@ -159,10 +162,9 @@ class BlogContentSeeder extends Seeder
 
     private function createLandingPage(Collection $collection, Blueprint $blueprint, User $admin): void
     {
-        $entry = \App\Models\Entry::query()->create([
+        $entry = Entry::query()->create([
             'title' => 'Home - Landing Page',
             'slug' => 'home',
-            'collection_id' => $collection->id,
             'blueprint_id' => $blueprint->id,
             'author_id' => $admin->id,
             'status' => 'published',
@@ -184,12 +186,12 @@ class BlogContentSeeder extends Seeder
             'cta_url_secondary' => '/blog',
         ];
 
-        foreach ($blueprint->elements as $blueprintElement) {
-            \App\Models\EntryElement::query()->create([
+        foreach ($blueprint->elements as $Field) {
+            EntryElement::query()->create([
                 'entry_id' => $entry->id,
-                'blueprint_element_id' => $blueprintElement->id,
-                'handle' => $blueprintElement->handle,
-                'value' => $elements[$blueprintElement->handle] ?? '',
+                'field_id' => $Field->id,
+                'handle' => $Field->handle,
+                'value' => $elements[$Field->handle] ?? '',
             ]);
         }
     }
@@ -250,22 +252,21 @@ class BlogContentSeeder extends Seeder
         ];
 
         foreach ($posts as $postData) {
-            $entry = \App\Models\Entry::query()->create([
+            $entry = Entry::query()->create([
                 'title' => $postData['title'],
                 'slug' => $postData['slug'],
-                'collection_id' => $collection->id,
                 'blueprint_id' => $blueprint->id,
                 'author_id' => $admin->id,
                 'status' => 'published',
                 'published_at' => now()->subDays(random_int(1, 30)),
             ]);
 
-            foreach ($blueprint->elements as $blueprintElement) {
-                \App\Models\EntryElement::query()->create([
+            foreach ($blueprint->elements as $Field) {
+                EntryElement::query()->create([
                     'entry_id' => $entry->id,
-                    'blueprint_element_id' => $blueprintElement->id,
-                    'handle' => $blueprintElement->handle,
-                    'value' => $postData[$blueprintElement->handle] ?? '',
+                    'field_id' => $Field->id,
+                    'handle' => $Field->handle,
+                    'value' => $postData[$Field->handle] ?? '',
                 ]);
             }
         }
@@ -343,22 +344,21 @@ class BlogContentSeeder extends Seeder
         ];
 
         foreach ($projects as $projectData) {
-            $entry = \App\Models\Entry::query()->create([
+            $entry = Entry::query()->create([
                 'title' => $projectData['title'],
                 'slug' => $projectData['slug'],
-                'collection_id' => $collection->id,
                 'blueprint_id' => $blueprint->id,
                 'author_id' => $admin->id,
                 'status' => 'published',
                 'published_at' => now(),
             ]);
 
-            foreach ($blueprint->elements as $blueprintElement) {
-                \App\Models\EntryElement::query()->create([
+            foreach ($blueprint->elements as $Field) {
+                EntryElement::query()->create([
                     'entry_id' => $entry->id,
-                    'blueprint_element_id' => $blueprintElement->id,
-                    'handle' => $blueprintElement->handle,
-                    'value' => $projectData[$blueprintElement->handle] ?? '',
+                    'field_id' => $Field->id,
+                    'handle' => $Field->handle,
+                    'value' => $projectData[$Field->handle] ?? '',
                 ]);
             }
         }
@@ -366,10 +366,9 @@ class BlogContentSeeder extends Seeder
 
     private function createContactPage(Collection $collection, Blueprint $blueprint, User $admin): void
     {
-        $entry = \App\Models\Entry::query()->create([
+        $entry = Entry::query()->create([
             'title' => 'Contact',
             'slug' => 'contact',
-            'collection_id' => $collection->id,
             'blueprint_id' => $blueprint->id,
             'author_id' => $admin->id,
             'status' => 'published',
@@ -386,12 +385,12 @@ class BlogContentSeeder extends Seeder
             'github' => 'https://github.com/hector-moya/',
         ];
 
-        foreach ($blueprint->elements as $blueprintElement) {
-            \App\Models\EntryElement::query()->create([
+        foreach ($blueprint->elements as $Field) {
+            EntryElement::query()->create([
                 'entry_id' => $entry->id,
-                'blueprint_element_id' => $blueprintElement->id,
-                'handle' => $blueprintElement->handle,
-                'value' => $elements[$blueprintElement->handle] ?? '',
+                'field_id' => $Field->id,
+                'handle' => $Field->handle,
+                'value' => $elements[$Field->handle] ?? '',
             ]);
         }
     }

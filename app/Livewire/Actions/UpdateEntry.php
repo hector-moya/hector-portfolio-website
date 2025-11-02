@@ -83,7 +83,7 @@ class UpdateEntry
                 }
             } elseif ($this->shouldStoreInMeta($element->type)) {
                 $entry->elements()->create([
-                    'blueprint_element_id' => $element->id,
+                    'field_id' => $element->id,
                     'handle' => $element->handle,
                     'value' => null,
                     'meta' => $sanitizedValue,
@@ -91,7 +91,7 @@ class UpdateEntry
             } else {
                 /** @var \App\Models\EntryElement $element */
                 $element = $entry->elements()->create([
-                    'blueprint_element_id' => $element->id,
+                    'field_id' => $element->id,
                     'handle' => $element->handle,
                 ]);
 

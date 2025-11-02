@@ -3,11 +3,12 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\Blueprint;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\BlueprintElement>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Field>
  */
-class BlueprintElementFactory extends Factory
+class FieldFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -20,7 +21,7 @@ class BlueprintElementFactory extends Factory
         $types = ['text', 'textarea', 'richtext', 'image', 'select', 'checkbox', 'number', 'date'];
 
         return [
-            'blueprint_id' => \App\Models\Blueprint::factory(),
+            'blueprint_id' => Blueprint::factory(),
             'type' => fake()->randomElement($types),
             'label' => ucfirst($label),
             'handle' => str($label)->slug('_'),

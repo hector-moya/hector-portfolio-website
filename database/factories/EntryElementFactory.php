@@ -20,7 +20,7 @@ class EntryElementFactory extends Factory
 
         return [
             'entry_id' => \App\Models\Entry::factory(),
-            'blueprint_element_id' => \App\Models\BlueprintElement::factory(),
+            'field_id' => \App\Models\Field::factory(),
             'handle' => $handle,
             'value' => fake()->sentence(),
             'meta' => [],

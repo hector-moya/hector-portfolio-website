@@ -3,7 +3,7 @@
 namespace App\Livewire\Blueprints;
 
 use App\Enums\FieldType;
-use App\Models\BlueprintElement;
+use App\Models\Field;
 use Illuminate\Support\Str;
 use Livewire\Component;
 
@@ -26,7 +26,7 @@ class FieldPicker extends Component
         $section = \App\Models\BlueprintSection::query()->findOrFail($this->sectionId);
         $nextOrder = $section->elements()->max('sort_order') + 1;
 
-        $element = new BlueprintElement([
+        $element = new Field([
             'type' => $type,
             'label' => Str::title($type),
             'handle' => Str::slug($type).'_'.Str::random(6),

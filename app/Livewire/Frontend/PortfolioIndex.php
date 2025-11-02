@@ -16,7 +16,7 @@ class PortfolioIndex extends Component
 
         $projects = \App\Models\Entry::query()->where('collection_id', $collection?->id)
             ->where('status', 'published')
-            ->with(['elements.blueprintElement'])
+            ->with(['elements.Field'])
             ->latest('published_at')
             ->get();
 

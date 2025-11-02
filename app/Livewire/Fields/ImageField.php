@@ -3,21 +3,21 @@
 namespace App\Livewire\Fields;
 
 use App\Models\Asset;
-use App\Models\BlueprintElement;
+use App\Models\Field;
 use Livewire\Attributes\Modelable;
 use Livewire\Component;
 
 /** @property array $fieldValues */
 class ImageField extends Component
 {
-    public BlueprintElement $element;
+    public Field $element;
 
     #[Modelable]
     public array $fieldValues = [];
 
     public ?Asset $asset = null;
 
-    public function mount(BlueprintElement $element, array $fieldValues = []): void
+    public function mount(Field $element, array $fieldValues = []): void
     {
         $this->element = $element;
         $this->fieldValues = $fieldValues;

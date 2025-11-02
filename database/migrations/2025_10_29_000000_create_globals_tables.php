@@ -11,20 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('global_sets', function (Blueprint $table): void {
+        Schema::create('globals', function (Blueprint $table): void {
             $table->ulid('id')->primary();
             $table->string('handle')->unique();
             $table->string('name');
-            $table->foreignUlid('blueprint_id')->nullable()->constrained('blueprints')->nullOnDelete();
-            $table->timestamps();
-        });
-
-        Schema::create('global_variables', function (Blueprint $table): void {
-            $table->ulid('id')->primary();
-            $table->string('handle');
-            $table->json('value')->nullable();
-            $table->foreignUlid('global_set_id')->constrained('global_sets')->cascadeOnDelete();
-            $table->unique(['handle', 'global_set_id']);
+            $table->foreignId('blueprint_id')->nullable()->constrained('blueprints')->nullOnDelete();
             $table->timestamps();
         });
     }
@@ -34,7 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('global_variables');
-        Schema::dropIfExists('global_sets');
+        Schema::dropIfExists('globals');
     }
 };

@@ -14,7 +14,7 @@ class Home extends Component
     {
         $entry = \App\Models\Entry::query()->where('slug', 'home')
             ->where('status', 'published')
-            ->with(['elements.blueprintElement'])
+            ->with(['elements.Field'])
             ->first();
 
         return view('livewire.frontend.home', [

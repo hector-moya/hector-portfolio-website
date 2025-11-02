@@ -61,7 +61,7 @@ class CreateEntry
 
             if ($this->shouldStoreInMeta($element->type)) {
                 $entry->elements()->create([
-                    'blueprint_element_id' => $element->id,
+                    'field_id' => $element->id,
                     'handle' => $element->handle,
                     'value' => null,
                     'meta' => $sanitizedValue,
@@ -69,7 +69,7 @@ class CreateEntry
             } else {
                 /** @var \App\Models\EntryElement $newElement */
                 $newElement = $entry->elements()->create([
-                    'blueprint_element_id' => $element->id,
+                    'field_id' => $element->id,
                     'handle' => $element->handle,
                 ]);
 

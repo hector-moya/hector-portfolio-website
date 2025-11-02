@@ -81,7 +81,7 @@
                             <flux:checkbox wire:model.live="selectAll" />
                         </flux:table.column>
                         <flux:table.column sortable :sorted="$sortBy === 'title'" :direction="$sortDirection" wire:click="sort('title')">{{ __('Title') }}</flux:table.column>
-                        <flux:table.column sortable :sorted="$sortBy === 'collection_id'" :direction="$sortDirection" wire:click="sort('collection_id')">{{ __('Collection') }}</flux:table.column>
+                        <flux:table.column sortable :sorted="$sortBy === 'collection.name'" :direction="$sortDirection" wire:click="sort('collection.name')">{{ __('Collection') }}</flux:table.column>
                         <flux:table.column sortable :sorted="$sortBy === 'status'" :direction="$sortDirection" wire:click="sort('status')">{{ __('Status') }}</flux:table.column>
                         <flux:table.column sortable :sorted="$sortBy === 'author'" :direction="$sortDirection" wire:click="sort('author')">{{ __('Author') }}</flux:table.column>
                         <flux:table.column sortable :sorted="$sortBy === 'published_at'" :direction="$sortDirection" wire:click="sort('published_at')">{{ __('Published') }}</flux:table.column>
@@ -104,7 +104,7 @@
 
                                 <flux:table.cell>
                                     <flux:badge size="sm" color="zinc">
-                                        {{ $entry->collection->name }}
+                                        {{ $entry->collection?->name }}
                                     </flux:badge>
                                 </flux:table.cell>
 

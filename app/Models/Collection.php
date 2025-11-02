@@ -72,6 +72,6 @@ class Collection extends Model
 
     public function entries(): HasMany
     {
-        return $this->hasMany(Entry::class);
+        return $this->hasMany(Entry::class, 'blueprint_id', 'blueprint_id');
     }
 }

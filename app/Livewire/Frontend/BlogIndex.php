@@ -19,7 +19,7 @@ class BlogIndex extends Component
 
         $posts = \App\Models\Entry::query()->where('collection_id', $collection?->id)
             ->where('status', 'published')
-            ->with(['elements.blueprintElement', 'author'])
+            ->with(['elements.Field', 'author'])
             ->latest('published_at')
             ->paginate(9);
 

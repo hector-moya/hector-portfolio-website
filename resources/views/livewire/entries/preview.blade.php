@@ -46,10 +46,10 @@
                     @foreach ($this->entry->elements as $element)
                         <div class="mb-6">
                             <h3 class="text-sm font-semibold text-zinc-700 dark:text-zinc-300 mb-2">
-                                {{ $element->blueprintElement->label }}
+                                {{ $element->Field->label }}
                             </h3>
 
-                            @switch($element->blueprintElement->type)
+                            @switch($element->Field->type)
                                 @case('textarea')
                                 @case('richtext')
                                     <div class="whitespace-pre-wrap text-zinc-900 dark:text-zinc-100">

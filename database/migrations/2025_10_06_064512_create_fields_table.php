@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('blueprint_elements', function (Blueprint $table): void {
+        Schema::create('fields', function (Blueprint $table): void {
             $table->id();
             $table->foreignId('blueprint_id')->constrained()->cascadeOnDelete();
             $table->string('type'); // text, textarea, image, richtext, select, etc.
@@ -32,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('blueprint_elements');
+        Schema::dropIfExists('fields');
     }
 };

@@ -14,7 +14,7 @@ class ContactPage extends Component
     {
         $entry = \App\Models\Entry::query()->where('slug', 'contact')
             ->where('status', 'published')
-            ->with(['elements.blueprintElement'])
+            ->with(['elements.Field'])
             ->first();
 
         return view('livewire.frontend.contact-page', [

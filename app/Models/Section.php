@@ -29,6 +29,6 @@ class Section extends Model
 
     public function elements(): HasMany
     {
-        return $this->hasMany(BlueprintElement::class, 'section_id')->orderBy('sort_order');
+        return $this->hasMany(Field::class, 'section_id')->orderBy('sort_order');
     }
 }
