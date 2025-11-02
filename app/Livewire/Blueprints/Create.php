@@ -12,6 +12,10 @@ use Livewire\Component;
 class Create extends Component
 {
     public BlueprintForm $form;
+    public array $tabs = [
+        'tab-1' => 'Tab #1',
+        'tab-2' => 'Tab #2',
+    ];
 
     /**
      * Select options [value => label] built from registry.
@@ -35,6 +39,11 @@ class Create extends Component
     {
         // Start with one empty element
         $this->form->addElement('text');
+    }
+    public function addTab(): void
+    {
+        $id = 'tab-' . str()->random();
+        $this->tabs[$id] = 'Tab #' . count($this->tabs) + 1;
     }
 
     public function updatedFormName(): void

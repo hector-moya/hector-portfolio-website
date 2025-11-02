@@ -6,14 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class BlueprintSection extends Model
+class Tab extends Model
 {
     use \Illuminate\Database\Eloquent\Factories\HasFactory;
 
     protected $fillable = [
         'name',
         'handle',
-        'instructions',
         'sort_order',
     ];
 
@@ -22,13 +21,8 @@ class BlueprintSection extends Model
         return $this->belongsTo(Blueprint::class);
     }
 
-    public function tab(): BelongsTo
+    public function sections(): HasMany
     {
-        return $this->belongsTo(BlueprintTab::class);
-    }
-
-    public function elements(): HasMany
-    {
-        return $this->hasMany(BlueprintElement::class, 'section_id')->orderBy('sort_order');
+        return $this->hasMany(Section::class, 'tab_id')->orderBy('sort_order');
     }
 }
