@@ -6,7 +6,7 @@ use Livewire\Component;
 
 class SectionCard extends Component
 {
-    public function render()
+    public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
     {
         return view('livewire.blueprints.components.section-card');
     }

@@ -27,28 +27,28 @@ class BlogContentSeeder extends Seeder
         $contactBlueprint = $this->createContactBlueprint();
 
         // Create Collections
-        $pagesCollection = Collection::query()->create([
+        Collection::query()->create([
             'name' => 'Pages',
             'slug' => 'pages',
             'description' => 'Static pages for the website',
             'blueprint_id' => $pageBlueprint->id,
         ]);
 
-        $blogCollection = Collection::query()->create([
+        Collection::query()->create([
             'name' => 'Blog',
             'slug' => 'blog',
             'description' => 'Blog posts and articles',
             'blueprint_id' => $blogBlueprint->id,
         ]);
 
-        $portfolioCollection = Collection::query()->create([
+        Collection::query()->create([
             'name' => 'Portfolio',
             'slug' => 'portfolio',
             'description' => 'Portfolio projects and work samples',
             'blueprint_id' => $portfolioBlueprint->id,
         ]);
 
-        $contactCollection = Collection::query()->create([
+        Collection::query()->create([
             'name' => 'Contact',
             'slug' => 'contact',
             'description' => 'Contact page content',
@@ -56,10 +56,10 @@ class BlogContentSeeder extends Seeder
         ]);
 
         // Create Entries
-        $this->createLandingPage($pagesCollection, $pageBlueprint, $admin);
-        $this->createBlogPosts($blogCollection, $blogBlueprint, $admin);
-        $this->createPortfolioItems($portfolioCollection, $portfolioBlueprint, $admin);
-        $this->createContactPage($contactCollection, $contactBlueprint, $admin);
+        $this->createLandingPage($pageBlueprint, $admin);
+        $this->createBlogPosts($blogBlueprint, $admin);
+        $this->createPortfolioItems($portfolioBlueprint, $admin);
+        $this->createContactPage($contactBlueprint, $admin);
     }
 
     private function createHomePageBlueprint(): Blueprint
@@ -160,7 +160,7 @@ class BlogContentSeeder extends Seeder
         return $blueprint;
     }
 
-    private function createLandingPage(Collection $collection, Blueprint $blueprint, User $admin): void
+    private function createLandingPage(Blueprint $blueprint, User $admin): void
     {
         $entry = Entry::query()->create([
             'title' => 'Home - Landing Page',
@@ -196,7 +196,7 @@ class BlogContentSeeder extends Seeder
         }
     }
 
-    private function createBlogPosts(Collection $collection, Blueprint $blueprint, User $admin): void
+    private function createBlogPosts(Blueprint $blueprint, User $admin): void
     {
         $posts = [
             [
@@ -272,7 +272,7 @@ class BlogContentSeeder extends Seeder
         }
     }
 
-    private function createPortfolioItems(Collection $collection, Blueprint $blueprint, User $admin): void
+    private function createPortfolioItems(Blueprint $blueprint, User $admin): void
     {
         $projects = [
             [
@@ -364,7 +364,7 @@ class BlogContentSeeder extends Seeder
         }
     }
 
-    private function createContactPage(Collection $collection, Blueprint $blueprint, User $admin): void
+    private function createContactPage(Blueprint $blueprint, User $admin): void
     {
         $entry = Entry::query()->create([
             'title' => 'Contact',

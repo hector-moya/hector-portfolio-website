@@ -21,7 +21,7 @@ class TabForm extends Form
 
     public function setTab(?int $tabId): void
     {
-        $tab = Tab::find($tabId) ?? null;
+        $tab = \App\Models\Tab::query()->find($tabId) ?? null;
         $this->name = $tab?->name ?? '';
         $this->handle = $tab?->handle ?? '';
         $this->sort_order = $tab?->sort_order ?? 0;

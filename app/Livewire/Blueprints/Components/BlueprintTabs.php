@@ -23,7 +23,7 @@ class BlueprintTabs extends Component
 
     public Tab $tab;
 
-    public function mount()
+    public function mount(): void
     {
         // $this->form->setTab($this->tabId);
     }
@@ -31,7 +31,7 @@ class BlueprintTabs extends Component
     public function addTab(): void
     {
         $id = $this->generateSlug($this->newTabName) ?: 'tab-'.str()->random();
-        $this->tabs[$id] = $this->newTabName ?: 'Tab #'.(count($this->tabs) + 1);
+        $this->tabs[$id] = $this->newTabName !== '' && $this->newTabName !== '0' ? $this->newTabName : 'Tab #'.(count($this->tabs) + 1);
         $this->newTabName = '';
         Flux::modal('add-tab-modal')->close();
     }
@@ -42,7 +42,7 @@ class BlueprintTabs extends Component
         return $this->form->sections;
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
     {
         return view('livewire.blueprints.components.blueprint-tabs');
     }

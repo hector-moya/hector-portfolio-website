@@ -70,16 +70,16 @@ class Index extends Component
             ->when($this->statusFilter, function ($query): void {
                 $query->where('status', $this->statusFilter);
             })
-            ->when($this->sortBy === 'collection.name', function ($query) {
+            ->when($this->sortBy === 'collection.name', function ($query): void {
                 $query->join('collections', 'collections.blueprint_id', '=', 'entries.blueprint_id')
                     ->select('entries.*')
                     ->orderBy('collections.name', $this->sortDirection);
-            }, function ($query) {
+            }, function ($query): void {
                 if ($this->sortBy && $this->sortBy !== '0') {
                     $query->orderBy($this->sortBy, $this->sortDirection);
                 }
             })
-            ->when(! $this->sortBy || $this->sortBy === '0', function ($query) {
+            ->when(in_array($this->sortBy, ['', '0', '0'], true), function ($query): void {
                 $query->latest();
             })
             ->paginate(15);
