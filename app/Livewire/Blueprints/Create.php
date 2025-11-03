@@ -4,6 +4,8 @@ namespace App\Livewire\Blueprints;
 
 use App\Livewire\Forms\BlueprintForm;
 use App\Services\FieldTypeRegistry;
+use Illuminate\Contracts\View\View;
+use Illuminate\Contracts\View\Factory;
 use Flux\Flux;
 use App\Traits\HasSlug;
 use Livewire\Attributes\Computed;
@@ -15,14 +17,6 @@ class Create extends Component
 {
     use HasSlug;
     public BlueprintForm $form;
-
-    public string $newTabName = '';
-
-    public array $tabs = [
-        'main' => 'Main',
-        'side' => 'Side',
-    ];
-
 
     public function mount(): void
     {
@@ -55,13 +49,6 @@ class Create extends Component
         ];
     }
 
-    public function addTab(): void
-    {
-        $id = $this->generateSlug($this->newTabName) ?: 'tab-'.str()->random();
-        $this->tabs[$id] = $this->newTabName ?: 'Tab #'.(count($this->tabs) + 1);
-        $this->newTabName = '';
-        Flux::modal('add-tab-modal')->close();
-    }
 
     public function updatedFormName(): void
     {
@@ -81,9 +68,9 @@ class Create extends Component
         Flux::modal('select-field-modal')->close();
     }
 
-    public function removeElement(int $index): void
+    public function removeField(int $index): void
     {
-        $this->form->removeElement($index);
+        $this->form->removeField($index);
     }
 
     public function save(): void
@@ -114,7 +101,7 @@ class Create extends Component
     }
 
     #[Title('Create Blueprint')]
-    public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+    public function render(): View|Factory
     {
         return view('livewire.blueprints.create');
     }
