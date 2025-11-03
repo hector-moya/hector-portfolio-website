@@ -2,19 +2,21 @@
 
 namespace App\Livewire\Blueprints\Components;
 
-use Livewire\Component;
-use App\Models\Tab;
-use Livewire\Attributes\Computed;
-use Flux\Flux;
 use App\Livewire\Forms\TabForm;
+use App\Models\Tab;
+use Flux\Flux;
+use Livewire\Attributes\Computed;
+use Livewire\Component;
 
 class BlueprintTabs extends Component
 {
     public int $tabId;
+
     public array $tabs = [
         1 => 'Main',
         2 => 'Side',
     ];
+
     public string $newTabName = '';
 
     public TabForm $form;
@@ -25,6 +27,7 @@ class BlueprintTabs extends Component
     {
         // $this->form->setTab($this->tabId);
     }
+
     public function addTab(): void
     {
         $id = $this->generateSlug($this->newTabName) ?: 'tab-'.str()->random();

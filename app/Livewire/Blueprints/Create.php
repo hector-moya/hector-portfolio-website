@@ -4,18 +4,18 @@ namespace App\Livewire\Blueprints;
 
 use App\Livewire\Forms\BlueprintForm;
 use App\Services\FieldTypeRegistry;
-use Illuminate\Contracts\View\View;
-use Illuminate\Contracts\View\Factory;
-use Flux\Flux;
 use App\Traits\HasSlug;
+use Flux\Flux;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Livewire\Attributes\Computed;
-use Illuminate\Support\Collection;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
 class Create extends Component
 {
     use HasSlug;
+
     public BlueprintForm $form;
 
     public function mount(): void
@@ -23,6 +23,7 @@ class Create extends Component
         // Start with one empty element
         $this->form->addField('text');
     }
+
     /**
      * Select options [value => label] built from registry.
      */
@@ -48,7 +49,6 @@ class Create extends Component
             ['id' => 1, 'name' => 'Section 1'],
         ];
     }
-
 
     public function updatedFormName(): void
     {

@@ -87,6 +87,7 @@ class Blueprint extends Model
     {
         return $this->hasMany(Entry::class);
     }
+
     public function tabs(): HasMany
     {
         return $this->hasMany(Tab::class)->orderBy('sort_order');

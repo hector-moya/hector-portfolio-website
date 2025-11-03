@@ -9,7 +9,6 @@ use App\Livewire\Actions\Blueprints\UpdateBlueprint;
 use App\Models\Blueprint;
 use App\Services\FieldTypeRegistry;
 use Flux\Flux;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Livewire\Attributes\Validate;
@@ -31,6 +30,7 @@ class BlueprintForm extends Form
     public bool $is_active = true;
 
     public array $fields = [];
+
     public array $sections = [];
 
     public function rules(): array

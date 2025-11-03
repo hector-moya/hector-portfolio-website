@@ -2,16 +2,18 @@
 
 namespace App\Livewire\Forms;
 
-use Livewire\Attributes\Validate;
 use App\Models\Tab;
+use Livewire\Attributes\Validate;
 use Livewire\Form;
 
 class TabForm extends Form
 {
     #[Validate('required|string|max:255')]
     public string $name = '';
+
     #[Validate('required|string|max:255')]
     public string $handle = '';
+
     #[Validate('required|integer|min:0')]
     public int $sort_order = 0;
 
