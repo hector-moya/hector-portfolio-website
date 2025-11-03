@@ -62,6 +62,27 @@ enum FieldType: string
         };
     }
 
+    public function defaultLabel(): string
+    {
+        return match ($this) {
+            self::Text => 'New Text Field',
+            self::Textarea => 'New Textarea Field',
+            self::RichText => 'New Rich Text Field',
+            self::Number => 'New Number Field',
+            self::Email => 'New Email Field',
+            self::Url => 'New URL Field',
+            self::Date => 'New Date Field',
+            self::Time => 'New Time Field',
+            self::DateTime => 'New Date & Time Field',
+            self::Toggle => 'New Toggle Field',
+            self::Select => 'New Select Field',
+            self::Radio => 'New Radio Field',
+            self::Image => 'New Image Field',
+            self::File => 'New File Field',
+            self::Repeater => 'New Repeater Field',
+        };
+    }
+
     public function defaultConfig(): array
     {
         return match ($this) {

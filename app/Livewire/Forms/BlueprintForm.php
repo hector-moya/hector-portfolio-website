@@ -30,8 +30,8 @@ class BlueprintForm extends Form
     #[Validate('boolean')]
     public bool $is_active = true;
 
-    public array $elements = [];
-    public ?Collection $sections = null;
+    public array $fields = [];
+    public array $sections = [];
 
     public function rules(): array
     {
@@ -42,20 +42,20 @@ class BlueprintForm extends Form
                 'max:255',
                 Rule::unique('blueprints', 'slug')->ignore($this->blueprint_id),
             ],
-            'elements.*.type' => 'required|string',
-            'elements.*.label' => 'required|string|max:255',
-            'elements.*.handle' => [
+            'fields.*.type' => 'required|string',
+            'fields.*.label' => 'required|string|max:255',
+            'fields.*.handle' => [
                 'nullable', 'string', 'max:255',
                 function ($attribute, $value, $fail): void {
-                    $handles = array_column($this->elements, 'handle');
+                    $handles = array_column($this->fields, 'handle');
                     if ($value && count(array_keys($handles, $value)) > 1) {
                         $fail(__('Handles must be unique within the blueprint.'));
                     }
                 },
             ],
-            'elements.*.instructions' => 'nullable|string',
-            'elements.*.is_required' => 'boolean',
-            'elements.*.config' => 'array',
+            'fields.*.instructions' => 'nullable|string',
+            'fields.*.is_required' => 'boolean',
+            'fields.*.config' => 'array',
         ];
     }
 
@@ -65,7 +65,7 @@ class BlueprintForm extends Form
 
         // Per-type config validation (including nested repeater blueprints)
         $registry = app(FieldTypeRegistry::class);
-        foreach ($this->elements as $index => $element) {
+        foreach ($this->fields as $index => $element) {
             $registry->validateConfig($element, $index);
 
             if (($element['type'] ?? null) === FieldType::Repeater->value) {
@@ -87,7 +87,7 @@ class BlueprintForm extends Form
         $this->description = $blueprint->description ?? '';
         $this->is_active = $blueprint->is_active;
 
-        $this->elements = $blueprint->elements->map(fn ($element): array => [
+        $this->fields = $blueprint->fields->map(fn ($element): array => [
             'type' => $element->type,
             'label' => $element->label,
             'handle' => $element->handle,
@@ -107,7 +107,7 @@ class BlueprintForm extends Form
                 'slug' => $this->slug,
                 'description' => $this->description,
                 'is_active' => $this->is_active,
-                'elements' => $this->elements,
+                'fields' => $this->fields,
             ]);
 
         Flux::toast(
@@ -116,7 +116,7 @@ class BlueprintForm extends Form
             variant: 'success',
         );
 
-        $this->reset(['name', 'slug', 'description', 'is_active', 'elements']);
+        $this->reset(['name', 'slug', 'description', 'is_active', 'fields']);
 
         return $blueprint;
     }
@@ -132,7 +132,7 @@ class BlueprintForm extends Form
                 'slug' => $this->slug,
                 'description' => $this->description,
                 'is_active' => $this->is_active,
-                'elements' => $this->elements,
+                'fields' => $this->fields,
             ]);
 
         Flux::toast(
@@ -144,13 +144,14 @@ class BlueprintForm extends Form
         return $blueprint;
     }
 
-    public function addElement(string $type): void
+    public function addField(string $type): void
     {
-        $defaultConfig = app(\App\Services\FieldTypeRegistry::class)->defaultConfigFor($type);
+        $defaultConfig = app(FieldTypeRegistry::class)->defaultConfigFor($type);
 
-        $this->elements[] = [
+        $this->fields[] = [
             'type' => $type,
-            'label' => '',
+            'icon' => FieldType::from($type)->icon(),
+            'label' => FieldType::from($type)->defaultLabel(),
             'handle' => '',
             'instructions' => '',
             'is_required' => false,
@@ -158,10 +159,10 @@ class BlueprintForm extends Form
         ];
     }
 
-    public function removeElement(int $index): void
+    public function removeField(int $index): void
     {
-        unset($this->elements[$index]);
-        $this->elements = array_values($this->elements);
+        unset($this->fields[$index]);
+        $this->fields = array_values($this->fields);
     }
 
     public function destroy(int $blueprintId): void
@@ -185,19 +186,19 @@ class BlueprintForm extends Form
 
     public function updateHandleFromLabel(int $index): void
     {
-        $this->elements[$index]['handle'] = $this->generateSlug($this->elements[$index]['label']);
+        $this->fields[$index]['handle'] = $this->generateSlug($this->fields[$index]['label']);
     }
 
     public function addNestedField(int $parentIndex, string $type = 'text'): void
     {
         // Ensure array scaffolding exists
-        $this->elements[$parentIndex]['config'] ??= [];
-        $this->elements[$parentIndex]['config']['blueprint'] ??= [];
+        $this->fields[$parentIndex]['config'] ??= [];
+        $this->fields[$parentIndex]['config']['blueprint'] ??= [];
 
         // Default config for the chosen type
         $defaults = app(FieldTypeRegistry::class)->defaultConfigFor($type);
 
-        $this->elements[$parentIndex]['config']['blueprint'][] = [
+        $this->fields[$parentIndex]['config']['blueprint'][] = [
             'type' => $type,
             'label' => '',
             'handle' => '',
@@ -209,13 +210,13 @@ class BlueprintForm extends Form
 
     public function removeNestedField(int $parentIndex, int $childIndex): void
     {
-        if (! isset($this->elements[$parentIndex]['config']['blueprint'][$childIndex])) {
+        if (! isset($this->fields[$parentIndex]['config']['blueprint'][$childIndex])) {
             return;
         }
 
-        unset($this->elements[$parentIndex]['config']['blueprint'][$childIndex]);
-        $this->elements[$parentIndex]['config']['blueprint'] = array_values(
-            $this->elements[$parentIndex]['config']['blueprint']
+        unset($this->fields[$parentIndex]['config']['blueprint'][$childIndex]);
+        $this->fields[$parentIndex]['config']['blueprint'] = array_values(
+            $this->fields[$parentIndex]['config']['blueprint']
         );
     }
 
@@ -224,20 +225,20 @@ class BlueprintForm extends Form
      */
     public function addOption(int $index): void
     {
-        $this->elements[$index]['config'] ??= [];
-        $this->elements[$index]['config']['options'] ??= [];
-        $this->elements[$index]['config']['options'][] = ['value' => '', 'label' => ''];
+        $this->fields[$index]['config'] ??= [];
+        $this->fields[$index]['config']['options'] ??= [];
+        $this->fields[$index]['config']['options'][] = ['value' => '', 'label' => ''];
     }
 
     public function removeOption(int $index, int $optIndex): void
     {
-        if (! isset($this->elements[$index]['config']['options'][$optIndex])) {
+        if (! isset($this->fields[$index]['config']['options'][$optIndex])) {
             return;
         }
 
-        unset($this->elements[$index]['config']['options'][$optIndex]);
-        $this->elements[$index]['config']['options'] = array_values(
-            $this->elements[$index]['config']['options']
+        unset($this->fields[$index]['config']['options'][$optIndex]);
+        $this->fields[$index]['config']['options'] = array_values(
+            $this->fields[$index]['config']['options']
         );
     }
 }

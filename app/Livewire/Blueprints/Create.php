@@ -27,7 +27,7 @@ class Create extends Component
     public function mount(): void
     {
         // Start with one empty element
-        $this->form->addElement('text');
+        $this->form->addField('text');
     }
     /**
      * Select options [value => label] built from registry.
@@ -48,11 +48,11 @@ class Create extends Component
     }
 
     #[Computed]
-    public function sections(): ?Collection
+    public function sections(): array
     {
-        return $this->form->sections ??= collect([
-            (object) ['id' => 1, 'name' => 'Section 1'],
-        ]);
+        return $this->form->sections = [
+            ['id' => 1, 'name' => 'Section 1'],
+        ];
     }
 
     public function addTab(): void
@@ -75,9 +75,9 @@ class Create extends Component
         }
     }
 
-    public function addElement(string $type): void
+    public function addField(string $type): void
     {
-        $this->form->addElement(type: $type);
+        $this->form->addField(type: $type);
         Flux::modal('select-field-modal')->close();
     }
 
