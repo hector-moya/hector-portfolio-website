@@ -15,10 +15,9 @@
         @foreach ($tabs as $id => $tab)
             <flux:tab.panel :name="$id" class="space-y-6" :key="'panel-'.$id">
                 @foreach ($this->sections as $section)
-                <livewire:blueprints.components.section-card :key="'section-'.$section['id']" :section="$section" />
+                    <livewire:blueprints.components.section-card :key="'section-' . $section['id']" :$section />
                 @endforeach
                 <flux:card class="max-w-1/2 mx-auto flex justify-center border-2 border-dashed px-16">
-
                     <flux:button icon="plus" variant="ghost" wire:click="addSection" tooltip="{{ __('Click to add a new section.') }}">{{ __('Add Section') }}</flux:button>
                 </flux:card>
             </flux:tab.panel>

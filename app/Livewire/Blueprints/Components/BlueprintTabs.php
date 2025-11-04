@@ -25,7 +25,7 @@ class BlueprintTabs extends Component
 
     public function mount(): void
     {
-        // $this->form->setTab($this->tabId);
+        $this->form->setTab(null);
     }
 
     public function addTab(): void

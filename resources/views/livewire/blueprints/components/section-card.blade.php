@@ -16,8 +16,8 @@
     </div>
     <flux:separator />
     @if (empty($form->fields))
-        <div class="rounded-lg border-2 border-dashed border-zinc-300 p-8 text-center dark:border-zinc-600">
-            <flux:text>{{ __('No fields added yet. Click "Add Field" to get started.') }}</flux:text>
+        <div class="rounded-lg border-2 border-dashed border-zinc-300 p-8 text-center dark:border-zinc-600 m-8">
+            <flux:text>{{ __('No fields added yet. Click "Plus button" to get started.') }}</flux:text>
         </div>
     @else
         <div class="flex flex-col gap-4 p-6">
