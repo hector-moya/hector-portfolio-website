@@ -20,8 +20,69 @@ class Create extends Component
 
     public function mount(): void
     {
-        // Start with one empty element
-        $this->form->addField('text');
+        // Initialize with Main and Side tabs
+        $this->form->tabs = [
+            [
+                'name' => __('Main'),
+                'handle' => 'main',
+                'sort_order' => 0,
+                'sections' => [
+                    [
+                        'name' => __('Content'),
+                        'handle' => 'content',
+                        'sort_order' => 0,
+                        'instructions' => '',
+                        'fields' => [
+                            [
+                                'name' => __('Title'),
+                                'handle' => 'title',
+                                'type' => 'text',
+                                'sort_order' => 0,
+                                'instructions' => __('The title of your content'),
+                                'required' => true,
+                                'config' => app(FieldTypeRegistry::class)->defaultConfigFor('text'),
+                                'validation' => [],
+                            ],
+                            [
+                                'name' => __('Content'),
+                                'handle' => 'content',
+                                'type' => 'richtext',
+                                'sort_order' => 1,
+                                'instructions' => __('The main content body'),
+                                'required' => true,
+                                'config' => app(FieldTypeRegistry::class)->defaultConfigFor('rich_text'),
+                                'validation' => [],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            [
+                'name' => __('Side'),
+                'handle' => 'side',
+                'sort_order' => 1,
+                'sections' => [
+                    [
+                        'name' => __('Meta'),
+                        'handle' => 'meta',
+                        'sort_order' => 0,
+                        'instructions' => '',
+                        'fields' => [
+                            [
+                                'name' => __('Excerpt'),
+                                'handle' => 'excerpt',
+                                'type' => 'textarea',
+                                'sort_order' => 0,
+                                'instructions' => __('A brief summary of the content'),
+                                'required' => false,
+                                'config' => app(FieldTypeRegistry::class)->defaultConfigFor('textarea'),
+                                'validation' => [],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
     }
 
     /**
@@ -46,7 +107,18 @@ class Create extends Component
     public function sections(): array
     {
         return $this->form->sections = [
-            ['id' => 1, 'name' => 'Section 1'],
+            [
+                'id' => 'main-content',
+                'name' => 'Main Content',
+                'instructions' => 'Primary content for this blueprint',
+                'fields' => [],
+            ],
+            [
+                'id' => 'side-content',
+                'name' => 'Side Content',
+                'instructions' => 'Supplementary content for this blueprint',
+                'fields' => [],
+            ],
         ];
     }
 

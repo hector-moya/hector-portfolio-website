@@ -1,9 +1,9 @@
 <div>
     <flux:tab.group>
         <flux:tabs variant="segmented">
-            @foreach ($tabs as $id => $tab)
-                <flux:tab :name="$id" :key="'tab-'.$id">
-                    {{ $tab }}
+            @foreach ($form->tabs as $tabIndex => $tab)
+                <flux:tab :name="$tabIndex" :key="'tab-'.$tabIndex">
+                    {{ $tab['name'] }}
                 </flux:tab>
             @endforeach
             <flux:modal.trigger name="add-tab-modal">
@@ -12,13 +12,18 @@
                 </flux:tooltip>
             </flux:modal.trigger>
         </flux:tabs>
-        @foreach ($tabs as $id => $tab)
-            <flux:tab.panel :name="$id" class="space-y-6" :key="'panel-'.$id">
-                @foreach ($this->sections as $section)
-                    <livewire:blueprints.components.section-card :key="'section-' . $section['id']" :$section />
+        @foreach ($form->tabs as $tabIndex => $tab)
+            <flux:tab.panel :name="$tabIndex" class="space-y-6" :key="'panel-'.$tabIndex">
+                @foreach ($tab['sections'] ?? [] as $sectionIndex => $section)
+                    <livewire:blueprints.components.section-card
+                        :wire:key="'section-' . $tabIndex . '-' . $sectionIndex"
+                        :form="$form"
+                        :tab-index="$tabIndex"
+                        :section-index="$sectionIndex"
+                        :section="$section" />
                 @endforeach
                 <flux:card class="max-w-1/2 mx-auto flex justify-center border-2 border-dashed px-16">
-                    <flux:button icon="plus" variant="ghost" wire:click="addSection" tooltip="{{ __('Click to add a new section.') }}">{{ __('Add Section') }}</flux:button>
+                    <flux:button icon="plus" variant="ghost" wire:click="addSection({{ $tabIndex }})" tooltip="{{ __('Click to add a new section.') }}">{{ __('Add Section') }}</flux:button>
                 </flux:card>
             </flux:tab.panel>
         @endforeach

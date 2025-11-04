@@ -15,23 +15,23 @@
         </div>
     </div>
     <flux:separator />
-    @if (empty($form->fields))
+    @if (empty($section['fields']))
         <div class="rounded-lg border-2 border-dashed border-zinc-300 p-8 text-center dark:border-zinc-600 m-8">
             <flux:text>{{ __('No fields added yet. Click "Plus button" to get started.') }}</flux:text>
         </div>
     @else
         <div class="flex flex-col gap-4 p-6">
-            @foreach ($form->fields as $index => $field)
-                <flux:card wire:key="field-{{ $index }}" class="!p-0">
+            @foreach ($section['fields'] as $fieldIndex => $field)
+                <flux:card wire:key="field-{{ $tabIndex }}-{{ $sectionIndex }}-{{ $fieldIndex }}" class="!p-0">
                     <div class="flex items-center justify-between">
                         <flux:icon.grip-vertical variant="micro" class="mx-2 transition-opacity duration-200 hover:opacity-45" />
                         <flux:separator vertical />
                         <div class="m-2 flex flex-grow items-center">
-                            <flux:button size="xs" variant="ghost" icon="{{ $field['icon'] }}" tooltip="{{ __('Configure ') . $field['label'] }}">{{ $field['label'] }}</flux:button>
+                            <flux:button size="xs" variant="ghost" icon="{{ $field['icon'] }}" tooltip="{{ __('Configure ') . $field['name'] }}">{{ $field['name'] }}</flux:button>
                         </div>
                         <div class="mx-2 flex">
                             <flux:button icon="clipboard-document-list" size="xs" variant="ghost" tooltip="{{ __('Duplicate Field') }}" />
-                            <flux:button icon="trash" size="xs" variant="ghost" tooltip="{{ __('Remove Field') }}" />
+                            <flux:button icon="trash" size="xs" variant="ghost" tooltip="{{ __('Remove Field') }}" wire:click="removeField({{ $fieldIndex }})" />
                         </div>
                     </div>
                 </flux:card>

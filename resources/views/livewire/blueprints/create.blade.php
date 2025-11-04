@@ -38,7 +38,7 @@
                 {{-- Fields Card --}}
                 <flux:heading size="lg">{{ __('Fields') }}</flux:heading>
 
-                <livewire:blueprints.components.blueprint-tabs />
+                <livewire:blueprints.components.blueprint-tabs :form="$form" />
 
                 {{-- Actions --}}
                 <div class="flex items-center justify-end gap-3">
