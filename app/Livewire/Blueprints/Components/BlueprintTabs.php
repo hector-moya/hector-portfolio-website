@@ -4,12 +4,14 @@ namespace App\Livewire\Blueprints\Components;
 
 use App\Livewire\Forms\TabForm;
 use App\Models\Tab;
+use App\Traits\HasSlug;
 use Flux\Flux;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 
 class BlueprintTabs extends Component
 {
+    use HasSlug;
     public int $tabId;
 
     public array $tabs = [
