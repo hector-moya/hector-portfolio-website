@@ -22,7 +22,8 @@
     @else
         <div class="flex flex-col gap-4 p-6">
             @foreach ($section['fields'] as $fieldIndex => $field)
-                <flux:card :key="'field-'.$fieldIndex" class="!p-0">
+            <livewire:blueprints.components.field-card :$field :key="'field-'.$fieldIndex" />
+                {{-- <flux:card :key="'field-'.$fieldIndex" class="!p-0">
                     <div class="flex items-center justify-between">
                         <flux:icon.grip-vertical variant="micro" class="mx-2 transition-opacity duration-200 hover:opacity-45" />
                         <flux:separator vertical />
@@ -34,7 +35,7 @@
                             <flux:button icon="trash" size="xs" variant="ghost" tooltip="{{ __('Remove Field') }}" wire:click="removeField({{ $fieldIndex }})" />
                         </div>
                     </div>
-                </flux:card>
+                </flux:card> --}}
                 {{-- <div class="flex items-start gap-4" wire:key="element-{{ $index }}">
                                                     <div class="flex-1 space-y-4">
                                                         <div class="grid grid-cols-2 gap-4">
