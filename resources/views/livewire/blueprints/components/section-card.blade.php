@@ -74,16 +74,16 @@
     <div class="flex justify-center">
     </div>
     {{-- Edit Section Modal --}}
-    <flux:modal name="edit-section-modal-{{ $section['id'] ?? '' }}">
+    <flux:modal name="edit-section-modal-{{ $section['id'] }}">
         <div class="space-y-6">
             <flux:heading size="lg">{{ __('Edit Section') }}</flux:heading>
-            <flux:input label="{{ __('Section Name') }}" placeholder="{{ __('Main Content') }}" wire:model="sections.{{ $section['id'] ?? '' }}.name" />
-            <flux:textarea label="{{ __('Section Instructions') }}" placeholder="{{ __('Instructions for this section...') }}" rows="3" wire:model="sections.{{ $section['id'] ?? '' }}.instructions" />
+            <flux:input label="{{ __('Section Name') }}" placeholder="{{ __('Main Content') }}" wire:model="section.name" />
+            <flux:textarea label="{{ __('Section Instructions') }}" placeholder="{{ __('Instructions for this section...') }}" rows="3" wire:model="section.instructions" />
             <div class="flex justify-end">
-                <flux:button type="button" @click="$flux.modal('edit-section-modal-{{ $section['id'] ?? '' }}').close()" variant="outline" class="mr-2">
+                <flux:button type="button" @click="$flux.modal('edit-section-modal-{{ $section['id'] }}').close()" variant="outline" class="mr-2">
                     {{ __('Cancel') }}
                 </flux:button>
-                <flux:button type="button" wire:click="updateSection">
+                <flux:button type="button" wire:click="updateSection('{{ $section['id'] }}')">
                     {{ __('Update Section') }}
                 </flux:button>
             </div>

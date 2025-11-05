@@ -3,10 +3,9 @@
 namespace App\Livewire\Blueprints\Components;
 
 use App\Livewire\Forms\BlueprintForm;
-use App\Models\Tab;
 use App\Traits\HasSlug;
 use Flux\Flux;
-use Livewire\Attributes\Computed;
+use Ramsey\Uuid\Uuid;
 use Livewire\Component;
 
 class BlueprintTabs extends Component
@@ -56,19 +55,14 @@ class BlueprintTabs extends Component
 
     public function addSection(int $tabIndex): void
     {
-        $this->form->tabs[$tabIndex]['sections'] ??= [];
-        $this->form->tabs[$tabIndex]['sections'][] = [
+        $this->tabs[$tabIndex]['sections'][] = [
+            'id' => UUID::uuid4()->toString(),
             'name' => __('New Section'),
             'handle' => '',
-            'sort_order' => count($this->form->tabs[$tabIndex]['sections']),
+            'sort_order' => count($this->tabs[$tabIndex]['sections']),
             'instructions' => '',
             'fields' => [],
         ];
-    }
-
-    public function updateSection(): void
-    {
-        Flux::modal('edit-section-modal-' . $this->editingSectionId)->close();
     }
 
     public function updateTab(): void

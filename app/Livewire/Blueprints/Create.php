@@ -95,42 +95,6 @@ class Create extends Component
         ];
     }
 
-    /**
-     * Select options [value => label] built from registry.
-     */
-    #[Computed]
-    public function fieldTypeOptions(): array
-    {
-        return app(FieldTypeRegistry::class)->optionsForSelect();
-    }
-
-    /**
-     * Meta for modal listing (value, label, icon).
-     */
-    #[Computed]
-    public function fieldTypeMeta(): array
-    {
-        return app(FieldTypeRegistry::class)->all();
-    }
-
-    #[Computed]
-    public function sections(): array
-    {
-        return $this->form->sections = [
-            [
-                'id' => 'main-content',
-                'name' => 'Main Content',
-                'instructions' => 'Primary content for this blueprint',
-                'fields' => [],
-            ],
-            [
-                'id' => 'side-content',
-                'name' => 'Side Content',
-                'instructions' => 'Supplementary content for this blueprint',
-                'fields' => [],
-            ],
-        ];
-    }
 
     public function updatedFormName(): void
     {
@@ -149,26 +113,6 @@ class Create extends Component
         $this->form->create();
 
         $this->redirect(route('blueprints.index'), navigate: true);
-    }
-
-    public function addNestedField(int $parentIndex, string $type = 'text'): void
-    {
-        $this->form->addNestedField($parentIndex, $type);
-    }
-
-    public function removeNestedField(int $parentIndex, int $childIndex): void
-    {
-        $this->form->removeNestedField($parentIndex, $childIndex);
-    }
-
-    public function addOption(int $index): void
-    {
-        $this->form->addOption($index);
-    }
-
-    public function removeOption(int $index, int $optIndex): void
-    {
-        $this->form->removeOption($index, $optIndex);
     }
 
     #[Title('Create Blueprint')]
