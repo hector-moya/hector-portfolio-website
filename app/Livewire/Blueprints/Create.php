@@ -10,6 +10,7 @@ use Flux\Flux;
 use Ramsey\Uuid\Uuid;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -25,6 +26,7 @@ class Create extends Component
         // Initialize with Main and Side tabs
         $this->form->tabs = [
             [
+                'id' => UUID::uuid4()->toString(),
                 'name' => __('Main'),
                 'handle' => 'main',
                 'sort_order' => 0,
@@ -65,6 +67,7 @@ class Create extends Component
                 ],
             ],
             [
+                'id' => UUID::uuid4()->toString(),
                 'name' => __('Side'),
                 'handle' => 'side',
                 'sort_order' => 1,
@@ -108,8 +111,27 @@ class Create extends Component
         }
     }
 
+    #[On('update-section')]
+    public function updateSection(array $data): void
+    {
+        $section = $data['section'] ?? [];
+        $tabId = $data['tabId'] ?? '';
+
+        foreach ($this->form->tabs as $tabIndex => $tab) {
+            if ($tab['id'] === $tabId) {
+                foreach ($tab['sections'] as $sectionIndex => $existingSection) {
+                    if ($existingSection['id'] === $section['id']) {
+                        $this->form->tabs[$tabIndex]['sections'][$sectionIndex] = $section;
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
     public function save(): void
     {
+        dd($this->form->tabs);
         $this->form->create();
 
         $this->redirect(route('blueprints.index'), navigate: true);

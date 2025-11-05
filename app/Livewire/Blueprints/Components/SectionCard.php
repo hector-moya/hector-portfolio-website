@@ -6,11 +6,13 @@ use App\Services\FieldTypeRegistry;
 use App\Enums\FieldType;
 use Flux\Flux;
 use Livewire\Attributes\Computed;
+use Livewire\Attributes\Reactive;
 use Livewire\Component;
 
 class SectionCard extends Component
 {
     public array $section = [];
+    public string $tabId = '';
     public array $fields = [];
     public function mount(): void
     {
@@ -42,6 +44,7 @@ class SectionCard extends Component
     }
     public function updateSection(string $id): void
     {
+        $this->dispatch('update-section', ['section' => $this->section, 'tabId' => $this->tabId]);
         Flux::modal('edit-section-modal-' . $id)->close();
     }
 

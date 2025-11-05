@@ -2,19 +2,17 @@
 
 namespace App\Livewire\Blueprints\Components;
 
-use App\Livewire\Forms\BlueprintForm;
 use App\Traits\HasSlug;
 use Flux\Flux;
 use Illuminate\Contracts\View\View;
 use Illuminate\Contracts\View\Factory;
 use Ramsey\Uuid\Uuid;
 use Livewire\Component;
+use Livewire\Attributes\Reactive;
 
 class BlueprintTabs extends Component
 {
     use HasSlug;
-
-    public BlueprintForm $form;
 
     public string $newTabName = '';
 

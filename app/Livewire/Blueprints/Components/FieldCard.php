@@ -4,6 +4,7 @@ namespace App\Livewire\Blueprints\Components;
 
 use Livewire\Component;
 use Livewire\Attributes\Computed;
+use Livewire\Attributes\Reactive;
 use App\Services\FieldTypeRegistry;
 
 class FieldCard extends Component
