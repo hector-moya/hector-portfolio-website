@@ -5,6 +5,8 @@ namespace App\Livewire\Blueprints\Components;
 use App\Livewire\Forms\BlueprintForm;
 use App\Traits\HasSlug;
 use Flux\Flux;
+use Illuminate\Contracts\View\View;
+use Illuminate\Contracts\View\Factory;
 use Ramsey\Uuid\Uuid;
 use Livewire\Component;
 
@@ -32,15 +34,22 @@ class BlueprintTabs extends Component
 
     public function addTab(): void
     {
-        if (!trim($this->newTabName)) {
+        if (! trim($this->newTabName)) {
             return;
         }
 
-        $this->form->tabs[] = [
+        $this->tabs[] = [
             'name' => $this->newTabName,
             'handle' => '',
-            'sort_order' => count($this->form->tabs),
-            'sections' => [],
+            'sort_order' => count($this->tabs),
+            'sections' => [[
+                'id' => UUID::uuid4()->toString(),
+                'name' => __('New Section'),
+                'handle' => '',
+                'sort_order' => count($this->tabs[count($this->tabs) - 1]['sections']),
+                'instructions' => '',
+                'fields' => [],
+            ],],
         ];
 
         $this->newTabName = '';
@@ -67,14 +76,14 @@ class BlueprintTabs extends Component
 
     public function updateTab(): void
     {
-        if (!trim($this->editingTab['name'])) {
+        if (! trim($this->editingTab['name'])) {
             return;
         }
 
-        Flux::modal('edit-tab-modal-' . $this->editingTabId)->close();
+        Flux::modal('edit-tab-modal-'.$this->editingTabId)->close();
     }
 
-    public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+    public function render(): View|Factory
     {
         return view('livewire.blueprints.components.blueprint-tabs');
     }
