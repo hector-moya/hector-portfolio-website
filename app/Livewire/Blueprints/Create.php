@@ -2,10 +2,12 @@
 
 namespace App\Livewire\Blueprints;
 
+use App\Enums\FieldType;
 use App\Livewire\Forms\BlueprintForm;
 use App\Services\FieldTypeRegistry;
 use App\Traits\HasSlug;
 use Flux\Flux;
+use Ramsey\Uuid\Uuid;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Livewire\Attributes\Computed;
@@ -28,15 +30,18 @@ class Create extends Component
                 'sort_order' => 0,
                 'sections' => [
                     [
+                        'id' => UUID::uuid4()->toString(),
                         'name' => __('Content'),
                         'handle' => 'content',
                         'sort_order' => 0,
                         'instructions' => '',
                         'fields' => [
                             [
+                                'id' => UUID::uuid4()->toString(),
                                 'name' => __('Title'),
                                 'handle' => 'title',
                                 'type' => 'text',
+                                'icon' => FieldType::Text->icon(),
                                 'sort_order' => 0,
                                 'instructions' => __('The title of your content'),
                                 'required' => true,
@@ -44,9 +49,11 @@ class Create extends Component
                                 'validation' => [],
                             ],
                             [
+                                'id' => UUID::uuid4()->toString(),
                                 'name' => __('Content'),
                                 'handle' => 'content',
                                 'type' => 'richtext',
+                                'icon' => FieldType::RichText->icon(),
                                 'sort_order' => 1,
                                 'instructions' => __('The main content body'),
                                 'required' => true,
@@ -63,15 +70,18 @@ class Create extends Component
                 'sort_order' => 1,
                 'sections' => [
                     [
+                        'id' => UUID::uuid4()->toString(),
                         'name' => __('Meta'),
                         'handle' => 'meta',
                         'sort_order' => 0,
                         'instructions' => '',
                         'fields' => [
                             [
+                                'id' => UUID::uuid4()->toString(),
                                 'name' => __('Excerpt'),
                                 'handle' => 'excerpt',
                                 'type' => 'textarea',
+                                'icon' => FieldType::Textarea->icon(),
                                 'sort_order' => 0,
                                 'instructions' => __('A brief summary of the content'),
                                 'required' => false,
@@ -132,17 +142,6 @@ class Create extends Component
         if (preg_match('/^form\.elements\.(\d+)\.label$/', (string) $propertyName, $matches)) {
             $this->form->updateHandleFromLabel((int) $matches[1]);
         }
-    }
-
-    public function addField(string $type): void
-    {
-        $this->form->addField(type: $type);
-        Flux::modal('select-field-modal')->close();
-    }
-
-    public function removeField(int $index): void
-    {
-        $this->form->removeField($index);
     }
 
     public function save(): void

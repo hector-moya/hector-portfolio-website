@@ -1,4 +1,4 @@
-<flux:card class="!p-0" :key="'section-card-'.$section['id']">
+<flux:card class="p-0!">
     <div class="flex items-center justify-between">
         <flux:icon.grip-vertical variant="micro" class="mx-2 transition-opacity duration-200 hover:opacity-45" />
         <flux:separator vertical />
@@ -9,7 +9,7 @@
         </div>
 
         <div class="mx-2">
-            <flux:modal.trigger name="select-field-modal">
+            <flux:modal.trigger name="select-field-modal-{{ $section['id'] }}">
                 <flux:button icon="plus" size="xs" variant="primary" tooltip="{{ __('Add Field') }}" />
             </flux:modal.trigger>
         </div>
@@ -22,7 +22,7 @@
     @else
         <div class="flex flex-col gap-4 p-6">
             @foreach ($section['fields'] as $fieldIndex => $field)
-                <flux:card wire:key="field-{{ $tabIndex }}-{{ $sectionIndex }}-{{ $fieldIndex }}" class="!p-0">
+                <flux:card :key="'field-'.$fieldIndex" class="!p-0">
                     <div class="flex items-center justify-between">
                         <flux:icon.grip-vertical variant="micro" class="mx-2 transition-opacity duration-200 hover:opacity-45" />
                         <flux:separator vertical />
@@ -73,4 +73,36 @@
     @endif
     <div class="flex justify-center">
     </div>
+    {{-- Edit Section Modal --}}
+    <flux:modal name="edit-section-modal-{{ $section['id'] ?? '' }}">
+        <div class="space-y-6">
+            <flux:heading size="lg">{{ __('Edit Section') }}</flux:heading>
+            <flux:input label="{{ __('Section Name') }}" placeholder="{{ __('Main Content') }}" wire:model="sections.{{ $section['id'] ?? '' }}.name" />
+            <flux:textarea label="{{ __('Section Instructions') }}" placeholder="{{ __('Instructions for this section...') }}" rows="3" wire:model="sections.{{ $section['id'] ?? '' }}.instructions" />
+            <div class="flex justify-end">
+                <flux:button type="button" @click="$flux.modal('edit-section-modal-{{ $section['id'] ?? '' }}').close()" variant="outline" class="mr-2">
+                    {{ __('Cancel') }}
+                </flux:button>
+                <flux:button type="button" wire:click="updateSection">
+                    {{ __('Update Section') }}
+                </flux:button>
+            </div>
+        </div>
+    </flux:modal>
+    {{-- Select Field Type Modal --}}
+    <flux:modal name="select-field-modal-{{ $section['id'] ?? '' }}">
+        <div class="space-y-6">
+            <flux:heading size="lg">{{ __('Select Field Type') }}</flux:heading>
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                @foreach ($this->fieldTypeMeta as $type)
+                    <flux:card :key="$type['value']" wire:click="addField('{{ $type['value'] }}')" class="cursor-pointer hover:bg-zinc-50 dark:hover:bg-zinc-800">
+                        <div class="flex items-center gap-3">
+                            <flux:icon name="{{ $type['icon'] }}" class="h-5 w-5" />
+                            <flux:text>{{ $type['label'] }}</flux:text>
+                        </div>
+                    </flux:card>
+                @endforeach
+            </div>
+        </div>
+    </flux:modal>
 </flux:card>

@@ -2,25 +2,19 @@
 
 namespace App\Livewire\Blueprints\Components;
 
-use App\Livewire\Forms\BlueprintForm;
 use App\Services\FieldTypeRegistry;
+use App\Enums\FieldType;
 use Flux\Flux;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 
 class SectionCard extends Component
 {
-    public array $section;
-    public BlueprintForm $form;
-    public int $tabIndex;
-    public int $sectionIndex;
-
-    public function mount(array $section, BlueprintForm $form, int $tabIndex, int $sectionIndex): void
+    public array $section = [];
+    public array $fields = [];
+    public function mount(): void
     {
-        $this->section = $section;
-        $this->form = $form;
-        $this->tabIndex = $tabIndex;
-        $this->sectionIndex = $sectionIndex;
+        $this->fields = $this->section['fields'] ?? [];
     }
 
     #[Computed]
@@ -33,27 +27,25 @@ class SectionCard extends Component
     {
         $defaultConfig = app(FieldTypeRegistry::class)->defaultConfigFor($type);
 
-        $this->form->tabs[$this->tabIndex]['sections'][$this->sectionIndex]['fields'] ??= [];
-        $this->form->tabs[$this->tabIndex]['sections'][$this->sectionIndex]['fields'][] = [
-            'name' => __('New Field'),
-            'handle' => '',
+        $this->section['fields'][] = [
+            'name' => FieldType::from($type)->defaultLabel(),
             'type' => $type,
-            'sort_order' => count($this->form->tabs[$this->tabIndex]['sections'][$this->sectionIndex]['fields']),
+            'icon' => FieldType::from($type)->icon(),
+            'label' => FieldType::from($type)->defaultLabel(),
+            'handle' => '',
             'instructions' => '',
-            'required' => false,
+            'is_required' => false,
             'config' => $defaultConfig,
-            'validation' => [],
         ];
 
-        Flux::modal('select-field-modal')->close();
+        Flux::modal('select-field-modal-'.$this->section['id'])->close();
     }
 
-    public function removeField(int $fieldIndex): void
+
+    public function removeField(int $index): void
     {
-        unset($this->form->tabs[$this->tabIndex]['sections'][$this->sectionIndex]['fields'][$fieldIndex]);
-        $this->form->tabs[$this->tabIndex]['sections'][$this->sectionIndex]['fields'] = array_values(
-            $this->form->tabs[$this->tabIndex]['sections'][$this->sectionIndex]['fields']
-        );
+        unset($this->fields[$index]);
+        $this->fields = array_values($this->fields);
     }
 
     public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory

@@ -21,13 +21,14 @@ class BlueprintTabs extends Component
         'name' => '',
     ];
 
+    public array $tabs = [];
+
     public ?int $editingTabId = null;
     public ?int $editingSectionId = null;
     public ?int $currentTabIndex = null;
 
-    public function mount(BlueprintForm $form): void
+    public function mount(): void
     {
-        $this->form = $form;
     }
 
     public function addTab(): void
