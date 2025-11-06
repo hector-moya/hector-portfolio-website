@@ -20,6 +20,7 @@ class BlueprintTabs extends Component
         'name' => '',
     ];
 
+    #[Reactive]
     public array $tabs = [];
 
     public ?int $editingTabId = null;
@@ -36,7 +37,8 @@ class BlueprintTabs extends Component
             return;
         }
 
-        $this->tabs[] = [
+        $tab = [
+            'id' => UUID::uuid4()->toString(),
             'name' => $this->newTabName,
             'handle' => '',
             'sort_order' => count($this->tabs),
@@ -52,7 +54,7 @@ class BlueprintTabs extends Component
 
         $this->newTabName = '';
 
-        $this->dispatch('tab-added', ['tab' => end($this->tabs)]);
+        $this->dispatch('tab-added', ['tab' => $tab]);
         Flux::modal('add-tab-modal')->close();
     }
 

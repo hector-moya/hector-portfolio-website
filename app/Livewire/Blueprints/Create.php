@@ -12,6 +12,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Computed;
+use Livewire\WithPagination;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
@@ -172,6 +173,8 @@ class Create extends Component
     #[Title('Create Blueprint')]
     public function render(): View|Factory
     {
-        return view('livewire.blueprints.create');
+        return view('livewire.blueprints.create', [
+            'tabs' => $this->form->tabs,
+        ]);
     }
 }
