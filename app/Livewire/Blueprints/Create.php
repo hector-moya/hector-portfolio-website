@@ -111,6 +111,39 @@ class Create extends Component
         }
     }
 
+    #[On('tab-removed')]
+    public function removeTab(array $data): void
+    {
+        dd($data);
+    }
+
+    #[On('tab-added')]
+    public function addTab(array $data): void
+    {
+        $tab = $data['tab'] ?? [];
+        $this->form->tabs[] = $tab;
+    }
+
+    #[On('field-added')]
+    public function addField(array $data): void
+    {
+        $section = $data['section'] ?? [];
+        $tabId = $data['tabId'] ?? '';
+        $field = $data['fieldType'] ?? '';
+
+        foreach ($this->form->tabs as $tabIndex => $tab) {
+            if ($tab['id'] === $tabId) {
+                foreach ($tab['sections'] as $sectionIndex => $existingSection) {
+                    if ($existingSection['id'] === $section['id']) {
+                        $this->form->tabs[$tabIndex]['sections'][$sectionIndex]['fields'][] = $field;
+                        return;
+                    }
+                }
+            }
+        }
+
+    }
+
     #[On('update-section')]
     public function updateSection(array $data): void
     {
@@ -131,7 +164,6 @@ class Create extends Component
 
     public function save(): void
     {
-        dd($this->form->tabs);
         $this->form->create();
 
         $this->redirect(route('blueprints.index'), navigate: true);

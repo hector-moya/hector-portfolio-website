@@ -51,13 +51,15 @@ class BlueprintTabs extends Component
         ];
 
         $this->newTabName = '';
+
+        $this->dispatch('tab-added', ['tab' => end($this->tabs)]);
         Flux::modal('add-tab-modal')->close();
     }
 
     public function removeTab(int $index): void
     {
-        unset($this->form->tabs[$index]);
-        $this->form->tabs = array_values($this->form->tabs);
+        unset($this->tabs[$index]);
+        $this->dispatch('tab-removed', $this->tabs);
     }
 
     public function addSection(int $tabIndex): void

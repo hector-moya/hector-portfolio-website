@@ -40,6 +40,8 @@ class SectionCard extends Component
             'config' => $defaultConfig,
         ];
 
+        $this->dispatch('field-added', ['section' => $this->section, 'tabId' => $this->tabId, 'fieldType' => $type]);
+
         Flux::modal('select-field-modal-'.$this->section['id'])->close();
     }
     public function updateSection(string $id): void
