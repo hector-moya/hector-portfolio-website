@@ -1,5 +1,5 @@
-<div>
-    <flux:card class="!p-0">
+<div :key="'field-card-component-'.$field['id']">
+    {{-- <flux:card class="!p-0">
         <div class="flex items-center justify-between">
             <flux:icon.grip-vertical variant="micro" class="mx-2 transition-opacity duration-200 hover:opacity-45" />
             <flux:separator vertical />
@@ -9,19 +9,19 @@
                 </flux:modal.trigger>
             </div>
             <div class="mx-2 flex">
-                <flux:button icon="clipboard-document-list" size="xs" variant="ghost" tooltip="{{ __('Duplicate Field') }}" />
+                <flux:button icon="clipboard-document-list" size="xs" variant="ghost" tooltip="{{ __('Duplicate Field') }}" wire:click="$parent.save" />
                 <flux:button icon="trash" size="xs" variant="ghost" tooltip="{{ __('Remove Field') }}" wire:click="removeField('{{ $field['id'] }}')" />
             </div>
         </div>
-    </flux:card>
+    </flux:card> --}}
 
-    <flux:modal name="field-config-{{ $field['id'] }}">
+    {{-- <flux:modal name="field-config-{{ $field['id'] }}">
         <div class="flex items-start gap-4">
             <div class="flex-1 space-y-4">
                 <div class="grid grid-cols-2 gap-4">
                     <flux:select label="{{ __('Type') }}" wire:model="field.type">
                         @foreach ($this->fieldTypeOptions as $value => $label)
-                            <flux:select.option value="{{ $value }}">{{ $label }}</flux:select.option>
+                            <flux:select.option value="{{ $value }}" :key="'field-type-option-{$value}'">{{ $label }}</flux:select.option>
                         @endforeach
                     </flux:select>
 
@@ -43,11 +43,11 @@
 
                     @php($type = $field['type'] ?? 'text')
 
-                    {{-- @includeIf('blueprints.fields.config-' . $type, ['index' => $field['id'], 'element' => $field]) --}}
+                    @includeIf('blueprints.fields.config-' . $type, ['index' => $field['id'], 'element' => $field])
                 </div>
             </div>
 
             <flux:button type="button" icon="trash" wire:click="removeElement('{{ $field['id'] }}')" size="sm" variant="danger" />
         </div>
-    </flux:modal>
+    </flux:modal> --}}
 </div>

@@ -9,78 +9,78 @@ use App\Services\FieldTypeRegistry;
 
 class FieldCard extends Component
 {
-    public array $field = [];
+    // public array $field = [];
     /**
      * Select options [value => label] built from registry.
      */
-    #[Computed]
-    public function fieldTypeOptions(): array
-    {
-        return app(FieldTypeRegistry::class)->optionsForSelect();
-    }
-    public function removeField(int $index): void
-    {
-        unset($this->fields[$index]);
-        $this->fields = array_values($this->fields);
-    }
+    // #[Computed]
+    // public function fieldTypeOptions(): array
+    // {
+    //     return app(FieldTypeRegistry::class)->optionsForSelect();
+    // }
+    // public function removeField(int $index): void
+    // {
+    //     unset($this->fields[$index]);
+    //     $this->fields = array_values($this->fields);
+    // }
 
-    public function updateHandleFromLabel(int $index): void
-    {
-        $this->fields[$index]['handle'] = $this->generateSlug($this->fields[$index]['label']);
-    }
+    // public function updateHandleFromLabel(int $index): void
+    // {
+    //     $this->fields[$index]['handle'] = $this->generateSlug($this->fields[$index]['label']);
+    // }
 
-    public function addNestedField(int $parentIndex, string $type = 'text'): void
-    {
-        // Ensure array scaffolding exists
-        $this->fields[$parentIndex]['config'] ??= [];
-        $this->fields[$parentIndex]['config']['blueprint'] ??= [];
+    // public function addNestedField(int $parentIndex, string $type = 'text'): void
+    // {
+    //     // Ensure array scaffolding exists
+    //     $this->fields[$parentIndex]['config'] ??= [];
+    //     $this->fields[$parentIndex]['config']['blueprint'] ??= [];
 
-        // Default config for the chosen type
-        $defaults = app(FieldTypeRegistry::class)->defaultConfigFor($type);
+    //     // Default config for the chosen type
+    //     $defaults = app(FieldTypeRegistry::class)->defaultConfigFor($type);
 
-        $this->fields[$parentIndex]['config']['blueprint'][] = [
-            'type' => $type,
-            'label' => '',
-            'handle' => '',
-            'instructions' => '',
-            'is_required' => false,
-            'config' => $defaults,
-        ];
-    }
+    //     $this->fields[$parentIndex]['config']['blueprint'][] = [
+    //         'type' => $type,
+    //         'label' => '',
+    //         'handle' => '',
+    //         'instructions' => '',
+    //         'is_required' => false,
+    //         'config' => $defaults,
+    //     ];
+    // }
 
-    public function removeNestedField(int $parentIndex, int $childIndex): void
-    {
-        if (! isset($this->fields[$parentIndex]['config']['blueprint'][$childIndex])) {
-            return;
-        }
+    // public function removeNestedField(int $parentIndex, int $childIndex): void
+    // {
+    //     if (! isset($this->fields[$parentIndex]['config']['blueprint'][$childIndex])) {
+    //         return;
+    //     }
 
-        unset($this->fields[$parentIndex]['config']['blueprint'][$childIndex]);
-        $this->fields[$parentIndex]['config']['blueprint'] = array_values(
-            $this->fields[$parentIndex]['config']['blueprint']
-        );
-    }
+    //     unset($this->fields[$parentIndex]['config']['blueprint'][$childIndex]);
+    //     $this->fields[$parentIndex]['config']['blueprint'] = array_values(
+    //         $this->fields[$parentIndex]['config']['blueprint']
+    //     );
+    // }
 
-    /**
-     * Generic helpers for option-based types (select/radio) while editing blueprint.
-     */
-    public function addOption(int $index): void
-    {
-        $this->fields[$index]['config'] ??= [];
-        $this->fields[$index]['config']['options'] ??= [];
-        $this->fields[$index]['config']['options'][] = ['value' => '', 'label' => ''];
-    }
+    // /**
+    //  * Generic helpers for option-based types (select/radio) while editing blueprint.
+    //  */
+    // public function addOption(int $index): void
+    // {
+    //     $this->fields[$index]['config'] ??= [];
+    //     $this->fields[$index]['config']['options'] ??= [];
+    //     $this->fields[$index]['config']['options'][] = ['value' => '', 'label' => ''];
+    // }
 
-    public function removeOption(int $index, int $optIndex): void
-    {
-        if (! isset($this->fields[$index]['config']['options'][$optIndex])) {
-            return;
-        }
+    // public function removeOption(int $index, int $optIndex): void
+    // {
+    //     if (! isset($this->fields[$index]['config']['options'][$optIndex])) {
+    //         return;
+    //     }
 
-        unset($this->fields[$index]['config']['options'][$optIndex]);
-        $this->fields[$index]['config']['options'] = array_values(
-            $this->fields[$index]['config']['options']
-        );
-    }
+    //     unset($this->fields[$index]['config']['options'][$optIndex]);
+    //     $this->fields[$index]['config']['options'] = array_values(
+    //         $this->fields[$index]['config']['options']
+    //     );
+    // }
     public function render()
     {
         return view('livewire.blueprints.components.field-card');

@@ -7,7 +7,7 @@
                 <flux:text>{{ __('Define the structure for your content') }}</flux:text>
             </div>
 
-            <form wire:submit="save" class="flex flex-col space-y-6">
+            <div class="flex flex-col space-y-6">
                 {{-- Basic Info Card --}}
                 <flux:heading size="lg">{{ __('Basic Information') }}</flux:heading>
                 <flux:card class="space-y-4 !px-0">
@@ -38,18 +38,20 @@
                 {{-- Fields Card --}}
                 <flux:heading size="lg">{{ __('Fields') }}</flux:heading>
 
-                <livewire:blueprints.components.blueprint-tabs :tabs="$tabs" />
-
-                {{-- Actions --}}
-                <div class="flex items-center justify-end gap-3">
-                    <flux:button wire:navigate href="{{ route('blueprints.index') }}" type="button" variant="ghost">
-                        {{ __('Cancel') }}
-                    </flux:button>
-                    <flux:button type="submit" variant="primary">
-                        {{ __('Save') }}
-                    </flux:button>
-                </div>
-            </form>
+                <x-blueprints.tabs :tabs="$form->tabs" />
+                {{-- <livewire:blueprints.components.blueprint-tabs :tabs="$tabs" /> --}}
+                <form wire:submit="save">
+                    {{-- Actions --}}
+                    <div class="flex items-center justify-end gap-3">
+                        <flux:button wire:navigate href="{{ route('blueprints.index') }}" type="button" variant="ghost">
+                            {{ __('Cancel') }}
+                        </flux:button>
+                        <flux:button type="submit" variant="primary">
+                            {{ __('Save') }}
+                        </flux:button>
+                    </div>
+                </form>
+            </div>
 
         </div>
     </div>

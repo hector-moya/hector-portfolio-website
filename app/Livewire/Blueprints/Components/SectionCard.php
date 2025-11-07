@@ -6,6 +6,7 @@ use App\Services\FieldTypeRegistry;
 use App\Enums\FieldType;
 use Flux\Flux;
 use Livewire\Attributes\Computed;
+use Ramsey\Uuid\Uuid;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
 
@@ -29,7 +30,8 @@ class SectionCard extends Component
     {
         $defaultConfig = app(FieldTypeRegistry::class)->defaultConfigFor($type);
 
-        $this->section['fields'][] = [
+        $field = [
+            'id' => Uuid::uuid4()->toString(),
             'name' => FieldType::from($type)->defaultLabel(),
             'type' => $type,
             'icon' => FieldType::from($type)->icon(),
@@ -40,7 +42,7 @@ class SectionCard extends Component
             'config' => $defaultConfig,
         ];
 
-        $this->dispatch('field-added', ['section' => $this->section, 'tabId' => $this->tabId, 'fieldType' => $type]);
+        $this->dispatch('field-added', ['section' => $this->section, 'tabId' => $this->tabId, 'field' => $field]);
 
         Flux::modal('select-field-modal-'.$this->section['id'])->close();
     }
