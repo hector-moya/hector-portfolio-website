@@ -72,4 +72,9 @@ class SectionForm extends Form
             'config' => $defaultConfig,
         ]);
     }
+
+    public function destroy(int $sectionId): void
+    {
+        Section::query()->findOrFail($sectionId)->delete();
+    }
 }

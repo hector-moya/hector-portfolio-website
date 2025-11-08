@@ -1,9 +1,9 @@
 <div class="space-y-4">
     <div class="grid grid-cols-2 gap-4">
         <flux:input type="number" label="{{ __('Min items') }}"
-            wire:model="form.elements.{{ $index }}.config.min" />
+            wire:model="form.config.min" />
         <flux:input type="number" label="{{ __('Max items') }}"
-            wire:model="form.elements.{{ $index }}.config.max" />
+            wire:model="form.config.max" />
     </div>
 
     <flux:heading size="sm">{{ __('Repeater Blueprint') }}</flux:heading>
@@ -15,27 +15,27 @@
             <flux:card wire:key="repeater-{{ $index }}-nested-{{ $nIndex }}">
                 <div class="grid grid-cols-2 gap-3 mb-3">
                     <flux:select label="{{ __('Type') }}"
-                        wire:model="form.elements.{{ $index }}.config.blueprint.{{ $nIndex }}.type">
+                        wire:model="form.config.blueprint.{{ $nIndex }}.type">
                         @foreach ($this->fieldTypeOptions as $value => $label)
                             @continue($value === 'repeater') {{-- defer nested repeaters for v1 --}}
                             <flux:select.option value="{{ $value }}">{{ $label }}</flux:select.option>
                         @endforeach
                     </flux:select>
                     <flux:input label="{{ __('Label') }}"
-                        wire:model.live.debounce.500ms="form.elements.{{ $index }}.config.blueprint.{{ $nIndex }}.label" />
+                        wire:model.live.debounce.500ms="form.config.blueprint.{{ $nIndex }}.label" />
                 </div>
 
                 <div class="grid grid-cols-2 gap-3">
                     <flux:input label="{{ __('Handle') }}"
-                        wire:model="form.elements.{{ $index }}.config.blueprint.{{ $nIndex }}.handle" />
+                        wire:model="form.config.blueprint.{{ $nIndex }}.handle" />
                     <flux:input label="{{ __('Instructions') }}"
-                        wire:model="form.elements.{{ $index }}.config.blueprint.{{ $nIndex }}.instructions" />
+                        wire:model="form.config.blueprint.{{ $nIndex }}.instructions" />
                 </div>
 
                 <div class="mt-3 flex items-center justify-between">
                     <flux:switch
                         label="{{ ($nestedEl['is_required'] ?? false) ? 'Required' : 'Optional' }}"
-                        wire:model.live="form.elements.{{ $index }}.config.blueprint.{{ $nIndex }}.is_required"
+                        wire:model.live="form.config.blueprint.{{ $nIndex }}.is_required"
                     />
                     <flux:button size="xs" variant="danger"
                         wire:click="removeNestedField({{ $index }}, {{ $nIndex }})">
@@ -56,7 +56,7 @@
         @endforelse
 
         <div class="flex items-center gap-2">
-            <flux:button size="sm" icon="plus" wire:click="addNestedField({{ $index }})">
+            <flux:button size="sm" icon="plus" wire:click="addNestedField">
                 {{ __('Add nested field') }}
             </flux:button>
         </div>

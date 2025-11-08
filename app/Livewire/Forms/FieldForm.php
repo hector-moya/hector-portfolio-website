@@ -30,7 +30,7 @@ class FieldForm extends Form
 
     public function setField(int $fieldId): void
     {
-        $field = \App\Models\Field::query()->findOrFail($fieldId);
+        $field = Field::query()->findOrFail($fieldId);
         $this->blueprint_id = $field->blueprint_id;
         $this->section_id = $field->section_id;
         $this->type = $field->type;
@@ -41,5 +41,26 @@ class FieldForm extends Form
         $this->config = $field->config ?? [];
         $this->is_required = $field->is_required;
         $this->order = $field->order;
+    }
+
+    public function update(int $fieldId): void
+    {
+        $field = Field::query()->findOrFail($fieldId);
+
+        $field->update([
+            'blueprint_id' => $this->blueprint_id,
+            'section_id' => $this->section_id,
+            'type' => $this->type,
+            'label' => $this->label,
+            'handle' => $this->handle,
+            'instructions' => $this->instructions,
+            'config' => $this->config,
+            'is_required' => $this->is_required,
+            'order' => $this->order,
+        ]);
+    }
+    public function destroy(int $fieldId): void
+    {
+        Field::query()->findOrFail($fieldId)->delete();
     }
 }

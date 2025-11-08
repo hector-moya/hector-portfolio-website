@@ -5,11 +5,14 @@ namespace App\Livewire\Blueprints\Components;
 use App\Livewire\Forms\FieldForm;
 use App\Models\Field;
 use App\Services\FieldTypeRegistry;
+use App\Traits\HasSlug;
+use Flux\Flux;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 
 class FieldCard extends Component
 {
+    use HasSlug;
     public FieldForm $form;
 
     public Field $field;
@@ -21,19 +24,31 @@ class FieldCard extends Component
         $this->form->setField($this->fieldId);
     }
 
-    /**
-     * Select options [value => label] built from registry.
-     */
     #[Computed]
     public function fieldTypeOptions(): array
     {
         return app(FieldTypeRegistry::class)->optionsForSelect();
     }
 
-    public function removeField(int $index): void
+    public function updatedFormLabel(): void
     {
-        unset($this->fields[$index]);
-        $this->fields = array_values($this->fields);
+        $this->form->handle = $this->generateSlug($this->form->label);
+    }
+
+    public function updateField(int $fieldId): void
+    {
+        $this->form->update($fieldId);
+
+        $this->dispatch('update-field');
+
+        Flux::modal('field-config-'.$fieldId)->close();
+    }
+
+    public function removeField(): void
+    {
+        $this->form->destroy($this->fieldId);
+
+        $this->dispatch('field-removed');
     }
 
     public function updateHandleFromLabel(int $index): void
@@ -41,16 +56,16 @@ class FieldCard extends Component
         $this->fields[$index]['handle'] = $this->generateSlug($this->fields[$index]['label']);
     }
 
-    public function addNestedField(int $parentIndex, string $type = 'text'): void
+    public function addNestedField(string $type = 'text'): void
     {
         // Ensure array scaffolding exists
-        $this->fields[$parentIndex]['config'] ??= [];
-        $this->fields[$parentIndex]['config']['blueprint'] ??= [];
+        $this->form->config['blueprint'] ??= [];
+        $this->form->config['blueprint'] ??= [];
 
         // Default config for the chosen type
         $defaults = app(FieldTypeRegistry::class)->defaultConfigFor($type);
 
-        $this->fields[$parentIndex]['config']['blueprint'][] = [
+        $this->form->config['blueprint'][] = [
             'type' => $type,
             'label' => '',
             'handle' => '',

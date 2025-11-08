@@ -18,13 +18,13 @@ class SectionCard extends Component
 
     public ?int $sectionId = null;
 
-    #[On('field-added')]
+    #[On(['field-added', 'field-removed'])]
     public function mount(): void
     {
         $this->form->setSection($this->sectionId);
     }
 
-    public function updateFormName(): void
+    public function updatedFormName(): void
     {
         $this->form->handle = $this->generateSlug($this->form->name);
     }
@@ -51,6 +51,13 @@ class SectionCard extends Component
         $this->dispatch('update-section');
 
         Flux::modal('edit-section-modal-'.$id)->close();
+    }
+
+    public function removeSection(): void
+    {
+        $this->form->destroy($this->sectionId);
+
+        $this->dispatch('section-removed');
     }
 
     public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory

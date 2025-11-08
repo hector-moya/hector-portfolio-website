@@ -16,22 +16,25 @@
     </div>
     <flux:separator />
     @if (empty($form->fields))
-        <div class="rounded-lg border-2 border-dashed border-zinc-300 p-8 text-center dark:border-zinc-600 m-8">
+        <div class="m-8 rounded-lg border-2 border-dashed border-zinc-300 p-8 text-center dark:border-zinc-600">
             <flux:text>{{ __('No fields added yet. Click "Plus button" to get started.') }}</flux:text>
         </div>
     @else
         <div class="flex flex-col gap-4 p-6">
             @foreach ($form->fields as $fieldIndex => $field)
-            <livewire:blueprints.components.field-card :fieldId="$field->id" :key="'field-'.$fieldIndex" />
+                <livewire:blueprints.components.field-card :fieldId="$field->id" :key="'field-' . $fieldIndex" />
             @endforeach
         </div>
     @endif
     <div class="flex justify-center">
     </div>
     {{-- Edit Section Modal --}}
-    <flux:modal name="edit-section-modal-{{ $sectionId }}">
+    <flux:modal name="edit-section-modal-{{ $sectionId }}" :closable="false" class="min-w-140">
         <div class="space-y-6">
-            <flux:heading size="lg">{{ __('Edit Section') }}</flux:heading>
+            <div class="flex justify-between">
+                <flux:heading size="lg">{{ __('Edit Section') }}</flux:heading>
+                <flux:button variant="danger" icon="trash" size="sm" wire:click="removeSection" tooltip="{{ __('Delete Section') }}" />
+            </div>
             <flux:input label="{{ __('Section Name') }}" placeholder="{{ __('Main Content') }}" wire:model.live.debounce.750ms="form.name" />
             <flux:input label="{{ __('Section Handle') }}" placeholder="{{ __('main_content') }}" wire:model="form.handle" />
             <flux:textarea label="{{ __('Section Instructions') }}" placeholder="{{ __('Instructions for this section...') }}" rows="3" wire:model="form.instructions" />

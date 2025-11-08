@@ -22,7 +22,7 @@ class BlueprintTabs extends Component
 
     public ?Collection $tabs = null;
 
-    #[On('tabs-updated')]
+    #[On(['tabs-updated', 'section-removed'])]
     public function mount(): void
     {
         $this->tabs = Tab::query()->where('blueprint_id', $this->blueprintId)->with('sections:id,tab_id')->get();
