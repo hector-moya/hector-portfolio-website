@@ -92,7 +92,7 @@ class BlueprintForm extends Form
         $this->description = $blueprint->description ?? '';
         $this->is_active = $blueprint->is_active;
 
-        $this->tabs = $blueprint->tabs->map(fn($tab): array => [
+        $this->tabs = $blueprint->tabs->map(fn ($tab): array => [
             'id' => $tab->id,
             // 'name' => $tab->name,
             // 'handle' => $tab->handle,

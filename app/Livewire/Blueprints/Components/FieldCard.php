@@ -13,6 +13,7 @@ use Livewire\Component;
 class FieldCard extends Component
 {
     use HasSlug;
+
     public FieldForm $form;
 
     public Field $field;

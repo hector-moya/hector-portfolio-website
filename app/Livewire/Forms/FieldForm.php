@@ -59,6 +59,7 @@ class FieldForm extends Form
             'order' => $this->order,
         ]);
     }
+
     public function destroy(int $fieldId): void
     {
         Field::query()->findOrFail($fieldId)->delete();
