@@ -10,7 +10,6 @@ use App\Models\Blueprint;
 use App\Services\FieldTypeRegistry;
 use App\Traits\Blueprints\Tabs;
 use Flux\Flux;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Livewire\Attributes\Validate;
@@ -19,6 +18,7 @@ use Livewire\Form;
 class BlueprintForm extends Form
 {
     use Tabs;
+
     public ?int $blueprint_id = null;
 
     #[Validate('required|string|max:255')]
@@ -33,7 +33,9 @@ class BlueprintForm extends Form
     public bool $is_active = true;
 
     public array $fields = [];
+
     public array $sections = [];
+
     public array $tabs = [];
 
     public function rules(): array
@@ -187,5 +189,4 @@ class BlueprintForm extends Form
     {
         return Str::slug($slug);
     }
-
 }

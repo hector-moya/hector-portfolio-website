@@ -2,11 +2,11 @@
 
 namespace App\Livewire\Forms;
 
-use Livewire\Attributes\Validate;
-use App\Services\FieldTypeRegistry;
-use App\Models\Section;
-use Illuminate\Support\Collection;
 use App\Enums\FieldType;
+use App\Models\Section;
+use App\Services\FieldTypeRegistry;
+use Illuminate\Support\Collection;
+use Livewire\Attributes\Validate;
 use Livewire\Form;
 
 class SectionForm extends Form
@@ -19,9 +19,13 @@ class SectionForm extends Form
 
     #[Validate('nullable|string')]
     public string $instructions = '';
+
     public ?int $blueprint_id = null;
+
     public ?int $tab_id = null;
+
     public ?int $sort_order = null;
+
     public ?Collection $fields = null;
 
     public function setSection(?int $sectionId): void

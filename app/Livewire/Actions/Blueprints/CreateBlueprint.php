@@ -2,9 +2,8 @@
 
 namespace App\Livewire\Actions\Blueprints;
 
-use App\DataTransferObjects\TabDto;
-use Illuminate\Support\Facades\DB;
 use App\Models\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 

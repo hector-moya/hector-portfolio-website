@@ -2,23 +2,20 @@
 
 namespace App\Livewire\Blueprints\Components;
 
+use App\Livewire\Forms\SectionForm;
 use App\Services\FieldTypeRegistry;
-use App\Enums\FieldType;
-use App\Models\Section;
-use Illuminate\Support\Collection;
+use App\Traits\HasSlug;
 use Flux\Flux;
 use Livewire\Attributes\Computed;
-use App\Traits\HasSlug;
 use Livewire\Attributes\On;
-use App\Livewire\Forms\SectionForm;
-use Ramsey\Uuid\Uuid;
-use Livewire\Attributes\Reactive;
 use Livewire\Component;
 
 class SectionCard extends Component
 {
     use HasSlug;
+
     public SectionForm $form;
+
     public ?int $sectionId = null;
 
     #[On('field-added')]
@@ -46,13 +43,14 @@ class SectionCard extends Component
 
         Flux::modal('select-field-modal-'.$this->sectionId)->close();
     }
+
     public function updateSection(int $id): void
     {
         $this->form->update($this->sectionId);
 
         $this->dispatch('update-section');
 
-        Flux::modal('edit-section-modal-' . $id)->close();
+        Flux::modal('edit-section-modal-'.$id)->close();
     }
 
     public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory

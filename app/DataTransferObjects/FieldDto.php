@@ -9,8 +9,8 @@ use App\Enums\FieldType;
 class FieldDto
 {
     /**
-     * @param array<string, mixed> $config
-     * @param array<string, mixed> $validation
+     * @param  array<string, mixed>  $config
+     * @param  array<string, mixed>  $validation
      */
     public function __construct(
         public readonly string $name,
@@ -21,8 +21,7 @@ class FieldDto
         public readonly bool $required = false,
         public readonly array $config = [],
         public readonly array $validation = [],
-    ) {
-    }
+    ) {}
 
     public static function fromArray(array $data): self
     {

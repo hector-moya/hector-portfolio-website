@@ -2,24 +2,22 @@
 
 namespace App\Livewire\Blueprints\Components;
 
+use App\Livewire\Forms\TabForm;
+use App\Models\Tab;
 use App\Traits\HasSlug;
 use Flux\Flux;
-use Illuminate\Contracts\View\View;
 use Illuminate\Contracts\View\Factory;
-use Ramsey\Uuid\Uuid;
-use Livewire\Attributes\On;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
-use App\Models\Tab;
-use App\Livewire\Forms\TabForm;
+use Livewire\Attributes\On;
 use Livewire\Component;
-use Livewire\Attributes\Reactive;
 
 class BlueprintTabs extends Component
 {
     use HasSlug;
 
     public TabForm $form;
-    
+
     public ?int $blueprintId = null;
 
     public ?Collection $tabs = null;
@@ -69,7 +67,7 @@ class BlueprintTabs extends Component
             'handle' => $this->form->handle,
         ]);
 
-        Flux::modal('edit-tab-modal-'. $tabId)->close();
+        Flux::modal('edit-tab-modal-'.$tabId)->close();
     }
 
     public function deleteTab(int $tabId): void

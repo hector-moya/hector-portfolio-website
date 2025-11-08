@@ -7,7 +7,7 @@ namespace App\DataTransferObjects;
 class SectionDto
 {
     /**
-     * @param array<string, FieldDto> $fields
+     * @param  array<string, FieldDto>  $fields
      */
     public function __construct(
         public readonly string $name,
@@ -15,8 +15,7 @@ class SectionDto
         public readonly int $sortOrder = 0,
         public readonly ?string $instructions = null,
         public array $fields = [],
-    ) {
-    }
+    ) {}
 
     public static function fromArray(array $data): self
     {

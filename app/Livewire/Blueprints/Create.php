@@ -2,28 +2,22 @@
 
 namespace App\Livewire\Blueprints;
 
-use App\Enums\FieldType;
 use App\Livewire\Forms\BlueprintForm;
-use App\Services\FieldTypeRegistry;
-use App\Traits\HasSlug;
-use Flux\Flux;
-use Ramsey\Uuid\Uuid;
 use App\Models\Blueprint;
-use App\Traits\Blueprints\Tabs;
 use App\Traits\Blueprints\Sections;
+use App\Traits\Blueprints\Tabs;
+use App\Traits\HasSlug;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
-use Livewire\Attributes\On;
-use Livewire\Attributes\Computed;
-use Livewire\WithPagination;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
 class Create extends Component
 {
-    use HasSlug, Tabs, Sections;
+    use HasSlug, Sections, Tabs;
 
     public ?Blueprint $blueprint = null;
+
     public BlueprintForm $form;
 
     public function mount(): void

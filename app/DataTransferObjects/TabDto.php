@@ -7,16 +7,15 @@ namespace App\DataTransferObjects;
 class TabDto
 {
     /**
-     * @param array<string, FieldDto> $fields
-     * @param array<int, SectionDto> $sections
+     * @param  array<string, FieldDto>  $fields
+     * @param  array<int, SectionDto>  $sections
      */
     public function __construct(
         public readonly string $name,
         public readonly string $handle,
         public readonly int $sortOrder = 0,
         public array $sections = [],
-    ) {
-    }
+    ) {}
 
     public static function fromArray(array $data): self
     {

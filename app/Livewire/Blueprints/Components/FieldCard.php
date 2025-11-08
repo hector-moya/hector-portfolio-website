@@ -2,23 +2,25 @@
 
 namespace App\Livewire\Blueprints\Components;
 
-use Livewire\Component;
-use Livewire\Attributes\Computed;
 use App\Livewire\Forms\FieldForm;
 use App\Models\Field;
-use Livewire\Attributes\Reactive;
 use App\Services\FieldTypeRegistry;
+use Livewire\Attributes\Computed;
+use Livewire\Component;
 
 class FieldCard extends Component
 {
     public FieldForm $form;
+
     public Field $field;
+
     public ?int $fieldId = null;
 
     public function mount(): void
     {
         $this->form->setField($this->fieldId);
     }
+
     /**
      * Select options [value => label] built from registry.
      */
@@ -27,6 +29,7 @@ class FieldCard extends Component
     {
         return app(FieldTypeRegistry::class)->optionsForSelect();
     }
+
     public function removeField(int $index): void
     {
         unset($this->fields[$index]);
@@ -90,6 +93,7 @@ class FieldCard extends Component
             $this->fields[$index]['config']['options']
         );
     }
+
     public function render()
     {
         return view('livewire.blueprints.components.field-card');

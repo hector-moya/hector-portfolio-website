@@ -3,13 +3,14 @@
 namespace App\Livewire\Forms;
 
 use App\Models\Tab;
-use Livewire\Attributes\Validate;
 use App\Traits\Blueprints\Sections;
+use Livewire\Attributes\Validate;
 use Livewire\Form;
 
 class TabForm extends Form
 {
     use Sections;
+
     #[Validate('required|string|max:255')]
     public string $name = '';
 

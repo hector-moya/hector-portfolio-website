@@ -2,9 +2,10 @@
 
 namespace App\Traits\Blueprints;
 
-use Ramsey\Uuid\Uuid;
 use App\Enums\FieldType;
 use App\Services\FieldTypeRegistry;
+use Ramsey\Uuid\Uuid;
+
 trait Sections
 {
     public function newSection(array $data): array
@@ -24,6 +25,7 @@ trait Sections
     public function newField(string $type): array
     {
         $defaultConfig = app(FieldTypeRegistry::class)->defaultConfigFor($type);
+
         return [
             'id' => Uuid::uuid4()->toString(),
             'name' => FieldType::from($type)->defaultLabel(),
