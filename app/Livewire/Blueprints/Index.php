@@ -31,7 +31,7 @@ class Index extends Component
     {
         $blueprint = $this->blueprintForm->create();
         if ($blueprint) {
-            redirect()->route('blueprints.create', $blueprint);
+            to_route('blueprints.create', $blueprint);
         }
     }
 

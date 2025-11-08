@@ -41,9 +41,7 @@
                 <div class="mt-4 border-t pt-4">
                     <flux:heading size="sm">{{ __('Field Configuration') }}</flux:heading>
 
-                    @php($type = $form->type ?? 'text')
-
-                    @includeIf('blueprints.fields.config-' . $type, ['index' => $fieldId, 'element' => $form])
+                    @includeIf('blueprints.fields.config-' . $form->type, ['index' => $fieldId, 'element' => $form])
                 </div>
             </div>
         </div>

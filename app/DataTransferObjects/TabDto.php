@@ -24,7 +24,7 @@ class TabDto
             handle: $data['handle'] ?? \Illuminate\Support\Str::slug($data['name']),
             sortOrder: $data['sort_order'] ?? 0,
             sections: array_map(
-                fn (array $section) => SectionDto::fromArray($section),
+                fn (array $section): \App\DataTransferObjects\SectionDto => SectionDto::fromArray($section),
                 $data['sections'] ?? []
             ),
         );
@@ -37,7 +37,7 @@ class TabDto
             'handle' => $this->handle,
             'sort_order' => $this->sortOrder,
             'sections' => array_map(
-                fn (SectionDto $section) => $section->toArray(),
+                fn (SectionDto $section): array => $section->toArray(),
                 $this->sections
             ),
         ];

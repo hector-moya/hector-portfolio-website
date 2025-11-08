@@ -30,7 +30,7 @@ class FieldForm extends Form
 
     public function setField(int $fieldId): void
     {
-        $field = Field::findOrFail($fieldId);
+        $field = \App\Models\Field::query()->findOrFail($fieldId);
         $this->blueprint_id = $field->blueprint_id;
         $this->section_id = $field->section_id;
         $this->type = $field->type;

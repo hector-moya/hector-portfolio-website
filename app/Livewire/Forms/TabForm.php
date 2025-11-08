@@ -35,7 +35,7 @@ class TabForm extends Form
     {
         $this->validate();
 
-        $tab = Tab::create([
+        $tab = \App\Models\Tab::query()->create([
             'blueprint_id' => $blueprintId,
             'name' => $this->name,
             'handle' => $this->handle,

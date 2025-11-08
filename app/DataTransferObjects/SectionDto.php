@@ -25,7 +25,7 @@ class SectionDto
             sortOrder: $data['sort_order'] ?? 0,
             instructions: $data['instructions'] ?? null,
             fields: array_map(
-                fn (array $field) => FieldDto::fromArray($field),
+                fn (array $field): \App\DataTransferObjects\FieldDto => FieldDto::fromArray($field),
                 $data['fields'] ?? []
             ),
         );
@@ -39,7 +39,7 @@ class SectionDto
             'sort_order' => $this->sortOrder,
             'instructions' => $this->instructions,
             'fields' => array_map(
-                fn (FieldDto $field) => $field->toArray(),
+                fn (FieldDto $field): array => $field->toArray(),
                 $this->fields
             ),
         ];
