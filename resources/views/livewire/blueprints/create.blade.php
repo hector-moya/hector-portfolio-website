@@ -38,8 +38,8 @@
                 {{-- Fields Card --}}
                 <flux:heading size="lg">{{ __('Fields') }}</flux:heading>
 
-                <x-blueprints.tabs :tabs="$form->tabs" />
-                {{-- <livewire:blueprints.components.blueprint-tabs :tabs="$tabs" /> --}}
+                {{-- <x-blueprints.tabs :tabs="$form->tabs" /> --}}
+                <livewire:blueprints.components.blueprint-tabs :tabsIds="$form->tabs" :blueprintId="$form->blueprint_id" />
                 <form wire:submit="save">
                     {{-- Actions --}}
                     <div class="flex items-center justify-end gap-3">

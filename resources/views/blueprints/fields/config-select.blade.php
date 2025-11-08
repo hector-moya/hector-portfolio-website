@@ -2,7 +2,7 @@
 <div class="space-y-3">
     <flux:heading size="sm">{{ __('Options') }}</flux:heading>
 
-    @foreach (($element['config']['options'] ?? []) as $optIndex => $opt)
+    @foreach (($field['config']['options'] ?? []) as $optIndex => $opt)
         <div class="grid grid-cols-5 gap-3 items-end">
             <div class="col-span-2">
                 <flux:input label="{{ __('Value') }}"

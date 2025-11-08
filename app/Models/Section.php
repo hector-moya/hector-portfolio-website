@@ -14,6 +14,8 @@ class Section extends Model
     protected $fillable = [
         'name',
         'handle',
+        'blueprint_id',
+        'tab_id',
         'instructions',
         'sort_order',
     ];
@@ -28,7 +30,7 @@ class Section extends Model
         return $this->belongsTo(Tab::class);
     }
 
-    public function elements(): HasMany
+    public function fields(): HasMany
     {
         return $this->hasMany(Field::class, 'section_id')->orderBy('sort_order');
     }

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('blueprints', function (Blueprint $table): void {
             $table->id();
             $table->string('name');
-            $table->string('slug')->unique();
+            $table->string('slug');
             $table->text('description')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();

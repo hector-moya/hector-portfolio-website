@@ -4,20 +4,32 @@ namespace App\Livewire\Blueprints\Components;
 
 use App\Services\FieldTypeRegistry;
 use App\Enums\FieldType;
+use App\Models\Section;
+use Illuminate\Support\Collection;
 use Flux\Flux;
 use Livewire\Attributes\Computed;
+use App\Traits\HasSlug;
+use Livewire\Attributes\On;
+use App\Livewire\Forms\SectionForm;
 use Ramsey\Uuid\Uuid;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
 
 class SectionCard extends Component
 {
-    public array $section = [];
-    public string $tabId = '';
-    public array $fields = [];
+    use HasSlug;
+    public SectionForm $form;
+    public ?int $sectionId = null;
+
+    #[On('field-added')]
     public function mount(): void
     {
-        $this->fields = $this->section['fields'] ?? [];
+        $this->form->setSection($this->sectionId);
+    }
+
+    public function updateFormName(): void
+    {
+        $this->form->handle = $this->generateSlug($this->form->name);
     }
 
     #[Computed]
@@ -28,27 +40,18 @@ class SectionCard extends Component
 
     public function addField(string $type): void
     {
-        $defaultConfig = app(FieldTypeRegistry::class)->defaultConfigFor($type);
+        $this->form->addField($this->sectionId, $type);
 
-        $field = [
-            'id' => Uuid::uuid4()->toString(),
-            'name' => FieldType::from($type)->defaultLabel(),
-            'type' => $type,
-            'icon' => FieldType::from($type)->icon(),
-            'label' => FieldType::from($type)->defaultLabel(),
-            'handle' => '',
-            'instructions' => '',
-            'is_required' => false,
-            'config' => $defaultConfig,
-        ];
+        $this->dispatch('field-added');
 
-        $this->dispatch('field-added', ['section' => $this->section, 'tabId' => $this->tabId, 'field' => $field]);
-
-        Flux::modal('select-field-modal-'.$this->section['id'])->close();
+        Flux::modal('select-field-modal-'.$this->sectionId)->close();
     }
-    public function updateSection(string $id): void
+    public function updateSection(int $id): void
     {
-        $this->dispatch('update-section', ['section' => $this->section, 'tabId' => $this->tabId]);
+        $this->form->update($this->sectionId);
+
+        $this->dispatch('update-section');
+
         Flux::modal('edit-section-modal-' . $id)->close();
     }
 

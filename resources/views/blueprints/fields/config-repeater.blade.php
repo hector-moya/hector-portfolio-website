@@ -8,7 +8,7 @@
 
     <flux:heading size="sm">{{ __('Repeater Blueprint') }}</flux:heading>
 
-    @php($nested = $element['config']['blueprint'] ?? [])
+    @php($nested = $field['config']['blueprint'] ?? [])
 
     <div class="space-y-3">
         @forelse ($nested as $nIndex => $nestedEl)

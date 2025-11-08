@@ -14,6 +14,7 @@ class Tab extends Model
     protected $fillable = [
         'name',
         'handle',
+        'blueprint_id',
         'sort_order',
     ];
 

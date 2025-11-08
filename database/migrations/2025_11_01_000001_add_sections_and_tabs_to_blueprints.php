@@ -14,6 +14,8 @@ return new class extends Migration
             $table->string('name');
             $table->string('handle');
             $table->integer('sort_order')->default(0);
+            $table->timestamps();
+            $table->softDeletes();
         });
 
         Schema::create('sections', function (Blueprint $table): void {
@@ -25,6 +27,7 @@ return new class extends Migration
             $table->text('instructions')->nullable();
             $table->integer('sort_order')->default(0);
             $table->timestamps();
+            $table->softDeletes();
         });
 
         // Update fields to reference sections

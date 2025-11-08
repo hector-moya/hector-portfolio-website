@@ -52,6 +52,7 @@ class Field extends Model
 
     protected $fillable = [
         'blueprint_id',
+        'section_id',
         'type',
         'label',
         'handle',

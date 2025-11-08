@@ -7,6 +7,10 @@ use Flux\Flux;
 use Illuminate\Contracts\View\View;
 use Illuminate\Contracts\View\Factory;
 use Ramsey\Uuid\Uuid;
+use Livewire\Attributes\On;
+use Illuminate\Support\Collection;
+use App\Models\Tab;
+use App\Livewire\Forms\TabForm;
 use Livewire\Component;
 use Livewire\Attributes\Reactive;
 
@@ -14,75 +18,82 @@ class BlueprintTabs extends Component
 {
     use HasSlug;
 
-    public string $newTabName = '';
+    public TabForm $form;
+    
+    public ?int $blueprintId = null;
 
-    public array $editingTab = [
-        'name' => '',
-    ];
+    public ?Collection $tabs = null;
 
-    #[Reactive]
-    public array $tabs = [];
-
-    public ?int $editingTabId = null;
-    public ?int $editingSectionId = null;
-    public ?int $currentTabIndex = null;
-
+    #[On('tabs-updated')]
     public function mount(): void
     {
+        $this->tabs = Tab::query()->where('blueprint_id', $this->blueprintId)->with('sections:id,tab_id')->get();
+    }
+
+    public function openEditModal(int $tabId): void
+    {
+        $tab = $this->tabs->firstWhere('id', $tabId);
+        if (! $tab) {
+            return;
+        }
+
+        $this->form->name = $tab->name;
+        $this->form->handle = $tab->handle;
+
+        Flux::modal('edit-tab-modal-'.$tab->id)->show();
+    }
+
+    public function updatedFormName(): void
+    {
+        $this->form->handle = $this->generateSlug($this->form->name);
     }
 
     public function addTab(): void
     {
-        if (! trim($this->newTabName)) {
-            return;
-        }
+        $blueprintId = $this->tabs->first()->blueprint_id;
+        $this->form->create($blueprintId);
 
-        $tab = [
-            'id' => UUID::uuid4()->toString(),
-            'name' => $this->newTabName,
-            'handle' => '',
-            'sort_order' => count($this->tabs),
-            'sections' => [[
-                'id' => UUID::uuid4()->toString(),
-                'name' => __('New Section'),
-                'handle' => '',
-                'sort_order' => count($this->tabs[count($this->tabs) - 1]['sections']),
-                'instructions' => '',
-                'fields' => [],
-            ],],
-        ];
+        $this->dispatch('tabs-updated');
 
-        $this->newTabName = '';
-
-        $this->dispatch('tab-added', ['tab' => $tab]);
         Flux::modal('add-tab-modal')->close();
     }
 
-    public function removeTab(int $index): void
+    public function updateTab(int $tabId): void
     {
-        unset($this->tabs[$index]);
-        $this->dispatch('tab-removed', $this->tabs);
+        $tab = $this->tabs->firstWhere('id', $tabId);
+        if (! $tab) {
+            return;
+        }
+        $tab->update([
+            'name' => $this->form->name,
+            'handle' => $this->form->handle,
+        ]);
+
+        Flux::modal('edit-tab-modal-'. $tabId)->close();
     }
 
-    public function addSection(int $tabIndex): void
+    public function deleteTab(int $tabId): void
     {
-        $this->tabs[$tabIndex]['sections'][] = [
-            'id' => UUID::uuid4()->toString(),
-            'name' => __('New Section'),
-            'handle' => '',
-            'sort_order' => count($this->tabs[$tabIndex]['sections']),
-            'instructions' => '',
-            'fields' => [],
-        ];
+        $tab = $this->tabs->firstWhere('id', $tabId);
+        if (! $tab) {
+            return;
+        }
+        $tab->delete();
+
+        $this->dispatch('tabs-updated');
+
+        Flux::modal('edit-tab-modal-'.$tabId)->close();
     }
 
-    public function updateTab(): void
+    public function addSection(int $tabId): void
     {
-        if (! trim($this->editingTab['name'])) {
+        $tab = $this->tabs->firstWhere('id', $tabId);
+
+        if (! $tab) {
             return;
         }
 
-        Flux::modal('edit-tab-modal-'.$this->editingTabId)->close();
+        $this->form->createNewSection($tab);
     }
 
     public function render(): View|Factory

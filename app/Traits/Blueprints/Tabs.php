@@ -28,7 +28,7 @@ trait Tabs
                             'fields' => [
                                 [
                                     'id' => UUID::uuid4()->toString(),
-                                    'name' => __('Title'),
+                                    'label' => __('Title'),
                                     'handle' => 'title',
                                     'type' => 'text',
                                     'icon' => FieldType::Text->icon(),
@@ -40,7 +40,7 @@ trait Tabs
                                 ],
                                 [
                                     'id' => UUID::uuid4()->toString(),
-                                    'name' => __('Content'),
+                                    'label' => __('Content'),
                                     'handle' => 'content',
                                     'type' => 'richtext',
                                     'icon' => FieldType::RichText->icon(),
@@ -69,7 +69,7 @@ trait Tabs
                             'fields' => [
                                 [
                                     'id' => UUID::uuid4()->toString(),
-                                    'name' => __('Excerpt'),
+                                    'label' => __('Excerpt'),
                                     'handle' => 'excerpt',
                                     'type' => 'textarea',
                                     'icon' => FieldType::Textarea->icon(),

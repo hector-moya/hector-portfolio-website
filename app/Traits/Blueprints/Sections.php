@@ -7,11 +7,13 @@ use App\Enums\FieldType;
 use App\Services\FieldTypeRegistry;
 trait Sections
 {
-    public function newSection(): array
+    public function newSection(array $data): array
     {
         return [
             'id' => UUID::uuid4()->toString(),
             'name' => __('New Section'),
+            'blueprint_id' => $data['blueprint_id'] ?? null,
+            'tab_id' => $data['tab_id'] ?? null,
             'handle' => '',
             'sort_order' => 0,
             'instructions' => '',

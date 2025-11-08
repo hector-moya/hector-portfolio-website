@@ -8,6 +8,7 @@ use App\Livewire\Actions\Blueprints\DeleteBlueprint;
 use App\Livewire\Actions\Blueprints\UpdateBlueprint;
 use App\Models\Blueprint;
 use App\Services\FieldTypeRegistry;
+use App\Traits\Blueprints\Tabs;
 use Flux\Flux;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
@@ -17,6 +18,7 @@ use Livewire\Form;
 
 class BlueprintForm extends Form
 {
+    use Tabs;
     public ?int $blueprint_id = null;
 
     #[Validate('required|string|max:255')]
@@ -90,44 +92,47 @@ class BlueprintForm extends Form
 
         $this->tabs = $blueprint->tabs->map(function ($tab) {
             return [
-                'name' => $tab->name,
-                'handle' => $tab->handle,
-                'sort_order' => $tab->sort_order,
-                'sections' => $tab->sections->map(function ($section) {
-                    return [
-                        'name' => $section->name,
-                        'handle' => $section->handle,
-                        'sort_order' => $section->sort_order,
-                        'instructions' => $section->instructions,
-                        'fields' => $section->fields->map(function ($field) {
-                            return [
-                                'name' => $field->name,
-                                'handle' => $field->handle,
-                                'type' => $field->type,
-                                'sort_order' => $field->sort_order,
-                                'instructions' => $field->instructions,
-                                'required' => $field->required,
-                                'config' => $field->config ?? [],
-                                'validation' => $field->validation ?? [],
-                            ];
-                        })->all(),
-                    ];
-                })->all(),
+                'id' => $tab->id,
+                // 'name' => $tab->name,
+                // 'handle' => $tab->handle,
+                // 'sort_order' => $tab->sort_order,
+                // 'sections' => $tab->sections->map(function ($section) {
+                //     return [
+
+                //         'name' => $section->name,
+                //         'handle' => $section->handle,
+                //         'sort_order' => $section->sort_order,
+                //         'instructions' => $section->instructions,
+                //         'fields' => $section->fields->map(function ($field) {
+                //             return [
+                //                 'name' => $field->name,
+                //                 'handle' => $field->handle,
+                //                 'type' => $field->type,
+                //                 'sort_order' => $field->sort_order,
+                //                 'instructions' => $field->instructions,
+                //                 'required' => $field->required,
+                //                 'config' => $field->config ?? [],
+                //                 'validation' => $field->validation ?? [],
+                //             ];
+                //         })->all(),
+                //     ];
+                // })->all(),
             ];
         })->all();
     }
 
     public function create(): Blueprint
     {
-        $this->validate();
+        $tabs = $this->initializeTabs();
+        // $this->validate();
 
         $blueprint = (new CreateBlueprint)->create(
             blueprintData: [
-                'name' => $this->name,
-                'slug' => $this->slug,
-                'description' => $this->description,
-                'is_active' => $this->is_active,
-                'tabs' => $this->tabs,
+                'name' => 'New Blueprint',
+                'slug' => 'new-blueprint',
+                'description' => '',
+                'is_active' => false,
+                'tabs' => $tabs,
             ]);
 
         Flux::toast(

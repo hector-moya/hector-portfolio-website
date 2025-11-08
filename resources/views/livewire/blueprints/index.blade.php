@@ -6,7 +6,7 @@
                 <flux:heading size="xl">{{ __('Blueprints') }}</flux:heading>
                 <flux:text>{{ __('Define content structures with custom fields') }}</flux:text>
             </div>
-            <flux:button wire:navigate href="{{ route('blueprints.create') }}" icon="plus" variant="primary">
+            <flux:button wire:navigate wire:click="createBlueprint" icon="plus" variant="primary">
                 {{ __('Create Blueprint') }}
             </flux:button>
         </div>

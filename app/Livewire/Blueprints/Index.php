@@ -27,6 +27,14 @@ class Index extends Component
         $this->resetPage();
     }
 
+    public function createBlueprint(): void
+    {
+        $blueprint = $this->blueprintForm->create();
+        if ($blueprint) {
+            redirect()->route('blueprints.create', $blueprint);
+        }
+    }
+
     public function delete(int $blueprintId): void
     {
         $this->blueprintForm->destroy($blueprintId);

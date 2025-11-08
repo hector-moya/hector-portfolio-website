@@ -50,7 +50,7 @@ Route::middleware(['auth'])->group(function (): void {
 
     // Blueprints Routes
     Route::get('blueprints', BlueprintsIndex::class)->name('blueprints.index');
-    Route::get('blueprints/create', BlueprintsCreate::class)->name('blueprints.create');
+    Route::get('blueprints/{blueprint}/create', BlueprintsCreate::class)->name('blueprints.create');
     Route::get('blueprints/{blueprint}/edit', BlueprintsEdit::class)->name('blueprints.edit');
 
     // Entries Routes
