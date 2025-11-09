@@ -12,7 +12,7 @@ enum FieldType: string
     case Url = 'url';
     case Date = 'date';
     case Time = 'time';
-    case DateTime = 'datetime';
+    case Calendar = 'calendar';
     case Toggle = 'toggle';
     case Select = 'select';
     case Radio = 'radio';
@@ -31,7 +31,7 @@ enum FieldType: string
             self::Url => 'URL',
             self::Date => 'Date',
             self::Time => 'Time',
-            self::DateTime => 'Date & Time',
+            self::Calendar => 'Calendar',
             self::Toggle => 'Toggle',
             self::Select => 'Select',
             self::Radio => 'Radio',
@@ -52,7 +52,7 @@ enum FieldType: string
             self::Url => 'link',
             self::Date => 'calendar',
             self::Time => 'clock',
-            self::DateTime => 'calendar-date-range',
+            self::Calendar => 'calendar-days',
             self::Toggle => 'document-check',
             self::Select => 'chevrons-up-down',
             self::Radio => 'list-bullet',
@@ -73,7 +73,7 @@ enum FieldType: string
             self::Url => 'New URL Field',
             self::Date => 'New Date Field',
             self::Time => 'New Time Field',
-            self::DateTime => 'New Date & Time Field',
+            self::Calendar => 'New Calendar Field',
             self::Toggle => 'New Toggle Field',
             self::Select => 'New Select Field',
             self::Radio => 'New Radio Field',
@@ -92,9 +92,27 @@ enum FieldType: string
             self::Number => ['min' => null, 'max' => null, 'step' => 1],
             self::Email => ['placeholder' => null],
             self::Url => ['placeholder' => null],
-            self::Date => ['format' => 'Y-m-d'],
-            self::Time => ['format' => 'H:i'],
-            self::DateTime => ['format' => 'Y-m-d H:i'],
+            self::Date => [
+                'date_range' => true,
+                'include_separate_range_inputs' => false,
+                'include_presets' => false,
+                'start_date' => null,
+                'end_date' => null,
+                'min_range' => null,
+                'max_range' => null,
+                'presets' => []
+            ],
+            self::Time => [
+                'include_input' => true,
+                'accept_multiple' => false,
+                'time_format' => '24-hour',
+                'interval' => 30,
+                'min_time' => '09:00',
+                'max_time' => '17:00',
+            ],
+            self::Calendar => [
+                'accept_multiple' => false,
+            ],
             self::Toggle => ['on_label' => 'Yes', 'off_label' => 'No'],
             self::Select => ['options' => []],
             self::Radio => ['options' => []],
@@ -132,8 +150,8 @@ enum FieldType: string
             self::Email, self::Url => [
                 'placeholder' => ['nullable', 'string', 'max:255'],
             ],
-            self::Date, self::Time, self::DateTime => [
-                'format' => ['required', 'string', 'max:50'],
+            self::Date, self::Time, self::Calendar => [
+
             ],
             self::Toggle => [
                 'on_label' => ['required', 'string', 'max:50'],

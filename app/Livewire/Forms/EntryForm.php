@@ -173,7 +173,7 @@ class EntryForm extends Form
             'number' => ['numeric'],
             'date' => ['date'],
             'time' => ['date_format:H:i'],
-            'datetime' => ['date'],
+            'calendar' => ['date'],
             'checkbox' => ['boolean'],
             'select', 'radio' => ['string'],
             'image', 'file' => ['string'], // your uploader will refine later

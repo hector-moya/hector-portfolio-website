@@ -18,9 +18,12 @@
     <flux:modal name="field-config-{{ $fieldId }}" :closable="false" class="min-w-140">
         <div class="flex items-start gap-4">
             <div class="flex-1 space-y-4">
-                <div class="flex items-center gap-2">
-                    <flux:icon name="{{ $form->icon }}" variant="micro" />
-                    <flux:heading size="lg">{{ __('Configure ' . ucfirst($form->type) . ' Field') }}</flux:heading>
+                <div class="flex justify-between">
+                    <div class="flex items-center gap-2">
+                        <flux:icon name="{{ $form->icon }}" variant="micro" />
+                        <flux:heading size="lg">{{ __('Configure ' . ucfirst($form->type) . ' Field') }}</flux:heading>
+                    </div>
+                    <flux:switch label="{{ $form->is_required ? 'Required' : 'Optional' }}" wire:model.live="form.is_required" />
                 </div>
                 <flux:separator />
                 <div class="grid grid-cols-2 gap-4">
@@ -39,13 +42,8 @@
                     <flux:input label="{{ __('Instructions') }}" wire:model="form.instructions" placeholder="Enter the post title" />
                 </div>
 
-                <div class="flex justify-end">
-                    <flux:switch label="{{ $form->is_required ? 'Required' : 'Optional' }}" wire:model.live="form.is_required" />
-                </div>
-
                 <div class="space-y-4">
-                    {{-- <x-blueprints.fields.config-{{ $form->type }} :config="$form->config" /> --}}
-                        <x-dynamic-component component="blueprints.fields.config-{{ $form->type }}" :config="$form->config" />
+                    <x-dynamic-component component="blueprints.fields.config-{{ $form->type }}" :config="$form->config" />
                 </div>
 
                 <div class="flex justify-end">
