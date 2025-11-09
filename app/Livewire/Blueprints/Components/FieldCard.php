@@ -88,25 +88,21 @@ class FieldCard extends Component
         );
     }
 
-    /**
-     * Generic helpers for option-based types (select/radio) while editing blueprint.
-     */
-    public function addOption(int $index): void
+    public function addOption(): void
     {
-        $this->fields[$index]['config'] ??= [];
-        $this->fields[$index]['config']['options'] ??= [];
-        $this->fields[$index]['config']['options'][] = ['value' => '', 'label' => ''];
+        $this->form->config['options'] ??= [];
+        $this->form->config['options'][] = ['value' => '', 'label' => ''];
     }
 
-    public function removeOption(int $index, int $optIndex): void
+    public function removeOption(int $index): void
     {
-        if (! isset($this->fields[$index]['config']['options'][$optIndex])) {
+        if (! isset($this->form->config['options'][$index])) {
             return;
         }
 
-        unset($this->fields[$index]['config']['options'][$optIndex]);
-        $this->fields[$index]['config']['options'] = array_values(
-            $this->fields[$index]['config']['options']
+        unset($this->form->config['options'][$index]);
+        $this->form->config['options'] = array_values(
+            $this->form->config['options']
         );
     }
 

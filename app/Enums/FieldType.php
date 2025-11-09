@@ -89,8 +89,14 @@ enum FieldType: string
             self::Text => ['placeholder' => null, 'max' => null],
             self::Textarea => ['rows' => 4, 'max' => null],
             self::RichText => ['toolbar' => ['bold', 'italic', 'link', 'h2', 'h3', 'ul', 'ol']],
-            self::Number => ['min' => null, 'max' => null, 'step' => 1],
-            self::Email => ['placeholder' => null],
+            self::Number => [
+                'min' => null,
+                'max' => null,
+                'step' => 1
+            ],
+            self::Email => [
+                'placeholder' => null
+            ],
             self::Url => ['placeholder' => null],
             self::Date => [
                 'date_range' => true,
@@ -111,11 +117,15 @@ enum FieldType: string
                 'max_time' => '17:00',
             ],
             self::Calendar => [
-                'accept_multiple' => false,
+                'mode' => [],
+                'min_range' => null,
+                'max_range' => null,
             ],
             self::Toggle => ['on_label' => 'Yes', 'off_label' => 'No'],
             self::Select => ['options' => []],
-            self::Radio => ['options' => []],
+            self::Radio => [
+                'options' => []
+            ],
             self::Image => ['max_size_mb' => 5, 'mimes' => ['jpg', 'jpeg', 'png', 'webp']],
             self::File => ['max_size_mb' => 10, 'mimes' => ['pdf', 'doc', 'docx']],
             self::Repeater => ['blueprint' => [], 'min' => 0, 'max' => null],
