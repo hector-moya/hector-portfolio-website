@@ -88,7 +88,7 @@ enum FieldType: string
         return match ($this) {
             self::Text => [
                 'placeholder' => null,
-                'max' => null
+                'max' => null,
             ],
             self::Textarea => [
                 'placeholder' => null,
@@ -111,19 +111,19 @@ enum FieldType: string
                     'link',
                     'code',
                     'undo',
-                    'redo'
+                    'redo',
                 ],
             ],
             self::Number => [
                 'min' => null,
                 'max' => null,
-                'step' => 1
+                'step' => 1,
             ],
             self::Email => [
-                'placeholder' => null
+                'placeholder' => null,
             ],
             self::Url => [
-                'placeholder' => null
+                'placeholder' => null,
             ],
             self::Date => [
                 'date_range' => true,
@@ -150,13 +150,13 @@ enum FieldType: string
             ],
             self::Toggle => [
                 'on_label' => 'Yes',
-                'off_label' => 'No'
+                'off_label' => 'No',
             ],
             self::Select => [
-                'options' => []
+                'options' => [],
             ],
             self::Radio => [
-                'options' => []
+                'options' => [],
             ],
             self::Image => [
                 'max_size_mb' => 5,
@@ -164,8 +164,8 @@ enum FieldType: string
                     'jpg',
                     'jpeg',
                     'png',
-                    'webp'
-                ]
+                    'webp',
+                ],
             ],
             self::File => [
                 'max_size_mb' => 10,
@@ -178,13 +178,13 @@ enum FieldType: string
                     'xlsx',
                     'ppt',
                     'pptx',
-                    'txt'
-                ]
+                    'txt',
+                ],
             ],
             self::Repeater => [
                 'blueprint' => [],
                 'min' => 0,
-                'max' => null
+                'max' => null,
             ],
         };
     }
