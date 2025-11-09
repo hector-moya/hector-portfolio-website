@@ -1,8 +1,5 @@
 <div class="space-y-6">
     <flux:heading size="lg">{{ __('Radio Field Settings') }}</flux:heading>
-    <div class="flex justify-end">
-        <flux:button icon="plus-circle" size="sm" variant="primary" label="{{ __('Add Option') }}" wire:click="addOption" />
-    </div>
     <div>
         <flux:table>
             <flux:table.columns>
@@ -12,8 +9,8 @@
                 <flux:table.column>
                     {{ __('Option Value') }}
                 </flux:table.column>
-                <flux:table.column>
-                    {{ __('Remove') }}
+                <flux:table.column class="flex justify-end">
+                    <flux:button icon="plus-circle" size="sm" variant="primary" tooltip="{{ __('Add Option') }}" wire:click="addOption" />
                 </flux:table.column>
             </flux:table.columns>
             <flux:table.rows>

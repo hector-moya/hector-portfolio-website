@@ -1,28 +1,33 @@
-{{-- resources/views/blueprints/fields/config-select.blade.php --}}
-<div class="space-y-3">
-    <flux:heading size="sm">{{ __('Options') }}</flux:heading>
-
-    @foreach (($field['config']['options'] ?? []) as $optIndex => $opt)
-        <div class="grid grid-cols-5 gap-3 items-end">
-            <div class="col-span-2">
-                <flux:input label="{{ __('Value') }}"
-                    wire:model="form.elements.{{ $index }}.config.options.{{ $optIndex }}.value" />
-            </div>
-            <div class="col-span-2">
-                <flux:input label="{{ __('Label') }}"
-                    wire:model="form.elements.{{ $index }}.config.options.{{ $optIndex }}.label" />
-            </div>
-            <div class="col-span-1">
-                <flux:button size="xs" variant="danger"
-                    wire:click="removeOption({{ (int) explode('.', (string) $index)[0] }}, {{ $optIndex }})">
-                    {{ __('Remove') }}
-                </flux:button>
-            </div>
-        </div>
-    @endforeach
-
-    <flux:button size="xs" icon="plus"
-        wire:click="addOption({{ (int) explode('.', (string) $index)[0] }})">
-        {{ __('Add option') }}
-    </flux:button>
+<div class="space-y-6">
+    <flux:heading size="lg">{{ __('Select Field Settings') }}</flux:heading>
+    <div>
+        <flux:table>
+            <flux:table.columns>
+                <flux:table.column>
+                    {{ __('Option Label') }}
+                </flux:table.column>
+                <flux:table.column>
+                    {{ __('Option Value') }}
+                </flux:table.column>
+                <flux:table.column class="flex justify-end">
+                    <flux:button icon="plus" size="sm" variant="primary" tooltip="{{ __('Add Option') }}" wire:click="addOption" />
+                </flux:table.column>
+            </flux:table.columns>
+            <flux:table.rows>
+                @foreach ($config['options'] as $index => $option)
+                    <flux:table.row>
+                        <flux:table.cell>
+                            <flux:input wire:model.live="form.config.options.{{ $index }}.label" />
+                        </flux:table.cell>
+                        <flux:table.cell>
+                            <flux:input wire:model.live="form.config.options.{{ $index }}.value" />
+                        </flux:table.cell>
+                        <flux:table.cell class="flex justify-end">
+                            <flux:button variant="danger" icon="trash" wire:click="removeOption({{ $index }})" />
+                        </flux:table.cell>
+                    </flux:table.row>
+                @endforeach
+            </flux:table.rows>
+        </flux:table>
+    </div>
 </div>

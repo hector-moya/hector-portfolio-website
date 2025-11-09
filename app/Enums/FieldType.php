@@ -23,9 +23,9 @@ enum FieldType: string
     public function label(): string
     {
         return match ($this) {
-            self::Text => 'Text (Single Line)',
-            self::Textarea => 'Text (Multi-line)',
-            self::RichText => 'Content (Rich Text)',
+            self::Text => 'Text',
+            self::Textarea => 'Textarea',
+            self::RichText => 'Editor',
             self::Number => 'Number',
             self::Email => 'Email',
             self::Url => 'URL',
@@ -86,9 +86,34 @@ enum FieldType: string
     public function defaultConfig(): array
     {
         return match ($this) {
-            self::Text => ['placeholder' => null, 'max' => null],
-            self::Textarea => ['rows' => 4, 'max' => null],
-            self::RichText => ['toolbar' => ['bold', 'italic', 'link', 'h2', 'h3', 'ul', 'ol']],
+            self::Text => [
+                'placeholder' => null,
+                'max' => null
+            ],
+            self::Textarea => [
+                'placeholder' => null,
+                'rows' => 4,
+            ],
+            self::RichText => [
+                'placeholder' => null,
+                'toolbar' => [
+                    'heading',
+                    'bold',
+                    'italic',
+                    'strike',
+                    'underline',
+                    'bullet',
+                    'ordered',
+                    'blockquote',
+                    'subscript',
+                    'superscript',
+                    'highlight',
+                    'link',
+                    'code',
+                    'undo',
+                    'redo'
+                ],
+            ],
             self::Number => [
                 'min' => null,
                 'max' => null,
@@ -97,7 +122,9 @@ enum FieldType: string
             self::Email => [
                 'placeholder' => null
             ],
-            self::Url => ['placeholder' => null],
+            self::Url => [
+                'placeholder' => null
+            ],
             self::Date => [
                 'date_range' => true,
                 'include_separate_range_inputs' => false,
@@ -121,14 +148,44 @@ enum FieldType: string
                 'min_range' => null,
                 'max_range' => null,
             ],
-            self::Toggle => ['on_label' => 'Yes', 'off_label' => 'No'],
-            self::Select => ['options' => []],
+            self::Toggle => [
+                'on_label' => 'Yes',
+                'off_label' => 'No'
+            ],
+            self::Select => [
+                'options' => []
+            ],
             self::Radio => [
                 'options' => []
             ],
-            self::Image => ['max_size_mb' => 5, 'mimes' => ['jpg', 'jpeg', 'png', 'webp']],
-            self::File => ['max_size_mb' => 10, 'mimes' => ['pdf', 'doc', 'docx']],
-            self::Repeater => ['blueprint' => [], 'min' => 0, 'max' => null],
+            self::Image => [
+                'max_size_mb' => 5,
+                'mimes' => [
+                    'jpg',
+                    'jpeg',
+                    'png',
+                    'webp'
+                ]
+            ],
+            self::File => [
+                'max_size_mb' => 10,
+                'mimes' => [
+                    'pdf',
+                    'doc',
+                    'docx',
+                    'csv',
+                    'xls',
+                    'xlsx',
+                    'ppt',
+                    'pptx',
+                    'txt'
+                ]
+            ],
+            self::Repeater => [
+                'blueprint' => [],
+                'min' => 0,
+                'max' => null
+            ],
         };
     }
 
