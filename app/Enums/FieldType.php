@@ -100,7 +100,7 @@ enum FieldType: string
                 'end_date' => null,
                 'min_range' => null,
                 'max_range' => null,
-                'presets' => []
+                'presets' => [],
             ],
             self::Time => [
                 'include_input' => true,
