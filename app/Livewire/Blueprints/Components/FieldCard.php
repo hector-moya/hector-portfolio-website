@@ -31,6 +31,12 @@ class FieldCard extends Component
         return app(FieldTypeRegistry::class)->optionsForSelect();
     }
 
+    #[Computed]
+    public function fieldTypeMeta(): array
+    {
+        return app(FieldTypeRegistry::class)->all();
+    }
+
     public function updatedFormLabel(): void
     {
         $this->form->handle = $this->generateSlug($this->form->label);
@@ -52,11 +58,6 @@ class FieldCard extends Component
         $this->dispatch('field-removed');
     }
 
-    public function updateHandleFromLabel(int $index): void
-    {
-        $this->fields[$index]['handle'] = $this->generateSlug($this->fields[$index]['label']);
-    }
-
     public function addNestedField(string $type = 'text'): void
     {
         // Ensure array scaffolding exists
@@ -74,6 +75,7 @@ class FieldCard extends Component
             'is_required' => false,
             'config' => $defaults,
         ];
+        Flux::modal('select-repeater-nested-field-modal')->close();
     }
 
     public function removeNestedField(int $parentIndex, int $childIndex): void

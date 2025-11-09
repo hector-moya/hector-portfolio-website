@@ -32,7 +32,7 @@
                     </flux:button>
                 </div>
                 <div class="mt-4 border-t pt-3">
-                    <x-dynamic-component :component="'blueprints.fields.config-' . $field['type'] " :config="$field['config']" />
+                    <x-dynamic-component :component="'blueprints.fields.config-' . $field['type']" :config="$field['config']" />
                 </div>
             </flux:card>
         @empty
@@ -40,9 +40,27 @@
         @endforelse
 
         <div class="flex justify-end gap-2">
-            <flux:button size="sm" icon="plus" wire:click="addNestedField">
-                {{ __('Add nested field') }}
-            </flux:button>
+            <flux:modal.trigger name="select-repeater-nested-field-modal">
+                <flux:button size="sm" icon="plus">
+                    {{ __('Add nested field') }}
+                </flux:button>
+            </flux:modal.trigger>
         </div>
+        {{-- Select Field Type Modal --}}
+        <flux:modal name="select-repeater-nested-field-modal">
+            <div class="space-y-6">
+                <flux:heading size="lg">{{ __('Select Field Type') }}</flux:heading>
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    @foreach ($this->fieldTypeMeta as $type)
+                        <flux:card :key="$type['value']" wire:click="addNestedField('{{ $type['value'] }}')" class="cursor-pointer hover:bg-zinc-50 dark:hover:bg-zinc-800">
+                            <div class="flex items-center gap-3">
+                                <flux:icon name="{{ $type['icon'] }}" class="h-5 w-5" />
+                                <flux:text>{{ $type['label'] }}</flux:text>
+                            </div>
+                        </flux:card>
+                    @endforeach
+                </div>
+            </div>
+        </flux:modal>
     </div>
 </div>
