@@ -67,7 +67,7 @@ class FieldCard extends Component
 
     public function addNestedField(string $type = 'text'): void
     {
-        $this->field = Field::create([
+        $this->field = \App\Models\Field::query()->create([
             'parent_id' => $this->fieldId,
             'blueprint_id' => $this->form->blueprint_id,
             'type' => $type,
