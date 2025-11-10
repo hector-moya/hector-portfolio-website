@@ -26,7 +26,9 @@ class FieldForm extends Form
     public bool $is_required = false;
 
     public ?int $order = null;
+
     public ?Collection $children = null;
+
     public ?int $parent_id = null;
 
     public string $icon = '';

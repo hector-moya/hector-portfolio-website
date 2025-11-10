@@ -2,12 +2,11 @@
 
 namespace App\Livewire\Blueprints\Components;
 
+use App\Enums\FieldType;
 use App\Livewire\Forms\FieldForm;
 use App\Models\Field;
-use App\Enums\FieldType;
 use App\Services\FieldTypeRegistry;
 use App\Traits\HasSlug;
-use Livewire\Attributes\On;
 use Flux\Flux;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
@@ -53,7 +52,6 @@ class FieldCard extends Component
         Flux::modal('field-config-'.$fieldId)->close();
     }
 
-
     public function removeNestedField(int $fieldId): void
     {
         // Remove the nested field from the form's children collection
@@ -78,7 +76,7 @@ class FieldCard extends Component
             'instructions' => '',
             'is_required' => false,
             'config' => FieldType::from($type)->defaultConfig(),
-            'order' => $this->form->children->count() + 1
+            'order' => $this->form->children->count() + 1,
         ]);
 
         $this->form->children->push($this->field);

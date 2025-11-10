@@ -19,7 +19,7 @@ class FieldTypeRegistry
             'label' => $type->label(),
             'icon' => $type->icon(),
             'default_config' => $type->defaultConfig(),
-        ], array_filter(FieldType::cases(), fn(FieldType $type) => $type->value !== $exceptType));
+        ], array_filter(FieldType::cases(), fn (FieldType $type) => $type->value !== $exceptType));
     }
 
     /**

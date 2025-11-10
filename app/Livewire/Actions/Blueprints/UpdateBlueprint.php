@@ -21,7 +21,6 @@ class UpdateBlueprint
                 $blueprintData['slug'] = Str::slug($blueprintData['name']);
             }
 
-
             $blueprint->update([
                 'name' => $blueprintData['name'],
                 'slug' => $blueprintData['slug'],
