@@ -12,14 +12,14 @@ class FieldTypeRegistry
      * Returns an array of metadata for all field types.
      * Each item: ['value' => string, 'label' => string, 'icon' => string, 'default_config' => array]
      */
-    public function all(): array
+    public function all(string $exceptType = ''): array
     {
         return array_map(fn (FieldType $type): array => [
             'value' => $type->value,
             'label' => $type->label(),
             'icon' => $type->icon(),
             'default_config' => $type->defaultConfig(),
-        ], FieldType::cases());
+        ], array_filter(FieldType::cases(), fn(FieldType $type) => $type->value !== $exceptType));
     }
 
     /**

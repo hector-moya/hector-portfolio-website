@@ -50,11 +50,11 @@
                     <x-dynamic-component component="blueprints.fields.config-{{ $form->type }}" :config="$form->config" :children="$form->children" />
                 </div>
 
-                <div class="flex justify-end">
+                <div class="flex justify-between">
                     <flux:button type="button" @click="$flux.modal('field-config-{{ $fieldId }}').close()" variant="outline" class="mr-2">
                         {{ __('Cancel') }}
                     </flux:button>
-                    <flux:button type="button" wire:click="updateField('{{ $fieldId }}')">
+                    <flux:button type="button" variant="primary" wire:click="updateField('{{ $fieldId }}')">
                         {{ __('Update Field') }}
                     </flux:button>
                 </div>

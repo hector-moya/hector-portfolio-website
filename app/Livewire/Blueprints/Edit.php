@@ -4,45 +4,25 @@ namespace App\Livewire\Blueprints;
 
 use App\Livewire\Forms\BlueprintForm;
 use App\Models\Blueprint;
-use App\Services\FieldTypeRegistry;
-use Flux\Flux;
+use App\Traits\Blueprints\Sections;
+use App\Traits\Blueprints\Tabs;
+use App\Traits\HasSlug;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
 class Edit extends Component
 {
+    use HasSlug, Sections, Tabs;
+
+    public ?Blueprint $blueprint = null;
+
     public BlueprintForm $form;
 
-    public Blueprint $blueprint;
-
-    /**
-     * Select options [value => label] built from registry.
-     */
-    #[\Livewire\Attributes\Computed]
-    public function fieldTypeOptions(): array
+    public function mount(): void
     {
-        return app(FieldTypeRegistry::class)->optionsForSelect();
-    }
-
-    /**
-     * Meta for modal listing (value, label, icon).
-     */
-    #[\Livewire\Attributes\Computed]
-    public function fieldTypeMeta(): array
-    {
-        return app(FieldTypeRegistry::class)->all();
-    }
-
-    public function mount(Blueprint $blueprint): void
-    {
-        $this->blueprint = $blueprint->load('elements');
-        $this->form->setBlueprint($blueprint);
-    }
-
-    public function addElement(string $type): void
-    {
-        $this->form->addElement(type: $type);
-        Flux::modal('select-field-modal')->close();
+        $this->form->setBlueprint($this->blueprint);
     }
 
     public function updatedFormName(): void
@@ -50,46 +30,18 @@ class Edit extends Component
         $this->form->slug = $this->form->generateSlug($this->form->name);
     }
 
-    public function updated($propertyName, $value): void
-    {
-        if (preg_match('/^form\.elements\.(\d+)\.label$/', (string) $propertyName, $matches)) {
-            $this->form->updateHandleFromLabel((int) $matches[1]);
-        }
-    }
-
-    public function removeElement(int $index): void
-    {
-        $this->form->removeElement($index);
-    }
-
     public function save(): void
     {
-        $this->form->update($this->blueprint->id);
-    }
+        $this->form->create();
 
-    public function addNestedField(int $parentIndex, string $type = 'text'): void
-    {
-        $this->form->addNestedField($parentIndex, $type);
-    }
-
-    public function removeNestedField(int $parentIndex, int $childIndex): void
-    {
-        $this->form->removeNestedField($parentIndex, $childIndex);
-    }
-
-    public function addOption(int $index): void
-    {
-        $this->form->addOption($index);
-    }
-
-    public function removeOption(int $index, int $optIndex): void
-    {
-        $this->form->removeOption($index, $optIndex);
+        $this->redirect(route('blueprints.index'), navigate: true);
     }
 
     #[Title('Edit Blueprint')]
-    public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+    public function render(): View|Factory
     {
-        return view('livewire.blueprints.edit');
+        return view('livewire.blueprints.edit', [
+            'tabs' => $this->form->tabs,
+        ]);
     }
 }

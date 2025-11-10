@@ -36,7 +36,7 @@ class FieldCard extends Component
     #[Computed]
     public function fieldTypeMeta(): array
     {
-        return app(FieldTypeRegistry::class)->all();
+        return app(FieldTypeRegistry::class)->all('repeater');
     }
 
     public function updatedFormLabel(): void
@@ -85,18 +85,6 @@ class FieldCard extends Component
 
         Flux::modal('select-repeater-nested-field-modal')->close();
     }
-
-    // public function removeNestedField(int $parentIndex, int $childIndex): void
-    // {
-    //     if (! isset($this->fields[$parentIndex]['config']['blueprint'][$childIndex])) {
-    //         return;
-    //     }
-
-    //     unset($this->fields[$parentIndex]['config']['blueprint'][$childIndex]);
-    //     $this->fields[$parentIndex]['config']['blueprint'] = array_values(
-    //         $this->fields[$parentIndex]['config']['blueprint']
-    //     );
-    // }
 
     public function addOption(): void
     {
