@@ -38,7 +38,7 @@
         @empty
             <flux:text>{{ __('No nested fields yet.') }}</flux:text>
         @endforelse --}}
-        @forelse ($field->children as $nestedField)
+        @forelse ($children as $nestedField)
             <livewire:blueprints.components.field-card :fieldId="$nestedField->id" :key="'nested-field-' . $nestedField->id" />
         @empty
             <flux:text>{{ __('No nested fields yet.') }}</flux:text>

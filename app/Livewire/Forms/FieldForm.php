@@ -4,6 +4,7 @@ namespace App\Livewire\Forms;
 
 use App\Enums\FieldType;
 use App\Models\Field;
+use Illuminate\Support\Collection;
 use Livewire\Form;
 
 class FieldForm extends Form
@@ -25,6 +26,8 @@ class FieldForm extends Form
     public bool $is_required = false;
 
     public ?int $order = null;
+    public ?Collection $children = null;
+    public ?int $parent_id = null;
 
     public string $icon = '';
 
@@ -41,6 +44,16 @@ class FieldForm extends Form
         $this->config = $field->config ?? [];
         $this->is_required = $field->is_required;
         $this->order = $field->order;
+        $this->children = $field->children;
+        $this->parent_id = $field->parent_id;
+    }
+
+    public function setChildren(?int $parentId): void
+    {
+        $this->children = Field::query()
+            ->where('parent_id', $parentId)
+            ->orderBy('order')
+            ->get();
     }
 
     public function update(int $fieldId): void

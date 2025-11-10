@@ -4,8 +4,10 @@ namespace App\Livewire\Blueprints\Components;
 
 use App\Livewire\Forms\FieldForm;
 use App\Models\Field;
+use App\Enums\FieldType;
 use App\Services\FieldTypeRegistry;
 use App\Traits\HasSlug;
+use Livewire\Attributes\On;
 use Flux\Flux;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
@@ -51,45 +53,50 @@ class FieldCard extends Component
         Flux::modal('field-config-'.$fieldId)->close();
     }
 
+
+    public function removeNestedField(int $fieldId): void
+    {
+        // Remove the nested field from the form's children collection
+        $this->form->destroy($fieldId);
+        $this->form->setChildren($this->fieldId);
+    }
+
     public function removeField(): void
     {
         $this->form->destroy($this->fieldId);
-
         $this->dispatch('field-removed');
     }
 
     public function addNestedField(string $type = 'text'): void
     {
-        // Default config for the chosen type
-        $defaults = app(FieldTypeRegistry::class)->defaultConfigFor($type);
-
-        $field = Field::create([
+        $this->field = Field::create([
             'parent_id' => $this->fieldId,
-            'blueprint_id' => $this->field->blueprint_id,
+            'blueprint_id' => $this->form->blueprint_id,
             'type' => $type,
-            'label' => '',
-            'handle' => '',
+            'label' => FieldType::from($type)->defaultLabel(),
+            'handle' => $this->generateSlug(FieldType::from($type)->defaultLabel()),
             'instructions' => '',
             'is_required' => false,
-            'config' => $defaults,
-            'order' => $this->field->children()->count() + 1
+            'config' => FieldType::from($type)->defaultConfig(),
+            'order' => $this->form->children->count() + 1
         ]);
 
-        $this->dispatch('nested-field-added', fieldId: $field->id);
+        $this->form->children->push($this->field);
+
         Flux::modal('select-repeater-nested-field-modal')->close();
     }
 
-    public function removeNestedField(int $parentIndex, int $childIndex): void
-    {
-        if (! isset($this->fields[$parentIndex]['config']['blueprint'][$childIndex])) {
-            return;
-        }
+    // public function removeNestedField(int $parentIndex, int $childIndex): void
+    // {
+    //     if (! isset($this->fields[$parentIndex]['config']['blueprint'][$childIndex])) {
+    //         return;
+    //     }
 
-        unset($this->fields[$parentIndex]['config']['blueprint'][$childIndex]);
-        $this->fields[$parentIndex]['config']['blueprint'] = array_values(
-            $this->fields[$parentIndex]['config']['blueprint']
-        );
-    }
+    //     unset($this->fields[$parentIndex]['config']['blueprint'][$childIndex]);
+    //     $this->fields[$parentIndex]['config']['blueprint'] = array_values(
+    //         $this->fields[$parentIndex]['config']['blueprint']
+    //     );
+    // }
 
     public function addOption(): void
     {

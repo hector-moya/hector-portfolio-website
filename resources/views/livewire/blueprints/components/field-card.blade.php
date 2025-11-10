@@ -10,12 +10,16 @@
             </div>
             <div class="mx-2 flex">
                 <flux:button icon="clipboard-document-list" size="xs" variant="ghost" tooltip="{{ __('Duplicate Field') }}" wire:click="save" />
-                <flux:button icon="trash" size="xs" variant="ghost" tooltip="{{ __('Remove Field') }}" wire:click="removeField" />
+                @if ($form->parent_id)
+                    <flux:button icon="trash" size="xs" variant="ghost" tooltip="{{ __('Remove Nested Field') }}" wire:click="$parent.removeNestedField({{ $fieldId }})" />
+                @else
+                    <flux:button icon="trash" size="xs" variant="ghost" tooltip="{{ __('Remove Field') }}" wire:click="removeField" />
+                @endif
             </div>
         </div>
     </flux:card>
 
-    <flux:modal name="field-config-{{ $fieldId }}" :closable="false" class="min-w-140">
+    <flux:modal name="field-config-{{ $fieldId }}" :closable="false" variant="{{ $form->parent_id ? 'flyout' : 'default' }}" class="min-w-140">
         <div class="flex items-start gap-4">
             <div class="flex-1 space-y-4">
                 <div class="flex justify-between">
@@ -43,7 +47,7 @@
                 </div>
 
                 <div class="space-y-4">
-                    <x-dynamic-component component="blueprints.fields.config-{{ $form->type }}" :config="$form->config" />
+                    <x-dynamic-component component="blueprints.fields.config-{{ $form->type }}" :config="$form->config" :children="$form->children" />
                 </div>
 
                 <div class="flex justify-end">
