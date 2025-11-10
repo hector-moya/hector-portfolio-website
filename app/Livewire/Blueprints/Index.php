@@ -45,7 +45,7 @@ class Index extends Component
     public function blueprints(): LengthAwarePaginator
     {
         return Blueprint::query()
-            ->withCount('elements', 'collections')
+            ->withCount('fields', 'collections')
             ->when($this->search, fn ($query) => $query->where('name', 'like', "%{$this->search}%")
                 ->orWhere('slug', 'like', "%{$this->search}%"))
             ->tap(fn ($query) => $this->sortBy !== '' && $this->sortBy !== '0' ? $query->orderBy($this->sortBy, $this->sortDirection) : $query)

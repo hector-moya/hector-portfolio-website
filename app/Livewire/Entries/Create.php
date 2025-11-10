@@ -21,7 +21,7 @@ class Create extends Component
     public function mount(): void
     {
         // Auto-select collection if only one exists
-        $collections = ModelsCollection::with('blueprint.elements')->get();
+        $collections = ModelsCollection::with('blueprint.fields')->get();
 
         if ($collections->count() === 1) {
             $this->selectedCollectionId = $collections->first()->id;
@@ -32,7 +32,7 @@ class Create extends Component
     public function updatedSelectedCollectionId(): void
     {
         if ($this->selectedCollectionId !== null && $this->selectedCollectionId !== 0) {
-            $collection = ModelsCollection::with('blueprint.elements')->findOrFail($this->selectedCollectionId);
+            $collection = ModelsCollection::with('blueprint.fields')->findOrFail($this->selectedCollectionId);
             $this->form->setCollection($collection);
         }
     }
@@ -61,7 +61,7 @@ class Create extends Component
             return null;
         }
 
-        return Blueprint::with('elements')->find($this->form->blueprint_id);
+        return Blueprint::with('fields')->find($this->form->blueprint_id);
     }
 
     public function save(): void

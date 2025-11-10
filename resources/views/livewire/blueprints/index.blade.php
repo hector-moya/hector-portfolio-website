@@ -42,7 +42,7 @@
                                 <flux:badge>{{ $blueprint->slug }}</flux:badge>
                             </flux:table.cell>
                             <flux:table.cell>
-                                {{ $blueprint->elements_count }} {{ Str::plural('field', $blueprint->elements_count) }}
+                                {{ $blueprint->fields_count }} {{ Str::plural('field', $blueprint->fields_count) }}
                             </flux:table.cell>
                             <flux:table.cell>
                                 {{ $blueprint->collections_count }}

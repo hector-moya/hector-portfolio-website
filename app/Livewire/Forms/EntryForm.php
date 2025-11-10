@@ -35,7 +35,7 @@ class EntryForm extends Form
     protected function blueprint(): ?Blueprint
     {
         return $this->blueprint_id !== null && $this->blueprint_id !== 0
-            ? Blueprint::with('elements')->find($this->blueprint_id)
+            ? Blueprint::with('fields')->find($this->blueprint_id)
             : null;
     }
 
@@ -80,11 +80,11 @@ class EntryForm extends Form
     public function initializeFieldValues(): void
     {
         $bp = $this->blueprint();
-        if (! $bp instanceof \App\Models\Blueprint) {
+        if (! $bp instanceof Blueprint) {
             return;
         }
 
-        foreach ($bp->elements as $el) {
+        foreach ($bp->fields as $el) {
             $h = $el->handle;
             if (! array_key_exists($h, $this->fieldValues)) {
                 $this->fieldValues[$h] = $this->defaultForType($el->type, $el->config ?? []);

@@ -32,7 +32,7 @@ class Edit extends Component
 
     public function save(): void
     {
-        $this->form->create();
+        $this->form->update($this->form->blueprint_id);
 
         $this->redirect(route('blueprints.index'), navigate: true);
     }

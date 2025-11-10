@@ -73,7 +73,7 @@ class Blueprint extends Model
         ];
     }
 
-    public function elements(): HasMany
+    public function fields(): HasMany
     {
         return $this->hasMany(Field::class)->orderBy('order');
     }

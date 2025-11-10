@@ -94,30 +94,6 @@ class BlueprintForm extends Form
 
         $this->tabs = $blueprint->tabs->map(fn ($tab): array => [
             'id' => $tab->id,
-            // 'name' => $tab->name,
-            // 'handle' => $tab->handle,
-            // 'sort_order' => $tab->sort_order,
-            // 'sections' => $tab->sections->map(function ($section) {
-            //     return [
-
-            //         'name' => $section->name,
-            //         'handle' => $section->handle,
-            //         'sort_order' => $section->sort_order,
-            //         'instructions' => $section->instructions,
-            //         'fields' => $section->fields->map(function ($field) {
-            //             return [
-            //                 'name' => $field->name,
-            //                 'handle' => $field->handle,
-            //                 'type' => $field->type,
-            //                 'sort_order' => $field->sort_order,
-            //                 'instructions' => $field->instructions,
-            //                 'required' => $field->required,
-            //                 'config' => $field->config ?? [],
-            //                 'validation' => $field->validation ?? [],
-            //             ];
-            //         })->all(),
-            //     ];
-            // })->all(),
         ])->all();
     }
 
