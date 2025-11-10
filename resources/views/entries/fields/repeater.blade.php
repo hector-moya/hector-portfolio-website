@@ -1,19 +1,19 @@
 @php
-  $handle   = $element->handle;
+  $handle   = $field->handle;
   $items    = $form->fieldValues[$handle]['items'] ?? [];
-  $children = $element->config['blueprint'] ?? [];
+  $children = $field->config['blueprint'] ?? [];
 @endphp
 
 <flux:card class="space-y-4">
   <div class="flex items-center justify-between">
-    <flux:heading size="md">{{ $element->label }}</flux:heading>
+    <flux:heading size="md">{{ $field->label }}</flux:heading>
     <flux:button size="xs" icon="plus" wire:click="addRepeaterItem('{{ $handle }}')">
       {{ __('Add item') }}
     </flux:button>
   </div>
 
-  @if ($element->instructions)
-    <flux:description>{{ $element->instructions }}</flux:description>
+  @if ($field->instructions)
+    <flux:description>{{ $field->instructions }}</flux:description>
   @endif
 
   @forelse ($items as $i => $item)

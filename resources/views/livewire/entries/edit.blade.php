@@ -33,13 +33,13 @@
             </flux:card>
 
             {{-- Dynamic Blueprint Fields --}}
-            @if ($this->blueprint && $this->blueprint->elements->isNotEmpty())
+            @if ($this->blueprint && $this->blueprint->fields->isNotEmpty())
                 <flux:card class="space-y-6">
                     <flux:heading size="lg">{{ __('Content Fields') }}</flux:heading>
 
-                    @foreach ($this->blueprint->elements as $element)
+                    @foreach ($this->blueprint->fields as $field)
                             <div>
-                                @includeIf('entries.fields.' . $element->type, ['element' => $element])
+                                @includeIf('entries.fields.' . $field->type, ['field' => $field])
                             </div>
                     @endforeach
 

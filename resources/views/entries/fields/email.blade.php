@@ -1,10 +1,10 @@
 <flux:input
     type="email"
-    label="{{ $element->label }}"
-    placeholder="{{ $element->config['placeholder'] ?? '' }}"
-    wire:model="form.fieldValues.{{ $element->handle }}"
+    label="{{ $field->label }}"
+    placeholder="{{ $field->config['placeholder'] ?? '' }}"
+    wire:model="form.fieldValues.{{ $field->handle }}"
 />
-<flux:error name="form.fieldValues.{{ $element->handle }}" />
-@if ($element->instructions)
-    <flux:description>{{ $element->instructions }}</flux:description>
+<flux:error name="form.fieldValues.{{ $field->handle }}" />
+@if ($field->instructions)
+    <flux:description>{{ $field->instructions }}</flux:description>
 @endif

@@ -19,7 +19,7 @@ class Edit extends Component
 
     public function mount(Entry $entry): void
     {
-        $this->entry = $entry->load('collection.blueprint.elements', 'elements');
+        $this->entry = $entry->load('collection.blueprint.fields', 'elements');
         $this->form->setEntry($this->entry);
     }
 
@@ -37,7 +37,7 @@ class Edit extends Component
             return null;
         }
 
-        return Blueprint::with('elements')->find($this->form->blueprint_id);
+        return Blueprint::with('fields')->find($this->form->blueprint_id);
     }
 
     public function save(): void
