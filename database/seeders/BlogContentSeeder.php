@@ -2,14 +2,12 @@
 
 namespace Database\Seeders;
 
+use App\Livewire\Actions\Blueprints\CreateBlueprint;
 use App\Models\Blueprint;
 use App\Models\Collection;
 use App\Models\Entry;
 use App\Models\EntryElement;
-use App\Models\Field;
 use App\Models\User;
-use App\Enums\FieldType;
-use App\Livewire\Actions\Blueprints\CreateBlueprint;
 use App\Services\FieldTypeRegistry;
 use Illuminate\Database\Seeder;
 
@@ -288,7 +286,6 @@ class BlogContentSeeder extends Seeder
         ]);
     }
 
-
     private function createPortfolioBlueprint(): Blueprint
     {
         return (new CreateBlueprint)->create([
@@ -498,6 +495,7 @@ class BlogContentSeeder extends Seeder
             ],
         ]);
     }
+
     private function createLandingPage(Blueprint $blueprint, User $admin): void
     {
         $entry = Entry::query()->create([
@@ -661,7 +659,7 @@ class BlogContentSeeder extends Seeder
             ]);
 
             foreach ($blueprint->fields as $field) {
-            EntryElement::query()->create([
+                EntryElement::query()->create([
                     'entry_id' => $entry->id,
                     'field_id' => $field->id,
                     'handle' => $field->handle,
@@ -683,7 +681,7 @@ class BlogContentSeeder extends Seeder
         ]);
 
         $fields = [
-            'heading' => "Get in Touch",
+            'heading' => 'Get in Touch',
             'subheading' => "Let's work together",
             'content' => "I'm always open to new ideas, collaborations, or a good conversation about code, design, or the process of building interesting things. Whether you have a project in mind or just want to connect, feel free to reach out.",
             'email' => 'contact@hector-moya.com',
