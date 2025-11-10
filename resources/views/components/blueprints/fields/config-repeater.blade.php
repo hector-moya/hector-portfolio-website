@@ -8,12 +8,12 @@
     <flux:heading>{{ __('Repeater Blueprint') }}</flux:heading>
 
     <div class="space-y-3">
-        @forelse ($config['blueprint'] as $index => $field)
+        {{-- @forelse ($config['blueprint'] as $index => $field)
             <flux:card wire:key="repeater-nested-{{ $index }}">
                 <div class="mb-3 grid grid-cols-2 gap-3">
                     <flux:select label="{{ __('Type') }}" wire:model="form.config.blueprint.{{ $index }}.type">
                         @foreach ($this->fieldTypeOptions as $value => $label)
-                            @continue($value === 'repeater') {{-- defer nested repeaters for v1 --}}
+                            @continue($value === 'repeater')
                             <flux:select.option value="{{ $value }}">{{ $label }}</flux:select.option>
                         @endforeach
                     </flux:select>
@@ -35,6 +35,11 @@
                     <x-dynamic-component :component="'blueprints.fields.config-' . $field['type']" :config="$field['config']" />
                 </div>
             </flux:card>
+        @empty
+            <flux:text>{{ __('No nested fields yet.') }}</flux:text>
+        @endforelse --}}
+        @forelse ($field->children as $nestedField)
+            <livewire:blueprints.components.field-card :fieldId="$nestedField->id" :key="'nested-field-' . $nestedField->id" />
         @empty
             <flux:text>{{ __('No nested fields yet.') }}</flux:text>
         @endforelse

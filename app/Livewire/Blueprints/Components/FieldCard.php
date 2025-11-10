@@ -60,21 +60,22 @@ class FieldCard extends Component
 
     public function addNestedField(string $type = 'text'): void
     {
-        // Ensure array scaffolding exists
-        $this->form->config['blueprint'] ??= [];
-        $this->form->config['blueprint'] ??= [];
-
         // Default config for the chosen type
         $defaults = app(FieldTypeRegistry::class)->defaultConfigFor($type);
 
-        $this->form->config['blueprint'][] = [
+        $field = Field::create([
+            'parent_id' => $this->fieldId,
+            'blueprint_id' => $this->field->blueprint_id,
             'type' => $type,
             'label' => '',
             'handle' => '',
             'instructions' => '',
             'is_required' => false,
             'config' => $defaults,
-        ];
+            'order' => $this->field->children()->count() + 1
+        ]);
+
+        $this->dispatch('nested-field-added', fieldId: $field->id);
         Flux::modal('select-repeater-nested-field-modal')->close();
     }
 

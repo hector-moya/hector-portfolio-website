@@ -54,6 +54,7 @@ class Field extends Model
     protected $fillable = [
         'blueprint_id',
         'section_id',
+        'parent_id',
         'type',
         'label',
         'handle',
@@ -70,6 +71,16 @@ class Field extends Model
             'is_required' => 'boolean',
             'order' => 'integer',
         ];
+    }
+
+    public function parent(): BelongsTo
+    {
+        return $this->belongsTo(Field::class, 'parent_id');
+    }
+
+    public function children(): HasMany
+    {
+        return $this->hasMany(Field::class, 'parent_id');
     }
 
     public function blueprint(): BelongsTo
