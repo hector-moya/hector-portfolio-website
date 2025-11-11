@@ -114,7 +114,6 @@ class EntryForm extends Form
     public function rules(): array
     {
         $rules = [
-            'collection_id' => ['required', 'exists:collections,id'],
             'blueprint_id' => ['required', 'exists:blueprints,id'],
             'title' => ['required', 'string', 'max:255'],
             'slug' => ['required', 'string', 'max:255', Rule::unique('entries', 'slug')->ignore($this->entry?->id)],
@@ -127,7 +126,7 @@ class EntryForm extends Form
             return $rules;
         }
 
-        foreach ($bp->elements as $el) {
+        foreach ($bp->fields as $el) {
             $h = $el->handle;
             if ($el->type !== 'repeater') {
                 $rules["fieldValues.$h"] = $this->rulesForSimple($el->type, $el->is_required, $el->config ?? []);
@@ -236,7 +235,7 @@ class EntryForm extends Form
             return $attrs;
         }
 
-        foreach ($bp->elements as $el) {
+        foreach ($bp->fields as $el) {
             $attrs["fieldValues.{$el->handle}"] = $el->label;
             if ($el->type === 'repeater') {
                 foreach (($el->config['blueprint'] ?? []) as $child) {

@@ -86,6 +86,10 @@ class BlueprintForm extends Form
 
     public function setBlueprint($blueprint): void
     {
+        if (! $blueprint) {
+            return;
+        }
+
         $this->blueprint_id = $blueprint->id;
         $this->name = $blueprint->name;
         $this->slug = $blueprint->slug;

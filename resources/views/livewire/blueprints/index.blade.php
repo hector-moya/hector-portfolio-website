@@ -75,7 +75,7 @@
                                 <div class="flex flex-col items-center gap-2">
                                     <flux:icon.document class="size-12 text-zinc-400" />
                                     <flux:text>{{ __('No blueprints found') }}</flux:text>
-                                    <flux:button wire:navigate href="{{ route('blueprints.create') }}" size="sm" variant="primary">
+                                    <flux:button wire:click="createBlueprint" size="sm" variant="primary">
                                         {{ __('Create your first blueprint') }}
                                     </flux:button>
                                 </div>

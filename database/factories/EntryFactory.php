@@ -19,7 +19,6 @@ class EntryFactory extends Factory
         $title = fake()->sentence(4);
 
         return [
-            'collection_id' => \App\Models\Collection::factory(),
             'blueprint_id' => \App\Models\Blueprint::factory(),
             'title' => rtrim($title, '.'),
             'slug' => str($title)->slug(),

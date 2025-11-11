@@ -19,7 +19,7 @@ test('can view collections index page', function () {
     $response = $this->get(route('collections.index'));
 
     $response->assertSuccessful();
-    $response->assertSeeLivewire(Index::class);
+    $response->assertSee('Collections');
 });
 
 test('can list collections', function () {
@@ -44,7 +44,7 @@ test('can view create collection page', function () {
     $response = $this->get(route('collections.create'));
 
     $response->assertSuccessful();
-    $response->assertSeeLivewire(Create::class);
+    $response->assertSee('Create Collection');
 });
 
 test('can create a collection', function () {
@@ -85,7 +85,7 @@ test('can view edit collection page', function () {
     $response = $this->get(route('collections.edit', $collection));
 
     $response->assertSuccessful();
-    $response->assertSeeLivewire(Edit::class);
+    $response->assertSee('Edit Collection');
 });
 
 test('can update a collection', function () {

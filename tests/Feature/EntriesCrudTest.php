@@ -53,7 +53,6 @@ test('entries index page renders successfully', function () {
 
 test('entries index shows all entries', function () {
     $entries = Entry::factory(3)->create([
-        'collection_id' => $this->collection->id,
         'blueprint_id' => $this->blueprint->id,
         'author_id' => $this->user->id,
     ]);
@@ -67,14 +66,12 @@ test('entries index shows all entries', function () {
 
 test('entries index can search by title', function () {
     Entry::factory()->create([
-        'collection_id' => $this->collection->id,
         'blueprint_id' => $this->blueprint->id,
         'author_id' => $this->user->id,
         'title' => 'Laravel Tutorial',
     ]);
 
     Entry::factory()->create([
-        'collection_id' => $this->collection->id,
         'blueprint_id' => $this->blueprint->id,
         'author_id' => $this->user->id,
         'title' => 'PHP Best Practices',
@@ -93,14 +90,12 @@ test('entries index can filter by collection', function () {
     ]);
 
     $entry1 = Entry::factory()->create([
-        'collection_id' => $this->collection->id,
         'blueprint_id' => $this->blueprint->id,
         'author_id' => $this->user->id,
         'title' => 'Entry 1',
     ]);
 
     $entry2 = Entry::factory()->create([
-        'collection_id' => $collection2->id,
         'blueprint_id' => $this->blueprint->id,
         'author_id' => $this->user->id,
         'title' => 'Entry 2',
@@ -115,7 +110,6 @@ test('entries index can filter by collection', function () {
 
 test('entries index can filter by status', function () {
     Entry::factory()->create([
-        'collection_id' => $this->collection->id,
         'blueprint_id' => $this->blueprint->id,
         'author_id' => $this->user->id,
         'status' => 'draft',
@@ -123,7 +117,6 @@ test('entries index can filter by status', function () {
     ]);
 
     Entry::factory()->create([
-        'collection_id' => $this->collection->id,
         'blueprint_id' => $this->blueprint->id,
         'author_id' => $this->user->id,
         'status' => 'published',
@@ -160,7 +153,6 @@ test('can create an entry with dynamic fields', function () {
         'title' => 'My First Blog Post',
         'slug' => 'my-first-blog-post',
         'status' => 'draft',
-        'collection_id' => $this->collection->id,
         'author_id' => $this->user->id,
     ]);
 
@@ -214,7 +206,6 @@ test('required blueprint fields are validated', function () {
 
 test('entries edit page renders successfully', function () {
     $entry = Entry::factory()->create([
-        'collection_id' => $this->collection->id,
         'blueprint_id' => $this->blueprint->id,
         'author_id' => $this->user->id,
     ]);
@@ -226,7 +217,6 @@ test('entries edit page renders successfully', function () {
 
 test('can update an entry', function () {
     $entry = Entry::factory()->create([
-        'collection_id' => $this->collection->id,
         'blueprint_id' => $this->blueprint->id,
         'author_id' => $this->user->id,
         'title' => 'Original Title',
@@ -251,7 +241,6 @@ test('can update an entry', function () {
 
 test('can update entry field values', function () {
     $entry = Entry::factory()->create([
-        'collection_id' => $this->collection->id,
         'blueprint_id' => $this->blueprint->id,
         'author_id' => $this->user->id,
     ]);
@@ -285,7 +274,6 @@ test('can update entry field values', function () {
 
 test('can delete an entry', function () {
     $entry = Entry::factory()->create([
-        'collection_id' => $this->collection->id,
         'blueprint_id' => $this->blueprint->id,
         'author_id' => $this->user->id,
     ]);
@@ -299,7 +287,6 @@ test('can delete an entry', function () {
 
 test('entry status can be changed to published', function () {
     $entry = Entry::factory()->create([
-        'collection_id' => $this->collection->id,
         'blueprint_id' => $this->blueprint->id,
         'author_id' => $this->user->id,
         'status' => 'draft',
