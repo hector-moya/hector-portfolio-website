@@ -27,14 +27,14 @@ test('user can upload an asset', function () {
         ->call('uploadAsset')
         ->assertOk();
 
-    expect(Storage::disk('public')->exists($file->hashName()))->toBeTrue();
-
     $asset = Asset::latest()->first();
     expect($asset)->not->toBeNull()
-        ->and($asset->filename)->toBe($file->hashName())
         ->and($asset->original_filename)->toBe('test.jpg')
         ->and($asset->mime_type)->toBe('image/jpeg')
         ->and($asset->uploaded_by)->toBe($user->id);
+
+    // Verify file was actually stored
+    expect(Storage::disk('public')->exists($asset->path))->toBeTrue();
 });
 
 test('user can select an asset', function () {

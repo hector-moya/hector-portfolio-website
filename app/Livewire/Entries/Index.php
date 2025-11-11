@@ -67,6 +67,11 @@ class Index extends Component
                         ->orWhere('slug', 'like', "%{$this->search}%");
                 });
             })
+            ->when($this->collectionFilter, function ($query): void {
+                $query->whereHas('collection', function ($q): void {
+                    $q->where('id', $this->collectionFilter);
+                });
+            })
             ->when($this->statusFilter, function ($query): void {
                 $query->where('status', $this->statusFilter);
             })

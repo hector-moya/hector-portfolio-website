@@ -26,4 +26,5 @@ Route::middleware('auth')->group(function (): void {
 });
 
 Route::post('logout', Logout::class)
+    ->middleware('auth')
     ->name('logout');

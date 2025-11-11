@@ -15,7 +15,6 @@ class CreateEntry
         return DB::transaction(function () use ($entryData) {
             // Create the entry
             $entry = Entry::query()->create([
-                'collection_id' => $entryData['collection_id'],
                 'blueprint_id' => $entryData['blueprint_id'],
                 'author_id' => auth()->id(),
                 'title' => $entryData['title'],
@@ -42,35 +41,35 @@ class CreateEntry
                 ],
             ]);
 
-            return $entry->load('elements', 'collection', 'blueprint');
+            return $entry->load('elements', 'blueprint');
         });
     }
 
     protected function syncEntryElements(Entry $entry, array $fieldValues): void
     {
-        $blueprint = Blueprint::with('elements')->find($entry->blueprint_id);
+        $blueprint = Blueprint::with('fields')->find($entry->blueprint_id);
 
         if (! $blueprint) {
             return;
         }
 
-        foreach ($blueprint->elements as $element) {
-            $value = $fieldValues[$element->handle] ?? $this->getDefaultValue($element->type);
+        foreach ($blueprint->fields as $field) {
+            $value = $fieldValues[$field->handle] ?? $this->getDefaultValue($field->type);
 
-            $sanitizedValue = $this->sanitizeValue($value, $element->type);
+            $sanitizedValue = $this->sanitizeValue($value, $field->type);
 
-            if ($this->shouldStoreInMeta($element->type)) {
+            if ($this->shouldStoreInMeta($field->type)) {
                 $entry->elements()->create([
-                    'field_id' => $element->id,
-                    'handle' => $element->handle,
+                    'field_id' => $field->id,
+                    'handle' => $field->handle,
                     'value' => null,
                     'meta' => $sanitizedValue,
                 ]);
             } else {
                 /** @var \App\Models\EntryElement $newElement */
                 $newElement = $entry->elements()->create([
-                    'field_id' => $element->id,
-                    'handle' => $element->handle,
+                    'field_id' => $field->id,
+                    'handle' => $field->handle,
                 ]);
 
                 $newElement->setElementValue($sanitizedValue);

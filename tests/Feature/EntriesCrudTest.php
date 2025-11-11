@@ -85,18 +85,23 @@ test('entries index can search by title', function () {
 });
 
 test('entries index can filter by collection', function () {
+    // Create a second blueprint for the second collection
+    $blueprint2 = Blueprint::factory()->create();
+
     $collection2 = Collection::factory()->create([
-        'blueprint_id' => $this->blueprint->id,
+        'blueprint_id' => $blueprint2->id,
     ]);
 
+    // Entry 1 belongs to the first collection (via $this->blueprint)
     $entry1 = Entry::factory()->create([
         'blueprint_id' => $this->blueprint->id,
         'author_id' => $this->user->id,
         'title' => 'Entry 1',
     ]);
 
+    // Entry 2 belongs to the second collection (via $blueprint2)
     $entry2 = Entry::factory()->create([
-        'blueprint_id' => $this->blueprint->id,
+        'blueprint_id' => $blueprint2->id,
         'author_id' => $this->user->id,
         'title' => 'Entry 2',
     ]);
@@ -247,7 +252,7 @@ test('can update entry field values', function () {
 
     // Create initial elements
     $entry->elements()->create([
-        'field_id' => $this->blueprint->elements->first()->id,
+        'field_id' => $this->blueprint->fields->first()->id,
         'handle' => 'subtitle',
         'value' => 'Original Subtitle',
     ]);
@@ -294,7 +299,7 @@ test('entry status can be changed to published', function () {
 
     // Create entry elements for required fields
     $entry->elements()->create([
-        'field_id' => $this->blueprint->elements->where('handle', 'excerpt')->first()->id,
+        'field_id' => $this->blueprint->fields->where('handle', 'excerpt')->first()->id,
         'handle' => 'excerpt',
         'value' => 'Test excerpt content',
     ]);

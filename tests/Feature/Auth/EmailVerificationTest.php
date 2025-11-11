@@ -28,7 +28,9 @@ test('email can be verified', function () {
 
     Event::assertDispatched(Verified::class);
 
-    expect($user->fresh()->hasVerifiedEmail())->toBeTrue();
+    $freshUser = User::find($user->id);
+    expect($freshUser)->not->toBeNull()
+        ->and($freshUser->hasVerifiedEmail())->toBeTrue();
     $response->assertRedirect(route('dashboard', absolute: false).'?verified=1');
 });
 
@@ -43,5 +45,7 @@ test('email is not verified with invalid hash', function () {
 
     $this->actingAs($user)->get($verificationUrl);
 
-    expect($user->fresh()->hasVerifiedEmail())->toBeFalse();
+    $freshUser = User::find($user->id);
+    expect($freshUser)->not->toBeNull()
+        ->and($freshUser->hasVerifiedEmail())->toBeFalse();
 });

@@ -50,13 +50,13 @@ class UpdateEntry
                 ],
             ]);
 
-            return $entry->fresh(['elements', 'collection', 'blueprint']);
+            return $entry->fresh(['elements', 'blueprint']);
         });
     }
 
     protected function syncEntryElements(Entry $entry, array $fieldValues): void
     {
-        $blueprint = Blueprint::with('elements')->find($entry->blueprint_id);
+        $blueprint = Blueprint::with('fields')->find($entry->blueprint_id);
 
         if (! $blueprint) {
             return;
@@ -65,14 +65,14 @@ class UpdateEntry
         // Get existing elements indexed by handle
         $existingElements = $entry->elements->keyBy('handle');
 
-        foreach ($blueprint->elements as $element) {
-            $value = $fieldValues[$element->handle] ?? $this->getDefaultValue($element->type);
-            $sanitizedValue = $this->sanitizeValue($value, $element->type);
+        foreach ($blueprint->fields as $field) {
+            $value = $fieldValues[$field->handle] ?? $this->getDefaultValue($field->type);
+            $sanitizedValue = $this->sanitizeValue($value, $field->type);
 
             // Update existing or create new
-            if ($existingElements->has($element->handle)) {
-                $existingEl = $existingElements[$element->handle];
-                if ($this->shouldStoreInMeta($element->type)) {
+            if ($existingElements->has($field->handle)) {
+                $existingEl = $existingElements[$field->handle];
+                if ($this->shouldStoreInMeta($field->type)) {
                     $existingEl->update([
                         'value' => null,
                         'meta' => $sanitizedValue,
@@ -81,27 +81,27 @@ class UpdateEntry
                     $existingEl->setElementValue($sanitizedValue);
                     $existingEl->save();
                 }
-            } elseif ($this->shouldStoreInMeta($element->type)) {
+            } elseif ($this->shouldStoreInMeta($field->type)) {
                 $entry->elements()->create([
-                    'field_id' => $element->id,
-                    'handle' => $element->handle,
+                    'field_id' => $field->id,
+                    'handle' => $field->handle,
                     'value' => null,
                     'meta' => $sanitizedValue,
                 ]);
             } else {
-                /** @var \App\Models\EntryElement $element */
-                $element = $entry->elements()->create([
-                    'field_id' => $element->id,
-                    'handle' => $element->handle,
+                /** @var \App\Models\EntryElement $newElement */
+                $newElement = $entry->elements()->create([
+                    'field_id' => $field->id,
+                    'handle' => $field->handle,
                 ]);
 
-                $element->setElementValue($sanitizedValue);
-                $element->save();
+                $newElement->setElementValue($sanitizedValue);
+                $newElement->save();
             }
         }
 
         // Remove elements that no longer exist in blueprint
-        $blueprintHandles = $blueprint->elements->pluck('handle')->toArray();
+        $blueprintHandles = $blueprint->fields->pluck('handle')->toArray();
         $entry->elements()->whereNotIn('handle', $blueprintHandles)->delete();
     }
 
