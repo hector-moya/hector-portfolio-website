@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|GlobalVariable newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|GlobalVariable query()
  *
- * @mixin \Eloquent
+ * @mixin \Illuminate\Database\Eloquent\Model
  */
 class GlobalVariable extends Model
 {

@@ -24,7 +24,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|GlobalSet newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|GlobalSet query()
  *
- * @mixin \Eloquent
+ * @mixin \Illuminate\Database\Eloquent\Model
  */
 class GlobalSet extends Model
 {
