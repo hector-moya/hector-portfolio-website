@@ -39,7 +39,7 @@
 
                     @foreach ($this->blueprint->fields as $field)
                             <div>
-                                <x-dynamic-component component="entries.fields.image" :field="$field" />
+                                <x-dynamic-component :component="'entries.fields.' . $field->type" :field="$field" />
                                 {{-- @includeIf('entries.fields.' . $field->type, ['field' => $field]) --}}
                             </div>
                     @endforeach
