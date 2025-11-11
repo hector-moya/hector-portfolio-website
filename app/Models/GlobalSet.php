@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $id
  * @property string $handle
  * @property string $name
- * @property string|null $blueprint_id
+ * @property int|null $blueprint_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Blueprint|null $blueprint
@@ -23,14 +23,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|GlobalSet newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|GlobalSet newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|GlobalSet query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|GlobalSet whereBlueprintId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|GlobalSet whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|GlobalSet whereHandle($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|GlobalSet whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|GlobalSet whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|GlobalSet whereUpdatedAt($value)
  *
- * @mixin \Illuminate\Database\Eloquent\Model
+ * @mixin \Eloquent
  */
 class GlobalSet extends Model
 {

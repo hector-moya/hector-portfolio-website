@@ -3,8 +3,8 @@
 namespace App\Livewire\Blueprints;
 
 use App\Models\Blueprint;
-use App\Models\BlueprintSection;
-use App\Models\BlueprintTab;
+use App\Models\Section;
+use App\Models\Tab;
 use Illuminate\Support\Str;
 use Livewire\Component;
 
@@ -23,7 +23,7 @@ class TabsManager extends Component
         ]);
     }
 
-    public function addSection(?BlueprintTab $tab = null): void
+    public function addSection(?Tab $tab = null): void
     {
         $nextOrder = $this->blueprint->sections()
             ->when($tab, fn ($q) => $q->where('tab_id', $tab->id))
@@ -37,12 +37,12 @@ class TabsManager extends Component
         ]);
     }
 
-    public function deleteTab(BlueprintTab $tab): void
+    public function deleteTab(Tab $tab): void
     {
         $tab->delete();
     }
 
-    public function deleteSection(BlueprintSection $section): void
+    public function deleteSection(Section $section): void
     {
         $section->delete();
     }
@@ -50,14 +50,14 @@ class TabsManager extends Component
     public function updateTabOrder($orderedIds): void
     {
         foreach ($orderedIds as $order => $id) {
-            \App\Models\BlueprintTab::query()->where('id', $id)->update(['sort_order' => $order]);
+            Tab::query()->where('id', $id)->update(['sort_order' => $order]);
         }
     }
 
     public function updateSectionOrder($orderedIds): void
     {
         foreach ($orderedIds as $order => $id) {
-            \App\Models\BlueprintSection::query()->where('id', $id)->update(['sort_order' => $order]);
+            Section::query()->where('id', $id)->update(['sort_order' => $order]);
         }
     }
 

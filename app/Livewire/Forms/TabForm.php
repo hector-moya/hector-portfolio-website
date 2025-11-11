@@ -24,11 +24,19 @@ class TabForm extends Form
 
     public function setTab(?int $tabId): void
     {
-        $tab = Tab::query()->find($tabId) ?? null;
-        $this->name = $tab?->name ?? '';
-        $this->handle = $tab?->handle ?? '';
-        $this->sort_order = $tab?->sort_order ?? 0;
-        $this->sections = $tab ? $tab->sections()->orderBy('sort_order')->get()->toArray() : [['id' => 0, 'name' => '', 'handle' => '', 'instructions' => '', 'sort_order' => 0]];
+        $tab = Tab::query()->find($tabId);
+
+        if ($tab) {
+            $this->name = $tab->name;
+            $this->handle = $tab->handle;
+            $this->sort_order = $tab->sort_order;
+            $this->sections = $tab->sections()->orderBy('sort_order')->get()->toArray();
+        } else {
+            $this->name = '';
+            $this->handle = '';
+            $this->sort_order = 0;
+            $this->sections = [['id' => 0, 'name' => '', 'handle' => '', 'instructions' => '', 'sort_order' => 0]];
+        }
     }
 
     public function create(int $blueprintId): Tab

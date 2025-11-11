@@ -21,14 +21,20 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int $order
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property string|null $deleted_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property int|null $section_id
+ * @property int|null $parent_id
  * @property-read \App\Models\Blueprint $blueprint
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Field> $children
+ * @property-read int|null $children_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\EntryElement> $entryElements
  * @property-read int|null $entry_elements_count
+ * @property-read Field|null $parent
  *
  * @method static \Database\Factories\FieldFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Field newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Field newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Field onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Field ordered()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Field query()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Field whereBlueprintId($value)
@@ -41,10 +47,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Field whereIsRequired($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Field whereLabel($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Field whereOrder($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Field whereParentId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Field whereSectionId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Field whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Field whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Field withTrashed(bool $withTrashed = true)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Field withoutTrashed()
  *
- * @mixin \Illuminate\Database\Eloquent\Model
+ * @mixin \Eloquent
  */
 class Field extends Model
 {

@@ -9,25 +9,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * @property string $id
- * @property string $handle
- * @property array<array-key, mixed>|null $value
- * @property string $global_set_id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\GlobalSet $globalSet
+ * @property-read \App\Models\GlobalSet|null $globalSet
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|GlobalVariable newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|GlobalVariable newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|GlobalVariable query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|GlobalVariable whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|GlobalVariable whereGlobalSetId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|GlobalVariable whereHandle($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|GlobalVariable whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|GlobalVariable whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|GlobalVariable whereValue($value)
  *
- * @mixin \Illuminate\Database\Eloquent\Model
+ * @mixin \Eloquent
  */
 class GlobalVariable extends Model
 {

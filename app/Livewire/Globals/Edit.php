@@ -17,7 +17,7 @@ class Edit extends Component
 
     public string $handle;
 
-    public ?string $blueprint_id = null;
+    public ?int $blueprint_id = null;
 
     public array $variables = [];
 

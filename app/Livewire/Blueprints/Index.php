@@ -30,9 +30,7 @@ class Index extends Component
     public function createBlueprint(): void
     {
         $blueprint = $this->blueprintForm->create();
-        if ($blueprint) {
-            $this->redirectRoute('blueprints.create', $blueprint);
-        }
+        $this->redirectRoute('blueprints.create', $blueprint);
     }
 
     public function delete(int $blueprintId): void

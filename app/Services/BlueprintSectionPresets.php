@@ -3,12 +3,12 @@
 namespace App\Services;
 
 use App\Enums\FieldType;
-use App\Models\BlueprintSection;
+use App\Models\Section;
 use Illuminate\Support\Str;
 
 class BlueprintSectionPresets
 {
-    public static function addPreset(BlueprintSection $section, string $preset): void
+    public static function addPreset(Section $section, string $preset): void
     {
         $method = Str::camel("add_{$preset}_fields");
 
@@ -17,9 +17,9 @@ class BlueprintSectionPresets
         }
     }
 
-    protected static function addSeoFields(BlueprintSection $section): void
+    protected static function addSeoFields(Section $section): void
     {
-        $section->elements()->createMany([
+        $section->fields()->createMany([
             [
                 'type' => FieldType::Text->value,
                 'label' => 'Meta Title',
@@ -47,9 +47,9 @@ class BlueprintSectionPresets
         ]);
     }
 
-    protected static function addNavigationFields(BlueprintSection $section): void
+    protected static function addNavigationFields(Section $section): void
     {
-        $section->elements()->createMany([
+        $section->fields()->createMany([
             [
                 'type' => FieldType::Text->value,
                 'label' => 'Link Text',
@@ -85,9 +85,9 @@ class BlueprintSectionPresets
         ]);
     }
 
-    protected static function addAssetFields(BlueprintSection $section): void
+    protected static function addAssetFields(Section $section): void
     {
-        $section->elements()->createMany([
+        $section->fields()->createMany([
             [
                 'type' => FieldType::Text->value,
                 'label' => 'Alt Text',
@@ -123,9 +123,9 @@ class BlueprintSectionPresets
         ]);
     }
 
-    protected static function addUserProfileFields(BlueprintSection $section): void
+    protected static function addUserProfileFields(Section $section): void
     {
-        $section->elements()->createMany([
+        $section->fields()->createMany([
             [
                 'type' => FieldType::Text->value,
                 'label' => 'Display Name',

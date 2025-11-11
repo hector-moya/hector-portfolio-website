@@ -8,6 +8,41 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * @property int $id
+ * @property int $blueprint_id
+ * @property int|null $tab_id
+ * @property string $name
+ * @property string $handle
+ * @property string|null $instructions
+ * @property int $sort_order
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property-read \App\Models\Blueprint $blueprint
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Field> $fields
+ * @property-read int|null $fields_count
+ * @property-read \App\Models\Tab|null $tab
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Section newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Section newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Section onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Section query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Section whereBlueprintId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Section whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Section whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Section whereHandle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Section whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Section whereInstructions($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Section whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Section whereSortOrder($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Section whereTabId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Section whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Section withTrashed(bool $withTrashed = true)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Section withoutTrashed()
+ *
+ * @mixin \Eloquent
+ */
 class Section extends Model
 {
     use HasFactory, SoftDeletes;

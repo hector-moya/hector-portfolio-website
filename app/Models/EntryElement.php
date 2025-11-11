@@ -23,17 +23,17 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|EntryElement newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|EntryElement newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|EntryElement query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|EntryElement whereFieldId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|EntryElement whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|EntryElement whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|EntryElement whereEntryId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|EntryElement whereFieldId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|EntryElement whereHandle($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|EntryElement whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|EntryElement whereMeta($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|EntryElement whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|EntryElement whereValue($value)
  *
- * @mixin \Illuminate\Database\Eloquent\Model
+ * @mixin \Eloquent
  */
 class EntryElement extends Model
 {

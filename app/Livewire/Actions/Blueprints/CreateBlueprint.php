@@ -27,6 +27,7 @@ class CreateBlueprint
 
             // Create tabs, sections, and fields
             foreach ($blueprintData['tabs'] as $tabIndex => $tab) {
+                /** @var \App\Models\Tab $createdTab */
                 $createdTab = $blueprint->tabs()->create([
                     'name' => $tab['name'],
                     'handle' => $tab['handle'],
@@ -34,6 +35,7 @@ class CreateBlueprint
                 ]);
 
                 foreach ($tab['sections'] as $sectionIndex => $section) {
+                    /** @var \App\Models\Section $createdSection */
                     $createdSection = $createdTab->sections()->create([
                         'name' => $section['name'],
                         'handle' => $section['handle'],

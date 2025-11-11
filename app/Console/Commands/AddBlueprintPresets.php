@@ -16,7 +16,7 @@ class AddBlueprintPresets extends Command
         $blueprint = \App\Models\Blueprint::query()->findOrFail($this->argument('blueprint'));
         $preset = $this->argument('preset');
 
-        /** @var \App\Models\BlueprintSection $section */
+        /** @var \App\Models\Section $section */
         $section = $blueprint->sections()->create([
             'name' => match ($preset) {
                 'seo' => 'SEO Settings',

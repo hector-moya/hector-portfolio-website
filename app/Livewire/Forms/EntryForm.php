@@ -55,7 +55,6 @@ class EntryForm extends Form
     public function setEntry(Entry $entry): void
     {
         $this->entry = $entry;
-        $this->collection_id = $entry->collection_id;
         $this->blueprint_id = $entry->blueprint_id;
         $this->title = $entry->title;
         $this->slug = $entry->slug;

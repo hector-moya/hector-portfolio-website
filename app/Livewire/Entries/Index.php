@@ -80,12 +80,11 @@ class Index extends Component
                     ->select('entries.*')
                     ->orderBy('collections.name', $this->sortDirection);
             }, function ($query): void {
-                if ($this->sortBy && $this->sortBy !== '0') {
+                if ($this->sortBy !== '' && $this->sortBy !== '0') {
                     $query->orderBy($this->sortBy, $this->sortDirection);
+                } else {
+                    $query->latest();
                 }
-            })
-            ->when(in_array($this->sortBy, ['', '0', '0'], true), function ($query): void {
-                $query->latest();
             })
             ->paginate(15);
     }

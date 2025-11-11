@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
  * @property string $value
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read Model|\Illuminate\Database\Eloquent\Model $translatable
+ * @property-read Model|\Eloquent $translatable
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Translation newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Translation newQuery()
@@ -28,7 +28,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Translation whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Translation whereValue($value)
  *
- * @mixin \Illuminate\Database\Eloquent\Model
+ * @mixin \Eloquent
  */
 class Translation extends Model
 {

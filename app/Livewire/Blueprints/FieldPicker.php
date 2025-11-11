@@ -23,8 +23,8 @@ class FieldPicker extends Component
 
     public function addField(string $type): void
     {
-        $section = \App\Models\BlueprintSection::query()->findOrFail($this->sectionId);
-        $nextOrder = $section->elements()->max('sort_order') + 1;
+        $section = \App\Models\Section::query()->findOrFail($this->sectionId);
+        $nextOrder = $section->fields()->max('sort_order') + 1;
 
         $element = new Field([
             'type' => $type,
@@ -35,7 +35,7 @@ class FieldPicker extends Component
             'sort_order' => $nextOrder,
         ]);
 
-        $section->elements()->save($element);
+        $section->fields()->save($element);
 
         $this->showModal = false;
         $this->dispatch('fieldAdded');

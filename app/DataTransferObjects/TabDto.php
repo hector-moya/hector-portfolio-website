@@ -7,7 +7,6 @@ namespace App\DataTransferObjects;
 class TabDto
 {
     /**
-     * @param  array<string, FieldDto>  $fields
      * @param  array<int, SectionDto>  $sections
      */
     public function __construct(
