@@ -12,9 +12,10 @@ class ContactPage extends Component
     #[Title('Contact')]
     public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
     {
-        $entry = \App\Models\Entry::query()->where('slug', 'contact')
+        $entry = \App\Models\Entry::query()
+            ->where('slug', 'contact')
             ->where('status', 'published')
-            ->with(['elements.Field'])
+            ->with(['elements.field'])
             ->first();
 
         return view('livewire.frontend.contact-page', [

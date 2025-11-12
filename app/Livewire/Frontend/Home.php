@@ -12,9 +12,10 @@ class Home extends Component
     #[Title('Home')]
     public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
     {
-        $entry = \App\Models\Entry::query()->where('slug', 'home')
+        $entry = \App\Models\Entry::query()
+            ->where('slug', 'home')
             ->where('status', 'published')
-            ->with(['elements.Field'])
+            ->with(['elements.field'])
             ->first();
 
         return view('livewire.frontend.home', [

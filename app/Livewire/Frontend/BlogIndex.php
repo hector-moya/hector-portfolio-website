@@ -17,9 +17,12 @@ class BlogIndex extends Component
     {
         $collection = \App\Models\Collection::query()->where('slug', 'blog')->first();
 
-        $posts = \App\Models\Entry::query()->where('collection_id', $collection?->id)
+        $posts = \App\Models\Entry::query()
+            ->whereHas('collection', function ($query) use ($collection) {
+                $query->where('id', $collection?->id);
+            })
             ->where('status', 'published')
-            ->with(['elements.Field', 'author'])
+            ->with(['elements.field', 'author'])
             ->latest('published_at')
             ->paginate(9);
 

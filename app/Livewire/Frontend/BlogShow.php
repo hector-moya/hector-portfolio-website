@@ -12,9 +12,10 @@ class BlogShow extends Component
 
     public function mount(string $slug): void
     {
-        $this->entry = \App\Models\Entry::query()->where('slug', $slug)
+        $this->entry = \App\Models\Entry::query()
+            ->where('slug', $slug)
             ->where('status', 'published')
-            ->with(['elements.Field', 'author', 'collection'])
+            ->with(['elements.field', 'author', 'collection'])
             ->firstOrFail();
     }
 

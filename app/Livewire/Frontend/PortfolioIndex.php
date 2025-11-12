@@ -14,9 +14,12 @@ class PortfolioIndex extends Component
     {
         $collection = \App\Models\Collection::query()->where('slug', 'portfolio')->first();
 
-        $projects = \App\Models\Entry::query()->where('collection_id', $collection?->id)
+        $projects = \App\Models\Entry::query()
+            ->whereHas('collection', function ($query) use ($collection) {
+                $query->where('id', $collection?->id);
+            })
             ->where('status', 'published')
-            ->with(['elements.Field'])
+            ->with(['elements.field'])
             ->latest('published_at')
             ->get();
 
