@@ -25,8 +25,8 @@
 
             @if ($selectedCollectionId && $this->blueprint)
                 <flux:card class="space-y-6">
-                    {{-- <flux:separator text="{{ $this->blueprint->name }}" /> --}}
                     <flux:heading size="lg">{{ $this->blueprint->name }}</flux:heading>
+                    
                     {{-- Basic Entry Fields --}}
                     <flux:input label="{{ __('Title') }}" wire:model.live.debounce.750ms="form.title" badge="{{ __('Required') }}" description="{{ __('The title of the entry') }}" />
 
@@ -43,12 +43,48 @@
                     </div>
                 </flux:card>
 
-                {{-- Dynamic Blueprint Fields --}}
-                @if ($this->blueprint->fields->isNotEmpty())
+                {{-- Dynamic Blueprint Fields with Tabs --}}
+                @if ($this->blueprint->tabs->isNotEmpty())
+                    <flux:card>
+                        <flux:tab.group>
+                            <flux:tabs variant="segmented">
+                                @foreach ($this->blueprint->tabs as $tabIndex => $tab)
+                                    <flux:tab :name="'tab-' . $tab->id">{{ $tab->name }}</flux:tab>
+                                @endforeach
+                            </flux:tabs>
 
+                            @foreach ($this->blueprint->tabs as $tab)
+                                <flux:tab.panel :name="'tab-' . $tab->id" class="space-y-6 pt-6">
+                                    @foreach ($tab->sections as $section)
+                                        <div class="space-y-4">
+                                            @if ($section->name)
+                                                <div>
+                                                    <flux:heading size="md">{{ $section->name }}</flux:heading>
+                                                    @if ($section->instructions)
+                                                        <flux:text>{{ $section->instructions }}</flux:text>
+                                                    @endif
+                                                </div>
+                                            @endif
+
+                                            @foreach ($section->fields as $field)
+                                                <div>
+                                                    @includeIf('entries.fields.' . $field->type, ['element' => $field])
+                                                </div>
+                                            @endforeach
+                                        </div>
+
+                                        @if (!$loop->last)
+                                            <flux:separator />
+                                        @endif
+                                    @endforeach
+                                </flux:tab.panel>
+                            @endforeach
+                        </flux:tab.group>
+                    </flux:card>
+                @elseif ($this->blueprint->fields->isNotEmpty())
+                    {{-- Fallback for blueprints without tabs --}}
                     <flux:card class="space-y-6">
                         <flux:heading size="lg">{{ __('Content Fields') }}</flux:heading>
-                        {{-- <flux:separator text="{{ __('Content Fields') }}" /> --}}
 
                         @foreach ($this->blueprint->fields as $element)
                             <div>

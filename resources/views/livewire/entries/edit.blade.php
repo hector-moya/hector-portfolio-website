@@ -32,17 +32,54 @@
                 </div>
             </flux:card>
 
-            {{-- Dynamic Blueprint Fields --}}
-            @if ($this->blueprint && $this->blueprint->fields->isNotEmpty())
+            {{-- Dynamic Blueprint Fields with Tabs --}}
+            @if ($this->blueprint && $this->blueprint->tabs->isNotEmpty())
+                <flux:card>
+                    <flux:tab.group>
+                        <flux:tabs variant="segmented">
+                            @foreach ($this->blueprint->tabs as $tabIndex => $tab)
+                                <flux:tab :name="'tab-' . $tab->id">{{ $tab->name }}</flux:tab>
+                            @endforeach
+                        </flux:tabs>
+
+                        @foreach ($this->blueprint->tabs as $tab)
+                            <flux:tab.panel :name="'tab-' . $tab->id" class="space-y-6 pt-6">
+                                @foreach ($tab->sections as $section)
+                                    <div class="space-y-4">
+                                        @if ($section->name)
+                                            <div>
+                                                <flux:heading size="md">{{ $section->name }}</flux:heading>
+                                                @if ($section->instructions)
+                                                    <flux:text>{{ $section->instructions }}</flux:text>
+                                                @endif
+                                            </div>
+                                        @endif
+
+                                        @foreach ($section->fields as $field)
+                                            <div>
+                                                <x-dynamic-component :component="'entries.fields.' . $field->type" :field="$field" />
+                                            </div>
+                                        @endforeach
+                                    </div>
+
+                                    @if (!$loop->last)
+                                        <flux:separator />
+                                    @endif
+                                @endforeach
+                            </flux:tab.panel>
+                        @endforeach
+                    </flux:tab.group>
+                </flux:card>
+            @elseif ($this->blueprint && $this->blueprint->fields->isNotEmpty())
+                {{-- Fallback for blueprints without tabs --}}
                 <flux:card class="space-y-6">
                     <flux:heading size="lg">{{ __('Content Fields') }}</flux:heading>
 
                     @foreach ($this->blueprint->fields as $field)
-                            <div>
-                                <x-dynamic-component :component="'entries.fields.' . $field->type" :field="$field" />
-                            </div>
+                        <div>
+                            <x-dynamic-component :component="'entries.fields.' . $field->type" :field="$field" />
+                        </div>
                     @endforeach
-
                 </flux:card>
             @endif
 

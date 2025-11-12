@@ -61,7 +61,7 @@ class Create extends Component
             return null;
         }
 
-        return Blueprint::with('fields')->find($this->form->blueprint_id);
+        return Blueprint::with(['tabs.sections.fields', 'fields'])->find($this->form->blueprint_id);
     }
 
     public function save(): void
