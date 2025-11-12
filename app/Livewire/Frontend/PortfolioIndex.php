@@ -19,7 +19,7 @@ class PortfolioIndex extends Component
         $collection = CollectionModel::query()->where('slug', 'portfolio')->first();
 
         $projects = Entry::query()
-            ->whereHas('collection', function ($query) use ($collection) {
+            ->whereHas('collection', function ($query) use ($collection): void {
                 $query->where('id', $collection?->id);
             })
             ->where('status', 'published')
