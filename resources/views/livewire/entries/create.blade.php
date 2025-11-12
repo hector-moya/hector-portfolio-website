@@ -26,7 +26,7 @@
             @if ($selectedCollectionId && $this->blueprint)
                 <flux:card class="space-y-6">
                     <flux:heading size="lg">{{ $this->blueprint->name }}</flux:heading>
-                    
+
                     {{-- Basic Entry Fields --}}
                     <flux:input label="{{ __('Title') }}" wire:model.live.debounce.750ms="form.title" badge="{{ __('Required') }}" description="{{ __('The title of the entry') }}" />
 
