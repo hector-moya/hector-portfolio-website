@@ -2,11 +2,11 @@
 
 namespace App\Livewire\Frontend;
 
+use App\Models\Entry;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
-use Illuminate\Contracts\View\View;
-use Illuminate\Contracts\View\Factory;
-use App\Models\Entry;
 use Livewire\Component;
 
 class Home extends Component

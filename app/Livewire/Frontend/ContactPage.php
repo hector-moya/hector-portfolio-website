@@ -2,11 +2,11 @@
 
 namespace App\Livewire\Frontend;
 
+use App\Models\Entry;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
-use App\Models\Entry;
-use Illuminate\Contracts\View\View;
-use Illuminate\Contracts\View\Factory;
 use Livewire\Component;
 
 class ContactPage extends Component

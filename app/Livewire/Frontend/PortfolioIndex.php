@@ -2,12 +2,12 @@
 
 namespace App\Livewire\Frontend;
 
-use Livewire\Attributes\Layout;
-use Livewire\Attributes\Title;
 use App\Models\Collection as CollectionModel;
 use App\Models\Entry;
-use Illuminate\Contracts\View\View;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Livewire\Attributes\Layout;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 
 class PortfolioIndex extends Component

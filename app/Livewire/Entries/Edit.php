@@ -15,7 +15,9 @@ use Livewire\WithFileUploads;
 class Edit extends Component
 {
     use WithFileUploads;
+
     public EntryForm $form;
+
     public array $uploads = [];
 
     public Entry $entry;
