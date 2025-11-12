@@ -202,8 +202,6 @@ class EntryForm extends Form
 
     public function update(int $entryId): Entry
     {
-        $this->validate();
-
         $entry = app(\App\Livewire\Actions\UpdateEntry::class)->update([
             'id' => $entryId,
             'title' => $this->title,

@@ -10,10 +10,13 @@ use Illuminate\Support\Str;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 
 class Edit extends Component
 {
+    use WithFileUploads;
     public EntryForm $form;
+    public array $uploads = [];
 
     public Entry $entry;
 

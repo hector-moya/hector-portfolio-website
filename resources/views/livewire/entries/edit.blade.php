@@ -11,7 +11,6 @@
             </flux:button>
         </div>
 
-        <form wire:submit="save" class="space-y-6">
             <flux:card class="space-y-6">
                 {{-- Collection Info (Read-only) --}}
                 <flux:input label="{{ __('Collection') }}" :value="$entry->collection->name" disabled description="{{ __('Collection cannot be changed after creation') }}" />
@@ -83,6 +82,7 @@
                 </flux:card>
             @endif
 
+        <form wire:submit="save" class="space-y-6">
             <div class="flex justify-end gap-2">
                 <flux:button type="button" variant="ghost" :href="route('entries')" wire:navigate>
                     {{ __('Cancel') }}

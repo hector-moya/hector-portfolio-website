@@ -12,6 +12,7 @@ class Browser extends Component
     use WithFileUploads;
 
     public string $fieldHandle;
+    public array $uploads = [];
 
     public ?string $search = '';
 
