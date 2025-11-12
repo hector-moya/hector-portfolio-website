@@ -4,15 +4,18 @@ namespace App\Livewire\Frontend;
 
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
+use Illuminate\Contracts\View\View;
+use Illuminate\Contracts\View\Factory;
+use App\Models\Entry;
 use Livewire\Component;
 
 class Home extends Component
 {
     #[Layout('components.layouts.frontend')]
     #[Title('Home')]
-    public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+    public function render(): View|Factory
     {
-        $entry = \App\Models\Entry::query()
+        $entry = Entry::query()
             ->where('slug', 'home')
             ->where('status', 'published')
             ->with(['elements.field'])

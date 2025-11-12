@@ -4,17 +4,21 @@ namespace App\Livewire\Frontend;
 
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
+use App\Models\Collection as CollectionModel;
+use App\Models\Entry;
+use Illuminate\Contracts\View\View;
+use Illuminate\Contracts\View\Factory;
 use Livewire\Component;
 
 class PortfolioIndex extends Component
 {
     #[Layout('components.layouts.frontend')]
     #[Title('Portfolio')]
-    public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+    public function render(): View|Factory
     {
-        $collection = \App\Models\Collection::query()->where('slug', 'portfolio')->first();
+        $collection = CollectionModel::query()->where('slug', 'portfolio')->first();
 
-        $projects = \App\Models\Entry::query()
+        $projects = Entry::query()
             ->whereHas('collection', function ($query) use ($collection) {
                 $query->where('id', $collection?->id);
             })

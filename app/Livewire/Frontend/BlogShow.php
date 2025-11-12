@@ -3,6 +3,8 @@
 namespace App\Livewire\Frontend;
 
 use App\Models\Entry;
+use Illuminate\Contracts\View\View;
+use Illuminate\Contracts\View\Factory;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
@@ -12,7 +14,7 @@ class BlogShow extends Component
 
     public function mount(string $slug): void
     {
-        $this->entry = \App\Models\Entry::query()
+        $this->entry = Entry::query()
             ->where('slug', $slug)
             ->where('status', 'published')
             ->with(['elements.field', 'author', 'collection'])
@@ -20,7 +22,7 @@ class BlogShow extends Component
     }
 
     #[Layout('components.layouts.frontend')]
-    public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+    public function render(): View|Factory
     {
         return view('livewire.frontend.blog-show');
     }

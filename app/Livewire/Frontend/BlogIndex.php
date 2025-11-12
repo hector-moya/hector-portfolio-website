@@ -4,6 +4,10 @@ namespace App\Livewire\Frontend;
 
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
+use Illuminate\Contracts\View\View;
+use App\Models\Collection as CollectionModel;
+use App\Models\Entry;
+use Illuminate\Contracts\View\Factory;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -13,11 +17,11 @@ class BlogIndex extends Component
 
     #[Layout('components.layouts.frontend')]
     #[Title('Blog')]
-    public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+    public function render(): View|Factory
     {
-        $collection = \App\Models\Collection::query()->where('slug', 'blog')->first();
+        $collection = CollectionModel::query()->where('slug', 'blog')->first();
 
-        $posts = \App\Models\Entry::query()
+        $posts = Entry::query()
             ->whereHas('collection', function ($query) use ($collection) {
                 $query->where('id', $collection?->id);
             })
