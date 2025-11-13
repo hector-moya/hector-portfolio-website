@@ -2,14 +2,14 @@
 
 namespace App\Livewire\Forms;
 
+use App\Livewire\Actions\CreateEntry;
+use App\Livewire\Actions\UpdateEntry;
 use App\Models\Blueprint;
 use App\Models\Collection;
 use App\Models\Entry;
 use Flux\Flux;
 use Illuminate\Validation\Rule;
 use Livewire\Attributes\Validate;
-use App\Livewire\Actions\CreateEntry;
-use App\Livewire\Actions\UpdateEntry;
 use Livewire\Form;
 
 class EntryForm extends Form

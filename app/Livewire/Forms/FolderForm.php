@@ -26,7 +26,7 @@ class FolderForm extends Form
 
     public function set(int $folderId): void
     {
-        $folder = \App\Models\Folder::query()->findOrFail($folderId);
+        $folder = Folder::query()->findOrFail($folderId);
         $this->name = $folder->name;
         $this->folderId = $folder->id;
         $this->parent_id = $folder->parent_id;
@@ -92,7 +92,7 @@ class FolderForm extends Form
             return [];
         }
 
-        $folder = \App\Models\Folder::query()->findOrFail($this->currentFolderId);
+        $folder = Folder::query()->findOrFail($this->currentFolderId);
 
         return $folder->ancestors();
     }
@@ -103,7 +103,7 @@ class FolderForm extends Form
             return null;
         }
 
-        $folder = \App\Models\Folder::query()->findOrFail($this->currentFolderId);
+        $folder = Folder::query()->findOrFail($this->currentFolderId);
 
         return $folder->name;
     }

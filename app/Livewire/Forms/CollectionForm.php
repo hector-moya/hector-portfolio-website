@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Forms;
 
+use illuminate\Validation\Rule;
 use Livewire\Attributes\Validate;
 use Livewire\Form;
 
@@ -30,7 +31,7 @@ class CollectionForm extends Form
                 'nullable',
                 'string',
                 'max:255',
-                \Illuminate\Validation\Rule::unique('collections', 'slug')
+                Rule::unique('collections', 'slug')
                     ->ignore($this->collection_id),
             ],
         ];
