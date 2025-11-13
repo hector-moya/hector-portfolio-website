@@ -121,7 +121,7 @@ class EntryForm extends Form
         ];
 
         $bp = $this->blueprint();
-        if (! $bp instanceof \App\Models\Blueprint) {
+        if (! $bp instanceof Blueprint) {
             return $rules;
         }
 
