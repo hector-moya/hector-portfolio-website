@@ -8,6 +8,8 @@ use App\Models\Entry;
 use Flux\Flux;
 use Illuminate\Validation\Rule;
 use Livewire\Attributes\Validate;
+use App\Livewire\Actions\CreateEntry;
+use App\Livewire\Actions\UpdateEntry;
 use Livewire\Form;
 
 class EntryForm extends Form
@@ -185,7 +187,7 @@ class EntryForm extends Form
     {
         $this->validate();
 
-        $entry = app(\App\Livewire\Actions\CreateEntry::class)->create([
+        $entry = app(CreateEntry::class)->create([
             'collection_id' => $this->collection_id,
             'blueprint_id' => $this->blueprint_id,
             'title' => $this->title,
@@ -202,7 +204,7 @@ class EntryForm extends Form
 
     public function update(int $entryId): Entry
     {
-        $entry = app(\App\Livewire\Actions\UpdateEntry::class)->update([
+        $entry = app(UpdateEntry::class)->update([
             'id' => $entryId,
             'title' => $this->title,
             'slug' => $this->slug,
@@ -228,7 +230,7 @@ class EntryForm extends Form
         ];
 
         $bp = $this->blueprint();
-        if (! $bp instanceof \App\Models\Blueprint) {
+        if (! $bp instanceof Blueprint) {
             return $attrs;
         }
 
