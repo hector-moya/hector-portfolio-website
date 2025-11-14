@@ -5,6 +5,8 @@ namespace App\Livewire\Navigation;
 use App\Facades\Navigation;
 use App\Models\Navigation as NavigationModel;
 use App\Models\NavigationItem;
+use Illuminate\Contracts\View\View;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Support\Str;
 use Livewire\Component;
 
@@ -125,7 +127,7 @@ class Edit extends Component
         ]);
     }
 
-    public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+    public function render(): View|Factory
     {
         return view('livewire.navigation.edit', [
             'items' => $this->navigation->items()->with('children')->whereNull('parent_id')->orderBy('order')->get(),

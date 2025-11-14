@@ -7,6 +7,7 @@ namespace App\Livewire\Globals;
 use App\Models\GlobalSet;
 use Illuminate\View\View;
 use Livewire\Attributes\Computed;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -15,7 +16,7 @@ class Index extends Component
     use WithPagination;
 
     #[Computed]
-    public function globalSets(): \Illuminate\Contracts\Pagination\LengthAwarePaginator
+    public function globalSets(): LengthAwarePaginator
     {
         return GlobalSet::with('blueprint')
             ->latest()

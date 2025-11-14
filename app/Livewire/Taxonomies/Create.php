@@ -3,6 +3,8 @@
 namespace App\Livewire\Taxonomies;
 
 use App\Livewire\Forms\TaxonomyForm;
+use Illuminate\Contracts\View\View;
+use Illuminate\Contracts\View\Factory;
 use Livewire\Component;
 
 class Create extends Component
@@ -33,7 +35,7 @@ class Create extends Component
         $this->redirect(route('taxonomies.index'), navigate: true);
     }
 
-    public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+    public function render(): View|Factory
     {
         return view('livewire.taxonomies.create');
     }

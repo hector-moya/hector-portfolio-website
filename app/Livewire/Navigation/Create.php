@@ -4,6 +4,8 @@ namespace App\Livewire\Navigation;
 
 use App\Facades\Navigation;
 use Illuminate\Support\Str;
+use Illuminate\Contracts\View\View;
+use Illuminate\Contracts\View\Factory;
 use Livewire\Component;
 
 class Create extends Component
@@ -41,7 +43,7 @@ class Create extends Component
         ]);
     }
 
-    public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+    public function render(): View|Factory
     {
         return view('livewire.navigation.create');
     }

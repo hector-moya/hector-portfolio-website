@@ -4,6 +4,9 @@ namespace App\Livewire\Navigation;
 
 use App\Facades\Navigation;
 use App\Models\Navigation as NavigationModel;
+use Illuminate\Contracts\View\View;
+use Illuminate\Contracts\View\Factory;
+use Livewire\Attributes\Computed;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -15,7 +18,7 @@ class Index extends Component
 
     public mixed $navigations;
 
-    #[\Livewire\Attributes\Computed]
+    #[Computed]
     public function navigations()
     {
         return NavigationModel::query()
@@ -38,7 +41,7 @@ class Index extends Component
         ]);
     }
 
-    public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+    public function render(): View|Factory
     {
         return view('livewire.navigation.index', [
             'navigations' => $this->navigations,

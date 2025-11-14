@@ -6,6 +6,8 @@ use App\Livewire\Forms\TaxonomyForm;
 use App\Models\Taxonomy;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Livewire\Attributes\Computed;
+use Illuminate\Contracts\View\View;
+use Illuminate\Contracts\View\Factory;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -53,8 +55,9 @@ class Index extends Component
         }
     }
 
-    public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+    public function render(): View|Factory
     {
         return view('livewire.taxonomies.index');
     }
 }
+
