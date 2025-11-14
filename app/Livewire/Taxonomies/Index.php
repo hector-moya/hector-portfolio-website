@@ -4,10 +4,10 @@ namespace App\Livewire\Taxonomies;
 
 use App\Livewire\Forms\TaxonomyForm;
 use App\Models\Taxonomy;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Livewire\Attributes\Computed;
-use Illuminate\Contracts\View\View;
-use Illuminate\Contracts\View\Factory;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -60,4 +60,3 @@ class Index extends Component
         return view('livewire.taxonomies.index');
     }
 }
-

@@ -3,9 +3,8 @@
 namespace App\Livewire\Taxonomies;
 
 use App\Livewire\Forms\TaxonomyForm;
-use Illuminate\Contracts\View\View;
-use Illuminate\Contracts\View\Factory;
 use App\Models\Taxonomy;
+use Illuminate\Contracts\View\Factory;
 use Livewire\Component;
 
 class Edit extends Component

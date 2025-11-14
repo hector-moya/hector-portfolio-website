@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Livewire\Globals;
 
 use App\Models\GlobalSet;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\View\View;
 use Livewire\Attributes\Computed;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Livewire\Component;
 use Livewire\WithPagination;
 

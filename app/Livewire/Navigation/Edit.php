@@ -5,8 +5,8 @@ namespace App\Livewire\Navigation;
 use App\Facades\Navigation;
 use App\Models\Navigation as NavigationModel;
 use App\Models\NavigationItem;
-use Illuminate\Contracts\View\View;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Str;
 use Livewire\Component;
 

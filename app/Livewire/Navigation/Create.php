@@ -3,9 +3,9 @@
 namespace App\Livewire\Navigation;
 
 use App\Facades\Navigation;
-use Illuminate\Support\Str;
-use Illuminate\Contracts\View\View;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Support\Str;
 use Livewire\Component;
 
 class Create extends Component

@@ -3,8 +3,8 @@
 namespace App\Livewire\Taxonomies;
 
 use App\Livewire\Forms\TaxonomyForm;
-use Illuminate\Contracts\View\View;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Livewire\Component;
 
 class Create extends Component

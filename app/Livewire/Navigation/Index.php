@@ -4,8 +4,8 @@ namespace App\Livewire\Navigation;
 
 use App\Facades\Navigation;
 use App\Models\Navigation as NavigationModel;
-use Illuminate\Contracts\View\View;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 use Livewire\WithPagination;
