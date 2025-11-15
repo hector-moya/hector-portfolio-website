@@ -6,7 +6,6 @@ use App\Livewire\Actions\CreateEntry;
 use App\Livewire\Actions\UpdateEntry;
 use App\Models\Blueprint;
 use App\Models\Collection as ModelsCollection;
-use Illuminate\Support\Collection;
 use App\Models\Entry;
 use App\Models\Field;
 use Flux\Flux;
@@ -104,12 +103,14 @@ class EntryForm extends Form
         $bp = $this->blueprint();
         if (! $bp) {
             $this->fieldValues[$handle]['items'][] = [];
+
             return;
         }
 
         $field = $bp->fields->firstWhere('handle', $handle);
         if (! $field || ! $field->children) {
             $this->fieldValues[$handle]['items'][] = [];
+
             return;
         }
 
@@ -156,6 +157,7 @@ class EntryForm extends Form
             $h = $el->handle;
             if ($el->type !== 'repeater') {
                 $rules["fieldValues.$h"] = $this->rulesForSimple($el->type, $el->is_required, $el->config ?? []);
+
                 continue;
             }
 

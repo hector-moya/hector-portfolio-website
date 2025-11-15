@@ -6,11 +6,11 @@ use App\Livewire\Forms\EntryForm;
 use App\Models\Blueprint;
 use App\Models\Collection as ModelsCollection;
 use Flux\Flux;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Computed;
-use Illuminate\Contracts\View\View;
-use Illuminate\Contracts\View\Factory;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
