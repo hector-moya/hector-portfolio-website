@@ -1,3 +1,8 @@
+@props([
+    'index' => 1,
+    'field' => null,
+])
+
 @php
     $value = $form->fieldValues[$field->handle] ?? null;
     $asset = $value ? \App\Models\Asset::find($value) : null;
@@ -53,7 +58,7 @@
     <flux:error name="form.fieldValues.{{ $field->handle }}" />
 
     {{-- Asset Browser Modal --}}
-    <flux:modal name="asset-browser-{{ $field->handle }}">
-        <livewire:assets.browser :key="'asset-browser-' . $field->handle" :field-handle="$field->handle" />
+    <flux:modal name="asset-browser-{{ $field->handle . $index }}">
+        <livewire:assets.browser :key="'asset-browser-' . $field->handle . $index" :field-handle="$field->handle" />
     </flux:modal>
 </div>

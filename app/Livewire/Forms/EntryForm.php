@@ -5,8 +5,10 @@ namespace App\Livewire\Forms;
 use App\Livewire\Actions\CreateEntry;
 use App\Livewire\Actions\UpdateEntry;
 use App\Models\Blueprint;
-use App\Models\Collection;
+use App\Models\Collection as ModelsCollection;
+use Illuminate\Support\Collection;
 use App\Models\Entry;
+use App\Models\Field;
 use Flux\Flux;
 use Illuminate\Validation\Rule;
 use Livewire\Attributes\Validate;
@@ -71,7 +73,7 @@ class EntryForm extends Form
         $this->initializeFieldValues(); // ensure defaults for any new fields
     }
 
-    public function setCollection(Collection $collection): void
+    public function setCollection(ModelsCollection $collection): void
     {
         $this->collection_id = $collection->id;
         $this->blueprint_id = $collection->blueprint_id;
@@ -98,7 +100,29 @@ class EntryForm extends Form
     public function addRepeaterItem(string $handle): void
     {
         $this->fieldValues[$handle] ??= ['items' => []];
-        $this->fieldValues[$handle]['items'][] = []; 
+
+        $bp = $this->blueprint();
+        if (! $bp) {
+            $this->fieldValues[$handle]['items'][] = [];
+            return;
+        }
+
+        $field = $bp->fields->firstWhere('handle', $handle);
+        if (! $field || ! $field->children) {
+            $this->fieldValues[$handle]['items'][] = [];
+            return;
+        }
+
+        // Initialize new item with defaults for each child field
+        $newItem = [];
+        foreach ($field->children as $childField) {
+            $newItem[$childField->handle] = $this->defaultForType(
+                $childField->type,
+                $childField->config ?? []
+            );
+        }
+
+        $this->fieldValues[$handle]['items'][] = $newItem;
     }
 
     public function removeRepeaterItem(string $handle, int $index): void
@@ -108,6 +132,7 @@ class EntryForm extends Form
         }
         unset($this->fieldValues[$handle]['items'][$index]);
         $this->fieldValues[$handle]['items'] = array_values($this->fieldValues[$handle]['items']);
+        dump($this->fieldValues[$handle]['items']);
     }
 
     /* ---------- Validation ---------- */
@@ -131,11 +156,10 @@ class EntryForm extends Form
             $h = $el->handle;
             if ($el->type !== 'repeater') {
                 $rules["fieldValues.$h"] = $this->rulesForSimple($el->type, $el->is_required, $el->config ?? []);
-
                 continue;
             }
 
-            // repeater container
+            // Repeater container
             $min = $el->config['min'] ?? 0;
             $max = $el->config['max'] ?? null;
 
@@ -145,14 +169,12 @@ class EntryForm extends Form
             }
             $rules["fieldValues.$h.items"] = $arr;
 
-            // children
-            foreach (($el->config['blueprint'] ?? []) as $child) {
-                $nh = $child['handle'];
-                $childReq = $child['is_required'] ?? false;
-                $rules["fieldValues.$h.items.*.$nh"] = $this->rulesForSimple(
-                    $child['type'],
-                    $childReq,
-                    $child['config'] ?? []
+            // Children from relationship, not config
+            foreach ($el->children as $child) {
+                $rules["fieldValues.$h.items.*.{$child->handle}"] = $this->rulesForSimple(
+                    $child->type,
+                    $child->is_required,
+                    $child->config ?? []
                 );
             }
         }
@@ -237,9 +259,9 @@ class EntryForm extends Form
         foreach ($bp->fields as $el) {
             $attrs["fieldValues.{$el->handle}"] = $el->label;
             if ($el->type === 'repeater') {
-                foreach (($el->config['blueprint'] ?? []) as $child) {
-                    $attrs["fieldValues.{$el->handle}.items.*.{$child['handle']}"] =
-                        "{$el->label} → {$child['label']}";
+                foreach ($el->children as $child) {
+                    $attrs["fieldValues.{$el->handle}.items.*.{$child->handle}"] =
+                        "{$el->label} → {$child->label}";
                 }
             }
         }

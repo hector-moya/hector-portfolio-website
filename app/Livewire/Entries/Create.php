@@ -9,6 +9,8 @@ use Flux\Flux;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Computed;
+use Illuminate\Contracts\View\View;
+use Illuminate\Contracts\View\Factory;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
@@ -61,7 +63,7 @@ class Create extends Component
             return null;
         }
 
-        return Blueprint::with(['tabs.sections.fields', 'fields'])->find($this->form->blueprint_id);
+        return Blueprint::with(['tabs.sections.fields.children', 'fields.children'])->find($this->form->blueprint_id);
     }
 
     public function save(): void
@@ -94,7 +96,7 @@ class Create extends Component
         $this->form->fieldValues[$data['handle']] = $data['value'];
     }
 
-    public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+    public function render(): View|Factory
     {
         return view('livewire.entries.create');
     }

@@ -67,9 +67,7 @@
                                             @endif
 
                                             @foreach ($section->fields as $field)
-                                            <div>
-                                                <x-dynamic-component :component="'entries.fields.' . $field->type" :field="$field" />
-                                            </div>
+                                                <x-dynamic-component :component="'entries.fields.' . $field->type" :field="$field" :form="$form" wire:key="field-{{ $field->id }}" />
                                             @endforeach
                                         </div>
 
