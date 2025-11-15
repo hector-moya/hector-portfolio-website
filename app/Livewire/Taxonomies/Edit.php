@@ -46,7 +46,7 @@ class Edit extends Component
         $this->redirect(route('taxonomies.index'), navigate: true);
     }
 
-    public function render(): \View|Factory
+    public function render(): \Illuminate\Support\Facades\View|Factory
     {
         return view('livewire.taxonomies.edit');
     }

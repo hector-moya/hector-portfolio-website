@@ -101,7 +101,7 @@ class EntryForm extends Form
         $this->fieldValues[$handle] ??= ['items' => []];
 
         $bp = $this->blueprint();
-        if (! $bp) {
+        if (!$bp instanceof \App\Models\Blueprint) {
             $this->fieldValues[$handle]['items'][] = [];
 
             return;
