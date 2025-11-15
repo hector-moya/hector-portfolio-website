@@ -98,7 +98,7 @@ class EntryForm extends Form
     public function addRepeaterItem(string $handle): void
     {
         $this->fieldValues[$handle] ??= ['items' => []];
-        $this->fieldValues[$handle]['items'][] = []; // empty block; UI fills it in
+        $this->fieldValues[$handle]['items'][] = []; 
     }
 
     public function removeRepeaterItem(string $handle, int $index): void

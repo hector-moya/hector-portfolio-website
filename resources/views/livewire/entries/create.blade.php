@@ -67,9 +67,9 @@
                                             @endif
 
                                             @foreach ($section->fields as $field)
-                                                <div>
-                                                    @includeIf('entries.fields.' . $field->type, ['element' => $field])
-                                                </div>
+                                            <div>
+                                                <x-dynamic-component :component="'entries.fields.' . $field->type" :field="$field" />
+                                            </div>
                                             @endforeach
                                         </div>
 
