@@ -3,7 +3,6 @@
 namespace App\Livewire\Actions;
 
 use App\Models\Activity;
-use App\Models\Blueprint;
 use App\Models\Entry;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -23,8 +22,8 @@ class CreateEntry
                 'published_at' => $entryData['published_at'] ?? null,
             ]);
 
-            // Create entry elements from field values
-            $this->syncEntryElements($entry, $entryData['fieldValues'] ?? []);
+            // Create entry elements from fields values
+            $this->createEntryElements($entry, $entryData['fieldsValues'] ?? []);
 
             // Log activity
             Activity::query()->create([
@@ -45,63 +44,40 @@ class CreateEntry
         });
     }
 
-    protected function syncEntryElements(Entry $entry, array $fieldValues): void
+    protected function createEntryElements(Entry $entry, array $fieldsValues): void
     {
-        $blueprint = Blueprint::with('fields')->find($entry->blueprint_id);
+        foreach ($fieldsValues as $fieldData) {
+            $fieldId = $fieldData['field_id'];
+            $handle = $fieldData['handle'];
+            $type = $fieldData['type'];
+            $value = $fieldData['value'];
 
-        if (! $blueprint) {
-            return;
-        }
+            // Handle repeater fields - create one element per item
+            if ($type === 'repeater') {
+                $items = $value['items'] ?? [];
+                foreach ($items as $index => $itemData) {
+                    $entry->elements()->create([
+                        'field_id' => $fieldId,
+                        'handle' => $handle,
+                        'value' => null,
+                        'meta' => [
+                            'index' => $index,
+                            'data' => $itemData,
+                        ],
+                    ]);
+                }
 
-        foreach ($blueprint->fields as $field) {
-            $value = $fieldValues[$field->handle] ?? $this->getDefaultValue($field->type);
-
-            $sanitizedValue = $this->sanitizeValue($value, $field->type);
-
-            if ($this->shouldStoreInMeta($field->type)) {
-                $entry->elements()->create([
-                    'field_id' => $field->id,
-                    'handle' => $field->handle,
-                    'value' => null,
-                    'meta' => $sanitizedValue,
-                ]);
-            } else {
-                /** @var \App\Models\EntryElement $newElement */
-                $newElement = $entry->elements()->create([
-                    'field_id' => $field->id,
-                    'handle' => $field->handle,
-                ]);
-
-                $newElement->setElementValue($sanitizedValue);
-                $newElement->save();
+                continue;
             }
+
+            // Handle regular fields
+            $element = $entry->elements()->create([
+                'field_id' => $fieldId,
+                'handle' => $handle,
+            ]);
+
+            $element->setElementValue($value);
+            $element->save();
         }
-    }
-
-    protected function getDefaultValue(string $type): mixed
-    {
-        return match ($type) {
-            'checkbox' => false,
-            'number' => null,
-            default => '',
-        };
-    }
-
-    protected function sanitizeValue(mixed $value, string $type): mixed
-    {
-        return match ($type) {
-            'checkbox' => (bool) $value,
-            'number' => $value ? (float) $value : null,
-            'select' => is_array($value) ? $value : (string) ($value ?? ''),
-            'repeater' => [
-                'items' => $value['items'] ?? [],
-            ],
-            default => (string) ($value ?? ''),
-        };
-    }
-
-    protected function shouldStoreInMeta(string $type): bool
-    {
-        return in_array($type, ['repeater', 'select']);
     }
 }

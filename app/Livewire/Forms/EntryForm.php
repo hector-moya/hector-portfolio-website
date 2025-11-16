@@ -35,6 +35,27 @@ class EntryForm extends Form
 
     /* ---------- Shared helpers ---------- */
 
+    protected function buildFieldsValuesArray(): array
+    {
+        $bp = $this->blueprint();
+        if (! $bp instanceof Blueprint) {
+            return [];
+        }
+
+        $fieldsValues = [];
+
+        foreach ($bp->fields as $field) {
+            $fieldsValues[] = [
+                'field_id' => $field->id,
+                'handle' => $field->handle,
+                'type' => $field->type,
+                'value' => $this->fieldValues[$field->handle] ?? $this->defaultForType($field->type, $field->config ?? []),
+            ];
+        }
+
+        return $fieldsValues;
+    }
+
     protected function blueprint(): ?Blueprint
     {
         return $this->blueprint_id !== null && $this->blueprint_id !== 0
@@ -101,7 +122,7 @@ class EntryForm extends Form
         $this->fieldValues[$handle] ??= ['items' => []];
 
         $bp = $this->blueprint();
-        if (!$bp instanceof Blueprint) {
+        if (! $bp instanceof Blueprint) {
             $this->fieldValues[$handle]['items'][] = [];
 
             return;
@@ -217,7 +238,7 @@ class EntryForm extends Form
             'slug' => $this->slug,
             'status' => $this->status,
             'published_at' => $this->published_at,
-            'fieldValues' => $this->fieldValues,
+            'fieldsValues' => $this->buildFieldsValuesArray(),
         ]);
 
         Flux::toast(heading: 'Entry Created', text: 'Entry created successfully.', variant: 'success');
@@ -233,7 +254,7 @@ class EntryForm extends Form
             'slug' => $this->slug,
             'status' => $this->status,
             'published_at' => $this->published_at,
-            'fieldValues' => $this->fieldValues,
+            'fieldsValues' => $this->buildFieldsValuesArray(),
         ]);
 
         Flux::toast(heading: 'Entry Updated', text: 'Entry updated successfully.', variant: 'success');

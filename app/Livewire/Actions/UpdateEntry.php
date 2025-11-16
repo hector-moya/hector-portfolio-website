@@ -3,7 +3,6 @@
 namespace App\Livewire\Actions;
 
 use App\Models\Activity;
-use App\Models\Blueprint;
 use App\Models\Entry;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -31,7 +30,8 @@ class UpdateEntry
             ]);
 
             // Sync entry elements
-            $this->syncEntryElements($entry, $entryData['fieldValues'] ?? []);
+            $this->syncEntryElements($entry, $entryData['fieldsValues'] ?? []);
+
             Activity::query()->create([
                 'log_name' => 'entry',
                 'description' => 'Updated entry',
@@ -54,83 +54,59 @@ class UpdateEntry
         });
     }
 
-    protected function syncEntryElements(Entry $entry, array $fieldValues): void
+    protected function syncEntryElements(Entry $entry, array $fieldsValues): void
     {
-        dd($entry->elements, $fieldValues);
-        $blueprint = Blueprint::with('fields')->find($entry->blueprint_id);
+        // Get existing elements grouped by field_id and handle
+        $existingElements = $entry->elements->groupBy('field_id');
+        $processedFieldIds = [];
 
-        if (! $blueprint) {
-            return;
-        }
+        foreach ($fieldsValues as $fieldData) {
+            $fieldId = $fieldData['field_id'];
+            $handle = $fieldData['handle'];
+            $type = $fieldData['type'];
+            $value = $fieldData['value'];
 
-        // Get existing elements indexed by handle
-        $existingElements = $entry->elements->keyBy('handle');
+            $processedFieldIds[] = $fieldId;
 
-        foreach ($blueprint->fields as $field) {
-            $value = $fieldValues[$field->handle] ?? $this->getDefaultValue($field->type);
-            $sanitizedValue = $this->sanitizeValue($value, $field->type);
+            // Handle repeater fields - one element per item
+            if ($type === 'repeater') {
+                // Delete existing repeater items for this field
+                $entry->elements()->where('field_id', $fieldId)->delete();
 
-            // Update existing or create new
-            if ($existingElements->has($field->handle)) {
-                $existingEl = $existingElements[$field->handle];
-                if ($this->shouldStoreInMeta($field->type)) {
-                    $existingEl->update([
+                // Create new items
+                $items = $value['items'] ?? [];
+                foreach ($items as $index => $itemData) {
+                    $entry->elements()->create([
+                        'field_id' => $fieldId,
+                        'handle' => $handle,
                         'value' => null,
-                        'meta' => $sanitizedValue,
+                        'meta' => [
+                            'index' => $index,
+                            'data' => $itemData,
+                        ],
                     ]);
-                } else {
-                    $existingEl->setElementValue($sanitizedValue);
-                    $existingEl->save();
                 }
-            } elseif ($this->shouldStoreInMeta($field->type)) {
-                $entry->elements()->create([
-                    'field_id' => $field->id,
-                    'handle' => $field->handle,
-                    'value' => null,
-                    'meta' => $sanitizedValue,
-                ]);
-            } else {
-                /** @var \App\Models\EntryElement $newElement */
-                $newElement = $entry->elements()->create([
-                    'field_id' => $field->id,
-                    'handle' => $field->handle,
-                ]);
 
-                $newElement->setElementValue($sanitizedValue);
-                $newElement->save();
+                continue;
+            }
+
+            // Handle regular fields - update or create
+            $existingElement = $existingElements->get($fieldId)?->first();
+
+            if ($existingElement) {
+                $existingElement->setElementValue($value);
+                $existingElement->save();
+            } else {
+                $element = $entry->elements()->create([
+                    'field_id' => $fieldId,
+                    'handle' => $handle,
+                ]);
+                $element->setElementValue($value);
+                $element->save();
             }
         }
 
-        // Remove elements that no longer exist in blueprint
-        $blueprintHandles = $blueprint->fields->pluck('handle')->toArray();
-        $entry->elements()->whereNotIn('handle', $blueprintHandles)->delete();
-    }
-
-    protected function getDefaultValue(string $type): mixed
-    {
-        return match ($type) {
-            'checkbox' => false,
-            'number' => null,
-            'repeater' => ['items' => []],
-            default => '',
-        };
-    }
-
-    protected function sanitizeValue(mixed $value, string $type): mixed
-    {
-        return match ($type) {
-            'checkbox' => (bool) $value,
-            'number' => $value ? (float) $value : null,
-            'select' => is_array($value) ? $value : (string) ($value ?? ''),
-            'repeater' => [
-                'items' => $value['items'] ?? [],
-            ],
-            default => (string) ($value ?? ''),
-        };
-    }
-
-    protected function shouldStoreInMeta(string $type): bool
-    {
-        return in_array($type, ['repeater', 'select']);
+        // Remove elements that no longer exist in fieldsValues
+        $entry->elements()->whereNotIn('field_id', $processedFieldIds)->delete();
     }
 }
