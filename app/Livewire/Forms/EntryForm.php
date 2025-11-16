@@ -122,14 +122,14 @@ class EntryForm extends Form
         $this->fieldValues[$handle] ??= ['items' => []];
 
         $bp = $this->blueprint();
-        if (! $bp instanceof Blueprint) {
+        if ($bp === null) {
             $this->fieldValues[$handle]['items'][] = [];
 
             return;
         }
 
         $field = $bp->fields->firstWhere('handle', $handle);
-        if (! $field || ! $field->children) {
+        if (! $field || $field->children->isEmpty()) {
             $this->fieldValues[$handle]['items'][] = [];
 
             return;

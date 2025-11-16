@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Forms;
 
-use illuminate\Validation\Rule;
+use Illuminate\Validation\Rule;
 use Livewire\Attributes\Validate;
 use Livewire\Form;
 

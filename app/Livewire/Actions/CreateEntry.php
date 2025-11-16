@@ -70,7 +70,7 @@ class CreateEntry
                 continue;
             }
 
-            // Handle regular fields
+            /** @var \App\Models\EntryElement $element */
             $element = $entry->elements()->create([
                 'field_id' => $fieldId,
                 'handle' => $handle,

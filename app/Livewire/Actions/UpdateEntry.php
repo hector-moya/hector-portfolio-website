@@ -91,12 +91,14 @@ class UpdateEntry
             }
 
             // Handle regular fields - update or create
+            /** @var \App\Models\EntryElement|null $existingElement */
             $existingElement = $existingElements->get($fieldId)?->first();
 
             if ($existingElement) {
                 $existingElement->setElementValue($value);
                 $existingElement->save();
             } else {
+                /** @var \App\Models\EntryElement $element */
                 $element = $entry->elements()->create([
                     'field_id' => $fieldId,
                     'handle' => $handle,

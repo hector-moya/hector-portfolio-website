@@ -10,6 +10,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
+ * @property string $id
+ * @property string $handle
+ * @property string $name
+ * @property int|null $blueprint_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Blueprint|null $blueprint
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\GlobalVariable> $variables
  * @property-read int|null $variables_count
