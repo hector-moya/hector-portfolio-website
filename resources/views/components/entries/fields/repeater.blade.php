@@ -37,7 +37,7 @@
     @forelse ($form->fieldValues[$handle]['items'] as $index => $item)
         <flux:card class="space-y-3" wire:key="rep-{{ $handle }}-{{ $index }}">
             <div class="flex items-start justify-between">
-                <flux:heading size="sm">{{ __('Item') }} #{{ $index + 1 }}</flux:heading>
+                <flux:heading size="sm">{{ __('Item ') . $index + 1 }}</flux:heading>
                 <flux:button
                     size="xs"
                     variant="danger"

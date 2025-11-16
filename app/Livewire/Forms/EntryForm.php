@@ -101,7 +101,7 @@ class EntryForm extends Form
         $this->fieldValues[$handle] ??= ['items' => []];
 
         $bp = $this->blueprint();
-        if (!$bp instanceof \App\Models\Blueprint) {
+        if (!$bp instanceof Blueprint) {
             $this->fieldValues[$handle]['items'][] = [];
 
             return;
@@ -133,7 +133,6 @@ class EntryForm extends Form
         }
         unset($this->fieldValues[$handle]['items'][$index]);
         $this->fieldValues[$handle]['items'] = array_values($this->fieldValues[$handle]['items']);
-        dump($this->fieldValues[$handle]['items']);
     }
 
     /* ---------- Validation ---------- */
@@ -211,14 +210,14 @@ class EntryForm extends Form
     {
         $this->validate();
 
-        $entry = app(CreateEntry::class)->create([
+        $entry = app(CreateEntry::class)->handle([
             'collection_id' => $this->collection_id,
             'blueprint_id' => $this->blueprint_id,
             'title' => $this->title,
             'slug' => $this->slug,
             'status' => $this->status,
             'published_at' => $this->published_at,
-            'fieldValues' => $this->fieldValues, // includes repeater arrays
+            'fieldValues' => $this->fieldValues,
         ]);
 
         Flux::toast(heading: 'Entry Created', text: 'Entry created successfully.', variant: 'success');
@@ -228,7 +227,7 @@ class EntryForm extends Form
 
     public function update(int $entryId): Entry
     {
-        $entry = app(UpdateEntry::class)->update([
+        $entry = app(UpdateEntry::class)->handle([
             'id' => $entryId,
             'title' => $this->title,
             'slug' => $this->slug,

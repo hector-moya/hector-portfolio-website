@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 
 class UpdateEntry
 {
-    public function update(array $entryData): Entry
+    public function handle(array $entryData): Entry
     {
         return DB::transaction(function () use ($entryData) {
             $entry = Entry::query()->findOrFail($entryData['id']);
@@ -56,6 +56,7 @@ class UpdateEntry
 
     protected function syncEntryElements(Entry $entry, array $fieldValues): void
     {
+        dd($entry->elements, $fieldValues);
         $blueprint = Blueprint::with('fields')->find($entry->blueprint_id);
 
         if (! $blueprint) {

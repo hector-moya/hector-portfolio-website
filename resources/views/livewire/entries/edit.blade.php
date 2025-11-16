@@ -11,76 +11,59 @@
             </flux:button>
         </div>
 
-            <flux:card class="space-y-6">
-                {{-- Collection Info (Read-only) --}}
-                <flux:input label="{{ __('Collection') }}" :value="$entry->collection->name" disabled description="{{ __('Collection cannot be changed after creation') }}" />
+        <flux:card class="space-y-6">
+            {{-- Collection Info (Read-only) --}}
+            <flux:input label="{{ __('Collection') }}" :value="$entry->collection->name" disabled description="{{ __('Collection cannot be changed after creation') }}" />
 
-                {{-- Basic Entry Fields --}}
-                <flux:input label="{{ __('Title') }}" wire:model.live.debounce.750ms="form.title" badge="{{ __('Required') }}" />
+            {{-- Basic Entry Fields --}}
+            <flux:input label="{{ __('Title') }}" wire:model.live.debounce.750ms="form.title" badge="{{ __('Required') }}" />
 
-                <flux:input label="{{ __('Slug') }}" wire:model="form.slug" badge="{{ __('Required') }}" />
+            <flux:input label="{{ __('Slug') }}" wire:model="form.slug" badge="{{ __('Required') }}" />
 
-                <div class="grid grid-cols-2 gap-6">
-                    <flux:select label="{{ __('Status') }}" wire:model="form.status" badge="{{ __('Required') }}">
-                        <flux:select.option value="draft">{{ __('Draft') }}</flux:select.option>
-                        <flux:select.option value="published">{{ __('Published') }}</flux:select.option>
-                        <flux:select.option value="archived">{{ __('Archived') }}</flux:select.option>
-                    </flux:select>
+            <div class="grid grid-cols-2 gap-6">
+                <flux:select label="{{ __('Status') }}" wire:model="form.status" badge="{{ __('Required') }}">
+                    <flux:select.option value="draft">{{ __('Draft') }}</flux:select.option>
+                    <flux:select.option value="published">{{ __('Published') }}</flux:select.option>
+                    <flux:select.option value="archived">{{ __('Archived') }}</flux:select.option>
+                </flux:select>
 
-                    <flux:input label="{{ __('Publish Date') }}" type="datetime-local" wire:model="form.published_at" />
-                </div>
-            </flux:card>
+                <flux:input label="{{ __('Publish Date') }}" type="datetime-local" wire:model="form.published_at" />
+            </div>
+        </flux:card>
 
-            {{-- Dynamic Blueprint Fields with Tabs --}}
-            @if ($this->blueprint && $this->blueprint->tabs->isNotEmpty())
-                <flux:card>
-                    <flux:tab.group>
-                        <flux:tabs variant="segmented">
-                            @foreach ($this->blueprint->tabs as $tabIndex => $tab)
-                                <flux:tab :name="'tab-' . $tab->id">{{ $tab->name }}</flux:tab>
-                            @endforeach
-                        </flux:tabs>
-
-                        @foreach ($this->blueprint->tabs as $tab)
-                            <flux:tab.panel :name="'tab-' . $tab->id" class="space-y-6 pt-6">
-                                @foreach ($tab->sections as $section)
-                                    <div class="space-y-4">
-                                        @if ($section->name)
-                                            <div>
-                                                <flux:heading size="md">{{ $section->name }}</flux:heading>
-                                                @if ($section->instructions)
-                                                    <flux:text>{{ $section->instructions }}</flux:text>
-                                                @endif
-                                            </div>
-                                        @endif
-
-                                        @foreach ($section->fields as $field)
-                                            <div>
-                                                <x-dynamic-component :component="'entries.fields.' . $field->type" :field="$field" />
-                                            </div>
-                                        @endforeach
-                                    </div>
-
-                                    @if (!$loop->last)
-                                        <flux:separator />
-                                    @endif
-                                @endforeach
-                            </flux:tab.panel>
-                        @endforeach
-                    </flux:tab.group>
-                </flux:card>
-            @elseif ($this->blueprint && $this->blueprint->fields->isNotEmpty())
-                {{-- Fallback for blueprints without tabs --}}
-                <flux:card class="space-y-6">
-                    <flux:heading size="lg">{{ __('Content Fields') }}</flux:heading>
-
-                    @foreach ($this->blueprint->fields as $field)
-                        <div>
-                            <x-dynamic-component :component="'entries.fields.' . $field->type" :field="$field" />
-                        </div>
+        {{-- Dynamic Blueprint Fields with Tabs --}}
+        @if ($this->blueprint && $this->blueprint->tabs->isNotEmpty())
+            <flux:tab.group>
+                <flux:tabs variant="segmented">
+                    @foreach ($this->blueprint->tabs as $tabIndex => $tab)
+                        <flux:tab :name="'tab-' . $tab->id">{{ $tab->name }}</flux:tab>
                     @endforeach
-                </flux:card>
-            @endif
+                </flux:tabs>
+
+                @foreach ($this->blueprint->tabs as $tab)
+                    <flux:tab.panel :name="'tab-' . $tab->id" class="space-y-6 pt-6">
+                        @foreach ($tab->sections as $section)
+                            <flux:card class="space-y-4">
+                                @if ($section->name)
+                                    <div>
+                                        <flux:heading size="md">{{ $section->name }}</flux:heading>
+                                        @if ($section->instructions)
+                                            <flux:text>{{ $section->instructions }}</flux:text>
+                                        @endif
+                                    </div>
+                                @endif
+
+                                @foreach ($section->fields as $field)
+                                    <div>
+                                        <x-dynamic-component :component="'entries.fields.' . $field->type" :field="$field" :form="$form" wire:key="field-{{ $field->id }}" />
+                                    </div>
+                                @endforeach
+                            </flux:card>
+                        @endforeach
+                    </flux:tab.panel>
+                @endforeach
+            </flux:tab.group>
+        @endif
 
         <form wire:submit="save" class="space-y-6">
             <div class="flex justify-end gap-2">

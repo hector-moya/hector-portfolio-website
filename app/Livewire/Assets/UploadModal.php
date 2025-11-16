@@ -8,6 +8,9 @@ use Flux\Flux;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Computed;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Contracts\View\View;
+use Illuminate\Contracts\View\Factory;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -100,7 +103,7 @@ class UploadModal extends Component
     }
 
     #[Computed]
-    public function assets(): \Illuminate\Contracts\Pagination\LengthAwarePaginator
+    public function assets(): LengthAwarePaginator
     {
         return Asset::query()
             ->when($this->searchQuery, function ($query): void {
@@ -114,7 +117,7 @@ class UploadModal extends Component
             ->paginate(24);
     }
 
-    public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+    public function render(): View|Factory
     {
 
         return view('livewire.assets.upload-modal');

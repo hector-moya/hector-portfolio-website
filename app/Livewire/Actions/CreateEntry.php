@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 
 class CreateEntry
 {
-    public function create(array $entryData): Entry
+    public function handle(array $entryData): Entry
     {
         return DB::transaction(function () use ($entryData) {
             // Create the entry
