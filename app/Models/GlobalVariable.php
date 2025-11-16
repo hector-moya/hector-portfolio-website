@@ -10,12 +10,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property-read \App\Models\GlobalSet|null $globalSet
- *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|GlobalVariable newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|GlobalVariable newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|GlobalVariable query()
- *
- * @mixin \Illuminate\Database\Eloquent\Model
+ * @mixin \Eloquent
  */
 class GlobalVariable extends Model
 {

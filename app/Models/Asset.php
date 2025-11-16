@@ -31,7 +31,6 @@ use Illuminate\Support\Facades\Storage;
  * @property-read string $url
  * @property-read \App\Models\User|null $updater
  * @property-read \App\Models\User $uploader
- *
  * @method static \Database\Factories\AssetFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Asset newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Asset newQuery()
@@ -55,8 +54,7 @@ use Illuminate\Support\Facades\Storage;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Asset whereUploadedBy($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Asset withTrashed(bool $withTrashed = true)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Asset withoutTrashed()
- *
- * @mixin \Illuminate\Database\Eloquent\Model
+ * @mixin \Eloquent
  */
 class Asset extends Model
 {

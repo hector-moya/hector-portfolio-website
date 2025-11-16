@@ -20,7 +20,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property-read \App\Models\Blueprint $blueprint
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Section> $sections
  * @property-read int|null $sections_count
- *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Tab newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Tab newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Tab onlyTrashed()
@@ -35,8 +34,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Tab whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Tab withTrashed(bool $withTrashed = true)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Tab withoutTrashed()
- *
- * @mixin \Illuminate\Database\Eloquent\Model
+ * @mixin \Eloquent
  */
 class Tab extends Model
 {

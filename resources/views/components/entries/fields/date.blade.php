@@ -18,7 +18,7 @@
     >
         @if($includePresets && !empty($presets))
             @foreach($presets as $preset)
-                <flux:date-picker.preset label="{{ $preset['label'] }}" value="{{ $preset['value'] }}" />
+                <flux:date-picker label="{{ $preset['label'] }}" value="{{ $preset['value'] }}" />
             @endforeach
         @endif
     </flux:date-picker>

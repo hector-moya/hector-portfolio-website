@@ -18,7 +18,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string|null $deleted_at
  * @property-read \App\Models\Field $Field
  * @property-read \App\Models\Entry $entry
- *
  * @method static \Database\Factories\EntryElementFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|EntryElement newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|EntryElement newQuery()
@@ -32,8 +31,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|EntryElement whereMeta($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|EntryElement whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|EntryElement whereValue($value)
- *
- * @mixin \Illuminate\Database\Eloquent\Model
+ * @mixin \Eloquent
  */
 class EntryElement extends Model
 {

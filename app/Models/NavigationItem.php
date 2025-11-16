@@ -24,10 +24,9 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, NavigationItem> $children
  * @property-read int|null $children_count
- * @property-read Model|\Illuminate\Database\Eloquent\Model|null $linkable
+ * @property-read Model|\Eloquent|null $linkable
  * @property-read \App\Models\Navigation $navigation
  * @property-read NavigationItem|null $parent
- *
  * @method static \Database\Factories\NavigationItemFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|NavigationItem newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|NavigationItem newQuery()
@@ -45,8 +44,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|NavigationItem whereTitle($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|NavigationItem whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|NavigationItem whereUrl($value)
- *
- * @mixin \Illuminate\Database\Eloquent\Model
+ * @mixin \Eloquent
  */
 class NavigationItem extends Model
 {

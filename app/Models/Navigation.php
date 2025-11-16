@@ -16,7 +16,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\NavigationItem> $items
  * @property-read int|null $items_count
- *
  * @method static \Database\Factories\NavigationFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Navigation newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Navigation newQuery()
@@ -28,8 +27,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Navigation whereIsActive($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Navigation whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Navigation whereUpdatedAt($value)
- *
- * @mixin \Illuminate\Database\Eloquent\Model
+ * @mixin \Eloquent
  */
 class Navigation extends Model
 {

@@ -24,7 +24,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property-read \App\Models\User $creator
  * @property-read Folder|null $parent
  * @property-read \App\Models\User|null $updater
- *
  * @method static \Database\Factories\FolderFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Folder newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Folder newQuery()
@@ -42,8 +41,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Folder whereUpdatedBy($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Folder withTrashed(bool $withTrashed = true)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Folder withoutTrashed()
- *
- * @mixin \Illuminate\Database\Eloquent\Model
+ * @mixin \Eloquent
  */
 class Folder extends Model
 {
