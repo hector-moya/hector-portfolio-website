@@ -19,9 +19,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read \App\Models\Blueprint|null $blueprint
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\GlobalVariable> $variables
  * @property-read int|null $variables_count
+ *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|GlobalSet newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|GlobalSet newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|GlobalSet query()
+ *
  * @mixin \Eloquent
  */
 class GlobalSet extends Model

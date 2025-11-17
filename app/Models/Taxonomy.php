@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property \Illuminate\Support\Carbon|null $deleted_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Term> $terms
  * @property-read int|null $terms_count
+ *
  * @method static \Database\Factories\TaxonomyFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Taxonomy newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Taxonomy newQuery()
@@ -33,6 +34,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Taxonomy whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Taxonomy withTrashed(bool $withTrashed = true)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Taxonomy withoutTrashed()
+ *
  * @mixin \Eloquent
  */
 class Taxonomy extends Model

@@ -30,6 +30,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\EntryElement> $entryElements
  * @property-read int|null $entry_elements_count
  * @property-read Field|null $parent
+ *
  * @method static \Database\Factories\FieldFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Field newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Field newQuery()
@@ -52,6 +53,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Field whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Field withTrashed(bool $withTrashed = true)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Field withoutTrashed()
+ *
  * @mixin \Eloquent
  */
 class Field extends Model

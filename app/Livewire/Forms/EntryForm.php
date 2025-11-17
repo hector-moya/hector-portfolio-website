@@ -91,8 +91,6 @@ class EntryForm extends Form
         // }
         $this->fieldValues = $this->buildFieldsValuesArray();
 
-        dd( $this->fieldValues );
-
         $this->initializeFieldValues(); // ensure defaults for any new fields
     }
 

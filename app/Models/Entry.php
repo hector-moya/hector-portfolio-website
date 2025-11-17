@@ -30,6 +30,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property-read int|null $elements_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Term> $terms
  * @property-read int|null $terms_count
+ *
  * @method static \Database\Factories\EntryFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Entry newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Entry newQuery()
@@ -48,6 +49,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Entry whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Entry withTrashed(bool $withTrashed = true)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Entry withoutTrashed()
+ *
  * @mixin \Eloquent
  */
 class Entry extends Model

@@ -24,6 +24,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property-read int|null $entries_count
  * @property-read Term|null $parent
  * @property-read \App\Models\Taxonomy $taxonomy
+ *
  * @method static \Database\Factories\TermFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Term newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Term newQuery()
@@ -39,6 +40,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Term whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Term withTrashed(bool $withTrashed = true)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Term withoutTrashed()
+ *
  * @mixin \Eloquent
  */
 class Term extends Model

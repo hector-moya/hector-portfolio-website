@@ -27,6 +27,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
  * @property-read Model|\Eloquent|null $linkable
  * @property-read \App\Models\Navigation $navigation
  * @property-read NavigationItem|null $parent
+ *
  * @method static \Database\Factories\NavigationItemFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|NavigationItem newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|NavigationItem newQuery()
@@ -44,6 +45,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|NavigationItem whereTitle($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|NavigationItem whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|NavigationItem whereUrl($value)
+ *
  * @mixin \Eloquent
  */
 class NavigationItem extends Model

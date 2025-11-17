@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
  * @property \Illuminate\Support\Carbon $created_at
  * @property-read Model|\Eloquent|null $causer
  * @property-read Model|\Eloquent|null $subject
+ *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Activity newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Activity newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Activity query()
@@ -31,6 +32,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Activity whereProperties($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Activity whereSubjectId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Activity whereSubjectType($value)
+ *
  * @mixin \Eloquent
  */
 class Activity extends Model
