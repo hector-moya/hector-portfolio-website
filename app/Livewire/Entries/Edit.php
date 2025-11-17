@@ -45,12 +45,13 @@ class Edit extends Component
         return Blueprint::with(['tabs.sections.fields', 'fields'])->find($this->form->blueprint_id);
     }
 
+    #[On('asset-uploaded')]
     public function save(): void
     {
         $this->form->update($this->form->entry->id);
 
         $this->dispatch('notify', message: 'Entry updated successfully.');
-        $this->redirect(route('entries'), navigate: true);
+        // $this->redirect(route('entries'), navigate: true);
     }
 
     public function addRepeaterItem(string $handle): void
