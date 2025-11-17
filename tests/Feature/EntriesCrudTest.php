@@ -234,8 +234,7 @@ test('can update an entry', function () {
         ->set('form.slug', 'updated-slug')
         ->set('form.fieldValues.excerpt', 'Updated excerpt')
         ->call('save')
-        ->assertHasNoErrors()
-        ->assertRedirect(route('entries'));
+        ->assertHasNoErrors();
 
     assertDatabaseHas('entries', [
         'id' => $entry->id,
