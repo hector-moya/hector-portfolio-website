@@ -86,9 +86,12 @@ class EntryForm extends Form
         $this->published_at = $entry->published_at?->format('Y-m-d\TH:i');
 
         // Load field values from entry elements
-        foreach ($entry->elements as $element) {
-            $this->fieldValues[$element->handle] = $element->getElementValue();
-        }
+        // foreach ($entry->elements as $element) {
+        //     $this->fieldValues[$element->handle] = $element->getElementValue();
+        // }
+        $this->fieldValues = $this->buildFieldsValuesArray();
+
+        dd( $this->fieldValues );
 
         $this->initializeFieldValues(); // ensure defaults for any new fields
     }
@@ -102,15 +105,15 @@ class EntryForm extends Form
 
     public function initializeFieldValues(): void
     {
-        $bp = $this->blueprint();
-        if (! $bp instanceof Blueprint) {
+        $blueprint = $this->blueprint();
+        if (! $blueprint instanceof Blueprint) {
             return;
         }
 
-        foreach ($bp->fields as $el) {
-            $h = $el->handle;
-            if (! array_key_exists($h, $this->fieldValues)) {
-                $this->fieldValues[$h] = $this->defaultForType($el->type, $el->config ?? []);
+        foreach ($blueprint->fields as $element) {
+            $handle = $element->handle;
+            if (! array_key_exists($handle, $this->fieldValues)) {
+                $this->fieldValues[$handle] = $this->defaultForType($element->type, $element->config ?? []);
             }
         }
     }
