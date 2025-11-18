@@ -1,4 +1,13 @@
+@props([
+    'index' => null,
+    'parentHandle' => null,
+    'field' => null,
+])
+
 @php
+    $wirePath = $parentHandle !== null
+        ? "form.fieldValues.{$parentHandle}.items.{$index}.{$field->handle}"
+        : "form.fieldValues.{$field->handle}";
     $dateRange = $field->config['date_range'] ?? true;
     $includeSeparateInputs = $field->config['include_separate_range_inputs'] ?? false;
     $includePresets = $field->config['include_presets'] ?? false;
@@ -10,7 +19,7 @@
 <div class="space-y-2">
     <flux:date-picker
         label="{{ $field->label }}"
-        wire:model="form.fieldValues.{{ $field->handle }}"
+        wire:model="{{ $wirePath }}"
         @if($dateRange) range @endif
         @if($includeSeparateInputs) separate-range @endif
         @if($minRange) :min="'{{ $minRange }}'" @endif
@@ -23,7 +32,7 @@
         @endif
     </flux:date-picker>
 
-    <flux:error name="form.fieldValues.{{ $field->handle }}" />
+    <flux:error name="{{ $wirePath }}" />
     @if ($field->instructions)
         <flux:description>{{ $field->instructions }}</flux:description>
     @endif

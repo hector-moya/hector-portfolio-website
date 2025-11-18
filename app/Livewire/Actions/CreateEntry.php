@@ -51,20 +51,31 @@ class CreateEntry
             $handle = $fieldData['handle'];
             $type = $fieldData['type'];
             $value = $fieldData['value'];
+            $children = $fieldData['children'] ?? [];
 
-            // Handle repeater fields - create one element per item
+            // Handle repeater fields - create individual elements for each child field in each item
             if ($type === 'repeater') {
                 $items = $value['items'] ?? [];
+
                 foreach ($items as $index => $itemData) {
-                    $entry->elements()->create([
-                        'field_id' => $fieldId,
-                        'handle' => $handle,
-                        'value' => null,
-                        'meta' => [
-                            'index' => $index,
-                            'data' => $itemData,
-                        ],
-                    ]);
+                    // Create an entry_element for each child field within this repeater item
+                    foreach ($children as $childField) {
+                        $childHandle = $childField['handle'];
+                        $childValue = $itemData[$childHandle] ?? null;
+
+                        /** @var \App\Models\EntryElement $element */
+                        $element = $entry->elements()->create([
+                            'field_id' => $childField['id'],
+                            'handle' => $childHandle,
+                            'meta' => [
+                                'parent_handle' => $handle,
+                                'index' => $index,
+                            ],
+                        ]);
+
+                        $element->setElementValue($childValue);
+                        $element->save();
+                    }
                 }
 
                 continue;

@@ -50,7 +50,7 @@
             </div>
 
             @foreach ($children as $childField)
-                    <x-dynamic-component :component="'entries.fields.' . $childField->type" :$index :field="$childField" wire:key="child-field-{{ $index }}-{{ $childField->id }}"/>
+                    <x-dynamic-component :component="'entries.fields.' . $childField->type" :$index :field="$childField" :parentHandle="$handle" wire:key="child-field-{{ $index }}-{{ $childField->id }}"/>
             @endforeach
         </flux:card>
     @empty

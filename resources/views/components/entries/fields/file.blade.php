@@ -1,5 +1,17 @@
+@props([
+    'index' => null,
+    'parentHandle' => null,
+    'field' => null,
+])
+
 @php
-    $value = $form->fieldValues[$field->handle] ?? null;
+    $wirePath = $parentHandle !== null
+        ? "form.fieldValues.{$parentHandle}.items.{$index}.{$field->handle}"
+        : "form.fieldValues.{$field->handle}";
+
+    $value = $parentHandle !== null
+        ? ($form->fieldValues[$parentHandle]['items'][$index][$field->handle] ?? null)
+        : ($form->fieldValues[$field->handle] ?? null);
     $asset = $value ? \App\Models\Asset::find($value) : null;
     $maxSize = $field->config['max_size_mb'] ?? 10;
     $mimes = $field->config['mimes'] ?? ['pdf', 'doc', 'docx', 'csv', 'xls', 'xlsx', 'ppt', 'pptx', 'txt'];
@@ -29,7 +41,7 @@
             </div>
             <button
                 type="button"
-                wire:click="form.fieldValues.{{ $field->handle }} = null"
+                wire:click="{{ $wirePath }} = null"
                 class="flex-shrink-0 p-1 text-gray-400 hover:text-red-500 transition-colors"
             >
                 <flux:icon.x-mark class="w-5 h-5" />
@@ -56,7 +68,7 @@
     </div>
 
     {{-- Error State --}}
-    <flux:error name="form.fieldValues.{{ $field->handle }}" />
+    <flux:error name="{{ $wirePath }}" />
 
     {{-- Asset Browser Modal --}}
     <flux:modal name="asset-browser-{{ $field->handle }}">

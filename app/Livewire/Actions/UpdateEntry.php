@@ -56,39 +56,55 @@ class UpdateEntry
 
     protected function syncEntryElements(Entry $entry, array $fieldsValues): void
     {
-        // Get existing elements grouped by field_id and handle
+        // Get existing elements grouped by field_id
         $existingElements = $entry->elements->groupBy('field_id');
         $processedFieldIds = [];
+        $processedRepeaterHandles = [];
 
         foreach ($fieldsValues as $fieldData) {
             $fieldId = $fieldData['field_id'];
             $handle = $fieldData['handle'];
             $type = $fieldData['type'];
             $value = $fieldData['value'];
+            $children = $fieldData['children'] ?? [];
 
-            $processedFieldIds[] = $fieldId;
-
-            // Handle repeater fields - one element per item
+            // Handle repeater fields - create individual elements for each child
             if ($type === 'repeater') {
-                // Delete existing repeater items for this field
-                $entry->elements()->where('field_id', $fieldId)->delete();
+                $processedRepeaterHandles[] = $handle;
 
-                // Create new items
+                // Delete all existing elements that belong to this repeater
+                $entry->elements()
+                    ->whereJsonContains('meta->parent_handle', $handle)
+                    ->delete();
+
+                // Create new elements for each child field in each item
                 $items = $value['items'] ?? [];
                 foreach ($items as $index => $itemData) {
-                    $entry->elements()->create([
-                        'field_id' => $fieldId,
-                        'handle' => $handle,
-                        'value' => null,
-                        'meta' => [
-                            'index' => $index,
-                            'data' => $itemData,
-                        ],
-                    ]);
+                    foreach ($children as $childField) {
+                        $childHandle = $childField['handle'];
+                        $childValue = $itemData[$childHandle] ?? null;
+
+                        $processedFieldIds[] = $childField['id'];
+
+                        /** @var \App\Models\EntryElement $element */
+                        $element = $entry->elements()->create([
+                            'field_id' => $childField['id'],
+                            'handle' => $childHandle,
+                            'meta' => [
+                                'parent_handle' => $handle,
+                                'index' => $index,
+                            ],
+                        ]);
+
+                        $element->setElementValue($childValue);
+                        $element->save();
+                    }
                 }
 
                 continue;
             }
+
+            $processedFieldIds[] = $fieldId;
 
             // Handle regular fields - update or create
             /** @var \App\Models\EntryElement|null $existingElement */
@@ -108,7 +124,10 @@ class UpdateEntry
             }
         }
 
-        // Remove elements that no longer exist in fieldsValues
-        $entry->elements()->whereNotIn('field_id', $processedFieldIds)->delete();
+        // Remove elements that no longer exist in fieldsValues (excluding repeater children which were already handled)
+        $entry->elements()
+            ->whereNotIn('field_id', $processedFieldIds)
+            ->whereNull('meta->parent_handle')
+            ->delete();
     }
 }

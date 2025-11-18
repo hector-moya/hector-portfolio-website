@@ -45,12 +45,23 @@ class EntryForm extends Form
         $fieldsValues = [];
 
         foreach ($bp->fields as $field) {
-            $fieldsValues[] = [
+            $fieldArray = [
                 'field_id' => $field->id,
                 'handle' => $field->handle,
                 'type' => $field->type,
                 'value' => $this->fieldValues[$field->handle] ?? $this->defaultForType($field->type, $field->config ?? []),
             ];
+
+            // Add children metadata for repeater fields
+            if ($field->type === 'repeater') {
+                $fieldArray['children'] = $field->children->map(fn ($child) => [
+                    'id' => $child->id,
+                    'handle' => $child->handle,
+                    'type' => $child->type,
+                ])->toArray();
+            }
+
+            $fieldsValues[] = $fieldArray;
         }
 
         return $fieldsValues;
@@ -85,13 +96,12 @@ class EntryForm extends Form
         $this->status = $entry->status;
         $this->published_at = $entry->published_at?->format('Y-m-d\TH:i');
 
-        // Load field values from entry elements
-        // foreach ($entry->elements as $element) {
-        //     $this->fieldValues[$element->handle] = $element->getElementValue();
-        // }
-        $this->fieldValues = $this->buildFieldsValuesArray();
+        // Load field values from entry elements (with Field relationship for legacy support)
+        $entry->load('elements.Field');
+        $this->loadFieldValuesFromEntry($entry);
 
-        // $this->initializeFieldValues(); // ensure defaults for any new fields
+        // Ensure defaults for any new fields that might have been added to the blueprint
+        $this->initializeFieldValues();
     }
 
     public function setCollection(ModelsCollection $collection): void
@@ -99,6 +109,74 @@ class EntryForm extends Form
         $this->collection_id = $collection->id;
         $this->blueprint_id = $collection->blueprint_id;
         $this->initializeFieldValues();
+    }
+
+    protected function loadFieldValuesFromEntry(Entry $entry): void
+    {
+        $blueprint = $this->blueprint();
+        if (! $blueprint instanceof Blueprint) {
+            return;
+        }
+
+        // Group all elements by their parent_handle (null for regular fields)
+        $regularElements = [];
+        $repeaterElements = [];
+
+        foreach ($entry->elements as $element) {
+            $parentHandle = $element->meta['parent_handle'] ?? null;
+
+            // Handle legacy data: if no parent_handle but field has a parent_id, look up the parent
+            if ($parentHandle === null && $element->Field && $element->Field->parent_id) {
+                $parentField = $blueprint->fields->firstWhere('id', $element->Field->parent_id);
+                if ($parentField && $parentField->type === 'repeater') {
+                    $parentHandle = $parentField->handle;
+                    // For legacy data without index, we'll group them sequentially
+                    $index = $element->meta['index'] ?? 0;
+                }
+            }
+
+            if ($parentHandle === null) {
+                // Regular field
+                $regularElements[$element->handle] = $element;
+            } else {
+                // Repeater child field
+                $index = $element->meta['index'] ?? 0;
+                $repeaterElements[$parentHandle][$index][$element->handle] = $element;
+            }
+        }
+
+        // Load values for each field in the blueprint
+        foreach ($blueprint->fields as $field) {
+            $handle = $field->handle;
+
+            if ($field->type === 'repeater') {
+                // Reconstruct repeater items from individual elements
+                $items = [];
+
+                if (isset($repeaterElements[$handle])) {
+                    // Sort by index and rebuild each item
+                    ksort($repeaterElements[$handle]);
+
+                    foreach ($repeaterElements[$handle] as $index => $itemElements) {
+                        $itemData = [];
+                        foreach ($field->children as $childField) {
+                            $childHandle = $childField->handle;
+                            $itemData[$childHandle] = isset($itemElements[$childHandle])
+                                ? $itemElements[$childHandle]->getElementValue()
+                                : $this->defaultForType($childField->type, $childField->config ?? []);
+                        }
+                        $items[] = $itemData;
+                    }
+                }
+
+                $this->fieldValues[$handle] = ['items' => $items];
+            } else {
+                // Regular field
+                if (isset($regularElements[$handle])) {
+                    $this->fieldValues[$handle] = $regularElements[$handle]->getElementValue();
+                }
+            }
+        }
     }
 
     public function initializeFieldValues(): void
@@ -123,7 +201,7 @@ class EntryForm extends Form
         $this->fieldValues[$handle] ??= ['items' => []];
 
         $bp = $this->blueprint();
-        if (!$bp instanceof \App\Models\Blueprint) {
+        if (! $bp instanceof \App\Models\Blueprint) {
             $this->fieldValues[$handle]['items'][] = [];
 
             return;

@@ -1,4 +1,13 @@
+@props([
+    'index' => null,
+    'parentHandle' => null,
+    'field' => null,
+])
+
 @php
+    $wirePath = $parentHandle !== null
+        ? "form.fieldValues.{$parentHandle}.items.{$index}.{$field->handle}"
+        : "form.fieldValues.{$field->handle}";
     $options = $field->config['options'] ?? [];
 @endphp
 
@@ -17,12 +26,12 @@
             @endphp
             <flux:radio
                 label="{{ $label }}"
-                name="form.fieldValues.{{ $field->handle }}"
+                name="{{ $wirePath }}"
                 value="{{ $value }}"
-                wire:model="form.fieldValues.{{ $field->handle }}"
+                wire:model="{{ $wirePath }}"
             />
         @endforeach
     </div>
 
-    <flux:error name="form.fieldValues.{{ $field->handle }}" />
+    <flux:error name="{{ $wirePath }}" />
 </div>

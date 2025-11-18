@@ -1,4 +1,13 @@
+@props([
+    'index' => null,
+    'parentHandle' => null,
+    'field' => null,
+])
+
 @php
+    $wirePath = $parentHandle !== null
+        ? "form.fieldValues.{$parentHandle}.items.{$index}.{$field->handle}"
+        : "form.fieldValues.{$field->handle}";
     $includeInput = $field->config['include_input'] ?? true;
     $acceptMultiple = $field->config['accept_multiple'] ?? false;
     $timeFormat = $field->config['time_format'] ?? '24-hour';
@@ -11,7 +20,7 @@
 <div class="space-y-2">
     <flux:select
         label="{{ $field->label }}"
-        wire:model="form.fieldValues.{{ $field->handle }}"
+        wire:model="{{ $wirePath }}"
         @if($acceptMultiple) multiple @endif
     >
         <option value="">{{ __('Select time...') }}</option>
@@ -33,11 +42,11 @@
     @if($includeInput)
         <flux:input
             type="time"
-            wire:model="form.fieldValues.{{ $field->handle }}"
+            wire:model="{{ $wirePath }}"
         />
     @endif
 
-    <flux:error name="form.fieldValues.{{ $field->handle }}" />
+    <flux:error name="{{ $wirePath }}" />
     @if ($field->instructions)
         <flux:description>{{ $field->instructions }}</flux:description>
     @endif
