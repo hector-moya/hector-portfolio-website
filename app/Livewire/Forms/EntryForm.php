@@ -91,7 +91,7 @@ class EntryForm extends Form
         // }
         $this->fieldValues = $this->buildFieldsValuesArray();
 
-        $this->initializeFieldValues(); // ensure defaults for any new fields
+        // $this->initializeFieldValues(); // ensure defaults for any new fields
     }
 
     public function setCollection(ModelsCollection $collection): void
