@@ -5,8 +5,13 @@ namespace App\Livewire\Entries;
 use App\Livewire\Actions\DeleteEntry;
 use App\Models\Collection as ModelsCollection;
 use App\Models\Entry;
+use App\Models\EntryElement;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
@@ -124,6 +129,34 @@ class Index extends Component
         $this->dispatch('notify', message: 'Entry deleted successfully.');
     }
 
+    public function duplicate(int $id): void
+    {
+        $original = Entry::query()->with('elements')->findOrFail($id);
+
+        DB::transaction(function () use ($original): void {
+            $duplicate = Entry::query()->create([
+                'blueprint_id' => $original->blueprint_id,
+                'author_id' => auth()->id(),
+                'title' => $original->title.' (Copy)',
+                'slug' => Str::slug($original->title.'-copy-'.now()->timestamp),
+                'status' => 'draft',
+                'published_at' => null,
+            ]);
+
+            foreach ($original->elements as $element) {
+                EntryElement::query()->create([
+                    'entry_id' => $duplicate->id,
+                    'field_id' => $element->field_id,
+                    'handle' => $element->handle,
+                    'value' => $element->value,
+                    'meta' => $element->meta,
+                ]);
+            }
+        });
+
+        $this->dispatch('notify', message: 'Entry duplicated successfully.');
+    }
+
     public function bulkPublish(): void
     {
         if ($this->selected === []) {
@@ -176,7 +209,7 @@ class Index extends Component
     }
 
     #[Title('Entries')]
-    public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+    public function render(): View|Factory
     {
         return view('livewire.entries.index');
     }

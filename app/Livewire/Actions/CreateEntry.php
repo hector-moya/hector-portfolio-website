@@ -4,6 +4,7 @@ namespace App\Livewire\Actions;
 
 use App\Models\Activity;
 use App\Models\Entry;
+use App\Models\EntryElement;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
@@ -20,6 +21,9 @@ class CreateEntry
                 'slug' => $entryData['slug'],
                 'status' => $entryData['status'],
                 'published_at' => $entryData['published_at'] ?? null,
+                'seo_title' => $entryData['seo_title'] ?? null,
+                'seo_description' => $entryData['seo_description'] ?? null,
+                'og_image' => $entryData['og_image'] ?? null,
             ]);
 
             // Create entry elements from fields values
@@ -63,7 +67,7 @@ class CreateEntry
                         $childHandle = $childField['handle'];
                         $childValue = $itemData[$childHandle] ?? null;
 
-                        /** @var \App\Models\EntryElement $element */
+                        /** @var EntryElement $element */
                         $element = $entry->elements()->create([
                             'field_id' => $childField['id'],
                             'handle' => $childHandle,
@@ -81,7 +85,7 @@ class CreateEntry
                 continue;
             }
 
-            /** @var \App\Models\EntryElement $element */
+            /** @var EntryElement $element */
             $element = $entry->elements()->create([
                 'field_id' => $fieldId,
                 'handle' => $handle,

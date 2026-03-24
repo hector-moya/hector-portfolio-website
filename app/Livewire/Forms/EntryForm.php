@@ -31,6 +31,12 @@ class EntryForm extends Form
 
     public ?string $published_at = null;
 
+    public string $seo_title = '';
+
+    public string $seo_description = '';
+
+    public string $og_image = '';
+
     public array $fieldValues = [];
 
     /* ---------- Shared helpers ---------- */
@@ -95,6 +101,9 @@ class EntryForm extends Form
         $this->slug = $entry->slug;
         $this->status = $entry->status;
         $this->published_at = $entry->published_at?->format('Y-m-d\TH:i');
+        $this->seo_title = $entry->seo_title ?? '';
+        $this->seo_description = $entry->seo_description ?? '';
+        $this->og_image = $entry->og_image ?? '';
 
         // Load field values from entry elements (with Field relationship for legacy support)
         $entry->load('elements.Field');
@@ -201,7 +210,7 @@ class EntryForm extends Form
         $this->fieldValues[$handle] ??= ['items' => []];
 
         $bp = $this->blueprint();
-        if (! $bp instanceof \App\Models\Blueprint) {
+        if (! $bp instanceof Blueprint) {
             $this->fieldValues[$handle]['items'][] = [];
 
             return;
@@ -245,6 +254,9 @@ class EntryForm extends Form
             'slug' => ['required', 'string', 'max:255', Rule::unique('entries', 'slug')->ignore($this->entry?->id)],
             'status' => ['required', Rule::in(['draft', 'published', 'archived'])],
             'published_at' => ['nullable', 'date'],
+            'seo_title' => ['nullable', 'string', 'max:255'],
+            'seo_description' => ['nullable', 'string', 'max:500'],
+            'og_image' => ['nullable', 'string', 'max:255'],
         ];
 
         $bp = $this->blueprint();
@@ -317,6 +329,9 @@ class EntryForm extends Form
             'slug' => $this->slug,
             'status' => $this->status,
             'published_at' => $this->published_at,
+            'seo_title' => $this->seo_title ?: null,
+            'seo_description' => $this->seo_description ?: null,
+            'og_image' => $this->og_image ?: null,
             'fieldsValues' => $this->buildFieldsValuesArray(),
         ]);
 
@@ -333,6 +348,9 @@ class EntryForm extends Form
             'slug' => $this->slug,
             'status' => $this->status,
             'published_at' => $this->published_at,
+            'seo_title' => $this->seo_title ?: null,
+            'seo_description' => $this->seo_description ?: null,
+            'og_image' => $this->og_image ?: null,
             'fieldsValues' => $this->buildFieldsValuesArray(),
         ]);
 

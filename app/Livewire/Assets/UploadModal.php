@@ -4,6 +4,7 @@ namespace App\Livewire\Assets;
 
 use App\Livewire\Forms\AssetForm;
 use App\Models\Asset;
+use App\Services\ImageTransformer;
 use Flux\Flux;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\View\Factory;
@@ -64,15 +65,29 @@ class UploadModal extends Component
         // For S3 in staging/production
         $path = $disk === 's3' ? $this->form->upload->storePublicly($this->currentFolder, 's3') : $this->form->upload->storePublicly($this->currentFolder, 'public');
 
+        $mimeType = $this->form->upload->getMimeType();
+        $variants = [];
+
+        if (str_starts_with((string) $mimeType, 'image/')) {
+            $variants = app(ImageTransformer::class)->transform((string) $path, (string) $disk);
+        }
+
         $this->form->filename = basename((string) $path);
         $this->form->original_filename = $this->form->upload->getClientOriginalName();
         $this->form->disk = $disk;
-        $this->form->mime_type = $this->form->upload->getMimeType();
+        $this->form->mime_type = $mimeType;
         $this->form->size = $this->form->upload->getSize();
         $this->form->path = $path;
         $this->form->folder_id = $this->currentFolderId;
         $this->form->uploaded_by = auth()->id();
         $this->form->updated_by = auth()->id();
+
+        if ($variants !== []) {
+            $this->form->meta = array_merge($this->form->meta ?? [], [
+                'thumbnail' => $variants['thumbnail'],
+                'medium' => $variants['medium'],
+            ]);
+        }
     }
 
     public function selectAsset($assetId = null): void

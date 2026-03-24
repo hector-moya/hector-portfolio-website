@@ -31,6 +31,8 @@
             @can('viewAny', App\Models\User::class)
                 <flux:navlist.group :heading="__('Administration')" class="grid">
                     <flux:navlist.item icon="user-group" :href="route('users.index')" :current="request()->routeIs('users.*')" wire:navigate>{{ __('Users') }}</flux:navlist.item>
+                    <flux:navlist.item icon="envelope" :href="route('form-submissions.index')" :current="request()->routeIs('form-submissions.*')" wire:navigate>{{ __('Submissions') }}</flux:navlist.item>
+                    <flux:navlist.item icon="clock" :href="route('activity-log.index')" :current="request()->routeIs('activity-log.*')" wire:navigate>{{ __('Activity Log') }}</flux:navlist.item>
                 </flux:navlist.group>
             @endcan
         </flux:navlist>

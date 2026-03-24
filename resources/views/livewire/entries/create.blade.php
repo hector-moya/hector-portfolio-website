@@ -75,6 +75,19 @@
             @endif
 
             @if ($selectedCollectionId && $this->blueprint)
+                {{-- SEO Fields --}}
+                <flux:card class="space-y-4">
+                    <div>
+                        <flux:heading size="md">{{ __('SEO') }}</flux:heading>
+                        <flux:text class="text-sm text-zinc-500">{{ __('Search engine optimization settings') }}</flux:text>
+                    </div>
+                    <flux:input label="{{ __('SEO Title') }}" wire:model="form.seo_title" placeholder="{{ $form->title }}" description="{{ __('Defaults to entry title if left blank. Recommended: 50–60 characters.') }}" />
+                    <flux:textarea label="{{ __('SEO Description') }}" wire:model="form.seo_description" rows="3" placeholder="{{ __('A brief summary of this page for search engines...') }}" description="{{ __('Recommended: 120–160 characters.') }}" />
+                    <flux:input label="{{ __('OG Image URL') }}" wire:model="form.og_image" placeholder="https://..." description="{{ __('Open Graph image for social media sharing. Recommended: 1200×630px.') }}" />
+                </flux:card>
+            @endif
+
+            @if ($selectedCollectionId && $this->blueprint)
                 <div class="flex justify-end gap-2">
                     <flux:button type="button" variant="ghost" :href="route('entries')" wire:navigate>
                         {{ __('Cancel') }}

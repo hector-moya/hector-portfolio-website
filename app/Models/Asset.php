@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Filesystem\FilesystemAdapter;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 
 /**
@@ -20,17 +22,17 @@ use Illuminate\Support\Facades\Storage;
  * @property string|null $title
  * @property array<array-key, mixed>|null $meta
  * @property int $uploaded_by
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property Carbon|null $deleted_at
  * @property int|null $folder_id
  * @property int|null $updated_by
- * @property-read \App\Models\Folder|null $folder
+ * @property-read Folder|null $folder
  * @property-read bool $is_image
  * @property-read string $size_for_humans
  * @property-read string $url
- * @property-read \App\Models\User|null $updater
- * @property-read \App\Models\User $uploader
+ * @property-read User|null $updater
+ * @property-read User $uploader
  *
  * @method static \Database\Factories\AssetFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Asset newModelQuery()
@@ -56,7 +58,7 @@ use Illuminate\Support\Facades\Storage;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Asset withTrashed(bool $withTrashed = true)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Asset withoutTrashed()
  *
- * @mixin \Illuminate\Database\Eloquent\Model
+ * @mixin Model
  */
 class Asset extends Model
 {
@@ -97,7 +99,7 @@ class Asset extends Model
      */
     protected function getUrlAttribute(): string
     {
-        /** @var \Illuminate\Filesystem\FilesystemAdapter */
+        /** @var FilesystemAdapter */
         $disk = Storage::disk($this->disk);
 
         return $disk->url($this->path);
@@ -120,10 +122,31 @@ class Asset extends Model
         return str_starts_with($this->mime_type, 'image/');
     }
 
+    protected function getThumbnailUrlAttribute(): ?string
+    {
+        $path = $this->meta['thumbnail'] ?? null;
+
+        return $path ? Storage::disk($this->disk)->url($path) : null;
+    }
+
+    protected function getMediumUrlAttribute(): ?string
+    {
+        $path = $this->meta['medium'] ?? null;
+
+        return $path ? Storage::disk($this->disk)->url($path) : null;
+    }
+
     public function delete()
     {
-        // Delete the physical file
-        Storage::disk($this->disk)->delete($this->path);
+        $disk = Storage::disk($this->disk);
+
+        $disk->delete($this->path);
+
+        foreach (['thumbnail', 'medium'] as $variant) {
+            if (! empty($this->meta[$variant])) {
+                $disk->delete($this->meta[$variant]);
+            }
+        }
 
         return parent::delete();
     }

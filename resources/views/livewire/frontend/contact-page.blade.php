@@ -12,33 +12,86 @@
                 </div>
 
                 <div class="flex justify-center">
-
-                    {{-- Contact Form Placeholder --}}
                     <flux:card class="w-full space-y-6 p-8 shadow-xl">
                         <flux:heading class="!text-2xl font-bold">{{ __('Send a Message') }}</flux:heading>
-                        <form class="space-y-4">
-                            <div>
-                                <flux:input name="name" label="Name" type="text" />
-                            </div>
-                            <div>
-                                <flux:input name="email" label="Email" type="email" />
-                            </div>
-                            <div>
-                                <flux:textarea name="message" label="Message" rows="4" />
-                            </div>
-                            <div class="flex justify-end">
-                                <flux:button type="submit" variant="primary" icon-trailing="paper-airplane">
-                                    {{ __('Send Message') }}
+
+                        @if ($submitted)
+                            <div class="rounded-lg bg-green-50 p-6 text-center dark:bg-green-950/20">
+                                <flux:icon.check-circle class="mx-auto mb-3 size-10 text-green-500" />
+                                <flux:heading size="lg">{{ __('Message Sent!') }}</flux:heading>
+                                <flux:text class="mt-2 text-zinc-600 dark:text-zinc-400">
+                                    {{ __("Thank you for reaching out. We'll get back to you soon.") }}
+                                </flux:text>
+                                <flux:button class="mt-4" variant="ghost" wire:click="$set('submitted', false)">
+                                    {{ __('Send another message') }}
                                 </flux:button>
                             </div>
-                        </form>
+                        @else
+                            <form wire:submit="submit" class="space-y-4">
+                                <div>
+                                    <flux:input wire:model="name" name="name" label="{{ __('Name') }}" type="text" />
+                                    @error('name') <flux:error>{{ $message }}</flux:error> @enderror
+                                </div>
+                                <div>
+                                    <flux:input wire:model="email" name="email" label="{{ __('Email') }}" type="email" />
+                                    @error('email') <flux:error>{{ $message }}</flux:error> @enderror
+                                </div>
+                                <div>
+                                    <flux:textarea wire:model="message" name="message" label="{{ __('Message') }}" rows="4" />
+                                    @error('message') <flux:error>{{ $message }}</flux:error> @enderror
+                                </div>
+                                <div class="flex justify-end">
+                                    <flux:button type="submit" variant="primary" icon-trailing="paper-airplane" wire:loading.attr="disabled">
+                                        <span wire:loading.remove>{{ __('Send Message') }}</span>
+                                        <span wire:loading>{{ __('Sending...') }}</span>
+                                    </flux:button>
+                                </div>
+                            </form>
+                        @endif
                     </flux:card>
                 </div>
             </div>
         @else
-            <div class="mx-auto max-w-7xl space-y-8 px-4 py-24 text-center sm:px-6 lg:px-8">
-                <flux:heading class="!text-4xl">Contact</flux:heading>
-                <flux:text>Content coming soon...</flux:text>
+            <div class="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8">
+                <div class="flex justify-center">
+                    <flux:card class="w-full space-y-6 p-8 shadow-xl">
+                        <flux:heading class="!text-2xl font-bold">{{ __('Contact Us') }}</flux:heading>
+
+                        @if ($submitted)
+                            <div class="rounded-lg bg-green-50 p-6 text-center dark:bg-green-950/20">
+                                <flux:icon.check-circle class="mx-auto mb-3 size-10 text-green-500" />
+                                <flux:heading size="lg">{{ __('Message Sent!') }}</flux:heading>
+                                <flux:text class="mt-2 text-zinc-600 dark:text-zinc-400">
+                                    {{ __("Thank you for reaching out. We'll get back to you soon.") }}
+                                </flux:text>
+                                <flux:button class="mt-4" variant="ghost" wire:click="$set('submitted', false)">
+                                    {{ __('Send another message') }}
+                                </flux:button>
+                            </div>
+                        @else
+                            <form wire:submit="submit" class="space-y-4">
+                                <div>
+                                    <flux:input wire:model="name" name="name" label="{{ __('Name') }}" type="text" />
+                                    @error('name') <flux:error>{{ $message }}</flux:error> @enderror
+                                </div>
+                                <div>
+                                    <flux:input wire:model="email" name="email" label="{{ __('Email') }}" type="email" />
+                                    @error('email') <flux:error>{{ $message }}</flux:error> @enderror
+                                </div>
+                                <div>
+                                    <flux:textarea wire:model="message" name="message" label="{{ __('Message') }}" rows="4" />
+                                    @error('message') <flux:error>{{ $message }}</flux:error> @enderror
+                                </div>
+                                <div class="flex justify-end">
+                                    <flux:button type="submit" variant="primary" icon-trailing="paper-airplane" wire:loading.attr="disabled">
+                                        <span wire:loading.remove>{{ __('Send Message') }}</span>
+                                        <span wire:loading>{{ __('Sending...') }}</span>
+                                    </flux:button>
+                                </div>
+                            </form>
+                        @endif
+                    </flux:card>
+                </div>
             </div>
         @endif
     </x-themes.greenpeace>

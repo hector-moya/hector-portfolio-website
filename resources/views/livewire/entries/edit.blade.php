@@ -6,9 +6,16 @@
                 <flux:text>{{ __('Edit the details of the entry below.') }}</flux:text>
             </div>
 
-            <flux:button icon="arrow-uturn-left" :href="route('entries')" wire:navigate>
-                {{ __('Return') }}
-            </flux:button>
+            <div class="flex gap-2">
+                <flux:modal.trigger name="entry-history">
+                    <flux:button icon="clock" variant="ghost" wire:click="$dispatch('open-history', { entryId: {{ $entry->id }} })">
+                        {{ __('History') }}
+                    </flux:button>
+                </flux:modal.trigger>
+                <flux:button icon="arrow-uturn-left" :href="route('entries')" wire:navigate>
+                    {{ __('Return') }}
+                </flux:button>
+            </div>
         </div>
 
         <flux:card class="space-y-6">
@@ -65,6 +72,20 @@
             </flux:tab.group>
         @endif
 
+        {{-- SEO Fields --}}
+        <flux:card class="space-y-4">
+            <div>
+                <flux:heading size="md">{{ __('SEO') }}</flux:heading>
+                <flux:text class="text-sm text-zinc-500">{{ __('Search engine optimization settings') }}</flux:text>
+            </div>
+
+            <flux:input label="{{ __('SEO Title') }}" wire:model="form.seo_title" placeholder="{{ $form->title }}" description="{{ __('Defaults to entry title if left blank. Recommended: 50–60 characters.') }}" />
+
+            <flux:textarea label="{{ __('SEO Description') }}" wire:model="form.seo_description" rows="3" placeholder="{{ __('A brief summary of this page for search engines...') }}" description="{{ __('Recommended: 120–160 characters.') }}" />
+
+            <flux:input label="{{ __('OG Image URL') }}" wire:model="form.og_image" placeholder="https://..." description="{{ __('Open Graph image shown when shared on social media. Recommended: 1200×630px.') }}" />
+        </flux:card>
+
         <form wire:submit="save" class="space-y-6">
             <div class="flex justify-end gap-2">
                 <flux:button type="button" variant="ghost" :href="route('entries')" wire:navigate>
@@ -75,5 +96,7 @@
                 </flux:button>
             </div>
         </form>
+
+        <livewire:entries.history />
     </div>
 </div>

@@ -6,9 +6,17 @@
                 <flux:text>{{ __('Manage your entries') }}</flux:text>
             </div>
 
-            <flux:button icon="plus" variant="primary" :href="route('entries.create')" wire:navigate>
-                {{ __('New Entry') }}
-            </flux:button>
+            <div class="flex gap-2">
+                <flux:modal.trigger name="import-entries">
+                    <flux:button icon="arrow-up-tray" variant="ghost">{{ __('Import') }}</flux:button>
+                </flux:modal.trigger>
+                <flux:modal.trigger name="export-entries">
+                    <flux:button icon="arrow-down-tray" variant="ghost">{{ __('Export') }}</flux:button>
+                </flux:modal.trigger>
+                <flux:button icon="plus" variant="primary" :href="route('entries.create')" wire:navigate>
+                    {{ __('New Entry') }}
+                </flux:button>
+            </div>
         </div>
 
         <div class="flex items-center gap-4">
@@ -133,6 +141,9 @@
                                             <flux:menu.item icon="pencil" :href="route('entries.edit', $entry)" wire:navigate>
                                                 {{ __('Edit') }}
                                             </flux:menu.item>
+                                            <flux:menu.item icon="document-duplicate" wire:click="duplicate({{ $entry->id }})" wire:confirm="Duplicate this entry?">
+                                                {{ __('Duplicate') }}
+                                            </flux:menu.item>
                                             <flux:menu.separator />
                                             <flux:menu.item icon="trash" variant="danger" wire:click="delete({{ $entry->id }})" wire:confirm="Are you sure you want to delete this entry?">
                                                 {{ __('Delete') }}
@@ -153,5 +164,9 @@
 
         {{-- Preview Modal --}}
         <livewire:entries.preview />
+
+        {{-- Export/Import Modals --}}
+        <livewire:entries.export />
+        <livewire:entries.import />
     </div>
 </div>

@@ -1,5 +1,6 @@
 <?php
 
+use App\Livewire\ActivityLog\Index as ActivityLogIndex;
 use App\Livewire\Assets\Index as AssetsIndex;
 use App\Livewire\Blueprints\Create as BlueprintsCreate;
 use App\Livewire\Blueprints\Edit as BlueprintsEdit;
@@ -7,9 +8,11 @@ use App\Livewire\Blueprints\Index as BlueprintsIndex;
 use App\Livewire\Collections\Create as CollectionsCreate;
 use App\Livewire\Collections\Edit as CollectionsEdit;
 use App\Livewire\Collections\Index as CollectionsIndex;
+use App\Livewire\Dashboard;
 use App\Livewire\Entries\Create as EntriesCreate;
 use App\Livewire\Entries\Edit as EntriesEdit;
 use App\Livewire\Entries\Index as EntriesIndex;
+use App\Livewire\FormSubmissions\Index as FormSubmissionsIndex;
 use App\Livewire\Frontend\BlogIndex;
 use App\Livewire\Frontend\BlogShow;
 use App\Livewire\Frontend\ContactPage;
@@ -38,7 +41,7 @@ Route::get('/blog/{slug}', BlogShow::class)->name('blog.show');
 Route::get('/portfolio', PortfolioIndex::class)->name('portfolio.index');
 Route::get('/contact', ContactPage::class)->name('contact');
 
-Route::view('dashboard', 'dashboard')
+Route::get('dashboard', Dashboard::class)
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
@@ -70,6 +73,12 @@ Route::middleware(['auth'])->group(function (): void {
 
     // Assets Routes
     Route::get('assets', AssetsIndex::class)->name('assets.index');
+
+    // Activity Log Routes
+    Route::get('activity-log', ActivityLogIndex::class)->name('activity-log.index');
+
+    // Form Submissions Routes
+    Route::get('form-submissions', FormSubmissionsIndex::class)->name('form-submissions.index');
 
     // Users Routes
     Route::get('users', UsersIndex::class)->name('users.index');

@@ -4,6 +4,7 @@ namespace App\Livewire\Actions;
 
 use App\Models\Activity;
 use App\Models\Entry;
+use App\Models\EntryElement;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
@@ -27,6 +28,9 @@ class UpdateEntry
                 'slug' => $entryData['slug'],
                 'status' => $entryData['status'],
                 'published_at' => $entryData['published_at'] ?? null,
+                'seo_title' => $entryData['seo_title'] ?? null,
+                'seo_description' => $entryData['seo_description'] ?? null,
+                'og_image' => $entryData['og_image'] ?? null,
             ]);
 
             // Sync entry elements
@@ -86,7 +90,7 @@ class UpdateEntry
 
                         $processedFieldIds[] = $childField['id'];
 
-                        /** @var \App\Models\EntryElement $element */
+                        /** @var EntryElement $element */
                         $element = $entry->elements()->create([
                             'field_id' => $childField['id'],
                             'handle' => $childHandle,
@@ -107,14 +111,14 @@ class UpdateEntry
             $processedFieldIds[] = $fieldId;
 
             // Handle regular fields - update or create
-            /** @var \App\Models\EntryElement|null $existingElement */
+            /** @var EntryElement|null $existingElement */
             $existingElement = $existingElements->get($fieldId)?->first();
 
             if ($existingElement) {
                 $existingElement->setElementValue($value);
                 $existingElement->save();
             } else {
-                /** @var \App\Models\EntryElement $element */
+                /** @var EntryElement $element */
                 $element = $entry->elements()->create([
                     'field_id' => $fieldId,
                     'handle' => $handle,
