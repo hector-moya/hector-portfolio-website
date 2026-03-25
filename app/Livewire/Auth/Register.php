@@ -35,12 +35,12 @@ class Register extends Component
 
         $validated['password'] = Hash::make($validated['password']);
 
-        event(new Registered(($user = \App\Models\User::query()->create($validated))));
+        event(new Registered(($user = User::query()->create($validated))));
 
         Auth::login($user);
 
         Session::regenerate();
 
-        $this->redirect(route('dashboard', absolute: false), navigate: true);
+        $this->redirect(route('verification.notice', absolute: false), navigate: true);
     }
 }
