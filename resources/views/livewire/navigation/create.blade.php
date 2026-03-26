@@ -24,7 +24,7 @@
 
                         {{-- Status --}}
                         <div class="flex justify-end">
-                            <flux:switch label="{{ $form['is_active'] ? __('Active') : __('Draft') }}" wire:model.live="form.is_active" />
+                            <flux:switch label="{{ $form->is_active ? __('Active') : __('Draft') }}" wire:model.live="form.is_active" />
                         </div>
                     </div>
                 </flux:card>
