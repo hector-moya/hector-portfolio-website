@@ -13,6 +13,13 @@ use Livewire\Attributes\Rule;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
+// TODO: Extract the contact fields and validation into a ContactForm (app/Livewire/Forms/ContactForm.php,
+//       extends Livewire\Form) using #[Validate] attributes for name, email, and message.
+//       Add a submit() method to ContactForm that calls a SubmitContactForm action
+//       (app/Actions/Forms/SubmitContactForm.php). The action should handle DB creation of the FormSubmission
+//       record and queue the ContactFormSubmissionMail — keeping both persistence and side-effects out of the
+//       component. The component's submit() should then just call $this->form->submit() and set $submitted = true.
+//       Use app/Actions/ (not app/Livewire/Actions/) since this action is reusable outside Livewire (e.g. API).
 class ContactPage extends Component
 {
     #[Rule('required|string|max:255')]

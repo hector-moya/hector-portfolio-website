@@ -11,6 +11,13 @@ use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
+// TODO: Extract the import() method's JSON parsing, collection resolution, and CreateEntry loop into
+//       an ImportEntries action (app/Actions/Entries/ImportEntries.php). The action should accept the
+//       decoded entries array and return an array with 'imported' and 'skipped' counts.
+//       The component should only handle file upload, decode the JSON, call the action, and display results.
+//       This mirrors how Export should work and makes the import logic unit-testable without Livewire.
+//       Consider also wrapping the entire import loop in a single DB::transaction() inside the action
+//       for atomicity — currently a mid-loop failure leaves partial data committed.
 class Import extends Component
 {
     use WithFileUploads;

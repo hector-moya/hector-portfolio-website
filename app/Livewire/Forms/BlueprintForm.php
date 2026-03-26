@@ -104,6 +104,9 @@ class BlueprintForm extends Form
     public function create(): Blueprint
     {
         $tabs = $this->initializeTabs();
+        // TODO: Uncomment $this->validate() once the create flow populates name/slug before saving.
+        //       Currently hardcodes 'New Blueprint' / 'new-blueprint' as a workaround; this should instead
+        //       use $this->name and $this->slug so the validation covers actual user-supplied values.
         // $this->validate();
 
         $blueprint = (new CreateBlueprint)->create(

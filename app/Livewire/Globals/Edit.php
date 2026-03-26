@@ -10,6 +10,16 @@ use App\Models\GlobalVariable;
 use Illuminate\View\View;
 use Livewire\Component;
 
+// TODO: This component should use GlobalForm (app/Livewire/Forms/GlobalForm.php) instead of
+//       carrying raw properties + a protected rules() method + inline persistence.
+//       Once GlobalForm gains setGlobalSet(), update(), and destroy() methods (see TODOs in GlobalForm),
+//       refactor as follows:
+//   - Replace the $name, $handle, $blueprint_id, $variables properties with `public GlobalForm $form`.
+//   - Call $this->form->setGlobalSet($globalSet) in mount().
+//   - Replace the inline $this->validate() + $globalSet->update() + GlobalVariable upsert loop in save()
+//     with a single $this->form->update($globalSet->id) call.
+//   - Remove the protected rules() method entirely; validation belongs in the form.
+//   This aligns the component with the established pattern (compare Users/Edit.php, Taxonomies/Edit.php).
 class Edit extends Component
 {
     public GlobalSet $globalSet;

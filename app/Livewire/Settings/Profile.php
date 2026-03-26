@@ -8,6 +8,13 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
 
+// TODO: Extract profile fields and validation into a ProfileForm (app/Livewire/Forms/Settings/ProfileForm.php,
+//       extends Livewire\Form) with #[Validate] attributes and a rules() method for the unique-email-with-ignore rule.
+//       Add setUser(User $user) to populate the form on mount.
+//       Add an update() method that calls an UpdateProfile action (app/Livewire/Actions/Settings/UpdateProfile.php).
+//       The action should handle the email-dirty check (nulling email_verified_at), model save, and event dispatch.
+//       Move resendVerificationNotification() logic into a ResendVerificationNotification action for reusability.
+//       This aligns with the pattern in Users/Edit.php and removes all controller-like persistence from the component.
 class Profile extends Component
 {
     public string $name = '';

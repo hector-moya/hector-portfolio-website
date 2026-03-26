@@ -11,6 +11,11 @@ class CreateBlueprint
 {
     public function create(array $blueprintData): Blueprint
     {
+        // TODO: Uncomment Gate::authorize once Blueprint policies are confirmed complete.
+        //       Authorization is inconsistently applied across actions: CreateBlueprint and all Collection/Entry
+        //       actions have no Gate check, while CreateTaxonomy, CreateUser, CreateGlobal, and CreateAsset do.
+        //       Audit all actions in app/Livewire/Actions/ and app/Actions/ and add Gate::authorize() calls
+        //       where missing, using the corresponding model policy (create, update, delete).
         // Gate::authorize('create', Blueprint::class);
 
         return DB::transaction(function () use ($blueprintData) {

@@ -101,6 +101,14 @@ class UploadModal extends Component
 
     public function createFolder(): void
     {
+        // TODO: This method bypasses the CreateFolder action (app/Actions/Folders/CreateFolder.php) entirely
+        //       and only creates a filesystem directory — it never creates a Folder database record.
+        //       It should instead call app(CreateFolder::class)->create([...]) via FolderForm::create(),
+        //       which handles both DB record creation (with Gate authorization + DB transaction) and the
+        //       parent_id relationship. The Storage::disk()->makeDirectory() call should live inside the
+        //       action (or be driven by a model observer/hook) so the filesystem and DB stay in sync.
+        //       Also note: this method validates $newFolderName inline but FolderForm already has a $name
+        //       property with #[Validate] — consolidate into the form to remove the duplicate validation.
         $this->validate([
             'newFolderName' => ['required', 'string', 'min:1', 'max:255'],
         ]);

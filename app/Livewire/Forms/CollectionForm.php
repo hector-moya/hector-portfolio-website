@@ -6,6 +6,13 @@ use Illuminate\Validation\Rule;
 use Livewire\Attributes\Validate;
 use Livewire\Form;
 
+// TODO: Add create(), update(Collection $collection), and destroy(int $collectionId) methods to this form,
+//       each calling the existing actions in app/Livewire/Actions/Collections/.
+//       Currently, Collections/Create.php and Collections/Edit.php call the actions directly, and
+//       Collections/Index.php calls DeleteCollection directly — meaning all CRUD logic lives in the
+//       components instead of the form. After adding these methods, the components can simply call
+//       $this->form->create() / $this->form->update($this->collection) / $this->form->destroy($id),
+//       matching the pattern in UserForm and TaxonomyForm, and aligning all forms to own their persistence.
 class CollectionForm extends Form
 {
     public ?int $collection_id = null;

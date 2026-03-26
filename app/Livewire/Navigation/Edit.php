@@ -10,6 +10,17 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Support\Str;
 use Livewire\Component;
 
+// TODO: Replace the $form array with a NavigationForm (extends Livewire\Form) using #[Validate] attributes
+//       and a rules() method that includes the unique-with-ignore rule for handle.
+//       Add setNavigation(Navigation $navigation) to populate the form on mount.
+//       Add an update() method to NavigationForm that calls an UpdateNavigation action.
+//       The action should handle Gate authorization, DB transaction, model update, and Navigation::flush().
+//
+// TODO: Extract $newItemTitle / $newItemUrl and the addItem() / updateItem() / deleteItem() methods
+//       into a NavigationItemForm with create(), update(), and destroy() methods that call corresponding
+//       actions: CreateNavigationItem, UpdateNavigationItem, DeleteNavigationItem — each responsible for
+//       item persistence and dispatching Navigation::flush(). This removes all controller-like logic from
+//       the component and aligns with the pattern in Users/Edit.php and Entries/Edit.php.
 class Edit extends Component
 {
     public NavigationModel $navigation;

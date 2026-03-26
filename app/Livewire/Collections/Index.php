@@ -26,6 +26,11 @@ class Index extends Component
 
     public function delete(int $id): void
     {
+        // TODO: This component calls the DeleteCollection action directly — the action is not routed through
+        //       CollectionForm::destroy(). Once CollectionForm gains a destroy() method (see TODO in
+        //       CollectionForm), replace this with $this->form->destroy($id) and add `public CollectionForm $form`
+        //       to this component, consistent with how Taxonomies/Index.php and Blueprints/Index.php delegate
+        //       all mutations through their respective form objects.
         $collection = CollectionModel::query()->findOrFail($id);
 
         (new DeleteCollection)->execute($collection);

@@ -10,6 +10,12 @@ use Livewire\Attributes\Computed;
 use Livewire\Component;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
+// TODO: Extract the export() method's query-build and serialization logic into an ExportEntries action
+//       (app/Actions/Entries/ExportEntries.php). The action should accept optional $collectionId and
+//       $includeBlueprint parameters and return the serialized JSON payload (or a Collection of arrays).
+//       The component's export() should call the action and stream the result, keeping the component
+//       responsible only for streaming the response — not for building the data shape.
+//       This also makes the export logic testable in isolation without needing a Livewire test context.
 class Export extends Component
 {
     public ?int $collectionId = null;

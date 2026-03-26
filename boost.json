@@ -3,18 +3,21 @@
         "claude_code"
     ],
     "guidelines": true,
-    "herd_mcp": true,
     "mcp": true,
     "nightwatch_mcp": false,
     "packages": [
-        "laravel/fortify"
+        "laravel/fortify",
+        "livewire/blaze"
     ],
     "sail": false,
     "skills": [
+        "laravel-best-practices",
         "fluxui-development",
+        "livewire-development",
         "volt-development",
         "pest-testing",
         "tailwindcss-development",
-        "fortify-development"
+        "fortify-development",
+        "blaze-optimize"
     ]
 }

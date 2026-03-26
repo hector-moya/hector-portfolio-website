@@ -8,6 +8,8 @@ use App\Models\EntryElement;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
+// TODO: No authorization check. Add Gate::authorize('create', Entry::class) before the transaction,
+//       consistent with CreateTaxonomy, CreateUser, CreateGlobal, and CreateAsset.
 class CreateEntry
 {
     public function handle(array $entryData): Entry
