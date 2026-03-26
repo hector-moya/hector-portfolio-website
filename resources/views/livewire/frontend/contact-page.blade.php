@@ -29,15 +29,15 @@
                         @else
                             <form wire:submit="submit" class="space-y-4">
                                 <div>
-                                    <flux:input wire:model="name" name="name" label="{{ __('Name') }}" type="text" />
+                                    <flux:input wire:model="form.name" name="name" label="{{ __('Name') }}" type="text" />
                                     @error('name') <flux:error>{{ $message }}</flux:error> @enderror
                                 </div>
                                 <div>
-                                    <flux:input wire:model="email" name="email" label="{{ __('Email') }}" type="email" />
+                                    <flux:input wire:model="form.email" name="email" label="{{ __('Email') }}" type="email" />
                                     @error('email') <flux:error>{{ $message }}</flux:error> @enderror
                                 </div>
                                 <div>
-                                    <flux:textarea wire:model="message" name="message" label="{{ __('Message') }}" rows="4" />
+                                    <flux:textarea wire:model="form.message" name="message" label="{{ __('Message') }}" rows="4" />
                                     @error('message') <flux:error>{{ $message }}</flux:error> @enderror
                                 </div>
                                 <div class="flex justify-end">
@@ -71,15 +71,15 @@
                         @else
                             <form wire:submit="submit" class="space-y-4">
                                 <div>
-                                    <flux:input wire:model="name" name="name" label="{{ __('Name') }}" type="text" />
+                                    <flux:input wire:model="form.name" name="name" label="{{ __('Name') }}" type="text" />
                                     @error('name') <flux:error>{{ $message }}</flux:error> @enderror
                                 </div>
                                 <div>
-                                    <flux:input wire:model="email" name="email" label="{{ __('Email') }}" type="email" />
+                                    <flux:input wire:model="form.email" name="email" label="{{ __('Email') }}" type="email" />
                                     @error('email') <flux:error>{{ $message }}</flux:error> @enderror
                                 </div>
                                 <div>
-                                    <flux:textarea wire:model="message" name="message" label="{{ __('Message') }}" rows="4" />
+                                    <flux:textarea wire:model="form.message" name="message" label="{{ __('Message') }}" rows="4" />
                                     @error('message') <flux:error>{{ $message }}</flux:error> @enderror
                                 </div>
                                 <div class="flex justify-end">
