@@ -1,5 +1,5 @@
 <div>
-    <x-themes.greenpeace>
+    <x-themes.wrapper :theme="$theme">
         @if ($entry)
             <div class="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8">
                 <div class="mb-12 space-y-8 text-center">
@@ -94,5 +94,5 @@
                 </div>
             </div>
         @endif
-    </x-themes.greenpeace>
+    </x-themes.wrapper>
 </div>

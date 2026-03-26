@@ -20,14 +20,16 @@ class Home extends Component
         $entry = Entry::query()
             ->where('slug', 'home')
             ->where('status', 'published')
-            ->with(['elements.field'])
+            ->with(['elements.field', 'collection'])
             ->first();
 
         $assets = $this->loadLayoutAssets($entry);
+        $theme = $entry?->collection?->settings['theme'] ?? 'greenpeace';
 
         return view('livewire.frontend.home', [
             'entry' => $entry,
             'assets' => $assets,
+            'theme' => $theme,
         ]);
     }
 

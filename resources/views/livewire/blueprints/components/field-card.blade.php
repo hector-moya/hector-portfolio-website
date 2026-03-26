@@ -9,15 +9,44 @@
                 </flux:modal.trigger>
             </div>
             <div class="mx-2 flex">
-                <flux:button icon="clipboard-document-list" size="xs" variant="ghost" tooltip="{{ __('Duplicate Field') }}" wire:click="save" />
+                <flux:button icon="clipboard-document-list" size="xs" variant="ghost" tooltip="{{ __('Duplicate Field') }}" wire:click="duplicate" />
                 @if ($form->parent_id)
-                    <flux:button icon="trash" size="xs" variant="ghost" tooltip="{{ __('Remove Nested Field') }}" wire:click="$parent.removeNestedField({{ $fieldId }})" />
+                    <flux:modal.trigger name="confirm-remove-nested-field-{{ $fieldId }}">
+                        <flux:button icon="trash" size="xs" variant="ghost" tooltip="{{ __('Remove Nested Field') }}" />
+                    </flux:modal.trigger>
                 @else
-                    <flux:button icon="trash" size="xs" variant="ghost" tooltip="{{ __('Remove Field') }}" wire:click="removeField" />
+                    <flux:modal.trigger name="confirm-remove-field-{{ $fieldId }}">
+                        <flux:button icon="trash" size="xs" variant="ghost" tooltip="{{ __('Remove Field') }}" />
+                    </flux:modal.trigger>
                 @endif
             </div>
         </div>
     </flux:card>
+
+    {{-- Confirm remove field --}}
+    @if ($form->parent_id)
+        <flux:modal name="confirm-remove-nested-field-{{ $fieldId }}" class="min-w-sm">
+            <div class="space-y-4">
+                <flux:heading size="lg">{{ __('Remove Field') }}</flux:heading>
+                <flux:text>{{ __('Are you sure you want to remove this nested field? This cannot be undone.') }}</flux:text>
+                <div class="flex justify-end gap-3">
+                    <flux:button @click="$flux.modal('confirm-remove-nested-field-{{ $fieldId }}').close()" variant="outline">{{ __('Cancel') }}</flux:button>
+                    <flux:button wire:click="$parent.removeNestedField({{ $fieldId }})" variant="danger">{{ __('Remove') }}</flux:button>
+                </div>
+            </div>
+        </flux:modal>
+    @else
+        <flux:modal name="confirm-remove-field-{{ $fieldId }}" class="min-w-sm">
+            <div class="space-y-4">
+                <flux:heading size="lg">{{ __('Remove Field') }}</flux:heading>
+                <flux:text>{{ __('Are you sure you want to remove "') }}{{ $form->label }}{{ __('"? This cannot be undone.') }}</flux:text>
+                <div class="flex justify-end gap-3">
+                    <flux:button @click="$flux.modal('confirm-remove-field-{{ $fieldId }}').close()" variant="outline">{{ __('Cancel') }}</flux:button>
+                    <flux:button wire:click="removeField" variant="danger">{{ __('Remove') }}</flux:button>
+                </div>
+            </div>
+        </flux:modal>
+    @endif
 
     <flux:modal name="field-config-{{ $fieldId }}" :closable="false" variant="{{ $form->parent_id ? 'flyout' : 'default' }}" class="min-w-140">
         <div class="flex items-start gap-4">
@@ -41,7 +70,7 @@
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
-                    <flux:input label="{{ __('Handle') }}" wire:model="form.handle" placeholder="post_title" />
+                    <flux:input label="{{ __('Handle') }}" wire:model="form.handle" placeholder="post_title" description="{{ __('Used in templates to retrieve this value, e.g. firstWhere(\'handle\', \'post_title\')') }}" />
 
                     <flux:input label="{{ __('Instructions') }}" wire:model="form.instructions" placeholder="Enter the post title" />
                 </div>

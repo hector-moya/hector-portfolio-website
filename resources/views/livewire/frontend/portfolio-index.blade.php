@@ -1,5 +1,5 @@
 <div>
-    <x-themes.greenpeace>
+    <x-themes.wrapper :theme="$theme">
         <div class="text-center mb-12 space-y-8">
             <flux:heading class="!text-4xl">{{ __('Portfolio') }}</flux:heading>
             <flux:text class="!text-xl">
@@ -51,5 +51,5 @@
                 </div>
             @endforelse
         </div>
-    </x-themes.greenpeace>
+    </x-themes.wrapper>
 </div>

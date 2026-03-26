@@ -1,5 +1,5 @@
 <div>
-    <x-themes.greenpeace>
+    <x-themes.wrapper :theme="$theme">
         {{-- Featured Image --}}
         @if($featuredImage = $entry->elements->firstWhere('handle', 'featured_image')?->value)
             <img src="{{ $featuredImage }}" alt="{{ $entry->title }}" class="w-full h-96 object-cover rounded-lg mb-8">
@@ -49,7 +49,7 @@
                 ← Back to Blog
             </a>
         </div>
-    </x-themes.greenpeace>
+    </x-themes.wrapper>
 
     {{-- Optional page builder sections --}}
     @if (!empty($entry->layout))

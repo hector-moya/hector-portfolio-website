@@ -29,6 +29,9 @@ class CollectionForm extends Form
     #[Validate('boolean')]
     public bool $is_active = true;
 
+    #[Validate('nullable|string|max:255')]
+    public string $theme = '';
+
     public function rules(): array
     {
         return [
@@ -50,6 +53,7 @@ class CollectionForm extends Form
         $this->description = $collection->description ?? '';
         $this->blueprint_id = $collection->blueprint_id;
         $this->is_active = $collection->is_active;
+        $this->theme = $collection->settings['theme'] ?? '';
     }
 
     public function create(): Collection
@@ -62,6 +66,7 @@ class CollectionForm extends Form
             'description' => $this->description,
             'blueprint_id' => $this->blueprint_id,
             'is_active' => $this->is_active,
+            'settings' => array_filter(['theme' => $this->theme ?: null]),
         ]);
 
         Flux::toast(
@@ -70,7 +75,7 @@ class CollectionForm extends Form
             variant: 'success',
         );
 
-        $this->reset('name', 'slug', 'description', 'blueprint_id', 'is_active');
+        $this->reset('name', 'slug', 'description', 'blueprint_id', 'is_active', 'theme');
 
         return $collection;
     }
@@ -85,6 +90,7 @@ class CollectionForm extends Form
             'description' => $this->description,
             'blueprint_id' => $this->blueprint_id,
             'is_active' => $this->is_active,
+            'settings' => array_merge($collection->settings ?? [], ['theme' => $this->theme ?: null]),
         ]);
 
         Flux::toast(

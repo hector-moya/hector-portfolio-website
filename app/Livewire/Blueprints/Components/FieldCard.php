@@ -8,6 +8,8 @@ use App\Models\Field;
 use App\Services\FieldTypeRegistry;
 use App\Traits\HasSlug;
 use Flux\Flux;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 
@@ -59,6 +61,21 @@ class FieldCard extends Component
         $this->form->setChildren($this->fieldId);
     }
 
+    public function duplicate(): void
+    {
+        $original = Field::query()->findOrFail($this->fieldId);
+
+        $copy = $original->replicate(['section_id', 'blueprint_id', 'order']);
+        $copy->handle = $original->handle.'_copy';
+        $copy->label = $original->label.' (Copy)';
+        $copy->order = $original->order + 1;
+        $copy->section_id = $original->section_id;
+        $copy->blueprint_id = $original->blueprint_id;
+        $copy->save();
+
+        $this->dispatch('field-added');
+    }
+
     public function removeField(): void
     {
         $this->form->destroy($this->fieldId);
@@ -67,7 +84,7 @@ class FieldCard extends Component
 
     public function addNestedField(string $type = 'text'): void
     {
-        $this->field = \App\Models\Field::query()->create([
+        $this->field = Field::query()->create([
             'parent_id' => $this->fieldId,
             'blueprint_id' => $this->form->blueprint_id,
             'type' => $type,
@@ -102,7 +119,7 @@ class FieldCard extends Component
         );
     }
 
-    public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+    public function render(): View|Factory
     {
         return view('livewire.blueprints.components.field-card');
     }

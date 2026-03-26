@@ -30,11 +30,12 @@ class ContactPage extends Component
         $entry = Entry::query()
             ->where('slug', 'contact')
             ->where('status', 'published')
-            ->with(['elements.field'])
+            ->with(['elements.field', 'collection'])
             ->first();
 
         return view('livewire.frontend.contact-page', [
             'entry' => $entry,
+            'theme' => $entry?->collection?->settings['theme'] ?? 'greenpeace',
         ]);
     }
 }

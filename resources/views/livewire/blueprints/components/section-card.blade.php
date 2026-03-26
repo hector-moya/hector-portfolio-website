@@ -33,10 +33,12 @@
         <div class="space-y-6">
             <div class="flex justify-between">
                 <flux:heading size="lg">{{ __('Edit Section') }}</flux:heading>
-                <flux:button variant="danger" icon="trash" size="sm" wire:click="removeSection" tooltip="{{ __('Delete Section') }}" />
+                <flux:modal.trigger name="confirm-remove-section-{{ $sectionId }}">
+                    <flux:button variant="danger" icon="trash" size="sm" tooltip="{{ __('Delete Section') }}" />
+                </flux:modal.trigger>
             </div>
             <flux:input label="{{ __('Section Name') }}" placeholder="{{ __('Main Content') }}" wire:model.live.debounce.750ms="form.name" />
-            <flux:input label="{{ __('Section Handle') }}" placeholder="{{ __('main_content') }}" wire:model="form.handle" />
+            <flux:input label="{{ __('Section Handle') }}" placeholder="{{ __('main_content') }}" wire:model="form.handle" description="{{ __('A unique identifier used internally. Auto-generated from the name.') }}" />
             <flux:textarea label="{{ __('Section Instructions') }}" placeholder="{{ __('Instructions for this section...') }}" rows="3" wire:model="form.instructions" />
             <div class="flex justify-end">
                 <flux:button type="button" @click="$flux.modal('edit-section-modal-{{ $sectionId }}').close()" variant="outline" class="mr-2">
@@ -48,6 +50,18 @@
             </div>
         </div>
     </flux:modal>
+    {{-- Confirm Delete Section Modal --}}
+    <flux:modal name="confirm-remove-section-{{ $sectionId }}" class="min-w-sm">
+        <div class="space-y-4">
+            <flux:heading size="lg">{{ __('Delete Section') }}</flux:heading>
+            <flux:text>{{ __('Are you sure you want to delete "') }}{{ $form->name }}{{ __('"? All fields in this section will also be removed.') }}</flux:text>
+            <div class="flex justify-end gap-3">
+                <flux:button @click="$flux.modal('confirm-remove-section-{{ $sectionId }}').close()" variant="outline">{{ __('Cancel') }}</flux:button>
+                <flux:button wire:click="removeSection" variant="danger">{{ __('Delete Section') }}</flux:button>
+            </div>
+        </div>
+    </flux:modal>
+
     {{-- Select Field Type Modal --}}
     <flux:modal name="select-field-modal-{{ $sectionId }}">
         <div class="space-y-6">

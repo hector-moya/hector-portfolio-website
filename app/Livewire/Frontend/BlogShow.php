@@ -28,6 +28,7 @@ class BlogShow extends Component
     {
         return view('livewire.frontend.blog-show', [
             'assets' => $this->loadLayoutAssets($this->entry),
+            'theme' => $this->entry->collection?->settings['theme'] ?? 'greenpeace',
         ]);
     }
 

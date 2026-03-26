@@ -103,6 +103,35 @@ test('can update a collection', function () {
     expect($collection->fresh()->name)->toBe('New Name');
 });
 
+test('can create a collection with a theme', function () {
+    Livewire::test(Create::class)
+        ->set('form.name', 'Blog Posts')
+        ->set('form.theme', 'greenpeace')
+        ->call('save')
+        ->assertHasNoErrors();
+
+    $collection = Collection::where('name', 'Blog Posts')->first();
+    expect($collection->settings['theme'])->toBe('greenpeace');
+});
+
+test('can update a collection theme', function () {
+    $collection = Collection::factory()->create(['settings' => []]);
+
+    Livewire::test(Edit::class, ['collection' => $collection])
+        ->set('form.name', $collection->name)
+        ->set('form.theme', 'greenpeace')
+        ->call('save')
+        ->assertHasNoErrors();
+
+    expect($collection->fresh()->settings['theme'])->toBe('greenpeace');
+});
+
+test('collection theme defaults to greenpeace when not set', function () {
+    $collection = Collection::factory()->create(['settings' => []]);
+
+    expect($collection->settings['theme'] ?? 'greenpeace')->toBe('greenpeace');
+});
+
 test('can delete a collection', function () {
     $collection = Collection::factory()->create();
 

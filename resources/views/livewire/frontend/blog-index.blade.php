@@ -1,5 +1,5 @@
 <div>
-    <x-themes.greenpeace>
+    <x-themes.wrapper :theme="$theme">
         <div class="text-center mb-12">
             <h1 class="text-4xl font-bold text-zinc-900 dark:text-white">Blog</h1>
             <p class="mt-4 text-xl text-zinc-600 dark:text-zinc-400">
@@ -48,5 +48,5 @@
         <div class="mt-12">
             {{ $posts->links() }}
         </div>
-    </x-themes.greenpeace>
+    </x-themes.wrapper>
 </div>

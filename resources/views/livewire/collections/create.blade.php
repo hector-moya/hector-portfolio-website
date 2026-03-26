@@ -31,6 +31,12 @@
                     @endforeach
                 </flux:select>
 
+                {{-- Theme --}}
+                <flux:select label="{{ __('Theme') }}" wire:model="form.theme" description="{{ __('The visual theme used to render this collection\'s pages') }}">
+                    <flux:select.option value="">{{ __('Default (Greenpeace)') }}</flux:select.option>
+                    <flux:select.option value="greenpeace">{{ __('Greenpeace') }}</flux:select.option>
+                </flux:select>
+
                 {{-- Status --}}
                 <div class="flex justify-end">
                     <flux:switch label="{{ $form->is_active ? __('Active') : __('Inactive') }}" wire:model.live="form.is_active" />

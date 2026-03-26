@@ -31,7 +31,7 @@
                         <flux:button icon="trash" variant="danger" size="xs" wire:click="deleteTab({{ $tab->id ?? '' }})" tooltip="{{ __('Delete Tab') }}" />
                     </div>
                     <flux:input label="{{ __('Tab Name') }}" placeholder="{{ __('Content') }}" wire:model.live.debounce.750ms="form.name" />
-                    <flux:input label="{{ __('Tab Handle') }}" placeholder="{{ __('content') }}" wire:model="form.handle" />
+                    <flux:input label="{{ __('Tab Handle') }}" placeholder="{{ __('content') }}" wire:model="form.handle" description="{{ __('A unique identifier used internally. Auto-generated from the name.') }}" />
                     <div class="flex justify-end">
                         <flux:button type="button" @click="$flux.modal('edit-tab-modal-{{ $tab->id ?? '' }}').close()" variant="outline" class="mr-2">
                             {{ __('Cancel') }}

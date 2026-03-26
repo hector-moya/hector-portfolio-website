@@ -32,6 +32,7 @@ class BlogIndex extends Component
 
         return view('livewire.frontend.blog-index', [
             'posts' => $posts,
+            'theme' => $collection?->settings['theme'] ?? 'greenpeace',
         ]);
     }
 }

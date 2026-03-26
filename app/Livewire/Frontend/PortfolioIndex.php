@@ -29,6 +29,7 @@ class PortfolioIndex extends Component
 
         return view('livewire.frontend.portfolio-index', [
             'projects' => $projects,
+            'theme' => $collection?->settings['theme'] ?? 'greenpeace',
         ]);
     }
 }

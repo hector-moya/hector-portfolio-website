@@ -10,7 +10,7 @@
         @endforeach
     @elseif ($entry)
         {{-- Legacy: entry with blueprint elements but no layout sections yet --}}
-        <x-themes.greenpeace>
+        <x-themes.wrapper :theme="$theme">
             <div class="mx-auto max-w-2xl gap-x-20 lg:mx-0 lg:flex lg:max-w-none lg:items-center">
                 <div class="relative w-full space-y-8 lg:shrink-0 xl:max-w-xl">
                     <flux:heading class="leading-16 animate-slide-in-from-top !text-6xl font-bold opacity-0" level="1">
@@ -32,13 +32,13 @@
                     </div>
                 </div>
             </div>
-        </x-themes.greenpeace>
+        </x-themes.wrapper>
     @else
-        <x-themes.greenpeace>
+        <x-themes.wrapper :theme="$theme">
             <div class="mx-auto max-w-7xl space-y-8 px-4 py-24 text-center sm:px-6 lg:px-8">
                 <flux:heading class="!text-4xl">{{ __('Welcome') }}</flux:heading>
                 <flux:text>{{ __('Content coming soon...') }}</flux:text>
             </div>
-        </x-themes.greenpeace>
+        </x-themes.wrapper>
     @endif
 </div>
