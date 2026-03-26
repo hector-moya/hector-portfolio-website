@@ -16,8 +16,8 @@ test('profile information can be updated', function () {
     $this->actingAs($user);
 
     $response = Livewire::test(Profile::class)
-        ->set('name', 'Test User')
-        ->set('email', 'test@example.com')
+        ->set('form.name', 'Test User')
+        ->set('form.email', 'test@example.com')
         ->call('updateProfileInformation');
 
     $response->assertHasNoErrors();
@@ -35,8 +35,8 @@ test('email verification status is unchanged when email address is unchanged', f
     $this->actingAs($user);
 
     $response = Livewire::test(Profile::class)
-        ->set('name', 'Test User')
-        ->set('email', $user->email)
+        ->set('form.name', 'Test User')
+        ->set('form.email', $user->email)
         ->call('updateProfileInformation');
 
     $response->assertHasNoErrors();
@@ -50,7 +50,7 @@ test('user can delete their account', function () {
     $this->actingAs($user);
 
     $response = Livewire::test('settings.delete-user-form')
-        ->set('password', 'password')
+        ->set('form.password', 'password')
         ->call('deleteUser');
 
     $response
@@ -67,10 +67,10 @@ test('correct password must be provided to delete account', function () {
     $this->actingAs($user);
 
     $response = Livewire::test('settings.delete-user-form')
-        ->set('password', 'wrong-password')
+        ->set('form.password', 'wrong-password')
         ->call('deleteUser');
 
-    $response->assertHasErrors(['password']);
+    $response->assertHasErrors(['form.password']);
 
     expect($user->fresh())->not->toBeNull();
 });

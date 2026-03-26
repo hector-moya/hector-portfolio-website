@@ -13,9 +13,9 @@ test('password can be updated', function () {
     $this->actingAs($user);
 
     $response = Livewire::test(Password::class)
-        ->set('current_password', 'password')
-        ->set('password', 'new-password')
-        ->set('password_confirmation', 'new-password')
+        ->set('form.current_password', 'password')
+        ->set('form.password', 'new-password')
+        ->set('form.password_confirmation', 'new-password')
         ->call('updatePassword');
 
     $response->assertHasNoErrors();
@@ -31,10 +31,10 @@ test('correct password must be provided to update password', function () {
     $this->actingAs($user);
 
     $response = Livewire::test(Password::class)
-        ->set('current_password', 'wrong-password')
-        ->set('password', 'new-password')
-        ->set('password_confirmation', 'new-password')
+        ->set('form.current_password', 'wrong-password')
+        ->set('form.password', 'new-password')
+        ->set('form.password_confirmation', 'new-password')
         ->call('updatePassword');
 
-    $response->assertHasErrors(['current_password']);
+    $response->assertHasErrors(['form.current_password']);
 });
