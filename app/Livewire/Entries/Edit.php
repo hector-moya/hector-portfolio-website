@@ -6,6 +6,8 @@ use App\Livewire\Forms\EntryForm;
 use App\Models\Blueprint;
 use App\Models\Entry;
 use Flux\Flux;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
@@ -73,11 +75,16 @@ class Edit extends Component
     #[On('asset-selected')]
     public function onAssetSelected(array $data): void
     {
+        // Page builder asset handles are handled by the PageBuilder component
+        if (str_starts_with($data['handle'], 'section_')) {
+            return;
+        }
+
         // Update the form field value
         $this->form->fieldValues[$data['handle']] = $data['value'];
     }
 
-    public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+    public function render(): View|Factory
     {
         return view('livewire.entries.edit');
     }

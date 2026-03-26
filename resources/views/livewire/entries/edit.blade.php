@@ -72,6 +72,15 @@
             </flux:tab.group>
         @endif
 
+        {{-- Page Builder --}}
+        <flux:card class="space-y-4">
+            <div>
+                <flux:heading size="md">{{ __('Page Builder') }}</flux:heading>
+                <flux:text>{{ __('Add and arrange sections to build the page layout.') }}</flux:text>
+            </div>
+            <livewire:entries.partials.page-builder :entry="$entry" :key="'pb-' . $entry->id" />
+        </flux:card>
+
         {{-- SEO Fields --}}
         <flux:card class="space-y-4">
             <div>

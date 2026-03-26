@@ -50,4 +50,16 @@
             </a>
         </div>
     </x-themes.greenpeace>
+
+    {{-- Optional page builder sections --}}
+    @if (!empty($entry->layout))
+        @foreach ($entry->layout as $section)
+            <x-dynamic-component
+                :component="'sections.' . str_replace('_', '-', $section['type'])"
+                :section="$section"
+                :assets="$assets"
+                wire:key="section-{{ $section['_id'] }}"
+            />
+        @endforeach
+    @endif
 </div>

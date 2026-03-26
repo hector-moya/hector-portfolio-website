@@ -2,9 +2,11 @@
 
 namespace App\Livewire\Frontend;
 
+use App\Models\Asset;
 use App\Models\Entry;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Collection;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -21,8 +23,38 @@ class Home extends Component
             ->with(['elements.field'])
             ->first();
 
+        $assets = $this->loadLayoutAssets($entry);
+
         return view('livewire.frontend.home', [
             'entry' => $entry,
+            'assets' => $assets,
         ]);
+    }
+
+    private function loadLayoutAssets(?Entry $entry): Collection
+    {
+        if (! $entry || empty($entry->layout)) {
+            return new Collection;
+        }
+
+        $assetIds = collect($entry->layout)
+            ->flatMap(function (array $section): array {
+                return match ($section['type']) {
+                    'hero' => [$section['data']['bg_image'] ?? null],
+                    'image_text' => [$section['data']['image'] ?? null],
+                    'gallery' => $section['data']['images'] ?? [],
+                    default => [],
+                };
+            })
+            ->filter()
+            ->unique()
+            ->values()
+            ->all();
+
+        if (empty($assetIds)) {
+            return new Collection;
+        }
+
+        return Asset::query()->whereIn('id', $assetIds)->get();
     }
 }
