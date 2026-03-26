@@ -11,7 +11,7 @@ use Livewire\Livewire;
 use function Pest\Laravel\actingAs;
 
 beforeEach(function () {
-    $this->user = User::factory()->create();
+    $this->user = User::factory()->create(['role' => 'admin']);
     actingAs($this->user);
 });
 

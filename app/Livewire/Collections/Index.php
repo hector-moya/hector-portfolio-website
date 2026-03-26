@@ -2,8 +2,11 @@
 
 namespace App\Livewire\Collections;
 
-use App\Livewire\Actions\Collections\DeleteCollection;
+use App\Livewire\Forms\CollectionForm;
 use App\Models\Collection as CollectionModel;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -12,6 +15,8 @@ use Livewire\WithPagination;
 class Index extends Component
 {
     use WithPagination;
+
+    public CollectionForm $form;
 
     public string $search = '';
 
@@ -26,20 +31,13 @@ class Index extends Component
 
     public function delete(int $id): void
     {
-        // TODO: This component calls the DeleteCollection action directly — the action is not routed through
-        //       CollectionForm::destroy(). Once CollectionForm gains a destroy() method (see TODO in
-        //       CollectionForm), replace this with $this->form->destroy($id) and add `public CollectionForm $form`
-        //       to this component, consistent with how Taxonomies/Index.php and Blueprints/Index.php delegate
-        //       all mutations through their respective form objects.
-        $collection = CollectionModel::query()->findOrFail($id);
-
-        (new DeleteCollection)->execute($collection);
+        $this->form->destroy($id);
 
         $this->dispatch('collection-deleted');
     }
 
     #[Computed]
-    public function collectionModels(): \Illuminate\Contracts\Pagination\LengthAwarePaginator
+    public function collectionModels(): LengthAwarePaginator
     {
         return CollectionModel::query()
             ->with('blueprint')
@@ -62,7 +60,7 @@ class Index extends Component
     }
 
     #[Title('Collections')]
-    public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+    public function render(): View|Factory
     {
 
         return view('livewire.collections.index');

@@ -2,17 +2,15 @@
 
 namespace App\Livewire\Forms;
 
+use App\Livewire\Actions\Collections\CreateCollection;
+use App\Livewire\Actions\Collections\DeleteCollection;
+use App\Livewire\Actions\Collections\UpdateCollection;
+use App\Models\Collection;
+use Flux\Flux;
 use Illuminate\Validation\Rule;
 use Livewire\Attributes\Validate;
 use Livewire\Form;
 
-// TODO: Add create(), update(Collection $collection), and destroy(int $collectionId) methods to this form,
-//       each calling the existing actions in app/Livewire/Actions/Collections/.
-//       Currently, Collections/Create.php and Collections/Edit.php call the actions directly, and
-//       Collections/Index.php calls DeleteCollection directly — meaning all CRUD logic lives in the
-//       components instead of the form. After adding these methods, the components can simply call
-//       $this->form->create() / $this->form->update($this->collection) / $this->form->destroy($id),
-//       matching the pattern in UserForm and TaxonomyForm, and aligning all forms to own their persistence.
 class CollectionForm extends Form
 {
     public ?int $collection_id = null;
@@ -52,5 +50,62 @@ class CollectionForm extends Form
         $this->description = $collection->description ?? '';
         $this->blueprint_id = $collection->blueprint_id;
         $this->is_active = $collection->is_active;
+    }
+
+    public function create(): Collection
+    {
+        $this->validate();
+
+        $collection = app(CreateCollection::class)->execute([
+            'name' => $this->name,
+            'slug' => $this->slug,
+            'description' => $this->description,
+            'blueprint_id' => $this->blueprint_id,
+            'is_active' => $this->is_active,
+        ]);
+
+        Flux::toast(
+            heading: 'Collection Created',
+            text: 'The collection has been successfully created.',
+            variant: 'success',
+        );
+
+        $this->reset('name', 'slug', 'description', 'blueprint_id', 'is_active');
+
+        return $collection;
+    }
+
+    public function update(Collection $collection): Collection
+    {
+        $this->validate();
+
+        $updated = app(UpdateCollection::class)->execute($collection, [
+            'name' => $this->name,
+            'slug' => $this->slug,
+            'description' => $this->description,
+            'blueprint_id' => $this->blueprint_id,
+            'is_active' => $this->is_active,
+        ]);
+
+        Flux::toast(
+            heading: 'Collection Updated',
+            text: 'The collection has been successfully updated.',
+            variant: 'success',
+        );
+
+        return $updated;
+    }
+
+    public function destroy(int $collectionId): void
+    {
+        $collection = Collection::query()->findOrFail($collectionId);
+
+        app(DeleteCollection::class)->execute($collection);
+
+        Flux::toast(
+            heading: 'Collection Deleted',
+            text: 'The collection has been successfully deleted.',
+            variant: 'success',
+        );
     }
 }

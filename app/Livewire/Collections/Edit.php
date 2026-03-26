@@ -2,9 +2,11 @@
 
 namespace App\Livewire\Collections;
 
-use App\Livewire\Actions\Collections\UpdateCollection;
 use App\Livewire\Forms\CollectionForm;
+use App\Models\Blueprint;
 use App\Models\Collection;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
@@ -22,20 +24,16 @@ class Edit extends Component
 
     public function save(): void
     {
-        $this->form->validate();
-
-        (new UpdateCollection)->execute($this->collection, $this->form->all());
-
-        session()->flash('message', 'Collection updated successfully.');
+        $this->form->update($this->collection);
 
         $this->redirect(route('collections.index'), navigate: true);
     }
 
     #[Title('Edit Collection')]
-    public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+    public function render(): View|Factory
     {
         return view('livewire.collections.edit', [
-            'blueprints' => \App\Models\Blueprint::query()->where('is_active', true)->get(),
+            'blueprints' => Blueprint::query()->where('is_active', true)->get(),
         ]);
     }
 }
