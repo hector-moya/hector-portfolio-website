@@ -90,7 +90,7 @@
     <!-- Create Folder Modal -->
     {{-- <flux:modal title="Create New Folder" name="create-folder" wire:model="showCreateFolderModal">
         <div class="space-y-4">
-            <flux:input wire:model="newFolderName" label="Folder Name" placeholder="Enter folder name" />
+            <flux:input wire:model="folderForm.name" label="Folder Name" placeholder="Enter folder name" />
         </div>
 
         <x-slot:footer>

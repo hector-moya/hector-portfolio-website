@@ -3,14 +3,13 @@
 namespace App\Livewire\Assets;
 
 use App\Livewire\Forms\AssetForm;
+use App\Livewire\Forms\FolderForm;
 use App\Models\Asset;
 use App\Services\ImageTransformer;
 use Flux\Flux;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -22,6 +21,8 @@ class UploadModal extends Component
 
     public AssetForm $form;
 
+    public FolderForm $folderForm;
+
     public $showCreateFolderModal = false;
 
     public $currentFolder = '/';
@@ -31,8 +32,6 @@ class UploadModal extends Component
     public $upload;
 
     public $selectedAsset;
-
-    public $newFolderName = '';
 
     public ?int $currentFolderId = null;
 
@@ -101,23 +100,12 @@ class UploadModal extends Component
 
     public function createFolder(): void
     {
-        // TODO: This method bypasses the CreateFolder action (app/Actions/Folders/CreateFolder.php) entirely
-        //       and only creates a filesystem directory — it never creates a Folder database record.
-        //       It should instead call app(CreateFolder::class)->create([...]) via FolderForm::create(),
-        //       which handles both DB record creation (with Gate authorization + DB transaction) and the
-        //       parent_id relationship. The Storage::disk()->makeDirectory() call should live inside the
-        //       action (or be driven by a model observer/hook) so the filesystem and DB stay in sync.
-        //       Also note: this method validates $newFolderName inline but FolderForm already has a $name
-        //       property with #[Validate] — consolidate into the form to remove the duplicate validation.
-        $this->validate([
-            'newFolderName' => ['required', 'string', 'min:1', 'max:255'],
-        ]);
+        $this->folderForm->currentFolderId = $this->currentFolderId;
 
-        $folder = trim((string) $this->currentFolder, '/').'/'.Str::slug($this->newFolderName);
-        Storage::disk('public')->makeDirectory($folder);
-        $this->currentFolder = $folder;
+        $folder = $this->folderForm->create();
+
+        $this->currentFolderId = $folder->id;
         $this->showCreateFolderModal = false;
-        $this->newFolderName = '';
     }
 
     public function navigateToFolder($folder): void

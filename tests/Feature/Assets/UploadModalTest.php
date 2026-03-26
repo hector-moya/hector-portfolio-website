@@ -2,6 +2,7 @@
 
 use App\Livewire\Assets\UploadModal;
 use App\Models\Asset;
+use App\Models\Folder;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -51,21 +52,17 @@ test('user can select an asset', function () {
 });
 
 test('user can create folders', function () {
-    // Skip this test in CI environment
-    if (env('CI')) {
-        $this->markTestSkipped('Skipped in CI environment due to filesystem differences');
-    }
-
     Storage::fake('public');
 
-    $user = User::factory()->create();
+    $user = User::factory()->create(['role' => 'editor']);
 
     Livewire::actingAs($user)
         ->test(UploadModal::class)
-        ->set('newFolderName', 'Test Folder')
-        ->call('createFolder');
+        ->set('folderForm.name', 'Test Folder')
+        ->call('createFolder')
+        ->assertOk();
 
-    expect(Storage::disk('public')->exists('Test-Folder'))->toBeTrue();
+    expect(Folder::where('name', 'Test Folder')->exists())->toBeTrue();
 });
 
 test('user can navigate folders', function () {
