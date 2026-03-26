@@ -86,6 +86,21 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Supported Locales
+    |--------------------------------------------------------------------------
+    |
+    | The locales supported by the application for translation purposes.
+    | Adding a new locale here is the only code change required.
+    |
+    */
+
+    'supported_locales' => [
+        'en' => 'English',
+        'es' => 'Español',
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Encryption Key
     |--------------------------------------------------------------------------
     |

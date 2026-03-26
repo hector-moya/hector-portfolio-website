@@ -3,6 +3,7 @@
 use App\Livewire\TranslationEditor;
 use App\Models\Blueprint;
 use App\Models\Translation;
+use App\Models\User;
 use Livewire\Livewire;
 
 test('translation editor can be rendered', function () {
@@ -17,11 +18,13 @@ test('translation editor can be rendered', function () {
 });
 
 test('translations can be updated', function () {
+    $user = User::factory()->create(['role' => 'editor']);
+
     $blueprint = Blueprint::factory()->create([
         'name' => 'Test Blueprint',
     ]);
 
-    Livewire::test(TranslationEditor::class, [
+    Livewire::actingAs($user)->test(TranslationEditor::class, [
         'model' => $blueprint,
         'field' => 'name',
     ])->call('updateTranslation', 'es', 'Blueprint de Prueba');
@@ -55,11 +58,13 @@ test('translations are loaded correctly', function () {
 });
 
 test('translation changes dispatch event', function () {
+    $user = User::factory()->create(['role' => 'editor']);
+
     $blueprint = Blueprint::factory()->create([
         'name' => 'Test Blueprint',
     ]);
 
-    Livewire::test(TranslationEditor::class, [
+    Livewire::actingAs($user)->test(TranslationEditor::class, [
         'model' => $blueprint,
         'field' => 'name',
     ])->call('updateTranslation', 'es', 'Blueprint de Prueba')
