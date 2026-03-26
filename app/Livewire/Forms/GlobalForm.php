@@ -5,33 +5,50 @@ declare(strict_types=1);
 namespace App\Livewire\Forms;
 
 use App\Actions\Globals\CreateGlobal;
+use App\Actions\Globals\DeleteGlobal;
+use App\Actions\Globals\UpdateGlobal;
 use App\Models\GlobalSet;
 use Flux\Flux;
+use Illuminate\Validation\Rule;
 use Livewire\Attributes\Validate;
 use Livewire\Form;
 
-// TODO: This form only handles creation. Add the following to complete the CRUD pattern:
-//   1. A $global_set_id property (nullable int) to track the model being edited.
-//   2. A setGlobalSet(GlobalSet $globalSet) method to populate fields for edit.
-//   3. Move the unique handle validation out of the #[Validate] attribute and into a rules() method
-//      that uses Rule::unique('global_sets', 'handle')->ignore($this->global_set_id), so the rule
-//      correctly ignores the current record during updates.
-//   4. An update(int $globalSetId) method that calls an UpdateGlobal action
-//      (app/Livewire/Actions/Globals/UpdateGlobal.php or app/Actions/Globals/UpdateGlobal.php).
-//      The action should handle GlobalSet update + GlobalVariable upsert loop, replacing the
-//      inline logic currently in Globals/Edit.php.
-//   5. A destroy(int $globalSetId) method that calls a DeleteGlobal action.
-//   Without these, Globals/Edit.php cannot use this form and is forced to do all persistence inline.
 class GlobalForm extends Form
 {
+    public ?int $global_set_id = null;
+
     #[Validate('required|string|max:255')]
     public string $name = '';
 
-    #[Validate('required|string|max:255|unique:global_sets,handle')]
+    #[Validate('required|string|max:255')]
     public string $handle = '';
 
     #[Validate('required|integer|exists:blueprints,id')]
     public ?int $blueprint_id = null;
+
+    /** @var array<string, mixed> */
+    public array $variables = [];
+
+    public function rules(): array
+    {
+        return [
+            'handle' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('global_sets', 'handle')->ignore($this->global_set_id),
+            ],
+        ];
+    }
+
+    public function setGlobalSet(GlobalSet $globalSet): void
+    {
+        $this->global_set_id = $globalSet->id;
+        $this->name = $globalSet->name;
+        $this->handle = $globalSet->handle;
+        $this->blueprint_id = $globalSet->blueprint_id;
+        $this->variables = $globalSet->variables->pluck('value', 'handle')->toArray();
+    }
 
     public function create(): GlobalSet
     {
@@ -50,5 +67,37 @@ class GlobalForm extends Form
         );
 
         return $globalSet;
+    }
+
+    public function update(int $globalSetId): GlobalSet
+    {
+        $this->validate();
+
+        $globalSet = app(UpdateGlobal::class)->handle([
+            'id' => $globalSetId,
+            'name' => $this->name,
+            'handle' => $this->handle,
+            'blueprint_id' => $this->blueprint_id,
+            'variables' => $this->variables,
+        ]);
+
+        Flux::toast(
+            heading: __('Success'),
+            text: __('Global set updated successfully.'),
+            variant: 'success'
+        );
+
+        return $globalSet;
+    }
+
+    public function destroy(int $globalSetId): void
+    {
+        app(DeleteGlobal::class)->handle($globalSetId);
+
+        Flux::toast(
+            heading: __('Success'),
+            text: __('Global set deleted successfully.'),
+            variant: 'success'
+        );
     }
 }

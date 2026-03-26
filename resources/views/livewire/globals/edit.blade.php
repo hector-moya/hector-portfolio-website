@@ -9,15 +9,15 @@
             <flux:card>
                 <div class="p-4 space-y-4">
                     <div>
-                        <flux:input wire:model="name" label="Name" placeholder="Company Information" />
+                        <flux:input wire:model="form.name" label="Name" placeholder="Company Information" />
                     </div>
 
                     <div>
-                        <flux:input wire:model="handle" label="Handle" placeholder="company_info" />
+                        <flux:input wire:model="form.handle" label="Handle" placeholder="company_info" />
                     </div>
 
                     <div>
-                        <flux:select wire:model.live="blueprint_id" label="Blueprint" placeholder="Select a blueprint...">
+                        <flux:select wire:model.live="form.blueprint_id" label="Blueprint" placeholder="Select a blueprint...">
                             @foreach ($blueprints as $blueprint)
                                 <flux:select.option :value="$blueprint->id">
                                     {{ $blueprint->name }}
@@ -26,7 +26,7 @@
                         </flux:select>
                     </div>
 
-                    @if($blueprint_id)
+                    @if($form->blueprint_id)
                         <div class="border-t border-zinc-200 pt-4">
                             @foreach($globalSet->blueprint->elements as $element)
                                 @include('entries.fields.' . $element->type, [
@@ -39,7 +39,7 @@
                         <div class="border-t border-zinc-200 pt-4">
                             @foreach($globalSet->variables as $variable)
                                 <div class="mb-4">
-                                    <flux:textarea wire:model="variables.{{ $variable->handle }}" label="{{ $variable->handle }}" placeholder="Enter a value..." />
+                                    <flux:textarea wire:model="form.variables.{{ $variable->handle }}" label="{{ $variable->handle }}" placeholder="Enter a value..." />
                                 </div>
                             @endforeach
                         </div>
