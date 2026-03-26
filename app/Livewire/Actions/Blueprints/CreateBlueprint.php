@@ -3,6 +3,8 @@
 namespace App\Livewire\Actions\Blueprints;
 
 use App\Models\Blueprint;
+use App\Models\Section;
+use App\Models\Tab;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
@@ -11,12 +13,7 @@ class CreateBlueprint
 {
     public function create(array $blueprintData): Blueprint
     {
-        // TODO: Uncomment Gate::authorize once Blueprint policies are confirmed complete.
-        //       Authorization is inconsistently applied across actions: CreateBlueprint and all Collection/Entry
-        //       actions have no Gate check, while CreateTaxonomy, CreateUser, CreateGlobal, and CreateAsset do.
-        //       Audit all actions in app/Livewire/Actions/ and app/Actions/ and add Gate::authorize() calls
-        //       where missing, using the corresponding model policy (create, update, delete).
-        // Gate::authorize('create', Blueprint::class);
+        Gate::authorize('create', Blueprint::class);
 
         return DB::transaction(function () use ($blueprintData) {
             if (empty($blueprintData['slug'])) {
@@ -32,7 +29,7 @@ class CreateBlueprint
 
             // Create tabs, sections, and fields
             foreach ($blueprintData['tabs'] as $tabIndex => $tab) {
-                /** @var \App\Models\Tab $createdTab */
+                /** @var Tab $createdTab */
                 $createdTab = $blueprint->tabs()->create([
                     'name' => $tab['name'],
                     'handle' => $tab['handle'],
@@ -40,7 +37,7 @@ class CreateBlueprint
                 ]);
 
                 foreach ($tab['sections'] as $sectionIndex => $section) {
-                    /** @var \App\Models\Section $createdSection */
+                    /** @var Section $createdSection */
                     $createdSection = $createdTab->sections()->create([
                         'name' => $section['name'],
                         'handle' => $section['handle'],
