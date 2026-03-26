@@ -65,7 +65,7 @@ class History extends Component
     public function revisions(): Collection
     {
         if ($this->entryId === null) {
-            return collect();
+            return new Collection;
         }
 
         return Activity::query()

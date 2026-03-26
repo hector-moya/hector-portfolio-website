@@ -1,5 +1,4 @@
-<x-layouts.app :title="__('Dashboard')">
-    <div class="flex h-full w-full flex-1 flex-col gap-6">
+<div class="flex h-full w-full flex-1 flex-col gap-6">
         <div class="flex items-center justify-between">
             <div>
                 <flux:heading size="xl">{{ __('Dashboard') }}</flux:heading>
@@ -147,5 +146,4 @@
                 @endif
             </flux:card>
         </div>
-    </div>
-</x-layouts.app>
+</div>
