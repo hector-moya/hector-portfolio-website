@@ -16,8 +16,6 @@ class Index extends Component
 
     public string $search = '';
 
-    public mixed $navigations;
-
     #[Computed]
     public function navigations()
     {

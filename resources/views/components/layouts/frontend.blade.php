@@ -23,8 +23,9 @@
                     </svg>
                 </button>
             </div>
+            @php $mainMenu = \App\Facades\Navigation::get('main-menu'); @endphp
             <div class="hidden lg:flex lg:gap-x-12">
-                <x-menu handle="main-menu" class="text-sm/6 font-semibold text-white" />
+                <x-menu :navigation="$mainMenu" class="text-sm/6 font-semibold text-white" />
             </div>
             {{-- <div class="hidden lg:flex lg:flex-1 lg:justify-end">
                 <a href="/dashboard" class="text-sm/6 font-semibold text-white">{{ __('Log in') }} <span aria-hidden="true">&rarr;</span></a>
@@ -49,7 +50,7 @@
                         <div class="mt-6 flow-root">
                             <div class="-my-6 divide-y divide-white/10">
                                 <div class="space-y-2 py-6">
-                                    <x-menu handle="main-menu" class="flex flex-col" />
+                                    <x-menu :navigation="$mainMenu" class="flex flex-col" />
                                 </div>
                             </div>
                         </div>
