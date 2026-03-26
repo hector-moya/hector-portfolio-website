@@ -18,8 +18,6 @@ class FolderForm extends Form
     #[Validate('nullable|integer|exists:folders,id')]
     public ?int $parent_id = null;
 
-    public string $newFolderName = '';
-
     public ?int $currentFolderId = null;
 
     public ?int $folderId = null;
@@ -34,11 +32,8 @@ class FolderForm extends Form
 
     public function create(): Folder
     {
-        // TODO: create() does not call $this->validate() before persisting — update() does. Add $this->validate()
-        //       here so the #[Validate] attributes on $name and $parent_id are enforced on creation too.
-        //       Also consider whether $newFolderName (unused here) and $name are the same concept; the form
-        //       has both properties but create() reads $this->name while $newFolderName is reset after — clean
-        //       up to a single field to remove the ambiguity.
+        $this->validate();
+
         $folder = app(CreateFolder::class)->create([
             'name' => $this->name,
             'parent_id' => $this->currentFolderId ?? null,
@@ -52,10 +47,9 @@ class FolderForm extends Form
             variant: 'success'
         );
 
-        $this->reset('newFolderName');
+        $this->reset('name');
 
         return $folder;
-
     }
 
     public function update(int $folderId): Folder
