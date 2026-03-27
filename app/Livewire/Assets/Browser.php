@@ -3,48 +3,94 @@
 namespace App\Livewire\Assets;
 
 use App\Models\Asset;
+use App\Models\Folder;
 use Flux\Flux;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Collection;
+use Livewire\Attributes\Computed;
 use Livewire\Component;
-use Livewire\WithFileUploads;
+use Livewire\WithPagination;
 
 class Browser extends Component
 {
-    use WithFileUploads;
+    use WithPagination;
 
     public string $fieldHandle;
 
-    public array $uploads = [];
-
     public ?string $search = '';
 
-    public function mount(string $fieldHandle): void
+    /** 'image' or 'file' — controls which MIME types are shown */
+    public string $mode = 'image';
+
+    public ?int $currentFolderId = null;
+
+    public function mount(string $fieldHandle, string $mode = 'image'): void
     {
         $this->fieldHandle = $fieldHandle;
+        $this->mode = $mode;
     }
 
     public function selectAsset(int $assetId): void
     {
-        // Set the field value in the parent form
         $this->dispatch('asset-selected', [
             'handle' => $this->fieldHandle,
             'value' => $assetId,
         ]);
 
-        // Close the modal
         Flux::modal('asset-browser-'.$this->fieldHandle)->close();
     }
 
-    public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+    public function openFolder(?int $folderId): void
+    {
+        $this->currentFolderId = $folderId;
+        $this->resetPage();
+    }
+
+    #[Computed]
+    public function folders(): Collection
+    {
+        return Folder::query()
+            ->where('parent_id', $this->currentFolderId)
+            ->orderBy('name')
+            ->get();
+    }
+
+    #[Computed]
+    public function breadcrumbs(): array
+    {
+        if ($this->currentFolderId === null) {
+            return [];
+        }
+
+        $folder = Folder::query()->find($this->currentFolderId);
+
+        return $folder ? $folder->ancestors() : [];
+    }
+
+    /** @return LengthAwarePaginator<Asset> */
+    private function assetsQuery(): LengthAwarePaginator
+    {
+        return Asset::query()
+            ->when($this->search, fn ($q) => $q
+                ->where('original_filename', 'like', "%{$this->search}%")
+                ->orWhere('mime_type', 'like', "%{$this->search}%")
+            )
+            ->when(
+                $this->mode === 'image',
+                fn ($q) => $q->where('mime_type', 'like', 'image/%'),
+                fn ($q) => $q->where('mime_type', 'not like', 'image/%'),
+            )
+            ->where('folder_id', $this->currentFolderId)
+            ->latest()
+            ->paginate(12);
+    }
+
+    public function render(): View|Factory
     {
         return view('livewire.assets.browser', [
-            'assets' => Asset::query()
-                ->when($this->search, function ($query): void {
-                    $query->where('original_filename', 'like', "%{$this->search}%")
-                        ->orWhere('mime_type', 'like', "%{$this->search}%");
-                })
-                ->where('mime_type', 'like', 'image/%')
-                ->latest()
-                ->paginate(12),
+            'assets' => $this->assetsQuery(),
         ]);
     }
 }
