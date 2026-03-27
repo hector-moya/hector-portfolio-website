@@ -111,16 +111,12 @@ class Index extends Component
         $this->authorize('update', [auth()->user(), Asset::class]);
 
         $folder = Folder::query()->findOrFail($folderId);
-        $asset = Asset::query()->findOrFail($assetId);
-
-        $folderPath = trim((string) $folder->path, '/').'/';
 
         app(MoveAsset::class)->move(
             assetId: $assetId,
-            targetFolder: $folderPath,
+            targetFolder: trim((string) $folder->path, '/'),
+            folderId: $folderId,
         );
-
-        $asset->update(['folder_id' => $folderId]);
 
         unset($this->items);
 

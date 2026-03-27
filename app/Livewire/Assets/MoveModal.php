@@ -2,11 +2,13 @@
 
 namespace App\Livewire\Assets;
 
-use App\Livewire\Forms\AssetForm;
+use App\Actions\Assets\MoveAsset;
 use App\Livewire\Forms\FolderForm;
 use App\Models\Asset;
 use App\Models\Folder;
 use Flux\Flux;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Computed;
@@ -16,8 +18,6 @@ use Livewire\WithPagination;
 class MoveModal extends Component
 {
     use WithPagination;
-
-    public AssetForm $form;
 
     public FolderForm $folderForm;
 
@@ -127,13 +127,16 @@ class MoveModal extends Component
     {
         $this->authorize('update', [auth()->user(), Asset::class]);
 
-        $folder = $this->folderForm->currentFolderId !== null && $this->folderForm->currentFolderId !== 0 ? \App\Models\Folder::query()->findOrFail($this->folderForm->currentFolderId) : null;
-        $folderPath = $folder ? trim((string) $folder->path, '/').'/' : '';
+        $folderId = $this->folderForm->currentFolderId ?: null;
+        $folder = $folderId ? Folder::query()->findOrFail($folderId) : null;
+        $folderPath = $folder ? trim((string) $folder->path, '/') : '';
 
         foreach ($this->selected as $assetId) {
-            $this->form->setAsset($assetId);
-            $this->form->path = $folderPath.basename($this->form->path);
-            $this->form->update($assetId, $this->folderForm->currentFolderId);
+            app(MoveAsset::class)->move(
+                assetId: (int) $assetId,
+                targetFolder: $folderPath,
+                folderId: $folderId,
+            );
         }
 
         $this->selected = [];
@@ -154,7 +157,7 @@ class MoveModal extends Component
         Flux::modal('new-folder-modal')->show();
     }
 
-    public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+    public function render(): View|Factory
     {
         return view('livewire.assets.move-modal');
     }
