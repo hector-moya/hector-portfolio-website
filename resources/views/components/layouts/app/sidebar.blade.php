@@ -45,9 +45,9 @@
                 {{ __('Repository') }}
             </flux:navlist.item>
 
-            {{-- <flux:navlist.item icon="book-open-text" href="https://github.com/hector-moya/hector-portfolio-website" target="_blank">
+            <flux:navlist.item icon="book-open-text" :href="route('documentation.index')" :current="request()->routeIs('documentation.*')" wire:navigate>
                 {{ __('Documentation') }}
-                </flux:navlist.item> --}}
+            </flux:navlist.item>
         </flux:navlist>
 
         <!-- Desktop User Menu -->

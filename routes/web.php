@@ -9,6 +9,7 @@ use App\Livewire\Collections\Create as CollectionsCreate;
 use App\Livewire\Collections\Edit as CollectionsEdit;
 use App\Livewire\Collections\Index as CollectionsIndex;
 use App\Livewire\Dashboard;
+use App\Livewire\Documentation\Index as DocumentationIndex;
 use App\Livewire\Entries\Create as EntriesCreate;
 use App\Livewire\Entries\Edit as EntriesEdit;
 use App\Livewire\Entries\Index as EntriesIndex;
@@ -76,6 +77,9 @@ Route::middleware(['auth'])->group(function (): void {
 
     // Activity Log Routes
     Route::get('activity-log', ActivityLogIndex::class)->name('activity-log.index');
+
+    // Documentation Routes
+    Route::get('documentation/{slug?}', DocumentationIndex::class)->name('documentation.index');
 
     // Form Submissions Routes
     Route::get('form-submissions', FormSubmissionsIndex::class)->name('form-submissions.index');
