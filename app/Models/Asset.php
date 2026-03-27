@@ -19,6 +19,10 @@ use Illuminate\Support\Facades\Storage;
  * @property int $size
  * @property string $path
  * @property string|null $alt_text
+ * @property string|null $caption
+ * @property string|null $description
+ * @property string|null $copyright
+ * @property array{x: float, y: float}|null $focal_point
  * @property string|null $title
  * @property array<array-key, mixed>|null $meta
  * @property int $uploaded_by
@@ -72,6 +76,10 @@ class Asset extends Model
         'size',
         'path',
         'alt_text',
+        'caption',
+        'description',
+        'copyright',
+        'focal_point',
         'title',
         'folder_id',
         'meta',
@@ -81,6 +89,7 @@ class Asset extends Model
 
     protected $casts = [
         'meta' => 'array',
+        'focal_point' => 'array',
         'size' => 'integer',
     ];
 

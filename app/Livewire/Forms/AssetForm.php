@@ -46,6 +46,18 @@ class AssetForm extends Form
     #[Validate('nullable|string|max:255')]
     public string $alt_text = '';
 
+    #[Validate('nullable|string')]
+    public string $caption = '';
+
+    #[Validate('nullable|string')]
+    public string $description = '';
+
+    #[Validate('nullable|string|max:255')]
+    public string $copyright = '';
+
+    #[Validate('nullable|array')]
+    public ?array $focal_point = null;
+
     #[Validate('nullable|string|max:255')]
     public string $title = '';
 
@@ -73,6 +85,10 @@ class AssetForm extends Form
         $this->size = $asset->size ?? '';
         $this->path = $asset->path ?? '';
         $this->alt_text = $asset->alt_text ?? '';
+        $this->caption = $asset->caption ?? '';
+        $this->description = $asset->description ?? '';
+        $this->copyright = $asset->copyright ?? '';
+        $this->focal_point = $asset->focal_point ?? null;
         $this->title = $asset->title ?? '';
         $this->folder_id = $asset->folder_id ?? null;
         $this->meta = $asset->meta ?? [];
@@ -91,6 +107,10 @@ class AssetForm extends Form
             'size' => $this->size,
             'path' => $this->path,
             'alt_text' => $this->alt_text,
+            'caption' => $this->caption,
+            'description' => $this->description,
+            'copyright' => $this->copyright,
+            'focal_point' => $this->focal_point,
             'title' => $this->title,
             'folder_id' => $this->folder_id,
             'meta' => $this->meta,
@@ -104,7 +124,7 @@ class AssetForm extends Form
             variant: 'success',
         );
 
-        $this->reset('filename', 'original_filename', 'disk', 'mime_type', 'size', 'path', 'alt_text', 'title', 'folder', 'meta', 'uploaded_by');
+        $this->reset('filename', 'original_filename', 'disk', 'mime_type', 'size', 'path', 'alt_text', 'caption', 'description', 'copyright', 'focal_point', 'title', 'folder', 'meta', 'uploaded_by');
 
         return $asset;
     }
@@ -120,6 +140,10 @@ class AssetForm extends Form
             'size' => $this->size,
             'path' => $this->path,
             'alt_text' => $this->alt_text,
+            'caption' => $this->caption,
+            'description' => $this->description,
+            'copyright' => $this->copyright,
+            'focal_point' => $this->focal_point,
             'title' => $this->title,
             'folder_id' => $folderId,
             'meta' => $this->meta,

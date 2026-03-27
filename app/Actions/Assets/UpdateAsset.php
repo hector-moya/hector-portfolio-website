@@ -4,7 +4,6 @@ namespace App\Actions\Assets;
 
 use App\Models\Asset;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Gate;
 
 class UpdateAsset
 {
@@ -23,6 +22,10 @@ class UpdateAsset
                 'size' => $assetData['size'],
                 'path' => $assetData['path'],
                 'alt_text' => $assetData['alt_text'],
+                'caption' => $assetData['caption'] ?? null,
+                'description' => $assetData['description'] ?? null,
+                'copyright' => $assetData['copyright'] ?? null,
+                'focal_point' => $assetData['focal_point'] ?? null,
                 'title' => $assetData['title'],
                 'folder_id' => $assetData['folder_id'],
                 'meta' => $assetData['meta'],
