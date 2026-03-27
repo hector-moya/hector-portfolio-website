@@ -87,6 +87,7 @@ class EntryForm extends Form
             'number' => null,
             'select', 'radio', 'email', 'url' => '',
             'repeater' => ['items' => []],
+            'page_builder' => [],
             default => '',
         };
     }
@@ -266,8 +267,14 @@ class EntryForm extends Form
 
         foreach ($bp->fields as $el) {
             $h = $el->handle;
-            if ($el->type !== 'repeater') {
+            if (! in_array($el->type, ['repeater', 'page_builder'], true)) {
                 $rules["fieldValues.$h"] = $this->rulesForSimple($el->type, $el->is_required, $el->config ?? []);
+
+                continue;
+            }
+
+            if ($el->type === 'page_builder') {
+                $rules["fieldValues.$h"] = ['nullable', 'array'];
 
                 continue;
             }
@@ -312,6 +319,7 @@ class EntryForm extends Form
             'checkbox' => ['boolean'],
             'select', 'radio' => ['string'],
             'image', 'file' => ['string'], // your uploader will refine later
+            'page_builder' => ['array'],
             default => ['string'],
         });
     }

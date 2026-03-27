@@ -19,6 +19,7 @@ enum FieldType: string
     case Image = 'image';
     case File = 'file';
     case Repeater = 'repeater';
+    case PageBuilder = 'page_builder';
 
     public function label(): string
     {
@@ -38,6 +39,7 @@ enum FieldType: string
             self::Image => 'Image',
             self::File => 'File',
             self::Repeater => 'Repeater (Block Group)',
+            self::PageBuilder => 'Page Builder',
         };
     }
 
@@ -59,6 +61,7 @@ enum FieldType: string
             self::Image => 'photo',
             self::File => 'arrow-up-tray',
             self::Repeater => 'rectangle-group',
+            self::PageBuilder => 'squares-plus',
         };
     }
 
@@ -80,6 +83,7 @@ enum FieldType: string
             self::Image => 'New Image Field',
             self::File => 'New File Field',
             self::Repeater => 'New Repeater Field',
+            self::PageBuilder => 'Page Builder',
         };
     }
 
@@ -186,6 +190,9 @@ enum FieldType: string
                 'min' => 0,
                 'max' => null,
             ],
+            self::PageBuilder => [
+                'allowed_section_types' => ['hero', 'text', 'image_text', 'gallery', 'cta', 'features'],
+            ],
         };
     }
 
@@ -244,6 +251,10 @@ enum FieldType: string
                 'blueprint.*.instructions' => ['nullable', 'string'],
                 'blueprint.*.is_required' => ['boolean'],
                 'blueprint.*.config' => ['array'],
+            ],
+            self::PageBuilder => [
+                'allowed_section_types' => ['array'],
+                'allowed_section_types.*' => ['string'],
             ],
         };
     }
