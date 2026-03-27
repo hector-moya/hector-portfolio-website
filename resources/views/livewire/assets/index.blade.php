@@ -70,4 +70,6 @@
             </div>
         </form>
     </flux:modal>
+
+    <livewire:assets.edit-modal />
 </div>

@@ -2,11 +2,14 @@
 
 namespace App\Livewire\Assets;
 
+use App\Actions\Assets\MoveAsset;
 use App\Livewire\Forms\AssetForm;
 use App\Livewire\Forms\FolderForm;
 use App\Models\Asset;
 use App\Models\Folder;
 use Flux\Flux;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Computed;
@@ -98,6 +101,36 @@ class Index extends Component
         $this->resetPage();
     }
 
+    public function openAsset(int $assetId): void
+    {
+        $this->dispatch('open-asset-edit', assetId: $assetId);
+    }
+
+    public function dropAssetOnFolder(int $assetId, int $folderId): void
+    {
+        $this->authorize('update', [auth()->user(), Asset::class]);
+
+        $folder = Folder::query()->findOrFail($folderId);
+        $asset = Asset::query()->findOrFail($assetId);
+
+        $folderPath = trim((string) $folder->path, '/').'/';
+
+        app(MoveAsset::class)->move(
+            assetId: $assetId,
+            targetFolder: $folderPath,
+        );
+
+        $asset->update(['folder_id' => $folderId]);
+
+        unset($this->items);
+
+        Flux::toast(
+            heading: 'Asset Moved',
+            text: "Moved to {$folder->name}.",
+            variant: 'success',
+        );
+    }
+
     public function delete(int $assetId): void
     {
         $this->form->destroy($assetId);
@@ -118,6 +151,12 @@ class Index extends Component
         $this->resetPage();
     }
 
+    #[On('asset-updated')]
+    public function onAssetUpdated(): void
+    {
+        unset($this->items);
+    }
+
     #[Computed]
     public function items(): Collection
     {
@@ -132,6 +171,7 @@ class Index extends Component
                 DB::raw('NULL as mime_type'),
                 DB::raw('NULL as path'),
                 DB::raw('NULL as size'),
+                DB::raw('(SELECT COUNT(*) FROM assets WHERE assets.folder_id = folders.id AND assets.deleted_at IS NULL) as assets_count'),
             ])
             ->with(['updater'])
             ->where('parent_id', $this->folderForm->currentFolderId)
@@ -149,6 +189,7 @@ class Index extends Component
                 'mime_type',
                 'path',
                 'size',
+                DB::raw('NULL as assets_count'),
             ])
             ->with(['updater'])
             ->where('folder_id', $this->folderForm->currentFolderId)
@@ -215,7 +256,7 @@ class Index extends Component
     }
 
     #[Title('Assets')]
-    public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+    public function render(): View|Factory
     {
 
         return view('livewire.assets.index');
