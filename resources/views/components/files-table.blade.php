@@ -15,34 +15,75 @@
 
         <flux:table.rows>
             @foreach ($this->items as $item)
-                <flux:table.row :key="$item->type . '-' . $item->id">
-                    <flux:table.cell class="w-2">
-                        @if ($actions)
-                            @if ($item->type === 'asset')
-                                <flux:checkbox wire:model.live="selected" value="{{ $item->id }}" class="ml-2" />
-                            @endif
-                        @endif
-                    </flux:table.cell>
-                    <flux:table.cell class="group">
-                        <div class="flex items-center justify-between">
-                            <div wire:click="{{ $item->type === 'folder' ? 'openFolder(' . $item->id . ')' : 'openAsset(' . $item->id . ')' }}" class="flex cursor-pointer items-center space-x-2">
-                                @if ($item->type === 'folder')
+                @if ($item->type === 'folder')
+                    <flux:table.row
+                        :key="'folder-' . $item->id"
+                        x-data="{ dragOver: false }"
+                        x-on:dragover.prevent="dragOver = true"
+                        x-on:dragleave="dragOver = false"
+                        x-on:drop.prevent="dragOver = false; const aid = $event.dataTransfer.getData('assetId'); if (aid) $wire.dropAssetOnFolder(Number(aid), {{ $item->id }})"
+                        x-bind:class="dragOver ? 'bg-blue-50 dark:bg-blue-900/20 ring-2 ring-inset ring-blue-400' : ''"
+                    >
+                        <flux:table.cell class="w-2"></flux:table.cell>
+                        <flux:table.cell class="group">
+                            <div class="flex items-center justify-between">
+                                <div wire:click="openFolder({{ $item->id }})" class="flex cursor-pointer items-center space-x-2">
                                     <flux:icon name="folder" size="micro" />
-                                @elseif(str_starts_with($item->mime_type, 'image/'))
-                                    <img src="{{ $item->path }}" alt="{{ $item->display_name }}" class="h-6 w-6 rounded object-cover" />
-                                @else
-                                    <flux:icon name="document" size="micro" />
-                                @endif
-                                <flux:text class="hover:underline">
-                                    {{ $item->type === 'asset' ? substr($item->display_name, 0, 15) . (strlen($item->display_name) > 15 ? '...' : '') : $item->display_name }}
-                                </flux:text>
-                            </div>
-                            @if ($actions)
-                                <div class="group-focus-within:block group-hover:block">
-                                    @if ($item->type === 'asset')
+                                    <flux:text class="hover:underline">{{ $item->display_name }}</flux:text>
+                                </div>
+                                @if ($actions)
+                                    <div class="group-focus-within:block group-hover:block">
                                         <flux:dropdown>
                                             <flux:button variant="ghost" size="xs" icon="ellipsis-horizontal" inset />
                                             <flux:menu>
+                                                <flux:menu.item icon="pencil" wire:click="openRenameFolderModal({{ $item->id }})">
+                                                    {{ __('Rename') }}
+                                                </flux:menu.item>
+                                                <flux:menu.separator />
+                                                <flux:menu.item variant="danger" icon="trash" wire:click="deleteFolder({{ $item->id }})" wire:confirm="{{ __('Are you sure you want to delete this folder? This will also delete all :count assets inside it.', ['count' => $item->assets_count ?? 0]) }}">
+                                                    {{ __('Delete') }}
+                                                </flux:menu.item>
+                                            </flux:menu>
+                                        </flux:dropdown>
+                                    </div>
+                                @endif
+                            </div>
+                        </flux:table.cell>
+                        <flux:table.cell class="whitespace-nowrap">{{ $item->updated_at?->diffForHumans() }}</flux:table.cell>
+                        <flux:table.cell>{{ $item->updater?->name ?: $item->uploader?->name }}</flux:table.cell>
+                    </flux:table.row>
+                @else
+                    <flux:table.row
+                        :key="'asset-' . $item->id"
+                        draggable="true"
+                        x-on:dragstart="$event.dataTransfer.setData('assetId', '{{ $item->id }}'); $event.dataTransfer.effectAllowed = 'move'"
+                        class="cursor-grab active:opacity-50"
+                    >
+                        <flux:table.cell class="w-2">
+                            @if ($actions)
+                                <flux:checkbox wire:model.live="selected" value="{{ $item->id }}" class="ml-2" />
+                            @endif
+                        </flux:table.cell>
+                        <flux:table.cell class="group">
+                            <div class="flex items-center justify-between">
+                                <div wire:click="openAsset({{ $item->id }})" class="flex cursor-pointer items-center space-x-2">
+                                    @if (str_starts_with($item->mime_type ?? '', 'image/'))
+                                        <img src="{{ $item->path }}" alt="{{ $item->display_name }}" class="h-6 w-6 rounded object-cover" />
+                                    @else
+                                        <flux:icon name="document" size="micro" />
+                                    @endif
+                                    <flux:text class="hover:underline">
+                                        {{ substr($item->display_name, 0, 15) . (strlen($item->display_name) > 15 ? '...' : '') }}
+                                    </flux:text>
+                                </div>
+                                @if ($actions)
+                                    <div class="group-focus-within:block group-hover:block">
+                                        <flux:dropdown>
+                                            <flux:button variant="ghost" size="xs" icon="ellipsis-horizontal" inset />
+                                            <flux:menu>
+                                                <flux:menu.item wire:click="openAsset({{ $item->id }})" icon="pencil-square">
+                                                    {{ __('Edit') }}
+                                                </flux:menu.item>
                                                 <flux:menu.item wire:click="download({{ $item->id }})" icon="arrow-down-tray">
                                                     {{ __('Download') }}
                                                 </flux:menu.item>
@@ -56,31 +97,14 @@
                                                 </flux:menu.item>
                                             </flux:menu>
                                         </flux:dropdown>
-                                    @else
-                                        <flux:dropdown>
-                                            <flux:button variant="ghost" size="xs" icon="ellipsis-horizontal" inset />
-                                            <flux:menu>
-                                                <flux:menu.item icon="pencil" wire:click="openRenameFolderModal({{ $item->id }})">
-                                                    {{ __('Rename') }}
-                                                </flux:menu.item>
-                                                <flux:menu.separator />
-                                                <flux:menu.item variant="danger" icon="trash" wire:click="deleteFolder({{ $item->id }})" wire:confirm="Are you sure you want to delete this folder?">
-                                                    {{ __('Delete') }}
-                                                </flux:menu.item>
-                                            </flux:menu>
-                                        </flux:dropdown>
-                                    @endif
-                                </div>
-                            @endif
-                        </div>
-                    </flux:table.cell>
-                    <flux:table.cell class="whitespace-nowrap">
-                        {{ $item->updated_at?->diffForHumans() }}
-                    </flux:table.cell>
-                    <flux:table.cell>
-                        {{ $item->updater?->name ? $item->updater?->name : $item->uploader?->name }}
-                    </flux:table.cell>
-                </flux:table.row>
+                                    </div>
+                                @endif
+                            </div>
+                        </flux:table.cell>
+                        <flux:table.cell class="whitespace-nowrap">{{ $item->updated_at?->diffForHumans() }}</flux:table.cell>
+                        <flux:table.cell>{{ $item->updater?->name ?: $item->uploader?->name }}</flux:table.cell>
+                    </flux:table.row>
+                @endif
             @endforeach
         </flux:table.rows>
     </flux:table>
