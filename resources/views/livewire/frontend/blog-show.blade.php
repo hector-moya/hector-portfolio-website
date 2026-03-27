@@ -26,7 +26,7 @@
 
         {{-- Content --}}
         <div class="prose prose-lg dark:prose-invert max-w-none">
-            {!! nl2br(e($entry->elements->firstWhere('handle', 'content')?->value ?? '')) !!}
+            {!! $entry->elements->firstWhere('handle', 'content')?->value ?? '' !!}
         </div>
 
         {{-- Tags --}}
@@ -51,15 +51,13 @@
         </div>
     </x-themes.wrapper>
 
-    {{-- Optional page builder sections --}}
-    @if (!empty($entry->layout))
-        @foreach ($entry->layout as $section)
-            <x-dynamic-component
-                :component="'sections.' . str_replace('_', '-', $section['type'])"
-                :section="$section"
-                :assets="$assets"
-                wire:key="section-{{ $section['_id'] }}"
-            />
-        @endforeach
-    @endif
+    {{-- Page builder sections --}}
+    @foreach ($entry->getPageBuilderSections() as $section)
+        <x-dynamic-component
+            :component="'sections.' . str_replace('_', '-', $section['type'])"
+            :section="$section"
+            :assets="$assets"
+            wire:key="section-{{ $section['_id'] }}"
+        />
+    @endforeach
 </div>

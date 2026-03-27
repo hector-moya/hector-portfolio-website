@@ -39,11 +39,13 @@ class BlogShow extends Component
 
     private function loadLayoutAssets(Entry $entry): Collection
     {
-        if (empty($entry->layout)) {
+        $sections = $entry->getPageBuilderSections();
+
+        if (empty($sections)) {
             return new Collection;
         }
 
-        $assetIds = collect($entry->layout)
+        $assetIds = collect($sections)
             ->flatMap(function (array $section): array {
                 return match ($section['type']) {
                     'hero' => [$section['data']['bg_image'] ?? null],

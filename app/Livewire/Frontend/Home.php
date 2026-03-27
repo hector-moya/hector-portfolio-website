@@ -23,38 +23,25 @@ class Home extends Component
             ->with(['elements.field', 'collection'])
             ->first();
 
-        $layout = $this->hasLayoutContent($entry) ? $entry->layout : [];
-        $assets = $this->loadLayoutAssets($entry, $layout);
+        $sections = $entry?->getPageBuilderSections() ?? [];
+        $assets = $this->loadLayoutAssets($entry, $sections);
         $theme = $entry?->collection?->settings['theme'] ?? 'greenpeace';
 
         return view('livewire.frontend.home', [
             'entry' => $entry,
-            'layout' => $layout,
+            'layout' => $sections,
             'assets' => $assets,
             'theme' => $theme,
         ]);
     }
 
-    private function hasLayoutContent(?Entry $entry): bool
+    private function loadLayoutAssets(?Entry $entry, array $sections): Collection
     {
-        if (! $entry || empty($entry->layout)) {
-            return false;
-        }
-
-        return collect($entry->layout)->some(
-            fn (array $section): bool => collect($section['data'] ?? [])
-                ->filter(fn ($v): bool => $v !== null && $v !== '' && $v !== [])
-                ->isNotEmpty()
-        );
-    }
-
-    private function loadLayoutAssets(?Entry $entry, array $layout): Collection
-    {
-        if (! $entry || empty($layout)) {
+        if (! $entry || empty($sections)) {
             return new Collection;
         }
 
-        $assetIds = collect($layout)
+        $assetIds = collect($sections)
             ->flatMap(function (array $section): array {
                 return match ($section['type']) {
                     'hero' => [$section['data']['bg_image'] ?? null],

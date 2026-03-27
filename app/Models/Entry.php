@@ -110,4 +110,25 @@ class Entry extends Model
     {
         return $this->terms()->whereHas('taxonomy', fn ($q) => $q->where('handle', $taxonomyHandle));
     }
+
+    /**
+     * Returns page builder sections, checking entry_elements first (new format),
+     * then falling back to the legacy entries.layout column.
+     *
+     * @return array<int, array{_id: string, type: string, data: array<string, mixed>}>
+     */
+    public function getPageBuilderSections(): array
+    {
+        if ($this->relationLoaded('elements')) {
+            $pbElement = $this->elements->first(
+                fn (EntryElement $el) => $el->Field?->type === 'page_builder'
+            );
+
+            if ($pbElement !== null && is_array($pbElement->getElementValue())) {
+                return $pbElement->getElementValue();
+            }
+        }
+
+        return $this->layout ?? [];
+    }
 }
