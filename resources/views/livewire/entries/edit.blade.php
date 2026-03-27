@@ -76,19 +76,6 @@
                         </flux:tab.group>
                     @endif
 
-                    {{-- Page Builder --}}
-                    <flux:card class="!p-0">
-                        <div class="flex items-center gap-2 px-4 py-3">
-                            <flux:icon.squares-plus variant="micro" class="shrink-0 text-zinc-400" />
-                            <flux:separator vertical class="h-4" />
-                            <span class="flex-1 text-sm font-medium">{{ __('Page Builder') }}</span>
-                        </div>
-                        <flux:separator />
-                        <div class="p-5">
-                            <livewire:entries.partials.page-builder :entry="$entry" :key="'pb-' . $entry->id" />
-                        </div>
-                    </flux:card>
-
                 </div>
 
                 {{-- ─── Sidebar ─── --}}
