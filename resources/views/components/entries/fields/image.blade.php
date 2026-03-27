@@ -15,6 +15,7 @@
     $asset = $value ? \App\Models\Asset::find($value) : null;
     $maxSize = $field->config['max_size_mb'] ?? 5;
     $mimes = $field->config['mimes'] ?? ['jpg', 'jpeg', 'png', 'webp'];
+    $browserHandle = $field->handle . ($index !== null ? $index : '');
 @endphp
 
 <div class="space-y-2">
@@ -27,19 +28,19 @@
     </div>
 
     @if ($asset)
-        <div class="group relative aspect-video w-48 overflow-hidden rounded-lg border-2 border-gray-200 dark:border-gray-700">
-            <img src="{{ $asset->url }}" alt="{{ $asset->alt_text }}" class="h-full w-full object-cover" />
-            <button type="button" wire:click="{{ $wirePath }} = null" class="absolute right-2 top-2 rounded-full bg-white p-1 opacity-0 shadow transition-opacity group-hover:opacity-100 dark:bg-gray-800">
-                <flux:icon.x-mark class="h-4 w-4 text-gray-500" />
+        <div class="group relative aspect-video w-48 overflow-hidden rounded-lg border-2 border-zinc-200 dark:border-zinc-700">
+            <img src="{{ $asset->thumbnail_url ?? $asset->url }}" alt="{{ $asset->alt_text }}" class="h-full w-full object-cover" />
+            <button type="button" wire:click="{{ $wirePath }} = null" class="absolute right-2 top-2 rounded-full bg-white p-1 opacity-0 shadow transition-opacity group-hover:opacity-100 dark:bg-zinc-800">
+                <flux:icon.x-mark class="h-4 w-4 text-zinc-500" />
             </button>
         </div>
     @endif
 
     {{-- Asset Selector Button --}}
     <div>
-        <flux:modal.trigger name="asset-browser-{{ $field->handle . $index }}">
-            <flux:button type="button" variant="primary" icon="photo">
-                {{ $asset ? 'Change Image' : 'Select Image' }}
+        <flux:modal.trigger name="asset-browser-{{ $browserHandle }}">
+            <flux:button type="button" variant="ghost" size="sm" icon="photo">
+                {{ $asset ? __('Change Image') : __('Select Image') }}
             </flux:button>
         </flux:modal.trigger>
         <flux:text size="xs" class="mt-1 opacity-70">
@@ -51,7 +52,7 @@
     </div>
 
     {{-- Asset Browser Modal --}}
-    <flux:modal name="asset-browser-{{ $field->handle . $index }}">
-        <livewire:assets.upload-modal :key="'upload-modal-' . $field->handle . $index" :currentFolderId="null" />
+    <flux:modal name="asset-browser-{{ $browserHandle }}" class="w-3xl">
+        <livewire:assets.browser :fieldHandle="$browserHandle" :key="'img-browser-' . $browserHandle" />
     </flux:modal>
 </div>
