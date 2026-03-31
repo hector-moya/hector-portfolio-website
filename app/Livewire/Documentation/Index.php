@@ -23,6 +23,8 @@ class Index extends Component
         return [
             ['slug' => 'activity-log', 'title' => 'Activity Log', 'icon' => 'clock'],
             ['slug' => 'form-submissions', 'title' => 'Form Submissions', 'icon' => 'envelope'],
+            ['slug' => 'globals', 'title' => 'Globals', 'icon' => 'globe-alt'],
+            ['slug' => 'navigation', 'title' => 'Navigation', 'icon' => 'bars-3'],
             ['slug' => 'users', 'title' => 'Users', 'icon' => 'user-group'],
         ];
     }
