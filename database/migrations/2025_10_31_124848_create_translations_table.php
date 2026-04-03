@@ -19,7 +19,7 @@ return new class extends Migration
             $table->text('value');
             $table->timestamps();
 
-            $table->unique(['locale', 'translatable_type', 'translatable_id', 'field']);
+            $table->unique(['locale', 'translatable_type', 'translatable_id', 'field'], 'translations_unique');
         });
     }
 
