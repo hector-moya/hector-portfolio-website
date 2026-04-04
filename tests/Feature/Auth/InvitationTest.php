@@ -73,3 +73,47 @@ test('invitation email contains registration link with token', function (): void
         return $mail->invitation->token === $invitation->token;
     });
 });
+
+use App\Livewire\Auth\Register;
+use Livewire\Livewire;
+
+test('register component pre-fills email from valid invitation token', function (): void {
+    SiteSetting::set('registration_mode', 'invitation');
+
+    $invitation = Invitation::factory()->create(['email' => 'invited@example.com']);
+
+    Livewire::test(Register::class, ['token' => $invitation->token])
+        ->assertSet('email', 'invited@example.com');
+});
+
+test('registering with invitation token marks invitation as accepted', function (): void {
+    Mail::fake();
+    SiteSetting::set('registration_mode', 'invitation');
+
+    $invitation = Invitation::factory()->create(['email' => 'invited@example.com']);
+
+    Livewire::test(Register::class, ['token' => $invitation->token])
+        ->set('name', 'Invited User')
+        ->set('password', 'password123')
+        ->set('password_confirmation', 'password123')
+        ->call('register')
+        ->assertHasNoErrors();
+
+    expect($invitation->fresh()->accepted_at)->not->toBeNull();
+});
+
+test('registering in approval mode sets user status to pending', function (): void {
+    Mail::fake();
+    SiteSetting::set('registration_mode', 'approval');
+
+    Livewire::test(Register::class)
+        ->set('name', 'Pending User')
+        ->set('email', 'pending@example.com')
+        ->set('password', 'password123')
+        ->set('password_confirmation', 'password123')
+        ->call('register')
+        ->assertHasNoErrors();
+
+    $user = User::where('email', 'pending@example.com')->first();
+    expect($user->status)->toBe('pending');
+});

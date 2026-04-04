@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Auth;
 
+use App\Models\Invitation;
+use App\Models\SiteSetting;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
@@ -9,6 +11,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\Rules;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Url;
 use Livewire\Component;
 
 #[Layout('components.layouts.auth')]
@@ -21,6 +24,23 @@ class Register extends Component
     public string $password = '';
 
     public string $password_confirmation = '';
+
+    #[Url]
+    public string $token = '';
+
+    public function mount(): void
+    {
+        if ($this->token) {
+            $invitation = Invitation::where('token', $this->token)
+                ->whereNull('accepted_at')
+                ->where('expires_at', '>', now())
+                ->first();
+
+            if ($invitation) {
+                $this->email = $invitation->email;
+            }
+        }
+    }
 
     /**
      * Handle an incoming registration request.
@@ -35,7 +55,21 @@ class Register extends Component
 
         $validated['password'] = Hash::make($validated['password']);
 
-        event(new Registered(($user = User::query()->create($validated))));
+        $mode = SiteSetting::get('registration_mode', 'closed');
+
+        if ($mode === 'approval') {
+            $validated['status'] = 'pending';
+        }
+
+        $user = User::query()->create($validated);
+
+        event(new Registered($user));
+
+        if ($mode === 'invitation' && $this->token) {
+            Invitation::where('token', $this->token)
+                ->whereNull('accepted_at')
+                ->update(['accepted_at' => now()]);
+        }
 
         Auth::login($user);
 

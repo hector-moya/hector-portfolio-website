@@ -23,6 +23,7 @@
             type="email"
             required
             autocomplete="email"
+            :readonly="(bool) $token"
             placeholder="email@example.com"
         />
 
