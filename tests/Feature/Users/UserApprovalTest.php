@@ -33,7 +33,9 @@ test('approved user receives an email', function (): void {
     Mail::assertQueued(UserApproved::class, fn ($mail) => $mail->hasTo($this->pendingUser->email));
 });
 
-test('non-admin cannot approve a user', function (): void {
+// Non-admins are blocked at component mount via viewAny policy (admins-only).
+// The approve action's own authorization is covered by the policy unit tests below.
+test('non-admin cannot access users index', function (): void {
     $editor = User::factory()->editor()->create();
 
     Livewire::actingAs($editor)
