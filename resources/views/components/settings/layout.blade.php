@@ -7,6 +7,9 @@
                 <flux:navlist.item :href="route('two-factor.show')" wire:navigate>{{ __('Two-Factor Auth') }}</flux:navlist.item>
             @endif
             <flux:navlist.item :href="route('settings.appearance')" wire:navigate>{{ __('Appearance') }}</flux:navlist.item>
+            @can('viewAny', App\Models\User::class)
+                <flux:navlist.item :href="route('settings.security')" wire:navigate>{{ __('Security') }}</flux:navlist.item>
+            @endcan
         </flux:navlist>
     </div>
 
