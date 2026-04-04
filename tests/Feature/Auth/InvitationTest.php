@@ -24,7 +24,7 @@ test('admin can send an invitation', function (): void {
     );
 
     expect(Invitation::where('email', 'invited@example.com')->exists())->toBeTrue();
-    Mail::assertSent(InvitationMail::class, fn ($mail) => $mail->hasTo('invited@example.com'));
+    Mail::assertQueued(InvitationMail::class, fn ($mail) => $mail->hasTo('invited@example.com'));
 });
 
 test('invitation expires in 48 hours', function (): void {
@@ -67,7 +67,7 @@ test('invitation email contains registration link with token', function (): void
         role: 'viewer',
     );
 
-    Mail::assertSent(InvitationMail::class, function (InvitationMail $mail) {
+    Mail::assertQueued(InvitationMail::class, function (InvitationMail $mail) {
         $invitation = Invitation::where('email', 'invited@example.com')->first();
 
         return $mail->invitation->token === $invitation->token;
