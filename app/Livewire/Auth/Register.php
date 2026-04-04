@@ -2,12 +2,14 @@
 
 namespace App\Livewire\Auth;
 
+use App\Mail\AdminPendingUserNotification;
 use App\Models\Invitation;
 use App\Models\SiteSetting;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\Rules;
 use Livewire\Attributes\Layout;
@@ -79,6 +81,13 @@ class Register extends Component
         $user = User::query()->create($validated);
 
         event(new Registered($user));
+
+        if ($mode === 'approval') {
+            $admins = User::where('role', 'admin')->get();
+            foreach ($admins as $admin) {
+                Mail::to($admin)->queue(new AdminPendingUserNotification($user));
+            }
+        }
 
         if ($mode === 'invitation' && $this->token) {
             Invitation::where('token', $this->token)
