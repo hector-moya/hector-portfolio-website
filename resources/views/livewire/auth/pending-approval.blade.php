@@ -13,6 +13,9 @@
     </flux:card>
 
     <div class="text-center text-sm">
-        <flux:link :href="route('logout')" wire:navigate>{{ __('Back to login') }}</flux:link>
+        <form method="POST" action="{{ route('logout') }}">
+            @csrf
+            <flux:button type="submit" variant="ghost" size="sm">{{ __('Sign out') }}</flux:button>
+        </form>
     </div>
 </div>
