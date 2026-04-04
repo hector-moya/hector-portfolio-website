@@ -23,7 +23,7 @@ class InviteUser
             'expires_at' => now()->addHours(48),
         ]);
 
-        Mail::to($email)->send(new InvitationMail($invitation));
+        Mail::to($email)->queue(new InvitationMail($invitation));
 
         return $invitation;
     }
