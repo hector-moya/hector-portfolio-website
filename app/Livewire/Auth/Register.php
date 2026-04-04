@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\Rules;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Locked;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 
@@ -26,6 +27,7 @@ class Register extends Component
     public string $password_confirmation = '';
 
     #[Url]
+    #[Locked]
     public string $token = '';
 
     public function mount(): void
@@ -56,6 +58,19 @@ class Register extends Component
         $validated['password'] = Hash::make($validated['password']);
 
         $mode = SiteSetting::get('registration_mode', 'closed');
+
+        if ($mode === 'invitation' && $this->token) {
+            $invitation = Invitation::where('token', $this->token)
+                ->whereNull('accepted_at')
+                ->where('expires_at', '>', now())
+                ->first();
+
+            if (! $invitation || $invitation->email !== $validated['email']) {
+                $this->addError('email', 'This invitation is not valid for the provided email address.');
+
+                return;
+            }
+        }
 
         if ($mode === 'approval') {
             $validated['status'] = 'pending';

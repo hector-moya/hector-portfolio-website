@@ -1,12 +1,14 @@
 <?php
 
 use App\Livewire\Actions\Users\InviteUser;
+use App\Livewire\Auth\Register;
 use App\Mail\InvitationMail;
 use App\Models\Invitation;
 use App\Models\SiteSetting;
 use App\Models\User;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\Mail;
+use Livewire\Livewire;
 
 beforeEach(function (): void {
     SiteSetting::set('registration_mode', 'open');
@@ -74,9 +76,6 @@ test('invitation email contains registration link with token', function (): void
     });
 });
 
-use App\Livewire\Auth\Register;
-use Livewire\Livewire;
-
 test('register component pre-fills email from valid invitation token', function (): void {
     SiteSetting::set('registration_mode', 'invitation');
 
@@ -116,4 +115,18 @@ test('registering in approval mode sets user status to pending', function (): vo
 
     $user = User::where('email', 'pending@example.com')->first();
     expect($user->status)->toBe('pending');
+});
+
+test('registering with mismatched email and invitation token fails', function (): void {
+    SiteSetting::set('registration_mode', 'invitation');
+
+    $invitation = Invitation::factory()->create(['email' => 'invited@example.com']);
+
+    Livewire::test(Register::class, ['token' => $invitation->token])
+        ->set('email', 'other@example.com')
+        ->set('name', 'Attacker')
+        ->set('password', 'password123')
+        ->set('password_confirmation', 'password123')
+        ->call('register')
+        ->assertHasErrors(['email']);
 });
