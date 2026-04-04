@@ -1,10 +1,15 @@
 <?php
 
 use App\Livewire\Auth\Register;
+use App\Models\SiteSetting;
 use App\Models\User;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Support\Facades\Notification;
 use Livewire\Livewire;
+
+beforeEach(function (): void {
+    SiteSetting::set('registration_mode', 'open');
+});
 
 test('registration screen can be rendered', function () {
     $response = $this->get('/register');

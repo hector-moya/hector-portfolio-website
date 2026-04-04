@@ -5,6 +5,7 @@ use App\Http\Middleware\EnsureRegistrationOpen;
 use App\Livewire\Actions\Logout;
 use App\Livewire\Auth\ForgotPassword;
 use App\Livewire\Auth\Login;
+use App\Livewire\Auth\PendingApproval;
 use App\Livewire\Auth\Register;
 use App\Livewire\Auth\ResetPassword;
 use App\Livewire\Auth\VerifyEmail;
@@ -26,6 +27,9 @@ Route::middleware('auth')->group(function (): void {
     Route::get('verify-email/{id}/{hash}', VerifyEmailController::class)
         ->middleware(['signed', 'throttle:6,1'])
         ->name('verification.verify');
+
+    Route::get('pending-approval', PendingApproval::class)
+        ->name('pending-approval');
 });
 
 Route::post('logout', Logout::class)
