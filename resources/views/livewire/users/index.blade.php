@@ -44,6 +44,9 @@
                                         @if ($user->id === auth()->id())
                                             <flux:badge variant="info" size="sm" class="ml-2">{{ __('You') }}</flux:badge>
                                         @endif
+                                        @if ($user->status === 'pending')
+                                            <flux:badge color="yellow" size="sm" class="ml-2">{{ __('Pending') }}</flux:badge>
+                                        @endif
                                     </flux:text>
                                 </div>
                             </flux:table.cell>
@@ -62,6 +65,14 @@
                                 <flux:dropdown>
                                     <flux:button variant="ghost" size="sm" icon="ellipsis-horizontal" />
                                     <flux:menu>
+                                        @can('approve', $user)
+                                            @if ($user->status === 'pending')
+                                                <flux:menu.item icon="check-circle" wire:click="approve({{ $user->id }})" wire:confirm="{{ __('Approve this user?') }}">
+                                                    {{ __('Approve') }}
+                                                </flux:menu.item>
+                                                <flux:menu.separator />
+                                            @endif
+                                        @endcan
                                         @can('update', $user)
                                             <flux:menu.item icon="pencil" wire:navigate href="{{ route('users.edit', $user) }}">
                                                 {{ __('Edit') }}

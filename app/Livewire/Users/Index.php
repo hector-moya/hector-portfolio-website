@@ -3,10 +3,13 @@
 namespace App\Livewire\Users;
 
 use App\Livewire\Forms\Users\UserForm;
+use App\Mail\UserApproved;
 use App\Models\User;
+use Flux\Flux;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Mail;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -68,6 +71,23 @@ class Index extends Component
         $this->form->destroy($userId);
 
         $this->dispatch('user-deleted');
+    }
+
+    public function approve(int $userId): void
+    {
+        $user = User::findOrFail($userId);
+
+        $this->authorize('approve', $user);
+
+        $user->update(['status' => 'active']);
+
+        Mail::to($user)->queue(new UserApproved($user));
+
+        Flux::toast(
+            heading: 'User Approved',
+            text: "{$user->name} has been approved and notified.",
+            variant: 'success',
+        );
     }
 
     #[Title('Users')]

@@ -71,4 +71,12 @@ class UserPolicy
     {
         return $user->isAdmin() && $user->id !== $model->id; // Admins can force delete others, not themselves
     }
+
+    /**
+     * Determine whether the user can approve a pending registration.
+     */
+    public function approve(User $user, User $model): bool
+    {
+        return $user->isAdmin();
+    }
 }
