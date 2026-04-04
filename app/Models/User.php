@@ -27,6 +27,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
  * @property string|null $two_factor_recovery_codes
  * @property string|null $two_factor_confirmed_at
  * @property string $role
+ * @property string $status
  * @property-read DatabaseNotificationCollection<int, DatabaseNotification> $notifications
  * @property-read int|null $notifications_count
  *
@@ -64,6 +65,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'email',
         'password',
         'role',
+        'status',
     ];
 
     /**
@@ -99,6 +101,14 @@ class User extends Authenticatable implements MustVerifyEmail
             ->take(2)
             ->map(fn ($word) => Str::substr($word, 0, 1))
             ->implode('');
+    }
+
+    /**
+     * Check if the user is active
+     */
+    public function isActive(): bool
+    {
+        return $this->status === 'active';
     }
 
     /**
