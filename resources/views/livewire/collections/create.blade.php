@@ -37,6 +37,14 @@
                     <flux:select.option value="greenpeace">{{ __('Greenpeace') }}</flux:select.option>
                 </flux:select>
 
+                {{-- Index Template --}}
+                <flux:select label="{{ __('Index Template') }}" wire:model="form.index_template" description="{{ __('Layout used for the collection listing page') }}">
+                    <flux:select.option value="">{{ __('Default (Card Grid)') }}</flux:select.option>
+                    @foreach (\App\Support\TemplateLayouts::indexTemplates() as $value => $label)
+                        <flux:select.option value="{{ $value }}">{{ $label }}</flux:select.option>
+                    @endforeach
+                </flux:select>
+
                 {{-- Status --}}
                 <div class="flex justify-end">
                     <flux:switch label="{{ $form->is_active ? __('Active') : __('Inactive') }}" wire:model.live="form.is_active" />

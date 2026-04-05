@@ -32,6 +32,9 @@ class CollectionForm extends Form
     #[Validate('nullable|string|max:255')]
     public string $theme = '';
 
+    #[Validate('nullable|string')]
+    public string $index_template = '';
+
     public function rules(): array
     {
         return [
@@ -54,6 +57,7 @@ class CollectionForm extends Form
         $this->blueprint_id = $collection->blueprint_id;
         $this->is_active = $collection->is_active;
         $this->theme = $collection->settings['theme'] ?? '';
+        $this->index_template = $collection->settings['index_template'] ?? '';
     }
 
     public function create(): Collection
@@ -66,7 +70,10 @@ class CollectionForm extends Form
             'description' => $this->description,
             'blueprint_id' => $this->blueprint_id,
             'is_active' => $this->is_active,
-            'settings' => array_filter(['theme' => $this->theme ?: null]),
+            'settings' => array_filter([
+                'theme' => $this->theme ?: null,
+                'index_template' => $this->index_template ?: null,
+            ]),
         ]);
 
         Flux::toast(
@@ -75,7 +82,7 @@ class CollectionForm extends Form
             variant: 'success',
         );
 
-        $this->reset('name', 'slug', 'description', 'blueprint_id', 'is_active', 'theme');
+        $this->reset('name', 'slug', 'description', 'blueprint_id', 'is_active', 'theme', 'index_template');
 
         return $collection;
     }
@@ -90,7 +97,10 @@ class CollectionForm extends Form
             'description' => $this->description,
             'blueprint_id' => $this->blueprint_id,
             'is_active' => $this->is_active,
-            'settings' => array_merge($collection->settings ?? [], ['theme' => $this->theme ?: null]),
+            'settings' => array_merge($collection->settings ?? [], array_filter([
+                'theme' => $this->theme ?: null,
+                'index_template' => $this->index_template ?: null,
+            ])),
         ]);
 
         Flux::toast(

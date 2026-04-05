@@ -32,6 +32,9 @@ class BlueprintForm extends Form
     #[Validate('boolean')]
     public bool $is_active = true;
 
+    #[Validate('nullable|string')]
+    public string $detail_template = '';
+
     public array $fields = [];
 
     public array $sections = [];
@@ -95,6 +98,7 @@ class BlueprintForm extends Form
         $this->slug = $blueprint->slug;
         $this->description = $blueprint->description ?? '';
         $this->is_active = $blueprint->is_active;
+        $this->detail_template = $blueprint->settings['detail_template'] ?? '';
 
         $this->tabs = $blueprint->tabs->map(fn ($tab): array => [
             'id' => $tab->id,
@@ -140,6 +144,7 @@ class BlueprintForm extends Form
                 'slug' => $this->slug,
                 'description' => $this->description,
                 'is_active' => $this->is_active,
+                'settings' => array_filter(['detail_template' => $this->detail_template ?: null]),
                 'tabs' => $this->tabs,
             ]);
 

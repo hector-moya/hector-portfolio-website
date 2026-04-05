@@ -26,6 +26,7 @@ class UpdateBlueprint
                 'slug' => $blueprintData['slug'],
                 'description' => $blueprintData['description'] ?? null,
                 'is_active' => $blueprintData['is_active'] ?? false,
+                'settings' => array_merge($blueprint->settings ?? [], $blueprintData['settings'] ?? []),
             ]);
 
             return $blueprint->fresh('fields');
