@@ -20,7 +20,7 @@ class Index extends Component
 
     public string $search = '';
 
-    public string $sortBy = 'date';
+    public string $sortBy = 'created_at';
 
     public string $sortDirection = 'desc';
 

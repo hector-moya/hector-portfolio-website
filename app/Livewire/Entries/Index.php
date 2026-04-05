@@ -36,7 +36,7 @@ class Index extends Component
 
     public bool $selectAll = false;
 
-    public string $sortBy = 'date';
+    public string $sortBy = 'created_at';
 
     public string $sortDirection = 'desc';
 
@@ -99,7 +99,7 @@ class Index extends Component
     {
         return ModelsCollection::query()
             ->withCount('entries')
-            ->orderBy('title')
+            ->orderBy('name')
             ->get();
     }
 

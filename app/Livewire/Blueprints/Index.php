@@ -18,7 +18,7 @@ class Index extends Component
 
     public BlueprintForm $blueprintForm;
 
-    public string $sortBy = 'date';
+    public string $sortBy = 'created_at';
 
     public string $sortDirection = 'desc';
 
