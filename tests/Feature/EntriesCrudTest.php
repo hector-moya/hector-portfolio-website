@@ -1,5 +1,8 @@
 <?php
 
+use App\Livewire\Entries\Create;
+use App\Livewire\Entries\Edit;
+use App\Livewire\Entries\Index;
 use App\Models\Blueprint;
 use App\Models\Collection;
 use App\Models\Entry;
@@ -12,7 +15,7 @@ use function Pest\Laravel\assertDatabaseHas;
 use function Pest\Laravel\assertSoftDeleted;
 
 beforeEach(function () {
-    $this->user = User::factory()->create();
+    $this->user = User::factory()->admin()->create();
 
     $this->blueprint = Blueprint::factory()->create([
         'name' => 'Blog Post',
@@ -58,7 +61,7 @@ test('entries index shows all entries', function () {
     ]);
 
     Livewire::actingAs($this->user)
-        ->test(\App\Livewire\Entries\Index::class)
+        ->test(Index::class)
         ->assertSee($entries[0]->title)
         ->assertSee($entries[1]->title)
         ->assertSee($entries[2]->title);
@@ -78,7 +81,7 @@ test('entries index can search by title', function () {
     ]);
 
     Livewire::actingAs($this->user)
-        ->test(\App\Livewire\Entries\Index::class)
+        ->test(Index::class)
         ->set('search', 'Laravel')
         ->assertSee('Laravel Tutorial')
         ->assertDontSee('PHP Best Practices');
@@ -107,7 +110,7 @@ test('entries index can filter by collection', function () {
     ]);
 
     Livewire::actingAs($this->user)
-        ->test(\App\Livewire\Entries\Index::class)
+        ->test(Index::class)
         ->set('collectionFilter', $this->collection->id)
         ->assertSee('Entry 1')
         ->assertDontSee('Entry 2');
@@ -129,7 +132,7 @@ test('entries index can filter by status', function () {
     ]);
 
     Livewire::actingAs($this->user)
-        ->test(\App\Livewire\Entries\Index::class)
+        ->test(Index::class)
         ->set('statusFilter', 'draft')
         ->assertSee('Draft Entry')
         ->assertDontSee('Published Entry');
@@ -143,7 +146,7 @@ test('entries create page renders successfully', function () {
 
 test('can create an entry with dynamic fields', function () {
     Livewire::actingAs($this->user)
-        ->test(\App\Livewire\Entries\Create::class)
+        ->test(Create::class)
         ->set('selectedCollectionId', $this->collection->id)
         ->set('form.title', 'My First Blog Post')
         ->set('form.slug', 'my-first-blog-post')
@@ -178,7 +181,7 @@ test('can create an entry with dynamic fields', function () {
 
 test('entry title is required', function () {
     Livewire::actingAs($this->user)
-        ->test(\App\Livewire\Entries\Create::class)
+        ->test(Create::class)
         ->set('selectedCollectionId', $this->collection->id)
         ->set('form.title', '')
         ->set('form.slug', 'test-slug')
@@ -189,7 +192,7 @@ test('entry title is required', function () {
 
 test('entry slug is required', function () {
     Livewire::actingAs($this->user)
-        ->test(\App\Livewire\Entries\Create::class)
+        ->test(Create::class)
         ->set('selectedCollectionId', $this->collection->id)
         ->set('form.title', 'Test Title')
         ->set('form.slug', '')
@@ -200,7 +203,7 @@ test('entry slug is required', function () {
 
 test('required blueprint fields are validated', function () {
     Livewire::actingAs($this->user)
-        ->test(\App\Livewire\Entries\Create::class)
+        ->test(Create::class)
         ->set('selectedCollectionId', $this->collection->id)
         ->set('form.title', 'Test Title')
         ->set('form.slug', 'test-slug')
@@ -229,7 +232,7 @@ test('can update an entry', function () {
     ]);
 
     Livewire::actingAs($this->user)
-        ->test(\App\Livewire\Entries\Edit::class, ['entry' => $entry])
+        ->test(Edit::class, ['entry' => $entry])
         ->set('form.title', 'Updated Title')
         ->set('form.slug', 'updated-slug')
         ->set('form.fieldValues.excerpt', 'Updated excerpt')
@@ -257,7 +260,7 @@ test('can update entry field values', function () {
     ]);
 
     Livewire::actingAs($this->user)
-        ->test(\App\Livewire\Entries\Edit::class, ['entry' => $entry])
+        ->test(Edit::class, ['entry' => $entry])
         ->set('form.fieldValues.subtitle', 'Updated Subtitle')
         ->set('form.fieldValues.excerpt', 'New Excerpt')
         ->call('save')
@@ -283,7 +286,7 @@ test('can delete an entry', function () {
     ]);
 
     Livewire::actingAs($this->user)
-        ->test(\App\Livewire\Entries\Index::class)
+        ->test(Index::class)
         ->call('delete', $entry->id);
 
     assertSoftDeleted('entries', ['id' => $entry->id]);
@@ -304,7 +307,7 @@ test('entry status can be changed to published', function () {
     ]);
 
     Livewire::actingAs($this->user)
-        ->test(\App\Livewire\Entries\Edit::class, ['entry' => $entry])
+        ->test(Edit::class, ['entry' => $entry])
         ->set('form.status', 'published')
         ->call('save')
         ->assertHasNoErrors();

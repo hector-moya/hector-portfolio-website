@@ -1,4 +1,10 @@
-@props(['navigation' => null, 'class' => ''])
+@props(['navigation' => null, 'handle' => null, 'class' => ''])
+
+@php
+    if ($navigation === null && $handle !== null) {
+        $navigation = \App\Models\Navigation::with(['items.children'])->where('handle', $handle)->first();
+    }
+@endphp
 
 @if ($navigation)
     <nav
