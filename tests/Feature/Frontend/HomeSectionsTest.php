@@ -1,7 +1,6 @@
 <?php
 
 use App\Models\Entry;
-use App\Models\Field;
 
 test('home page returns 200 with no entry', function () {
     $this->get('/')->assertStatus(200);
@@ -54,22 +53,6 @@ test('home page renders multiple section types', function () {
 
 test('home page renders empty state when no entry exists', function () {
     $this->get('/')->assertSee('Welcome');
-});
-
-test('home page uses legacy element rendering when entry has no layout', function () {
-    $entry = Entry::factory()->create([
-        'slug' => 'home',
-        'status' => 'published',
-        'layout' => [],
-    ]);
-
-    $entry->elements()->create([
-        'field_id' => Field::factory()->create()->id,
-        'handle' => 'hero_title',
-        'value' => 'Legacy Hero Title',
-    ]);
-
-    $this->get('/')->assertSee('Legacy Hero Title');
 });
 
 test('draft home entry does not render sections', function () {

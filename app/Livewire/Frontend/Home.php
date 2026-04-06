@@ -24,7 +24,7 @@ class Home extends Component
             ->first();
 
         $sections = $entry?->getPageBuilderSections() ?? [];
-        $assets = $this->loadLayoutAssets($entry, $sections);
+        $assets = $this->resolveAssets($sections);
         $theme = $entry?->collection?->settings['theme'] ?? 'greenpeace';
 
         return view('livewire.frontend.home', [
@@ -35,9 +35,12 @@ class Home extends Component
         ]);
     }
 
-    private function loadLayoutAssets(?Entry $entry, array $sections): Collection
+    /**
+     * Batch-load assets referenced by image fields in page builder sections.
+     */
+    private function resolveAssets(array $sections): Collection
     {
-        if (! $entry || empty($sections)) {
+        if (empty($sections)) {
             return new Collection;
         }
 
