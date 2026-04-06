@@ -17,19 +17,36 @@
         <flux:separator class="mb-8" />
 
         <dl class="space-y-6">
-            @foreach($fields as $field)
-                @php $value = $entry->elements->firstWhere('handle', $field->handle)?->getElementValue(); @endphp
-                @if($value !== null && $value !== '')
-                    <div>
-                        <flux:text class="text-sm font-semibold text-zinc-500 dark:text-zinc-400 mb-1">{{ $field->label }}</flux:text>
-                        <x-dynamic-component
-                            :component="'field-renderers.' . $field->type"
-                            :field="$field"
-                            :value="$value"
-                        />
-                    </div>
-                @endif
-            @endforeach
+            @if($fields->isNotEmpty())
+                @foreach($fields as $field)
+                    @php $value = $entry->elements->firstWhere('handle', $field->handle)?->getElementValue(); @endphp
+                    @if($value !== null && $value !== '')
+                        <div>
+                            <flux:text class="text-sm font-semibold text-zinc-500 dark:text-zinc-400 mb-1">{{ $field->label }}</flux:text>
+                            <x-dynamic-component
+                                :component="'field-renderers.' . $field->type"
+                                :field="$field"
+                                :value="$value"
+                            />
+                        </div>
+                    @endif
+                @endforeach
+            @else
+                @foreach($entry->elements as $element)
+                    @if(!$element->Field || $element->Field->type === 'page_builder') @continue @endif
+                    @php $value = $element->getElementValue(); @endphp
+                    @if($value !== null && $value !== '')
+                        <div>
+                            <flux:text class="text-sm font-semibold text-zinc-500 dark:text-zinc-400 mb-1">{{ $element->Field->label }}</flux:text>
+                            <x-dynamic-component
+                                :component="'field-renderers.' . $element->Field->type"
+                                :field="$element->Field"
+                                :value="$value"
+                            />
+                        </div>
+                    @endif
+                @endforeach
+            @endif
         </dl>
     </div>
 </x-themes.wrapper>

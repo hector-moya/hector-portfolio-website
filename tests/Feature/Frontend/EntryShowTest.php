@@ -58,3 +58,23 @@ test('entry show renders published entry with field values', function () {
         ->assertSee('My Test Post')
         ->assertSee('This is the excerpt.');
 });
+
+test('entry show uses correct template from blueprint settings', function () {
+    $blueprint = Blueprint::factory()->create([
+        'settings' => ['detail_template' => 'minimal'],
+    ]);
+    Collection::factory()->create([
+        'slug' => 'my-portfolio',
+        'blueprint_id' => $blueprint->id,
+        'is_active' => true,
+    ]);
+    Entry::factory()->create([
+        'blueprint_id' => $blueprint->id,
+        'slug' => 'my-project',
+        'title' => 'My Project',
+        'status' => 'published',
+        'published_at' => now(),
+    ]);
+
+    $this->get('/my-portfolio/my-project')->assertOk();
+});

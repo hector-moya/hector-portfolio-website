@@ -34,17 +34,31 @@
     </flux:text>
 
     <div class="space-y-6 max-w-7xl">
-        @foreach($fields as $field)
-            @if($field->type === 'image') @continue @endif
-            @php $value = $entry->elements->firstWhere('handle', $field->handle)?->getElementValue(); @endphp
-            @if($value !== null && $value !== '')
-                <x-dynamic-component
-                    :component="'field-renderers.' . $field->type"
-                    :field="$field"
-                    :value="$value"
-                />
-            @endif
-        @endforeach
+        @if($fields->isNotEmpty())
+            @foreach($fields as $field)
+                @if($field->type === 'image') @continue @endif
+                @php $value = $entry->elements->firstWhere('handle', $field->handle)?->getElementValue(); @endphp
+                @if($value !== null && $value !== '')
+                    <x-dynamic-component
+                        :component="'field-renderers.' . $field->type"
+                        :field="$field"
+                        :value="$value"
+                    />
+                @endif
+            @endforeach
+        @else
+            @foreach($entry->elements as $element)
+                @if(!$element->Field || in_array($element->Field->type, ['image', 'page_builder'])) @continue @endif
+                @php $value = $element->getElementValue(); @endphp
+                @if($value !== null && $value !== '')
+                    <x-dynamic-component
+                        :component="'field-renderers.' . $element->Field->type"
+                        :field="$element->Field"
+                        :value="$value"
+                    />
+                @endif
+            @endforeach
+        @endif
     </div>
 
     @foreach($entry->getPageBuilderSections() as $section)
