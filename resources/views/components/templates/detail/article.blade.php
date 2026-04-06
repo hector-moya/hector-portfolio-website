@@ -29,17 +29,32 @@
 
         {{-- Fields --}}
         <div class="space-y-6">
-            @foreach($fields as $field)
-                @if($field->type === 'image') @continue @endif
-                @php $value = $entry->elements->firstWhere('handle', $field->handle)?->getElementValue(); @endphp
-                @if($value !== null && $value !== '')
-                    <x-dynamic-component
-                        :component="'field-renderers.' . $field->type"
-                        :field="$field"
-                        :value="$value"
-                    />
-                @endif
-            @endforeach
+            @if($fields->isNotEmpty())
+                @foreach($fields as $field)
+                    @if($field->type === 'image') @continue @endif
+                    @php $value = $entry->elements->firstWhere('handle', $field->handle)?->getElementValue(); @endphp
+                    @if($value !== null && $value !== '')
+                        <x-dynamic-component
+                            :component="'field-renderers.' . $field->type"
+                            :field="$field"
+                            :value="$value"
+                        />
+                    @endif
+                @endforeach
+            @else
+                @foreach($entry->elements as $element)
+                    @if($element->Field && $element->Field->type !== 'image' && $element->Field->type !== 'page_builder')
+                        @php $value = $element->getElementValue(); @endphp
+                        @if($value !== null && $value !== '')
+                            <x-dynamic-component
+                                :component="'field-renderers.' . $element->Field->type"
+                                :field="$element->Field"
+                                :value="$value"
+                            />
+                        @endif
+                    @endif
+                @endforeach
+            @endif
         </div>
 
         {{-- Page builder sections --}}

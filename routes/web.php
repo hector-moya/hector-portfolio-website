@@ -15,6 +15,7 @@ use App\Livewire\Entries\Edit as EntriesEdit;
 use App\Livewire\Entries\Index as EntriesIndex;
 use App\Livewire\FormSubmissions\Index as FormSubmissionsIndex;
 use App\Livewire\Frontend\CollectionIndex;
+use App\Livewire\Frontend\EntryShow;
 use App\Livewire\Frontend\Home;
 use App\Livewire\Navigation\Create as NavigationCreate;
 use App\Livewire\Navigation\Edit as NavigationEdit;
@@ -111,5 +112,5 @@ Route::middleware(['auth'])->group(function (): void {
 require __DIR__.'/auth.php';
 
 // Generic frontend routes — MUST be last to avoid catching admin/auth paths
-Route::get('/{collectionSlug}/{entrySlug}', fn () => abort(404))->name('entry.show');
+Route::get('/{collectionSlug}/{entrySlug}', EntryShow::class)->name('entry.show');
 Route::get('/{collectionSlug}', CollectionIndex::class)->name('collection.index');
