@@ -37,13 +37,25 @@
                     <flux:select.option value="greenpeace">{{ __('Greenpeace') }}</flux:select.option>
                 </flux:select>
 
+                {{-- Collection Type --}}
+                <flux:select
+                    label="{{ __('Collection Type') }}"
+                    wire:model.live="form.type"
+                    description="{{ __('Standard shows an entry listing. Single Page renders one entry directly (for landing pages).') }}"
+                >
+                    <flux:select.option value="standard">{{ __('Standard') }}</flux:select.option>
+                    <flux:select.option value="single">{{ __('Single Page') }}</flux:select.option>
+                </flux:select>
+
                 {{-- Index Template --}}
+                @if($form->type !== 'single')
                 <flux:select label="{{ __('Index Template') }}" wire:model="form.index_template" description="{{ __('Layout used for the collection listing page') }}">
                     <flux:select.option value="">{{ __('Default (Card Grid)') }}</flux:select.option>
                     @foreach (\App\Support\TemplateLayouts::indexTemplates() as $value => $label)
                         <flux:select.option value="{{ $value }}">{{ $label }}</flux:select.option>
                     @endforeach
                 </flux:select>
+                @endif
 
                 {{-- Status --}}
                 <div class="flex justify-end">

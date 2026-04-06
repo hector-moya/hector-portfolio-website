@@ -35,6 +35,9 @@ class CollectionForm extends Form
     #[Validate('nullable|string')]
     public string $index_template = '';
 
+    #[Validate('nullable|string|in:standard,single')]
+    public string $type = 'standard';
+
     public function rules(): array
     {
         return [
@@ -58,6 +61,7 @@ class CollectionForm extends Form
         $this->is_active = $collection->is_active;
         $this->theme = $collection->settings['theme'] ?? '';
         $this->index_template = $collection->settings['index_template'] ?? '';
+        $this->type = $collection->settings['type'] ?? 'standard';
     }
 
     public function create(): Collection
@@ -73,6 +77,7 @@ class CollectionForm extends Form
             'settings' => array_filter([
                 'theme' => $this->theme ?: null,
                 'index_template' => $this->index_template ?: null,
+                'type' => $this->type !== 'standard' ? $this->type : null,
             ]),
         ]);
 
@@ -82,7 +87,7 @@ class CollectionForm extends Form
             variant: 'success',
         );
 
-        $this->reset('name', 'slug', 'description', 'blueprint_id', 'is_active', 'theme', 'index_template');
+        $this->reset('name', 'slug', 'description', 'blueprint_id', 'is_active', 'theme', 'index_template', 'type');
 
         return $collection;
     }
@@ -100,6 +105,7 @@ class CollectionForm extends Form
             'settings' => array_merge($collection->settings ?? [], [
                 'theme' => $this->theme ?: null,
                 'index_template' => $this->index_template ?: null,
+                'type' => $this->type ?: 'standard',
             ]),
         ]);
 

@@ -25,6 +25,7 @@ class TemplateLayouts
             'article' => 'Article',
             'full-width' => 'Full Width',
             'minimal' => 'Minimal',
+            'landing-page' => 'Landing Page',
         ];
     }
 
