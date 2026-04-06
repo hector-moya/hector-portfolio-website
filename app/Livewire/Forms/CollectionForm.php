@@ -97,10 +97,10 @@ class CollectionForm extends Form
             'description' => $this->description,
             'blueprint_id' => $this->blueprint_id,
             'is_active' => $this->is_active,
-            'settings' => array_merge($collection->settings ?? [], array_filter([
+            'settings' => array_merge($collection->settings ?? [], [
                 'theme' => $this->theme ?: null,
                 'index_template' => $this->index_template ?: null,
-            ])),
+            ]),
         ]);
 
         Flux::toast(

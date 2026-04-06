@@ -48,3 +48,25 @@ test('blueprint edit saves detail_template in settings', function () {
 
     expect($blueprint->fresh()->settings['detail_template'])->toBe('full-width');
 });
+
+test('collection edit clears index_template when set to empty', function () {
+    $collection = Collection::factory()->create(['settings' => ['index_template' => 'magazine']]);
+
+    Livewire::test(CollectionsEdit::class, ['collection' => $collection])
+        ->set('form.index_template', '')
+        ->call('save')
+        ->assertHasNoErrors();
+
+    expect($collection->fresh()->settings['index_template'])->toBeNull();
+});
+
+test('blueprint edit clears detail_template when set to empty', function () {
+    $blueprint = Blueprint::factory()->create(['settings' => ['detail_template' => 'full-width']]);
+
+    Livewire::test(BlueprintsEdit::class, ['blueprint' => $blueprint])
+        ->set('form.detail_template', '')
+        ->call('save')
+        ->assertHasNoErrors();
+
+    expect($blueprint->fresh()->settings['detail_template'])->toBeNull();
+});

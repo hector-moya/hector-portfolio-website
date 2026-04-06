@@ -144,7 +144,7 @@ class BlueprintForm extends Form
                 'slug' => $this->slug,
                 'description' => $this->description,
                 'is_active' => $this->is_active,
-                'settings' => array_filter(['detail_template' => $this->detail_template ?: null]),
+                'settings' => ['detail_template' => $this->detail_template ?: null],
                 'tabs' => $this->tabs,
             ]);
 
