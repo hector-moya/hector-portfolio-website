@@ -2,10 +2,12 @@
 
 namespace App\Livewire\Frontend;
 
+use App\Models\Asset;
 use App\Models\Collection as CollectionModel;
 use App\Support\TemplateLayouts;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -27,6 +29,10 @@ class CollectionIndex extends Component
     #[Layout('components.layouts.frontend')]
     public function render(): View|Factory
     {
+        if (($this->collection->settings['type'] ?? 'standard') === 'single') {
+            return $this->renderSingle();
+        }
+
         $entries = $this->collection->entries()
             ->where('status', 'published')
             ->with(['elements.Field', 'author'])
@@ -44,7 +50,60 @@ class CollectionIndex extends Component
             'entries' => $entries,
             'template' => $template,
             'theme' => $this->collection->settings['theme'] ?? 'greenpeace',
+            'isSingle' => false,
         ]);
+    }
+
+    private function renderSingle(): View|Factory
+    {
+        $entry = $this->collection->entries()
+            ->where('status', 'published')
+            ->with(['elements.Field', 'blueprint'])
+            ->latest('published_at')
+            ->first();
+
+        $sections = $entry?->getPageBuilderSections() ?? [];
+        $assets = $this->resolveAssets($sections);
+        $theme = $this->collection->settings['theme'] ?? 'greenpeace';
+
+        return view('livewire.frontend.collection-index', [
+            'entry' => $entry,
+            'sections' => $sections,
+            'assets' => $assets,
+            'template' => 'landing-page',
+            'theme' => $theme,
+            'isSingle' => true,
+        ]);
+    }
+
+    /**
+     * Batch-load assets referenced by image fields in page builder sections.
+     */
+    private function resolveAssets(array $sections): EloquentCollection
+    {
+        if (empty($sections)) {
+            return new EloquentCollection;
+        }
+
+        $assetIds = collect($sections)
+            ->flatMap(function (array $section): array {
+                return match ($section['type']) {
+                    'hero' => [$section['data']['bg_image'] ?? null],
+                    'image_text' => [$section['data']['image'] ?? null],
+                    'gallery' => $section['data']['images'] ?? [],
+                    default => [],
+                };
+            })
+            ->filter()
+            ->unique()
+            ->values()
+            ->all();
+
+        if (empty($assetIds)) {
+            return new EloquentCollection;
+        }
+
+        return Asset::query()->whereIn('id', $assetIds)->get();
     }
 
     public function title(): string
