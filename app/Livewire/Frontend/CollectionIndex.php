@@ -36,6 +36,10 @@ class CollectionIndex extends Component
         $template = $this->collection->settings['index_template']
             ?? TemplateLayouts::defaultIndexTemplate();
 
+        if (! array_key_exists($template, TemplateLayouts::indexTemplates())) {
+            $template = TemplateLayouts::defaultIndexTemplate();
+        }
+
         return view('livewire.frontend.collection-index', [
             'entries' => $entries,
             'template' => $template,

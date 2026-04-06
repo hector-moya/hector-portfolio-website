@@ -5,6 +5,7 @@ namespace App\Livewire\Blueprints;
 use App\Ai\Agents\BlueprintWizardAgent;
 use App\Enums\FieldType;
 use App\Livewire\Actions\Blueprints\CreateBlueprint;
+use App\Models\Blueprint;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Str;
@@ -16,6 +17,11 @@ class AiWizard extends Component
     public string $step = 'describe';
 
     public string $description = '';
+
+    public function mount(): void
+    {
+        $this->authorize('create', Blueprint::class);
+    }
 
     /** @var array<string, mixed> */
     public array $proposal = [];

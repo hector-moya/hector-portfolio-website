@@ -69,4 +69,8 @@
             wire:key="section-{{ $section['_id'] }}"
         />
     @endforeach
+
+    <div class="mt-12">
+        <flux:link href="javascript:history.back()" wire:navigate.back>← Back</flux:link>
+    </div>
 </x-themes.wrapper>

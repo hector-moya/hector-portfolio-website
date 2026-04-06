@@ -37,6 +37,10 @@ class EntryShow extends Component
         $template = $this->entry->blueprint->settings['detail_template']
             ?? TemplateLayouts::defaultDetailTemplate();
 
+        if (! array_key_exists($template, TemplateLayouts::detailTemplates())) {
+            $template = TemplateLayouts::defaultDetailTemplate();
+        }
+
         return view('livewire.frontend.entry-show', [
             'template' => $template,
             'theme' => $this->collection->settings['theme'] ?? 'greenpeace',

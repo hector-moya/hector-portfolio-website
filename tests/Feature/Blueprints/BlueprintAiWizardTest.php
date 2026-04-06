@@ -81,6 +81,14 @@ test('save creates blueprint with tabs sections and fields', function () {
     expect($blueprint->tabs->first()->sections->first()->fields)->toHaveCount(2);
 });
 
+it('denies access to viewer role users', function () {
+    $viewer = User::factory()->create(['role' => 'viewer']);
+
+    Livewire::actingAs($viewer)
+        ->test(AiWizard::class)
+        ->assertForbidden();
+});
+
 test('remove tab removes it from proposal', function () {
     Livewire::test(AiWizard::class)
         ->set('step', 'review')
