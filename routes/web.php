@@ -14,11 +14,8 @@ use App\Livewire\Entries\Create as EntriesCreate;
 use App\Livewire\Entries\Edit as EntriesEdit;
 use App\Livewire\Entries\Index as EntriesIndex;
 use App\Livewire\FormSubmissions\Index as FormSubmissionsIndex;
-use App\Livewire\Frontend\BlogIndex;
-use App\Livewire\Frontend\BlogShow;
-use App\Livewire\Frontend\ContactPage;
+use App\Livewire\Frontend\CollectionIndex;
 use App\Livewire\Frontend\Home;
-use App\Livewire\Frontend\PortfolioIndex;
 use App\Livewire\Navigation\Create as NavigationCreate;
 use App\Livewire\Navigation\Edit as NavigationEdit;
 use App\Livewire\Navigation\Index as NavigationIndex;
@@ -38,10 +35,9 @@ use Laravel\Fortify\Features;
 
 // Frontend Routes (Public)
 Route::get('/', Home::class)->name('home');
-Route::get('/blog', BlogIndex::class)->name('blog.index');
-Route::get('/blog/{slug}', BlogShow::class)->name('blog.show');
-Route::get('/portfolio', PortfolioIndex::class)->name('portfolio.index');
-Route::get('/contact', ContactPage::class)->name('contact');
+// entry.show route will be implemented in Task 8 (CollectionShow component)
+Route::get('/{collectionSlug}/{entrySlug}', fn () => abort(404))->name('entry.show');
+Route::get('/{collectionSlug}', CollectionIndex::class)->name('collection.index');
 
 Route::get('dashboard', Dashboard::class)
     ->middleware(['auth', 'verified'])
