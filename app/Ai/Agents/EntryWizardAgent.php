@@ -35,6 +35,8 @@ class EntryWizardAgent implements Agent, HasStructuredOutput
     }
 
     /**
+     * Empty object shape is intentional — field handles are runtime-dynamic (vary per blueprint).
+     *
      * @return array<string, mixed>
      */
     public function schema(JsonSchema $schema): array

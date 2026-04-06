@@ -84,3 +84,11 @@ test('save creates entry with generated field values as draft', function () {
     expect($entry->status)->toBe('draft');
     expect($entry->elements->firstWhere('handle', 'excerpt')?->value)->toBe('This is the excerpt.');
 });
+
+it('denies access to viewer role users', function () {
+    $viewer = User::factory()->create(['role' => 'viewer']);
+
+    Livewire::actingAs($viewer)
+        ->test(AiWizard::class)
+        ->assertForbidden();
+});

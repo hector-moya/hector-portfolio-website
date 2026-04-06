@@ -6,10 +6,13 @@ use App\Ai\Agents\EntryWizardAgent;
 use App\Livewire\Actions\CreateEntry;
 use App\Models\Blueprint;
 use App\Models\Collection;
+use App\Models\Entry;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Str;
+use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Locked;
 use Livewire\Component;
 
 class AiWizard extends Component
@@ -28,7 +31,13 @@ class AiWizard extends Component
     public array $generatedFields = [];
 
     /** @var array<int, array{id: int, type: string, label: string, handle: string, config: array}> */
+    #[Locked]
     public array $blueprintFields = [];
+
+    public function mount(): void
+    {
+        $this->authorize('create', Entry::class);
+    }
 
     public function updatedCollectionId(): void
     {
@@ -133,13 +142,15 @@ class AiWizard extends Component
         $this->redirect(route('entries.edit', $entry), navigate: true);
     }
 
+    #[Computed]
+    public function collections(): \Illuminate\Support\Collection
+    {
+        return Collection::query()->where('is_active', true)->get();
+    }
+
     #[Layout('components.layouts.app')]
     public function render(): View|Factory
     {
-        $collections = Collection::query()->where('is_active', true)->get();
-
-        return view('livewire.entries.ai-wizard', [
-            'collections' => $collections,
-        ]);
+        return view('livewire.entries.ai-wizard');
     }
 }

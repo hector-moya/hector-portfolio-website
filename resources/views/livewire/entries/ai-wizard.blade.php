@@ -27,7 +27,7 @@
                 description="{{ __('The collection this entry belongs to.') }}"
             >
                 <flux:select.option value="">{{ __('Select a collection') }}</flux:select.option>
-                @foreach($collections as $collection)
+                @foreach($this->collections as $collection)
                     <flux:select.option value="{{ $collection->id }}">{{ $collection->name }}</flux:select.option>
                 @endforeach
             </flux:select>
@@ -105,6 +105,18 @@
                             <flux:select.option value="{{ $option['value'] }}">{{ $option['label'] }}</flux:select.option>
                         @endforeach
                     </flux:select>
+                @elseif($field['type'] === 'radio')
+                    <div class="space-y-2">
+                        <flux:label>{{ $field['label'] }}</flux:label>
+                        @foreach($field['config']['options'] ?? [] as $option)
+                            <flux:radio
+                                label="{{ $option['label'] }}"
+                                name="generatedFields.{{ $field['handle'] }}"
+                                value="{{ $option['value'] }}"
+                                wire:model="generatedFields.{{ $field['handle'] }}"
+                            />
+                        @endforeach
+                    </div>
                 @else
                     <flux:input
                         label="{{ $field['label'] }}"
@@ -121,9 +133,11 @@
             <flux:button
                 variant="primary"
                 wire:click="save"
+                wire:loading.attr="disabled"
                 icon="check"
             >
-                {{ __('Save as Draft') }}
+                <span wire:loading.remove wire:target="save">{{ __('Save as Draft') }}</span>
+                <span wire:loading wire:target="save">{{ __('Saving…') }}</span>
             </flux:button>
         </div>
     @endif
