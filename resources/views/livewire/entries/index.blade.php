@@ -13,6 +13,9 @@
                 <flux:modal.trigger name="export-entries">
                     <flux:button icon="arrow-down-tray" variant="ghost">{{ __('Export') }}</flux:button>
                 </flux:modal.trigger>
+                <flux:button icon="sparkles" wire:navigate href="{{ route('entries.ai-wizard') }}" variant="ghost">
+                    {{ __('Create with AI') }}
+                </flux:button>
                 <flux:button icon="plus" variant="primary" :href="route('entries.create')" wire:navigate>
                     {{ __('New Entry') }}
                 </flux:button>

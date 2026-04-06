@@ -11,6 +11,7 @@ use App\Livewire\Collections\Edit as CollectionsEdit;
 use App\Livewire\Collections\Index as CollectionsIndex;
 use App\Livewire\Dashboard;
 use App\Livewire\Documentation\Index as DocumentationIndex;
+use App\Livewire\Entries\AiWizard as EntriesAiWizard;
 use App\Livewire\Entries\Create as EntriesCreate;
 use App\Livewire\Entries\Edit as EntriesEdit;
 use App\Livewire\Entries\Index as EntriesIndex;
@@ -56,6 +57,7 @@ Route::middleware(['auth'])->group(function (): void {
 
     // Entries Routes
     Route::get('entries', EntriesIndex::class)->name('entries');
+    Route::get('entries/ai-wizard', EntriesAiWizard::class)->name('entries.ai-wizard');
     Route::get('entries/create', EntriesCreate::class)->name('entries.create');
     Route::get('entries/{entry}/edit', EntriesEdit::class)->name('entries.edit');
 
