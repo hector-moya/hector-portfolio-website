@@ -57,6 +57,7 @@ class BlueprintWizardAgent implements Agent, HasStructuredOutput
                                     'handle' => $schema->string()->required(),
                                     'instructions' => $schema->string(),
                                     'is_required' => $schema->boolean()->required(),
+                                    'config' => $schema->string(),
                                 ])
                             )->required(),
                         ])
