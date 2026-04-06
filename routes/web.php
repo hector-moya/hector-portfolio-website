@@ -2,6 +2,7 @@
 
 use App\Livewire\ActivityLog\Index as ActivityLogIndex;
 use App\Livewire\Assets\Index as AssetsIndex;
+use App\Livewire\Blueprints\AiWizard as BlueprintsAiWizard;
 use App\Livewire\Blueprints\Create as BlueprintsCreate;
 use App\Livewire\Blueprints\Edit as BlueprintsEdit;
 use App\Livewire\Blueprints\Index as BlueprintsIndex;
@@ -49,6 +50,7 @@ Route::middleware(['auth'])->group(function (): void {
 
     // Blueprints Routes
     Route::get('blueprints', BlueprintsIndex::class)->name('blueprints.index');
+    Route::get('blueprints/ai-wizard', BlueprintsAiWizard::class)->name('blueprints.ai-wizard');
     Route::get('blueprints/{blueprint}/create', BlueprintsCreate::class)->name('blueprints.create');
     Route::get('blueprints/{blueprint}/edit', BlueprintsEdit::class)->name('blueprints.edit');
 

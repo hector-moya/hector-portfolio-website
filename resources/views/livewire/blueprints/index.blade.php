@@ -6,9 +6,14 @@
                 <flux:heading size="xl">{{ __('Blueprints') }}</flux:heading>
                 <flux:text>{{ __('Define content structures with custom fields') }}</flux:text>
             </div>
-            <flux:button wire:navigate wire:click="createBlueprint" icon="plus" variant="primary">
-                {{ __('Create Blueprint') }}
-            </flux:button>
+            <div class="flex items-center gap-2">
+                <flux:button icon="sparkles" wire:navigate href="{{ route('blueprints.ai-wizard') }}" variant="ghost">
+                    {{ __('Create with AI') }}
+                </flux:button>
+                <flux:button wire:navigate wire:click="createBlueprint" icon="plus" variant="primary">
+                    {{ __('Create Blueprint') }}
+                </flux:button>
+            </div>
         </div>
 
         {{-- Search --}}
