@@ -44,5 +44,7 @@
         @endforelse
     </div>
 
-    <div class="mt-12">{{ $entries->links() }}</div>
+    @if($entries->hasPages())
+        <div class="mt-12">{{ $entries->links() }}</div>
+    @endif
 </x-themes.wrapper>
