@@ -35,7 +35,7 @@ class CollectionForm extends Form
     #[Validate('nullable|string')]
     public string $index_template = '';
 
-    #[Validate('nullable|string|in:standard,single')]
+    #[Validate('required|string|in:standard,single')]
     public string $type = 'standard';
 
     public function rules(): array
@@ -102,11 +102,11 @@ class CollectionForm extends Form
             'description' => $this->description,
             'blueprint_id' => $this->blueprint_id,
             'is_active' => $this->is_active,
-            'settings' => array_merge($collection->settings ?? [], [
+            'settings' => array_filter(array_merge($collection->settings ?? [], [
                 'theme' => $this->theme ?: null,
-                'index_template' => $this->index_template ?: null,
-                'type' => $this->type ?: 'standard',
-            ]),
+                'index_template' => ($this->type === 'single') ? null : ($this->index_template ?: null),
+                'type' => $this->type !== 'standard' ? $this->type : null,
+            ])),
         ]);
 
         Flux::toast(

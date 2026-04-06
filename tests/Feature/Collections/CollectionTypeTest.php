@@ -47,3 +47,12 @@ test('update collection persists type change', function () {
 
     expect($collection->fresh()->settings['type'])->toBe('single');
 });
+
+test('create standard collection omits type from settings', function () {
+    Livewire::test(Create::class)
+        ->set('form.name', 'Blog')
+        ->call('save');
+
+    $collection = Collection::where('slug', 'blog')->first();
+    expect($collection->settings)->not->toHaveKey('type');
+});
