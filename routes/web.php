@@ -35,9 +35,6 @@ use Laravel\Fortify\Features;
 
 // Frontend Routes (Public)
 Route::get('/', Home::class)->name('home');
-// entry.show route will be implemented in Task 8 (CollectionShow component)
-Route::get('/{collectionSlug}/{entrySlug}', fn () => abort(404))->name('entry.show');
-Route::get('/{collectionSlug}', CollectionIndex::class)->name('collection.index');
 
 Route::get('dashboard', Dashboard::class)
     ->middleware(['auth', 'verified'])
@@ -112,3 +109,7 @@ Route::middleware(['auth'])->group(function (): void {
 });
 
 require __DIR__.'/auth.php';
+
+// Generic frontend routes — MUST be last to avoid catching admin/auth paths
+Route::get('/{collectionSlug}/{entrySlug}', fn () => abort(404))->name('entry.show');
+Route::get('/{collectionSlug}', CollectionIndex::class)->name('collection.index');
