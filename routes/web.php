@@ -19,6 +19,7 @@ use App\Livewire\FormSubmissions\Index as FormSubmissionsIndex;
 use App\Livewire\Frontend\CollectionIndex;
 use App\Livewire\Frontend\EntryShow;
 use App\Livewire\Frontend\Home;
+use App\Livewire\LandingPages\AiWizard as LandingPagesAiWizard;
 use App\Livewire\Navigation\Create as NavigationCreate;
 use App\Livewire\Navigation\Edit as NavigationEdit;
 use App\Livewire\Navigation\Index as NavigationIndex;
@@ -48,6 +49,9 @@ Route::middleware(['auth'])->group(function (): void {
     Route::get('collections', CollectionsIndex::class)->name('collections.index');
     Route::get('collections/create', CollectionsCreate::class)->name('collections.create');
     Route::get('collections/{collection}/edit', CollectionsEdit::class)->name('collections.edit');
+
+    // Landing Pages Routes
+    Route::get('landing-pages/ai-wizard', LandingPagesAiWizard::class)->name('landing-pages.ai-wizard');
 
     // Blueprints Routes
     Route::get('blueprints', BlueprintsIndex::class)->name('blueprints.index');

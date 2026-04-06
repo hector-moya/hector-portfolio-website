@@ -6,9 +6,14 @@
                 <flux:heading size="xl">{{ __('Collections') }}</flux:heading>
                 <flux:text>{{ __('Manage your content collections') }}</flux:text>
             </div>
-            <flux:button icon="plus" wire:navigate href="{{ route('collections.create') }}" variant="primary">
-                {{ __('Create Collection') }}
-            </flux:button>
+            <div class="flex gap-2">
+                <flux:button icon="sparkles" wire:navigate href="{{ route('landing-pages.ai-wizard') }}" variant="ghost">
+                    {{ __('Create with AI') }}
+                </flux:button>
+                <flux:button icon="plus" wire:navigate href="{{ route('collections.create') }}" variant="primary">
+                    {{ __('Create Collection') }}
+                </flux:button>
+            </div>
         </div>
 
         {{-- Search --}}
