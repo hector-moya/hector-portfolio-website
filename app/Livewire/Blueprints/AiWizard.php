@@ -20,13 +20,9 @@ class AiWizard extends Component
     /** @var array<string, mixed> */
     public array $proposal = [];
 
-    public bool $loading = false;
-
     public function generate(): void
     {
         $this->validate(['description' => 'required|string|min:10|max:1000']);
-
-        $this->loading = true;
 
         $response = BlueprintWizardAgent::make()->prompt($this->description);
 
@@ -37,7 +33,6 @@ class AiWizard extends Component
             'tabs' => $response['tabs'],
         ];
 
-        $this->loading = false;
         $this->step = 'review';
     }
 

@@ -26,6 +26,7 @@
                 placeholder="A blog post blueprint with featured image, rich text content, author bio, tags, and SEO fields."
                 description="{{ __('Be as specific as you like — the more detail, the better the suggestion.') }}"
             />
+            <flux:error name="description" />
         </flux:card>
 
         <div class="flex justify-end">
