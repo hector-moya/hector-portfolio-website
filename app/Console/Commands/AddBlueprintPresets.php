@@ -2,6 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Blueprint;
+use App\Models\Section;
 use App\Services\BlueprintSectionPresets;
 use Illuminate\Console\Command;
 
@@ -13,10 +15,10 @@ class AddBlueprintPresets extends Command
 
     public function handle(): int
     {
-        $blueprint = \App\Models\Blueprint::query()->findOrFail($this->argument('blueprint'));
+        $blueprint = Blueprint::query()->findOrFail($this->argument('blueprint'));
         $preset = $this->argument('preset');
 
-        /** @var \App\Models\Section $section */
+        /** @var Section $section */
         $section = $blueprint->sections()->create([
             'name' => match ($preset) {
                 'seo' => 'SEO Settings',

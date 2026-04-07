@@ -5,9 +5,10 @@ namespace Database\Factories;
 use App\Models\Taxonomy;
 use App\Models\Term;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Term>
+ * @extends Factory<Term>
  */
 class TermFactory extends Factory
 {
@@ -21,7 +22,7 @@ class TermFactory extends Factory
         return [
             'taxonomy_id' => Taxonomy::factory(),
             'name' => $this->faker->words(2, true),
-            'slug' => fn (array $attributes) => \Illuminate\Support\Str::slug($attributes['name']),
+            'slug' => fn (array $attributes) => Str::slug($attributes['name']),
             'parent_id' => fn (array $attributes) => $this->faker->boolean(20) ? Term::factory() : null,
         ];
     }

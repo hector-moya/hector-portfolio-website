@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
@@ -12,9 +14,9 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
  * @property int $translatable_id
  * @property string $field
  * @property string $value
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read Model|\Illuminate\Database\Eloquent\Model $translatable
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read Model|Model $translatable
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Translation newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Translation newQuery()
@@ -28,11 +30,11 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Translation whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Translation whereValue($value)
  *
- * @mixin \Illuminate\Database\Eloquent\Model
+ * @mixin Model
  */
 class Translation extends Model
 {
-    use \Illuminate\Database\Eloquent\Factories\HasFactory;
+    use HasFactory;
 
     protected $fillable = [
         'locale',

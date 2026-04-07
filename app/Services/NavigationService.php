@@ -62,7 +62,7 @@ class NavigationService
     public function reorder(array $items, ?int $parentId = null): void
     {
         collect($items)->each(function (array $item, $index) use ($parentId): void {
-            \App\Models\NavigationItem::query()->where('id', $item['id'])->update([
+            NavigationItem::query()->where('id', $item['id'])->update([
                 'parent_id' => $parentId,
                 'order' => $index,
             ]);
@@ -83,7 +83,7 @@ class NavigationService
         Cache::forget('navigation.all');
         Cache::forget('navigation.all.active');
 
-        \App\Models\Navigation::query()->pluck('handle')->each(function ($handle): void {
+        Navigation::query()->pluck('handle')->each(function ($handle): void {
             Cache::forget("navigation.{$handle}");
         });
     }

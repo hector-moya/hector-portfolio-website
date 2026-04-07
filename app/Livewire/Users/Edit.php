@@ -4,6 +4,8 @@ namespace App\Livewire\Users;
 
 use App\Livewire\Forms\Users\UserForm;
 use App\Models\User;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
@@ -31,7 +33,7 @@ class Edit extends Component
     }
 
     #[Title('Edit User')]
-    public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+    public function render(): View|Factory
     {
         return view('livewire.users.edit');
     }

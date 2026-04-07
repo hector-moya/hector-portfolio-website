@@ -4,6 +4,8 @@ namespace App\Livewire\Fields;
 
 use App\Models\Asset;
 use App\Models\Field;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Livewire\Attributes\Modelable;
 use Livewire\Component;
 
@@ -40,7 +42,7 @@ class ImageField extends Component
         $this->asset = null;
     }
 
-    public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+    public function render(): View|Factory
     {
         return view('livewire.fields.image-field');
     }

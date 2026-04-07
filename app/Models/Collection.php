@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use Database\Factories\CollectionFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
@@ -16,11 +18,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int|null $blueprint_id
  * @property bool $is_active
  * @property array<array-key, mixed>|null $settings
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property-read \App\Models\Blueprint|null $blueprint
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Entry> $entries
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property Carbon|null $deleted_at
+ * @property-read Blueprint|null $blueprint
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Entry> $entries
  * @property-read int|null $entries_count
  *
  * @method static \Database\Factories\CollectionFactory factory($count = null, $state = [])
@@ -41,11 +43,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Collection withTrashed(bool $withTrashed = true)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Collection withoutTrashed()
  *
- * @mixin \Illuminate\Database\Eloquent\Model
+ * @mixin Model
  */
 class Collection extends Model
 {
-    /** @use HasFactory<\Database\Factories\CollectionFactory> */
+    /** @use HasFactory<CollectionFactory> */
     use HasFactory, SoftDeletes;
 
     protected $fillable = [

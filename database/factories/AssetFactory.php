@@ -2,10 +2,12 @@
 
 namespace Database\Factories;
 
+use App\Models\Asset;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Asset>
+ * @extends Factory<Asset>
  */
 class AssetFactory extends Factory
 {
@@ -29,7 +31,7 @@ class AssetFactory extends Factory
             'title' => fake()->words(3, true),
             'folder_id' => null,
             'meta' => [],
-            'uploaded_by' => \App\Models\User::factory(),
+            'uploaded_by' => User::factory(),
         ];
     }
 }

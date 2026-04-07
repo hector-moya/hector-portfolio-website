@@ -12,7 +12,7 @@ class CreateAsset
     {
         Gate::authorize('create', Asset::class);
 
-        return DB::transaction(fn () => \App\Models\Asset::query()->create([
+        return DB::transaction(fn () => Asset::query()->create([
             'filename' => $assetData['filename'],
             'original_filename' => $assetData['original_filename'],
             'disk' => $assetData['disk'],

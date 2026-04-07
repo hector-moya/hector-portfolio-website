@@ -2,10 +2,13 @@
 
 namespace Database\Factories;
 
+use App\Models\Blueprint;
+use App\Models\Entry;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Entry>
+ * @extends Factory<Entry>
  */
 class EntryFactory extends Factory
 {
@@ -19,11 +22,11 @@ class EntryFactory extends Factory
         $title = fake()->sentence(4);
 
         return [
-            'blueprint_id' => \App\Models\Blueprint::factory(),
+            'blueprint_id' => Blueprint::factory(),
             'title' => rtrim($title, '.'),
             'slug' => str($title)->slug(),
             'status' => fake()->randomElement(['draft', 'published', 'archived']),
-            'author_id' => \App\Models\User::factory(),
+            'author_id' => User::factory(),
             'published_at' => fake()->boolean(70) ? fake()->dateTimeBetween('-1 year') : null,
             'layout' => [],
         ];

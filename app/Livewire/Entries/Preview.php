@@ -3,6 +3,8 @@
 namespace App\Livewire\Entries;
 
 use App\Models\Entry;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -37,7 +39,7 @@ class Preview extends Component
             ->find($this->entryId);
     }
 
-    public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+    public function render(): View|Factory
     {
         return view('livewire.entries.preview');
     }

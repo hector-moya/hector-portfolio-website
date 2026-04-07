@@ -9,7 +9,7 @@ class GlobalsServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        $this->app->singleton('globals', fn ($app): \App\Services\GlobalsService => new GlobalsService);
+        $this->app->singleton('globals', fn ($app): GlobalsService => new GlobalsService);
     }
 
     public function boot(): void

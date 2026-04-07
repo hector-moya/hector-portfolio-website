@@ -4,6 +4,9 @@ namespace App\Livewire\Blueprints;
 
 use App\Enums\FieldType;
 use App\Models\Field;
+use App\Models\Section;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Str;
 use Livewire\Component;
 
@@ -23,7 +26,7 @@ class FieldPicker extends Component
 
     public function addField(string $type): void
     {
-        $section = \App\Models\Section::query()->findOrFail($this->sectionId);
+        $section = Section::query()->findOrFail($this->sectionId);
         $nextOrder = $section->fields()->max('sort_order') + 1;
 
         $element = new Field([
@@ -41,7 +44,7 @@ class FieldPicker extends Component
         $this->dispatch('fieldAdded');
     }
 
-    public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+    public function render(): View|Factory
     {
         return view('livewire.blueprints.field-picker', [
             'fieldTypes' => FieldType::cases(),

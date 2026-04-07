@@ -2,10 +2,12 @@
 
 namespace Database\Factories;
 
+use App\Models\Folder;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Folder>
+ * @extends Factory<Folder>
  */
 class FolderFactory extends Factory
 {
@@ -22,7 +24,7 @@ class FolderFactory extends Factory
             'name' => trim($path, '/'),
             'path' => $path,
             'parent_id' => null,
-            'created_by' => \App\Models\User::factory(),
+            'created_by' => User::factory(),
             'updated_by' => null,
         ];
     }

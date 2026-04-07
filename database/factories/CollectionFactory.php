@@ -2,10 +2,12 @@
 
 namespace Database\Factories;
 
+use App\Models\Blueprint;
+use App\Models\Collection;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Collection>
+ * @extends Factory<Collection>
  */
 class CollectionFactory extends Factory
 {
@@ -22,7 +24,7 @@ class CollectionFactory extends Factory
             'name' => ucfirst($name),
             'slug' => str($name)->slug(),
             'description' => fake()->sentence(),
-            'blueprint_id' => \App\Models\Blueprint::factory(),
+            'blueprint_id' => Blueprint::factory(),
             'is_active' => true,
             'settings' => [],
         ];

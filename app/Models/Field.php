@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use Database\Factories\FieldFactory;
 use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
@@ -19,15 +22,15 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property array<array-key, mixed>|null $config
  * @property bool $is_required
  * @property int $order
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property Carbon|null $deleted_at
  * @property int|null $section_id
  * @property int|null $parent_id
- * @property-read \App\Models\Blueprint $blueprint
- * @property-read \Illuminate\Database\Eloquent\Collection<int, Field> $children
+ * @property-read Blueprint $blueprint
+ * @property-read Collection<int, Field> $children
  * @property-read int|null $children_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\EntryElement> $entryElements
+ * @property-read Collection<int, EntryElement> $entryElements
  * @property-read int|null $entry_elements_count
  * @property-read Field|null $parent
  *
@@ -54,11 +57,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Field withTrashed(bool $withTrashed = true)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Field withoutTrashed()
  *
- * @mixin \Illuminate\Database\Eloquent\Model
+ * @mixin Model
  */
 class Field extends Model
 {
-    /** @use HasFactory<\Database\Factories\FieldFactory> */
+    /** @use HasFactory<FieldFactory> */
     use HasFactory, SoftDeletes;
 
     protected $fillable = [

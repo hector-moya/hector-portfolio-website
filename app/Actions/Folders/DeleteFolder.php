@@ -2,13 +2,14 @@
 
 namespace App\Actions\Folders;
 
+use App\Models\Folder;
 use Illuminate\Support\Facades\Gate;
 
 class DeleteFolder
 {
     public function delete(int $folderId): void
     {
-        $folder = \App\Models\Folder::query()->findOrFail($folderId);
+        $folder = Folder::query()->findOrFail($folderId);
 
         Gate::authorize('delete', $folder);
 

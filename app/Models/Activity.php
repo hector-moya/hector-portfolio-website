@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
@@ -15,9 +17,9 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
  * @property int|null $causer_id
  * @property array<array-key, mixed>|null $properties
  * @property string|null $event
- * @property \Illuminate\Support\Carbon $created_at
- * @property-read Model|\Illuminate\Database\Eloquent\Model|null $causer
- * @property-read Model|\Illuminate\Database\Eloquent\Model|null $subject
+ * @property Carbon $created_at
+ * @property-read Model|Model|null $causer
+ * @property-read Model|Model|null $subject
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Activity newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Activity newQuery()
@@ -33,11 +35,11 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Activity whereSubjectId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Activity whereSubjectType($value)
  *
- * @mixin \Illuminate\Database\Eloquent\Model
+ * @mixin Model
  */
 class Activity extends Model
 {
-    use \Illuminate\Database\Eloquent\Factories\HasFactory;
+    use HasFactory;
 
     public const UPDATED_AT = null;
 

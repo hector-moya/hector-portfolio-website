@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\DataTransferObjects;
 
+use Illuminate\Support\Str;
+
 class TabDto
 {
     /**
@@ -20,10 +22,10 @@ class TabDto
     {
         return new self(
             name: $data['name'],
-            handle: $data['handle'] ?? \Illuminate\Support\Str::slug($data['name']),
+            handle: $data['handle'] ?? Str::slug($data['name']),
             sortOrder: $data['sort_order'] ?? 0,
             sections: array_map(
-                fn (array $section): \App\DataTransferObjects\SectionDto => SectionDto::fromArray($section),
+                fn (array $section): SectionDto => SectionDto::fromArray($section),
                 $data['sections'] ?? []
             ),
         );

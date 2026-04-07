@@ -1,8 +1,13 @@
 <?php
 
+use App\Providers\AppServiceProvider;
+use App\Providers\FortifyServiceProvider;
+use App\Providers\GlobalsServiceProvider;
+use App\Providers\NavigationServiceProvider;
+
 return [
-    App\Providers\AppServiceProvider::class,
-    App\Providers\FortifyServiceProvider::class,
-    App\Providers\GlobalsServiceProvider::class,
-    App\Providers\NavigationServiceProvider::class,
+    AppServiceProvider::class,
+    FortifyServiceProvider::class,
+    GlobalsServiceProvider::class,
+    NavigationServiceProvider::class,
 ];

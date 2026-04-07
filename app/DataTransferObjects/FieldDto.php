@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\DataTransferObjects;
 
 use App\Enums\FieldType;
+use Illuminate\Support\Str;
 
 class FieldDto
 {
@@ -27,7 +28,7 @@ class FieldDto
     {
         return new self(
             name: $data['name'],
-            handle: $data['handle'] ?? \Illuminate\Support\Str::slug($data['name']),
+            handle: $data['handle'] ?? Str::slug($data['name']),
             type: FieldType::from($data['type']),
             sortOrder: $data['sort_order'] ?? 0,
             instructions: $data['instructions'] ?? null,

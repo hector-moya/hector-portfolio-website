@@ -48,9 +48,9 @@ class GlobalsService
      */
     public function setValue(string $set, string $variable, mixed $value): void
     {
-        $globalSet = \App\Models\GlobalSet::query()->firstOrCreate(['handle' => $set]);
+        $globalSet = GlobalSet::query()->firstOrCreate(['handle' => $set]);
 
-        \App\Models\GlobalVariable::query()->updateOrCreate(['global_set_id' => $globalSet->id, 'handle' => $variable], ['value' => $value]);
+        GlobalVariable::query()->updateOrCreate(['global_set_id' => $globalSet->id, 'handle' => $variable], ['value' => $value]);
 
         Cache::forget("globals.{$set}.{$variable}");
     }

@@ -5,6 +5,8 @@ namespace App\Livewire\Blueprints;
 use App\Models\Blueprint;
 use App\Models\Section;
 use App\Models\Tab;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Str;
 use Livewire\Component;
 
@@ -61,7 +63,7 @@ class TabsManager extends Component
         }
     }
 
-    public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+    public function render(): View|Factory
     {
         return view('livewire.blueprints.tabs-manager', [
             'tabs' => $this->blueprint->tabs()->with('sections.elements')->get(),

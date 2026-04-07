@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\DataTransferObjects;
 
+use Illuminate\Support\Str;
+
 class SectionDto
 {
     /**
@@ -21,11 +23,11 @@ class SectionDto
     {
         return new self(
             name: $data['name'],
-            handle: $data['handle'] ?? \Illuminate\Support\Str::slug($data['name']),
+            handle: $data['handle'] ?? Str::slug($data['name']),
             sortOrder: $data['sort_order'] ?? 0,
             instructions: $data['instructions'] ?? null,
             fields: array_map(
-                fn (array $field): \App\DataTransferObjects\FieldDto => FieldDto::fromArray($field),
+                fn (array $field): FieldDto => FieldDto::fromArray($field),
                 $data['fields'] ?? []
             ),
         );

@@ -13,20 +13,20 @@ trait Tabs
     {
         return [
             [
-                'id' => UUID::uuid4()->toString(),
+                'id' => Uuid::uuid4()->toString(),
                 'name' => __('Main'),
                 'handle' => 'main',
                 'sort_order' => 0,
                 'sections' => [
                     [
-                        'id' => UUID::uuid4()->toString(),
+                        'id' => Uuid::uuid4()->toString(),
                         'name' => __('Content'),
                         'handle' => 'content',
                         'sort_order' => 0,
                         'instructions' => '',
                         'fields' => [
                             [
-                                'id' => UUID::uuid4()->toString(),
+                                'id' => Uuid::uuid4()->toString(),
                                 'label' => __('Title'),
                                 'handle' => 'title',
                                 'type' => 'text',
@@ -38,7 +38,7 @@ trait Tabs
                                 'validation' => [],
                             ],
                             [
-                                'id' => UUID::uuid4()->toString(),
+                                'id' => Uuid::uuid4()->toString(),
                                 'label' => __('Content'),
                                 'handle' => 'content',
                                 'type' => 'richtext',
@@ -54,20 +54,20 @@ trait Tabs
                 ],
             ],
             [
-                'id' => UUID::uuid4()->toString(),
+                'id' => Uuid::uuid4()->toString(),
                 'name' => __('Side'),
                 'handle' => 'side',
                 'sort_order' => 1,
                 'sections' => [
                     [
-                        'id' => UUID::uuid4()->toString(),
+                        'id' => Uuid::uuid4()->toString(),
                         'name' => __('Meta'),
                         'handle' => 'meta',
                         'sort_order' => 0,
                         'instructions' => '',
                         'fields' => [
                             [
-                                'id' => UUID::uuid4()->toString(),
+                                'id' => Uuid::uuid4()->toString(),
                                 'label' => __('Excerpt'),
                                 'handle' => 'excerpt',
                                 'type' => 'textarea',

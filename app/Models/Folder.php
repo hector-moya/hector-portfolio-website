@@ -2,10 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
@@ -14,16 +18,16 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $path
  * @property int $created_by
  * @property int|null $updated_by
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Asset> $assets
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property Carbon|null $deleted_at
+ * @property-read Collection<int, Asset> $assets
  * @property-read int|null $assets_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, Folder> $children
+ * @property-read Collection<int, Folder> $children
  * @property-read int|null $children_count
- * @property-read \App\Models\User $creator
+ * @property-read User $creator
  * @property-read Folder|null $parent
- * @property-read \App\Models\User|null $updater
+ * @property-read User|null $updater
  *
  * @method static \Database\Factories\FolderFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Folder newModelQuery()
@@ -43,12 +47,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Folder withTrashed(bool $withTrashed = true)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Folder withoutTrashed()
  *
- * @mixin \Illuminate\Database\Eloquent\Model
+ * @mixin Model
  */
 class Folder extends Model
 {
-    use \Illuminate\Database\Eloquent\Factories\HasFactory;
-    use \Illuminate\Database\Eloquent\Factories\HasFactory;
+    use HasFactory;
+    use HasFactory;
     use SoftDeletes;
 
     protected $fillable = [
@@ -90,7 +94,7 @@ class Folder extends Model
         return $this->belongsTo(User::class, 'updated_by');
     }
 
-    #[\Illuminate\Database\Eloquent\Attributes\Scope]
+    #[Scope]
     protected function root($query): mixed
     {
         return $query->whereNull('parent_id');
@@ -100,7 +104,7 @@ class Folder extends Model
     {
         $segment = trim($name, '/');
 
-        return $parent instanceof \App\Models\Folder ? rtrim($parent->path, '/').'/'.$segment : $segment;
+        return $parent instanceof Folder ? rtrim($parent->path, '/').'/'.$segment : $segment;
     }
 
     public function ancestors(): array

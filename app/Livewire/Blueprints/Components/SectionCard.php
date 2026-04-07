@@ -6,6 +6,8 @@ use App\Livewire\Forms\SectionForm;
 use App\Services\FieldTypeRegistry;
 use App\Traits\HasSlug;
 use Flux\Flux;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -60,7 +62,7 @@ class SectionCard extends Component
         $this->dispatch('section-removed');
     }
 
-    public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+    public function render(): View|Factory
     {
         return view('livewire.blueprints.components.section-card');
     }

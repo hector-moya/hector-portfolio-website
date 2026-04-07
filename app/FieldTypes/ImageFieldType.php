@@ -43,7 +43,7 @@ class ImageFieldType extends BaseFieldType
             return null;
         }
 
-        return \App\Models\Asset::query()->find($value);
+        return Asset::query()->find($value);
     }
 
     public function dehydrate(mixed $value): mixed

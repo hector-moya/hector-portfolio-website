@@ -11,7 +11,7 @@ trait Sections
     public function newSection(array $data): array
     {
         return [
-            'id' => UUID::uuid4()->toString(),
+            'id' => Uuid::uuid4()->toString(),
             'name' => __('New Section'),
             'blueprint_id' => $data['blueprint_id'] ?? null,
             'tab_id' => $data['tab_id'] ?? null,

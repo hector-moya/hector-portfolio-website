@@ -9,7 +9,7 @@ class NavigationServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        $this->app->singleton('navigation', fn ($app): \App\Services\NavigationService => new NavigationService);
+        $this->app->singleton('navigation', fn ($app): NavigationService => new NavigationService);
     }
 
     public function boot(): void

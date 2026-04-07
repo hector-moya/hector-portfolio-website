@@ -2,10 +2,11 @@
 
 namespace Database\Factories;
 
+use App\Models\Blueprint;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Blueprint>
+ * @extends Factory<Blueprint>
  */
 class BlueprintFactory extends Factory
 {

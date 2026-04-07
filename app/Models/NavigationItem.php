@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use Database\Factories\NavigationItemFactory;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
@@ -20,12 +23,12 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
  * @property int|null $linkable_id
  * @property string|null $class
  * @property bool $is_active
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection<int, NavigationItem> $children
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read Collection<int, NavigationItem> $children
  * @property-read int|null $children_count
- * @property-read Model|\Illuminate\Database\Eloquent\Model|null $linkable
- * @property-read \App\Models\Navigation $navigation
+ * @property-read Model|Model|null $linkable
+ * @property-read Navigation $navigation
  * @property-read NavigationItem|null $parent
  *
  * @method static \Database\Factories\NavigationItemFactory factory($count = null, $state = [])
@@ -46,11 +49,11 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|NavigationItem whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|NavigationItem whereUrl($value)
  *
- * @mixin \Illuminate\Database\Eloquent\Model
+ * @mixin Model
  */
 class NavigationItem extends Model
 {
-    /** @use HasFactory<\Database\Factories\NavigationItemFactory> */
+    /** @use HasFactory<NavigationItemFactory> */
     use HasFactory;
 
     /**

@@ -4,6 +4,8 @@ namespace App\Livewire\Taxonomies;
 
 use App\Livewire\Forms\TaxonomyForm;
 use App\Models\Taxonomy;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Livewire\Component;
 
 class Edit extends Component
@@ -45,7 +47,7 @@ class Edit extends Component
         $this->redirect(route('taxonomies.index'), navigate: true);
     }
 
-    public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+    public function render(): View|Factory
     {
         return view('livewire.taxonomies.edit');
     }

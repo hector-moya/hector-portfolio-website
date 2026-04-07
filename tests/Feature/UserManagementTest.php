@@ -1,5 +1,8 @@
 <?php
 
+use App\Livewire\Users\Create;
+use App\Livewire\Users\Edit;
+use App\Livewire\Users\Index;
 use App\Models\User;
 use Livewire\Livewire;
 
@@ -45,7 +48,7 @@ test('editor cannot view create user page', function () {
 
 test('users index shows all users', function () {
     Livewire::actingAs($this->admin)
-        ->test(\App\Livewire\Users\Index::class)
+        ->test(Index::class)
         ->assertSee($this->admin->name)
         ->assertSee($this->admin->email)
         ->assertSee($this->editor->name)
@@ -57,7 +60,7 @@ test('users index can search by name', function () {
     $user2 = User::factory()->create(['name' => 'Jane Smith']);
 
     Livewire::actingAs($this->admin)
-        ->test(\App\Livewire\Users\Index::class)
+        ->test(Index::class)
         ->set('search', 'John')
         ->assertSee('John Doe')
         ->assertDontSee('Jane Smith');
@@ -65,7 +68,7 @@ test('users index can search by name', function () {
 
 test('users index can filter by role', function () {
     Livewire::actingAs($this->admin)
-        ->test(\App\Livewire\Users\Index::class)
+        ->test(Index::class)
         ->set('roleFilter', 'admin')
         ->assertSee($this->admin->name)
         ->assertDontSee($this->editor->name)
@@ -75,7 +78,7 @@ test('users index can filter by role', function () {
 // User Creation Tests
 test('admin can create a new user', function () {
     Livewire::actingAs($this->admin)
-        ->test(\App\Livewire\Users\Create::class)
+        ->test(Create::class)
         ->set('form.name', 'New User')
         ->set('form.email', 'newuser@example.com')
         ->set('form.password', 'password123')
@@ -93,7 +96,7 @@ test('admin can create a new user', function () {
 
 test('user name is required', function () {
     Livewire::actingAs($this->admin)
-        ->test(\App\Livewire\Users\Create::class)
+        ->test(Create::class)
         ->set('form.name', '')
         ->set('form.email', 'test@example.com')
         ->set('form.password', 'password123')
@@ -105,7 +108,7 @@ test('user name is required', function () {
 
 test('user email is required and must be valid', function () {
     Livewire::actingAs($this->admin)
-        ->test(\App\Livewire\Users\Create::class)
+        ->test(Create::class)
         ->set('form.name', 'Test User')
         ->set('form.email', '')
         ->set('form.password', 'password123')
@@ -115,7 +118,7 @@ test('user email is required and must be valid', function () {
         ->assertHasErrors(['form.email']);
 
     Livewire::actingAs($this->admin)
-        ->test(\App\Livewire\Users\Create::class)
+        ->test(Create::class)
         ->set('form.name', 'Test User')
         ->set('form.email', 'invalid-email')
         ->set('form.password', 'password123')
@@ -127,7 +130,7 @@ test('user email is required and must be valid', function () {
 
 test('user email must be unique', function () {
     Livewire::actingAs($this->admin)
-        ->test(\App\Livewire\Users\Create::class)
+        ->test(Create::class)
         ->set('form.name', 'Test User')
         ->set('form.email', $this->admin->email)
         ->set('form.password', 'password123')
@@ -139,7 +142,7 @@ test('user email must be unique', function () {
 
 test('user password is required with minimum length', function () {
     Livewire::actingAs($this->admin)
-        ->test(\App\Livewire\Users\Create::class)
+        ->test(Create::class)
         ->set('form.name', 'Test User')
         ->set('form.email', 'test@example.com')
         ->set('form.password', 'short')
@@ -151,7 +154,7 @@ test('user password is required with minimum length', function () {
 
 test('user password must be confirmed', function () {
     Livewire::actingAs($this->admin)
-        ->test(\App\Livewire\Users\Create::class)
+        ->test(Create::class)
         ->set('form.name', 'Test User')
         ->set('form.email', 'test@example.com')
         ->set('form.password', 'password123')
@@ -163,7 +166,7 @@ test('user password must be confirmed', function () {
 
 test('user role must be valid', function () {
     Livewire::actingAs($this->admin)
-        ->test(\App\Livewire\Users\Create::class)
+        ->test(Create::class)
         ->set('form.name', 'Test User')
         ->set('form.email', 'test@example.com')
         ->set('form.password', 'password123')
@@ -194,7 +197,7 @@ test('user cannot edit other users', function () {
 
 test('admin can update a user', function () {
     Livewire::actingAs($this->admin)
-        ->test(\App\Livewire\Users\Edit::class, ['user' => $this->editor])
+        ->test(Edit::class, ['user' => $this->editor])
         ->set('form.name', 'Updated Name')
         ->set('form.email', 'updated@example.com')
         ->set('form.role', 'admin')
@@ -211,7 +214,7 @@ test('admin can update a user', function () {
 
 test('user can update themselves', function () {
     Livewire::actingAs($this->editor)
-        ->test(\App\Livewire\Users\Edit::class, ['user' => $this->editor])
+        ->test(Edit::class, ['user' => $this->editor])
         ->set('form.name', 'My Updated Name')
         ->call('save')
         ->assertRedirect(route('users.index'));
@@ -226,7 +229,7 @@ test('password is optional when updating user', function () {
     $originalPassword = $this->editor->password;
 
     Livewire::actingAs($this->admin)
-        ->test(\App\Livewire\Users\Edit::class, ['user' => $this->editor])
+        ->test(Edit::class, ['user' => $this->editor])
         ->set('form.name', 'Updated Name')
         ->set('form.password', '')
         ->set('form.password_confirmation', '')
@@ -241,7 +244,7 @@ test('password is updated when provided', function () {
     $originalPassword = $this->editor->password;
 
     Livewire::actingAs($this->admin)
-        ->test(\App\Livewire\Users\Edit::class, ['user' => $this->editor])
+        ->test(Edit::class, ['user' => $this->editor])
         ->set('form.name', 'Updated Name')
         ->set('form.password', 'newpassword123')
         ->set('form.password_confirmation', 'newpassword123')
@@ -257,7 +260,7 @@ test('admin can delete a user', function () {
     $userToDelete = User::factory()->create();
 
     Livewire::actingAs($this->admin)
-        ->test(\App\Livewire\Users\Index::class)
+        ->test(Index::class)
         ->call('delete', $userToDelete->id);
 
     expect(User::find($userToDelete->id))->toBeNull();
@@ -265,7 +268,7 @@ test('admin can delete a user', function () {
 
 test('admin cannot delete themselves', function () {
     Livewire::actingAs($this->admin)
-        ->test(\App\Livewire\Users\Index::class)
+        ->test(Index::class)
         ->call('delete', $this->admin->id);
 
     expect(User::find($this->admin->id))->not->toBeNull();

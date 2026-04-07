@@ -2,10 +2,11 @@
 
 namespace Database\Factories;
 
+use App\Models\NavigationItem;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\NavigationItem>
+ * @extends Factory<NavigationItem>
  */
 class NavigationItemFactory extends Factory
 {

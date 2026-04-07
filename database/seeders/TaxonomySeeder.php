@@ -2,7 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\Taxonomy;
+use App\Models\Term;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class TaxonomySeeder extends Seeder
 {
@@ -12,7 +15,7 @@ class TaxonomySeeder extends Seeder
     public function run(): void
     {
         // Create Categories (hierarchical, single-select)
-        $categories = \App\Models\Taxonomy::query()->create([
+        $categories = Taxonomy::query()->create([
             'handle' => 'categories',
             'name' => 'Categories',
             'hierarchical' => true,
@@ -20,20 +23,20 @@ class TaxonomySeeder extends Seeder
         ]);
 
         // Create some default categories
-        $news = \App\Models\Term::query()->create([
+        $news = Term::query()->create([
             'taxonomy_id' => $categories->id,
             'name' => 'News',
             'slug' => 'news',
         ]);
 
-        \App\Models\Term::query()->create([
+        Term::query()->create([
             'taxonomy_id' => $categories->id,
             'name' => 'Company News',
             'slug' => 'company-news',
             'parent_id' => $news->id,
         ]);
 
-        \App\Models\Term::query()->create([
+        Term::query()->create([
             'taxonomy_id' => $categories->id,
             'name' => 'Industry News',
             'slug' => 'industry-news',
@@ -41,7 +44,7 @@ class TaxonomySeeder extends Seeder
         ]);
 
         // Create Tags (non-hierarchical, multi-select)
-        $tags = \App\Models\Taxonomy::query()->create([
+        $tags = Taxonomy::query()->create([
             'handle' => 'tags',
             'name' => 'Tags',
             'hierarchical' => false,
@@ -51,10 +54,10 @@ class TaxonomySeeder extends Seeder
         // Create some default tags
         $tagNames = ['Featured', 'Tutorial', 'Product Update', 'Community'];
         foreach ($tagNames as $name) {
-            \App\Models\Term::query()->create([
+            Term::query()->create([
                 'taxonomy_id' => $tags->id,
                 'name' => $name,
-                'slug' => \Illuminate\Support\Str::slug($name),
+                'slug' => Str::slug($name),
             ]);
         }
     }

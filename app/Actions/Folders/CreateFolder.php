@@ -13,9 +13,9 @@ class CreateFolder
         Gate::authorize('create', Folder::class);
 
         return DB::transaction(function () use ($folderData) {
-            $parent = \App\Models\Folder::query()->find($folderData['parent_id'] ?? null);
+            $parent = Folder::query()->find($folderData['parent_id'] ?? null);
 
-            return \App\Models\Folder::query()->create([
+            return Folder::query()->create([
                 'name' => $folderData['name'],
                 'parent_id' => $folderData['parent_id'] ?? null,
                 'path' => Folder::makePath($parent, $folderData['name']),
