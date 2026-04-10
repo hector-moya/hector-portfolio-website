@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Actions\Collections;
 
 use App\Models\Collection;
 use Illuminate\Support\Str;
 
-class UpdateCollection
+final class UpdateCollection
 {
     public function execute(Collection $collection, array $data): Collection
     {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
     'auth' => [
         'failed' => 'Estas credenciales no coinciden con nuestros registros.',

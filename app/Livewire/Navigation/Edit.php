@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Navigation;
 
 use App\Facades\Navigation;
@@ -11,7 +13,7 @@ use Illuminate\Contracts\View\View;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 
-class Edit extends Component
+final class Edit extends Component
 {
     public NavigationForm $form;
 

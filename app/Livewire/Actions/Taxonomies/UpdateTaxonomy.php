@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Actions\Taxonomies;
 
 use App\Models\Activity;
@@ -8,7 +10,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 
-class UpdateTaxonomy
+final class UpdateTaxonomy
 {
     public function update(array $taxonomyData): Taxonomy
     {

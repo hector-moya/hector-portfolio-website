@@ -7,7 +7,7 @@ namespace App\Livewire\Actions\Settings;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
-class UpdatePassword
+final class UpdatePassword
 {
     public function update(User $user, string $password): void
     {

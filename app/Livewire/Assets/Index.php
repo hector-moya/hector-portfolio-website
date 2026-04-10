@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Assets;
 
 use App\Actions\Assets\MoveAsset;
@@ -19,7 +21,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
-class Index extends Component
+final class Index extends Component
 {
     use WithPagination;
 
@@ -114,7 +116,7 @@ class Index extends Component
 
         resolve(MoveAsset::class)->move(
             assetId: $assetId,
-            targetFolder: trim((string) $folder->path, '/'),
+            targetFolder: mb_trim((string) $folder->path, '/'),
             folderId: $folderId,
         );
 

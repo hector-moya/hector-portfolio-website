@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Actions\Blueprints;
 
 use App\Models\Blueprint;
 use Illuminate\Support\Facades\Gate;
 
-class DeleteBlueprint
+final class DeleteBlueprint
 {
     public function execute(Blueprint $blueprint): bool
     {

@@ -9,7 +9,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Livewire\Component;
 
-class Create extends Component
+final class Create extends Component
 {
     public TaxonomyForm $form;
 

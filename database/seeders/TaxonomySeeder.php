@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Seeders;
 
 use App\Models\Taxonomy;
@@ -7,7 +9,7 @@ use App\Models\Term;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
-class TaxonomySeeder extends Seeder
+final class TaxonomySeeder extends Seeder
 {
     /**
      * Run the database seeds.

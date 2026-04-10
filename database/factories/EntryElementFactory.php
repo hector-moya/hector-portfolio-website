@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 /**
  * @extends Factory<EntryElement>
  */
-class EntryElementFactory extends Factory
+final class EntryElementFactory extends Factory
 {
     /**
      * Define the model's default state.

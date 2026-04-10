@@ -11,7 +11,7 @@ use Illuminate\Contracts\View\View;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
-class Create extends Component
+final class Create extends Component
 {
     public UserForm $form;
 

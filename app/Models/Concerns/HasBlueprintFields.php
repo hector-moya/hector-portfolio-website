@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models\Concerns;
 
 /**
@@ -7,13 +9,6 @@ namespace App\Models\Concerns;
  */
 trait HasBlueprintFields
 {
-    protected function initializeHasBlueprintFields(): void
-    {
-        if (! isset($this->casts['field_values'])) {
-            $this->casts['field_values'] = 'array';
-        }
-    }
-
     public function getFieldValue(string $path)
     {
         $parts = explode('.', $path);
@@ -62,5 +57,12 @@ trait HasBlueprintFields
         }
 
         return $this->field_values[$section] ?? [];
+    }
+
+    protected function initializeHasBlueprintFields(): void
+    {
+        if (! isset($this->casts['field_values'])) {
+            $this->casts['field_values'] = 'array';
+        }
     }
 }

@@ -6,7 +6,7 @@ namespace App\DataTransferObjects;
 
 use Illuminate\Support\Str;
 
-class TabDto
+final class TabDto
 {
     /**
      * @param  array<int, SectionDto>  $sections

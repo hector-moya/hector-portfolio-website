@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Actions;
 
 use App\Models\Activity;
 use App\Models\Entry;
 use App\Models\User;
 
-class DeleteEntry
+final class DeleteEntry
 {
     public function execute(Entry $entry): bool
     {

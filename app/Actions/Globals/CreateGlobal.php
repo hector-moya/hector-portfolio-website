@@ -7,7 +7,7 @@ namespace App\Actions\Globals;
 use App\Models\GlobalSet;
 use Illuminate\Support\Facades\Gate;
 
-class CreateGlobal
+final class CreateGlobal
 {
     public function handle(array $globalData): GlobalSet
     {

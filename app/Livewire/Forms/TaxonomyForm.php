@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Forms;
 
 use App\Livewire\Actions\Taxonomies\CreateTaxonomy;
@@ -12,7 +14,7 @@ use Illuminate\Validation\Rule;
 use Livewire\Attributes\Validate;
 use Livewire\Form;
 
-class TaxonomyForm extends Form
+final class TaxonomyForm extends Form
 {
     public ?int $taxonomy_id = null;
 

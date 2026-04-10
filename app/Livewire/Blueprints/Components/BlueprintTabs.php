@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Blueprints\Components;
 
 use App\Livewire\Forms\TabForm;
@@ -12,7 +14,7 @@ use Illuminate\Support\Collection;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
-class BlueprintTabs extends Component
+final class BlueprintTabs extends Component
 {
     use HasSlug;
 

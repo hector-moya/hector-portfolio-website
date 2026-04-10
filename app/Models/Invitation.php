@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Database\Factories\InvitationFactory;
@@ -19,20 +21,12 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
-class Invitation extends Model
+final class Invitation extends Model
 {
     /** @use HasFactory<InvitationFactory> */
     use HasFactory;
 
     protected $fillable = ['email', 'role', 'token', 'invited_by', 'expires_at', 'accepted_at'];
-
-    protected function casts(): array
-    {
-        return [
-            'expires_at' => 'datetime',
-            'accepted_at' => 'datetime',
-        ];
-    }
 
     public function invitedBy(): BelongsTo
     {
@@ -52,5 +46,13 @@ class Invitation extends Model
     public function isAccepted(): bool
     {
         return $this->accepted_at !== null;
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'expires_at' => 'datetime',
+            'accepted_at' => 'datetime',
+        ];
     }
 }

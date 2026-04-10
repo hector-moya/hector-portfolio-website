@@ -12,7 +12,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class InvitationMail extends Mailable implements ShouldQueue
+final class InvitationMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 

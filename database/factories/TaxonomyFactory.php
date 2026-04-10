@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 /**
  * @extends Factory<Taxonomy>
  */
-class TaxonomyFactory extends Factory
+final class TaxonomyFactory extends Factory
 {
     /**
      * Define the model's default state.

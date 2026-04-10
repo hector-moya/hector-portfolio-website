@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Actions;
 
 use App\Models\Entry;
 use Illuminate\Support\Facades\DB;
 
-class SavePageLayout
+final class SavePageLayout
 {
     /**
      * @param  array<int, array{_id: string, type: string, data: array<string, mixed>}>  $sections

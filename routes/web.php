@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Livewire\ActivityLog\Index as ActivityLogIndex;
 use App\Livewire\Assets\Index as AssetsIndex;
 use App\Livewire\Blueprints\AiWizard as BlueprintsAiWizard;

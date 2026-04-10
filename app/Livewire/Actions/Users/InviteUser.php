@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Actions\Users;
 
 use App\Mail\InvitationMail;
@@ -9,7 +11,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
-class InviteUser
+final class InviteUser
 {
     public function invite(string $email, string $role): Invitation
     {

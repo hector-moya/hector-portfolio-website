@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 /**
  * @extends Factory<NavigationItem>
  */
-class NavigationItemFactory extends Factory
+final class NavigationItemFactory extends Factory
 {
     /**
      * Define the model's default state.

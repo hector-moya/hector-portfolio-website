@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Blueprints;
 
 use App\Enums\FieldType;
@@ -10,7 +12,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Support\Str;
 use Livewire\Component;
 
-class FieldPicker extends Component
+final class FieldPicker extends Component
 {
     public ?string $sectionId = null;
 

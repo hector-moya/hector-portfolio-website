@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use App\Models\Concerns\HasTranslations;
@@ -51,7 +53,7 @@ use Illuminate\Support\Carbon;
  *
  * @mixin Model
  */
-class Blueprint extends Model
+final class Blueprint extends Model
 {
     /** @use HasFactory<BlueprintFactory> */
     use HasFactory, HasTranslations, SoftDeletes;
@@ -73,14 +75,6 @@ class Blueprint extends Model
         'is_active',
         'settings',
     ];
-
-    protected function casts(): array
-    {
-        return [
-            'is_active' => 'boolean',
-            'settings' => 'array',
-        ];
-    }
 
     public function fields(): HasMany
     {
@@ -105,5 +99,13 @@ class Blueprint extends Model
     public function sections(): HasMany
     {
         return $this->hasMany(Section::class)->orderBy('sort_order');
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'is_active' => 'boolean',
+            'settings' => 'array',
+        ];
     }
 }

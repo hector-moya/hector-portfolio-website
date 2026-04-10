@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Support;
 
-class SectionTypes
+final class SectionTypes
 {
     /**
      * @return array<string, array{label: string, fields: array<string, array{type: string, label: string, default: mixed, options?: array<string, string>}>}>
@@ -82,7 +84,7 @@ class SectionTypes
      */
     public static function get(string $type): ?array
     {
-        return static::all()[$type] ?? null;
+        return self::all()[$type] ?? null;
     }
 
     /**
@@ -90,7 +92,7 @@ class SectionTypes
      */
     public static function defaults(string $type): array
     {
-        $schema = static::get($type);
+        $schema = self::get($type);
 
         if ($schema === null) {
             return [];
@@ -104,6 +106,6 @@ class SectionTypes
      */
     public static function labels(): array
     {
-        return array_map(fn (array $type): string => $type['label'], static::all());
+        return array_map(fn (array $type): string => $type['label'], self::all());
     }
 }

@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services;
 
+use GdImage;
 use Illuminate\Support\Facades\Storage;
 
-class ImageTransformer
+final class ImageTransformer
 {
     /**
      * Generate thumbnail (150×150 cropped) and medium (800px wide) variants.
@@ -38,7 +41,7 @@ class ImageTransformer
         $originalHeight = imagesy($source);
         $dir = dirname($sourcePath);
         $filename = pathinfo($sourcePath, PATHINFO_FILENAME);
-        $ext = strtolower(pathinfo($sourcePath, PATHINFO_EXTENSION));
+        $ext = mb_strtolower(pathinfo($sourcePath, PATHINFO_EXTENSION));
 
         $thumbnailPath = $dir.'/'.$filename.'_thumb.'.$ext;
         $mediumPath = $dir.'/'.$filename.'_medium.'.$ext;
@@ -54,7 +57,7 @@ class ImageTransformer
         ];
     }
 
-    private function saveThumbnail(\GdImage $source, int $srcW, int $srcH, string $destPath, string $disk, string $ext): void
+    private function saveThumbnail(GdImage $source, int $srcW, int $srcH, string $destPath, string $disk, string $ext): void
     {
         $size = 150;
 
@@ -78,7 +81,7 @@ class ImageTransformer
         imagedestroy($thumb);
     }
 
-    private function saveMedium(\GdImage $source, int $srcW, int $srcH, string $destPath, string $disk, string $ext): void
+    private function saveMedium(GdImage $source, int $srcW, int $srcH, string $destPath, string $disk, string $ext): void
     {
         $maxWidth = 800;
 
@@ -97,7 +100,7 @@ class ImageTransformer
         imagedestroy($medium);
     }
 
-    private function encodeImage(\GdImage $image, string $ext): string
+    private function encodeImage(GdImage $image, string $ext): string
     {
         ob_start();
 

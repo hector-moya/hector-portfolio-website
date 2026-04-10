@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Factories;
 
 use App\Models\Blueprint;
@@ -9,7 +11,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 /**
  * @extends Factory<Collection>
  */
-class CollectionFactory extends Factory
+final class CollectionFactory extends Factory
 {
     /**
      * Define the model's default state.

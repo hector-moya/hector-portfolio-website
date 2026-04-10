@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Ai\Agents\BlueprintWizardAgent;
 use App\Livewire\Blueprints\AiWizard;
 use App\Models\Blueprint;

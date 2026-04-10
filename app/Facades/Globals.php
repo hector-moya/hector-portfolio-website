@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static \Illuminate\Support\Collection all()
  * @method static void flush()
  */
-class Globals extends Facade
+final class Globals extends Facade
 {
     protected static function getFacadeAccessor(): string
     {

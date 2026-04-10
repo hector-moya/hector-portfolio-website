@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Seeders;
 
 use App\Livewire\Actions\Blueprints\CreateBlueprint;
@@ -11,7 +13,7 @@ use App\Models\User;
 use App\Services\FieldTypeRegistry;
 use Illuminate\Database\Seeder;
 
-class BlogContentSeeder extends Seeder
+final class BlogContentSeeder extends Seeder
 {
     /**
      * Run the database seeds.

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Blueprints;
 
 use App\Models\Blueprint;
@@ -10,7 +12,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Support\Str;
 use Livewire\Component;
 
-class TabsManager extends Component
+final class TabsManager extends Component
 {
     public Blueprint $blueprint;
 

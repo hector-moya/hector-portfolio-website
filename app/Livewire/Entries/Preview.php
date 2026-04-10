@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Entries;
 
 use App\Models\Entry;
@@ -9,7 +11,7 @@ use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
-class Preview extends Component
+final class Preview extends Component
 {
     public bool $show = false;
 

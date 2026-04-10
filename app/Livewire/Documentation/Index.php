@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Documentation;
 
 use Illuminate\Contracts\View\Factory;
@@ -10,7 +12,7 @@ use Livewire\Attributes\Url;
 use Livewire\Component;
 
 #[Layout('components.layouts.app')]
-class Index extends Component
+final class Index extends Component
 {
     #[Url(as: 'topic')]
     public string $slug = 'activity-log';

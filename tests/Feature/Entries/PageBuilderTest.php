@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Livewire\Entries\Partials\PageBuilder;
 use App\Models\Entry;
 use App\Models\User;

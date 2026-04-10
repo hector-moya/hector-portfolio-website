@@ -7,7 +7,7 @@ namespace App\Policies;
 use App\Models\Collection;
 use App\Models\User;
 
-class CollectionPolicy
+final class CollectionPolicy
 {
     /**
      * Determine whether the user can view any models.

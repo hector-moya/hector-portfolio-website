@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Actions;
 
 use App\Models\Activity;
@@ -9,7 +11,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 
-class CreateEntry
+final class CreateEntry
 {
     public function handle(array $entryData): Entry
     {
@@ -51,7 +53,7 @@ class CreateEntry
         });
     }
 
-    protected function createEntryElements(Entry $entry, array $fieldsValues): void
+    private function createEntryElements(Entry $entry, array $fieldsValues): void
     {
         foreach ($fieldsValues as $fieldData) {
             $fieldId = $fieldData['field_id'];

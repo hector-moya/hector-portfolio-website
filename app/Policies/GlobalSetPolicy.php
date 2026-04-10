@@ -7,7 +7,7 @@ namespace App\Policies;
 use App\Models\GlobalSet;
 use App\Models\User;
 
-class GlobalSetPolicy
+final class GlobalSetPolicy
 {
     /**
      * Determine whether the user can view any global sets.

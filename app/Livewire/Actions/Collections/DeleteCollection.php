@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Actions\Collections;
 
 use App\Models\Collection;
 
-class DeleteCollection
+final class DeleteCollection
 {
     public function execute(Collection $collection): bool
     {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Blueprints\Components;
 
 use App\Livewire\Forms\SectionForm;
@@ -12,7 +14,7 @@ use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
-class SectionCard extends Component
+final class SectionCard extends Component
 {
     use HasSlug;
 

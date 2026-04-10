@@ -13,7 +13,7 @@ use Illuminate\Validation\Rule;
 use Livewire\Attributes\Validate;
 use Livewire\Form;
 
-class GlobalForm extends Form
+final class GlobalForm extends Form
 {
     public ?int $global_set_id = null;
 

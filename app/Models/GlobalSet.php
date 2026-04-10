@@ -30,7 +30,7 @@ use Illuminate\Support\Carbon;
  *
  * @mixin Model
  */
-class GlobalSet extends Model
+final class GlobalSet extends Model
 {
     use HasBlueprintFields, HasUlids;
     use HasFactory;

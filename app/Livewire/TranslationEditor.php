@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire;
 
 use App\Actions\Translations\UpdateTranslation;
@@ -9,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\App;
 use Livewire\Component;
 
-class TranslationEditor extends Component
+final class TranslationEditor extends Component
 {
     public Model $model;
 

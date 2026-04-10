@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Database\Factories\NavigationItemFactory;
@@ -51,7 +53,7 @@ use Illuminate\Support\Carbon;
  *
  * @mixin Model
  */
-class NavigationItem extends Model
+final class NavigationItem extends Model
 {
     /** @use HasFactory<NavigationItemFactory> */
     use HasFactory;
@@ -97,7 +99,7 @@ class NavigationItem extends Model
      */
     public function parent(): BelongsTo
     {
-        return $this->belongsTo(NavigationItem::class, 'parent_id');
+        return $this->belongsTo(self::class, 'parent_id');
     }
 
     /**
@@ -105,7 +107,7 @@ class NavigationItem extends Model
      */
     public function children(): HasMany
     {
-        return $this->hasMany(NavigationItem::class, 'parent_id')->orderBy('order');
+        return $this->hasMany(self::class, 'parent_id')->orderBy('order');
     }
 
     /**

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Blueprints;
 
 use App\Livewire\Forms\BlueprintForm;
@@ -12,7 +14,7 @@ use Illuminate\Contracts\View\View;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
-class Edit extends Component
+final class Edit extends Component
 {
     use HasSlug, Sections, Tabs;
 

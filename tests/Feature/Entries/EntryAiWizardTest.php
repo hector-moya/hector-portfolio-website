@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Ai\Agents\EntryWizardAgent;
 use App\Enums\FieldType;
 use App\Livewire\Entries\AiWizard;

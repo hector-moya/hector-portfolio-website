@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Collection;
@@ -45,7 +47,7 @@ use Illuminate\Support\Carbon;
  *
  * @mixin Model
  */
-class Term extends Model
+final class Term extends Model
 {
     use HasFactory;
     use SoftDeletes;
@@ -64,12 +66,12 @@ class Term extends Model
 
     public function parent(): BelongsTo
     {
-        return $this->belongsTo(Term::class, 'parent_id');
+        return $this->belongsTo(self::class, 'parent_id');
     }
 
     public function children(): HasMany
     {
-        return $this->hasMany(Term::class, 'parent_id');
+        return $this->hasMany(self::class, 'parent_id');
     }
 
     public function entries(): MorphToMany

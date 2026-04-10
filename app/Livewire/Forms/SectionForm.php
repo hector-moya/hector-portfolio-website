@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Forms;
 
 use App\Enums\FieldType;
@@ -9,7 +11,7 @@ use Illuminate\Support\Collection;
 use Livewire\Attributes\Validate;
 use Livewire\Form;
 
-class SectionForm extends Form
+final class SectionForm extends Form
 {
     #[Validate('required|string|max:255')]
     public string $name = '';

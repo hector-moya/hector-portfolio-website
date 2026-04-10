@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static \Illuminate\Support\Collection breadcrumb(\App\Models\NavigationItem $item)
  * @method static bool isActive(\App\Models\NavigationItem $item, string $url)
  */
-class Navigation extends Facade
+final class Navigation extends Facade
 {
     protected static function getFacadeAccessor(): string
     {

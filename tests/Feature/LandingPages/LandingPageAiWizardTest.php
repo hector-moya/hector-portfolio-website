@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Ai\Agents\LandingPageWizardAgent;
 use App\Livewire\LandingPages\AiWizard;
 use App\Models\Blueprint;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Settings;
 
 use App\Livewire\Actions\Users\InviteUser;
@@ -13,7 +15,7 @@ use Livewire\Attributes\Computed;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
-class Security extends Component
+final class Security extends Component
 {
     public string $registrationMode = 'closed';
 

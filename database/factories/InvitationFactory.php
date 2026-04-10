@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Factories;
 
 use App\Models\Invitation;
@@ -10,7 +12,7 @@ use Illuminate\Support\Str;
 /**
  * @extends Factory<Invitation>
  */
-class InvitationFactory extends Factory
+final class InvitationFactory extends Factory
 {
     public function definition(): array
     {

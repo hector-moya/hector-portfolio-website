@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Database\Factories\FieldFactory;
@@ -59,7 +61,7 @@ use Illuminate\Support\Carbon;
  *
  * @mixin Model
  */
-class Field extends Model
+final class Field extends Model
 {
     /** @use HasFactory<FieldFactory> */
     use HasFactory, SoftDeletes;
@@ -77,23 +79,14 @@ class Field extends Model
         'order',
     ];
 
-    protected function casts(): array
-    {
-        return [
-            'config' => 'array',
-            'is_required' => 'boolean',
-            'order' => 'integer',
-        ];
-    }
-
     public function parent(): BelongsTo
     {
-        return $this->belongsTo(Field::class, 'parent_id');
+        return $this->belongsTo(self::class, 'parent_id');
     }
 
     public function children(): HasMany
     {
-        return $this->hasMany(Field::class, 'parent_id');
+        return $this->hasMany(self::class, 'parent_id');
     }
 
     public function blueprint(): BelongsTo
@@ -104,6 +97,15 @@ class Field extends Model
     public function entryElements(): HasMany
     {
         return $this->hasMany(EntryElement::class);
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'config' => 'array',
+            'is_required' => 'boolean',
+            'order' => 'integer',
+        ];
     }
 
     #[Scope]

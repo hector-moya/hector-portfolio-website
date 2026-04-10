@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Actions\Navigation;
 
 use App\Facades\Navigation;
 use App\Models\Navigation as NavigationModel;
 use Illuminate\Support\Facades\Gate;
 
-class UpdateNavigation
+final class UpdateNavigation
 {
     public function update(NavigationModel $navigation, array $data): NavigationModel
     {

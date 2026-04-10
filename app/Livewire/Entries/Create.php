@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Entries;
 
 use App\Livewire\Forms\EntryForm;
@@ -14,7 +16,7 @@ use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
-class Create extends Component
+final class Create extends Component
 {
     public EntryForm $form;
 

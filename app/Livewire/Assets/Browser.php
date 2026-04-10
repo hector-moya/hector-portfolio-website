@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Assets;
 
 use App\Models\Asset;
@@ -13,7 +15,7 @@ use Livewire\Attributes\Computed;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-class Browser extends Component
+final class Browser extends Component
 {
     use WithPagination;
 
@@ -69,6 +71,13 @@ class Browser extends Component
         return $folder ? $folder->ancestors() : [];
     }
 
+    public function render(): View|Factory
+    {
+        return view('livewire.assets.browser', [
+            'assets' => $this->assetsQuery(),
+        ]);
+    }
+
     /** @return LengthAwarePaginator<Asset> */
     private function assetsQuery(): LengthAwarePaginator
     {
@@ -85,12 +94,5 @@ class Browser extends Component
             ->where('folder_id', $this->currentFolderId)
             ->latest()
             ->paginate(12);
-    }
-
-    public function render(): View|Factory
-    {
-        return view('livewire.assets.browser', [
-            'assets' => $this->assetsQuery(),
-        ]);
     }
 }

@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Resources\Api;
 
 use App\Models\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class CollectionResource extends JsonResource
+final class CollectionResource extends JsonResource
 {
     /**
      * Transform the resource into an array.

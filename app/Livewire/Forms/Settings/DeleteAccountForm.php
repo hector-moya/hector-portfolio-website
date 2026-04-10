@@ -9,7 +9,7 @@ use App\Models\User;
 use Livewire\Attributes\Validate;
 use Livewire\Form;
 
-class DeleteAccountForm extends Form
+final class DeleteAccountForm extends Form
 {
     #[Validate('required|string|current_password')]
     public string $password = '';

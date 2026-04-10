@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Collections;
 
 use App\Livewire\Forms\CollectionForm;
@@ -10,7 +12,7 @@ use Illuminate\Contracts\View\View;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
-class Edit extends Component
+final class Edit extends Component
 {
     public CollectionForm $form;
 

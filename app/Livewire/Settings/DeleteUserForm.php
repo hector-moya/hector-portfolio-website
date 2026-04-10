@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Settings;
 
 use App\Livewire\Forms\Settings\DeleteAccountForm;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
-class DeleteUserForm extends Component
+final class DeleteUserForm extends Component
 {
     public DeleteAccountForm $form;
 

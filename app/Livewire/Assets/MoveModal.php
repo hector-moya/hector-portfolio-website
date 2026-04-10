@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Assets;
 
 use App\Actions\Assets\MoveAsset;
@@ -15,7 +17,7 @@ use Livewire\Attributes\Computed;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-class MoveModal extends Component
+final class MoveModal extends Component
 {
     use WithPagination;
 
@@ -129,7 +131,7 @@ class MoveModal extends Component
 
         $folderId = $this->folderForm->currentFolderId ?: null;
         $folder = $folderId ? Folder::query()->findOrFail($folderId) : null;
-        $folderPath = $folder ? trim((string) $folder->path, '/') : '';
+        $folderPath = $folder ? mb_trim((string) $folder->path, '/') : '';
 
         foreach ($this->selected as $assetId) {
             resolve(MoveAsset::class)->move(

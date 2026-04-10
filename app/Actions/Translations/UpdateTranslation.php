@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Actions\Translations;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Gate;
 
-class UpdateTranslation
+final class UpdateTranslation
 {
     public function handle(Model $model, string $field, string $locale, string $value): void
     {

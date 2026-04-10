@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Livewire\Blueprints\Edit as BlueprintsEdit;
 use App\Livewire\Collections\Create as CollectionsCreate;
 use App\Livewire\Collections\Edit as CollectionsEdit;

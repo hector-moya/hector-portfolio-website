@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Models\Blueprint;
 use App\Models\Collection;
 use App\Models\Entry;

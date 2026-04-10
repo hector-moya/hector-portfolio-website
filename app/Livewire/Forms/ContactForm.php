@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Forms;
 
 use App\Actions\Forms\SubmitContactForm;
@@ -7,7 +9,7 @@ use App\Models\FormSubmission;
 use Livewire\Attributes\Validate;
 use Livewire\Form;
 
-class ContactForm extends Form
+final class ContactForm extends Form
 {
     #[Validate('required|string|max:255')]
     public string $name = '';

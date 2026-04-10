@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Livewire\Assets\Index;
 use App\Livewire\Assets\MoveModal;
 use App\Models\Asset;

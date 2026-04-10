@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services;
 
 use App\Models\Entry;
 use App\Models\EntryElement;
 use Illuminate\Support\Collection;
 
-class AssetUsage
+final class AssetUsage
 {
     /**
      * Return all entries that reference the given asset ID.
@@ -32,7 +34,7 @@ class AssetUsage
         $viaLayout = Entry::query()
             ->whereNotNull('layout')
             ->get()
-            ->filter(fn(Entry $entry): bool => $this->layoutContainsAsset($entry->layout ?? [], $assetIdString));
+            ->filter(fn (Entry $entry): bool => $this->layoutContainsAsset($entry->layout ?? [], $assetIdString));
 
         return $viaElements->merge($viaLayout)->unique('id')->values();
     }

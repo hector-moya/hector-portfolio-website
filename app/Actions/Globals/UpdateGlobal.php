@@ -8,7 +8,7 @@ use App\Models\GlobalSet;
 use App\Models\GlobalVariable;
 use Illuminate\Support\Facades\Gate;
 
-class UpdateGlobal
+final class UpdateGlobal
 {
     public function handle(array $globalData): GlobalSet
     {

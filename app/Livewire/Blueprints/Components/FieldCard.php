@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Blueprints\Components;
 
 use App\Enums\FieldType;
@@ -13,7 +15,7 @@ use Illuminate\Contracts\View\View;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 
-class FieldCard extends Component
+final class FieldCard extends Component
 {
     use HasSlug;
 

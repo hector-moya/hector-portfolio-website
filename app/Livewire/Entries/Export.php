@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Entries;
 
 use App\Actions\Entries\ExportEntries;
@@ -10,7 +12,7 @@ use Livewire\Attributes\Computed;
 use Livewire\Component;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
-class Export extends Component
+final class Export extends Component
 {
     public ?int $collectionId = null;
 

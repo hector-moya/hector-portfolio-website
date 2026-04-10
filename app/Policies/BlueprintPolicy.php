@@ -7,7 +7,7 @@ namespace App\Policies;
 use App\Models\Blueprint;
 use App\Models\User;
 
-class BlueprintPolicy
+final class BlueprintPolicy
 {
     /**
      * Determine whether the user can view any models.

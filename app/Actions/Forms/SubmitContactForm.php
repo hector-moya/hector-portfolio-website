@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Actions\Forms;
 
 use App\Mail\ContactFormSubmissionMail;
 use App\Models\FormSubmission;
 use Illuminate\Support\Facades\Mail;
 
-class SubmitContactForm
+final class SubmitContactForm
 {
     public function handle(array $data): FormSubmission
     {

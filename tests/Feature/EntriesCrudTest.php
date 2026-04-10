@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Livewire\Entries\Create;
 use App\Livewire\Entries\Edit;
 use App\Livewire\Entries\Index;

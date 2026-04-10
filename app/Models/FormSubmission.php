@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class FormSubmission extends Model
+final class FormSubmission extends Model
 {
-    use \Illuminate\Database\Eloquent\Factories\HasFactory;
+    use HasFactory;
+
     protected $fillable = [
         'form',
         'name',
@@ -18,14 +20,6 @@ class FormSubmission extends Model
         'read_at',
     ];
 
-    protected function casts(): array
-    {
-        return [
-            'data' => 'array',
-            'read_at' => 'datetime',
-        ];
-    }
-
     public function isRead(): bool
     {
         return $this->read_at !== null;
@@ -34,5 +28,13 @@ class FormSubmission extends Model
     public function markAsRead(): void
     {
         $this->update(['read_at' => now()]);
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'data' => 'array',
+            'read_at' => 'datetime',
+        ];
     }
 }

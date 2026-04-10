@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Entries\Partials;
 
 use App\Livewire\Actions\SavePageLayout;
@@ -12,7 +14,7 @@ use Illuminate\Support\Str;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
-class PageBuilder extends Component
+final class PageBuilder extends Component
 {
     public Entry $entry;
 
@@ -111,7 +113,7 @@ class PageBuilder extends Component
 
         $sectionId = $matches[1];
         $fieldPart = $matches[2];
-        $sectionIndex = array_find_key($this->sections, fn($section): bool => $section['_id'] === $sectionId);
+        $sectionIndex = array_find_key($this->sections, fn ($section): bool => $section['_id'] === $sectionId);
 
         if ($sectionIndex === null) {
             return;

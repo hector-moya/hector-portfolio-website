@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\FieldTypes;
 
 use App\Models\Asset;
 
-class FileFieldType extends BaseFieldType
+final class FileFieldType extends BaseFieldType
 {
     public function name(): string
     {

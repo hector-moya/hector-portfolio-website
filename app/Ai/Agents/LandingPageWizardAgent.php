@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Ai\Agents;
 
 use App\Support\SectionTypes;
@@ -10,7 +12,7 @@ use Laravel\Ai\Contracts\HasStructuredOutput;
 use Laravel\Ai\Promptable;
 
 #[UseSmartestModel]
-class LandingPageWizardAgent implements Agent, HasStructuredOutput
+final class LandingPageWizardAgent implements Agent, HasStructuredOutput
 {
     use Promptable;
 

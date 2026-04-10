@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Frontend;
 
 use App\Models\Asset;
@@ -11,7 +13,7 @@ use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
-class Home extends Component
+final class Home extends Component
 {
     #[Layout('components.layouts.frontend')]
     #[Title('Home')]
@@ -45,7 +47,7 @@ class Home extends Component
         }
 
         $assetIds = collect($sections)
-            ->flatMap(fn(array $section): array => match ($section['type']) {
+            ->flatMap(fn (array $section): array => match ($section['type']) {
                 'hero' => [$section['data']['bg_image'] ?? null],
                 'image_text' => [$section['data']['image'] ?? null],
                 'gallery' => $section['data']['images'] ?? [],

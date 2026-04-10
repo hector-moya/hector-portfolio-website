@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Ai\Agents;
 
 use Illuminate\Contracts\JsonSchema\JsonSchema;
@@ -9,7 +11,7 @@ use Laravel\Ai\Contracts\HasStructuredOutput;
 use Laravel\Ai\Promptable;
 
 #[UseSmartestModel]
-class EntryWizardAgent implements Agent, HasStructuredOutput
+final class EntryWizardAgent implements Agent, HasStructuredOutput
 {
     use Promptable;
 

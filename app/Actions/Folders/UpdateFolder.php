@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Actions\Folders;
 
 use App\Models\Folder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 
-class UpdateFolder
+final class UpdateFolder
 {
     public function update(array $folderData): Folder
     {

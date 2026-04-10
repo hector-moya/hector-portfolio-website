@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Livewire\Users\Create;
 use App\Livewire\Users\Edit;
 use App\Livewire\Users\Index;

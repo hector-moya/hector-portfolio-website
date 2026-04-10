@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Database\Factories\CollectionFactory;
@@ -45,7 +47,7 @@ use Illuminate\Support\Carbon;
  *
  * @mixin Model
  */
-class Collection extends Model
+final class Collection extends Model
 {
     /** @use HasFactory<CollectionFactory> */
     use HasFactory, SoftDeletes;
@@ -59,14 +61,6 @@ class Collection extends Model
         'settings',
     ];
 
-    protected function casts(): array
-    {
-        return [
-            'is_active' => 'boolean',
-            'settings' => 'array',
-        ];
-    }
-
     public function blueprint(): BelongsTo
     {
         return $this->belongsTo(Blueprint::class);
@@ -75,5 +69,13 @@ class Collection extends Model
     public function entries(): HasMany
     {
         return $this->hasMany(Entry::class, 'blueprint_id', 'blueprint_id');
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'is_active' => 'boolean',
+            'settings' => 'array',
+        ];
     }
 }

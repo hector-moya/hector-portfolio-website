@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Forms;
 
 use App\Actions\Folders\CreateFolder;
@@ -10,7 +12,7 @@ use Flux\Flux;
 use Livewire\Attributes\Validate;
 use Livewire\Form;
 
-class FolderForm extends Form
+final class FolderForm extends Form
 {
     #[Validate('required|string|max:255')]
     public ?string $name = '';

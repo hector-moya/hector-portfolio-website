@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Forms;
 
 use App\Enums\FieldType;
@@ -15,7 +17,7 @@ use Illuminate\Validation\Rule;
 use Livewire\Attributes\Validate;
 use Livewire\Form;
 
-class BlueprintForm extends Form
+final class BlueprintForm extends Form
 {
     use Tabs;
 

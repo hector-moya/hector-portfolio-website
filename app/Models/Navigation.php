@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Collection;
@@ -33,7 +35,7 @@ use Illuminate\Support\Carbon;
  *
  * @mixin Model
  */
-class Navigation extends Model
+final class Navigation extends Model
 {
     use HasFactory;
 

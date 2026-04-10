@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Database\Factories\EntryElementFactory;
@@ -37,7 +39,7 @@ use Illuminate\Support\Carbon;
  *
  * @mixin Model
  */
-class EntryElement extends Model
+final class EntryElement extends Model
 {
     /** @use HasFactory<EntryElementFactory> */
     use HasFactory;
@@ -49,18 +51,6 @@ class EntryElement extends Model
         'value',
         'meta',
     ];
-
-    protected function casts(): array
-    {
-        return [
-            'meta' => 'array',
-        ];
-    }
-
-    protected function shouldUseMetaForValue(mixed $value): bool
-    {
-        return is_array($value);
-    }
 
     /**
      * Get the value for this element, checking meta for arrays
@@ -105,5 +95,17 @@ class EntryElement extends Model
     public function Field(): BelongsTo
     {
         return $this->belongsTo(Field::class);
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'meta' => 'array',
+        ];
+    }
+
+    protected function shouldUseMetaForValue(mixed $value): bool
+    {
+        return is_array($value);
     }
 }

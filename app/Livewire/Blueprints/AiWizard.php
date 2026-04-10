@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Blueprints;
 
 use App\Ai\Agents\BlueprintWizardAgent;
@@ -12,19 +14,19 @@ use Illuminate\Support\Str;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
-class AiWizard extends Component
+final class AiWizard extends Component
 {
     public string $step = 'describe';
 
     public string $description = '';
 
+    /** @var array<string, mixed> */
+    public array $proposal = [];
+
     public function mount(): void
     {
         $this->authorize('create', Blueprint::class);
     }
-
-    /** @var array<string, mixed> */
-    public array $proposal = [];
 
     public function generate(): void
     {

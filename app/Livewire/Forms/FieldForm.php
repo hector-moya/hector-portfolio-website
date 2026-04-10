@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Forms;
 
 use App\Enums\FieldType;
@@ -7,7 +9,7 @@ use App\Models\Field;
 use Illuminate\Support\Collection;
 use Livewire\Form;
 
-class FieldForm extends Form
+final class FieldForm extends Form
 {
     public ?int $blueprint_id = null;
 

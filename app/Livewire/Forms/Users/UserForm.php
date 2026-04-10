@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Forms\Users;
 
 use App\Livewire\Actions\Users\CreateUser;
@@ -11,7 +13,7 @@ use Illuminate\Validation\Rule;
 use Livewire\Attributes\Validate;
 use Livewire\Form;
 
-class UserForm extends Form
+final class UserForm extends Form
 {
     public ?User $user = null;
 

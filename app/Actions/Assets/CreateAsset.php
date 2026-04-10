@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Actions\Assets;
 
 use App\Models\Asset;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 
-class CreateAsset
+final class CreateAsset
 {
     public function create(array $assetData): Asset
     {

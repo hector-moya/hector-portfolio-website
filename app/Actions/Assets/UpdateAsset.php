@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Actions\Assets;
 
 use App\Models\Asset;
 use Illuminate\Support\Facades\DB;
 
-class UpdateAsset
+final class UpdateAsset
 {
     public function update(array $assetData): Asset
     {

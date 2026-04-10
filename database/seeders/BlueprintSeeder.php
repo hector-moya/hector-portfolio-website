@@ -6,7 +6,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 
-class BlueprintSeeder extends Seeder
+final class BlueprintSeeder extends Seeder
 {
     /**
      * Run the database seeds.

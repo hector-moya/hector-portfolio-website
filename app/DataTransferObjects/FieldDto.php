@@ -7,7 +7,7 @@ namespace App\DataTransferObjects;
 use App\Enums\FieldType;
 use Illuminate\Support\Str;
 
-class FieldDto
+final class FieldDto
 {
     /**
      * @param  array<string, mixed>  $config

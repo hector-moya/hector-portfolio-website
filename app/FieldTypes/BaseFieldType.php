@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\FieldTypes;
 
 abstract class BaseFieldType
@@ -18,63 +20,63 @@ abstract class BaseFieldType
 
     abstract public function view(): string;
 
-    public function rules(): array
+    final public function rules(): array
     {
         return [];
     }
 
-    public function messages(): array
+    final public function messages(): array
     {
         return [];
     }
 
-    public function setHandle(string $handle): self
+    final public function setHandle(string $handle): self
     {
         $this->handle = $handle;
 
         return $this;
     }
 
-    public function getHandle(): string
+    final public function getHandle(): string
     {
         return $this->handle;
     }
 
-    public function setRequired(bool $required): self
+    final public function setRequired(bool $required): self
     {
         $this->is_required = $required;
 
         return $this;
     }
 
-    public function isRequired(): bool
+    final public function isRequired(): bool
     {
         return $this->is_required;
     }
 
-    public function setValue(mixed $value): self
+    final public function setValue(mixed $value): self
     {
         $this->value = $this->hydrate($value);
 
         return $this;
     }
 
-    public function getValue(): mixed
+    final public function getValue(): mixed
     {
         return $this->dehydrate($this->value);
     }
 
-    public function hydrate(mixed $value): mixed
+    final public function hydrate(mixed $value): mixed
     {
         return $value;
     }
 
-    public function dehydrate(mixed $value): mixed
+    final public function dehydrate(mixed $value): mixed
     {
         return $value;
     }
 
-    public function toArray(): array
+    final public function toArray(): array
     {
         return [
             'type' => $this->name(),

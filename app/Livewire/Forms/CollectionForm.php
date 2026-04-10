@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Forms;
 
 use App\Livewire\Actions\Collections\CreateCollection;
@@ -11,7 +13,7 @@ use Illuminate\Validation\Rule;
 use Livewire\Attributes\Validate;
 use Livewire\Form;
 
-class CollectionForm extends Form
+final class CollectionForm extends Form
 {
     public ?int $collection_id = null;
 

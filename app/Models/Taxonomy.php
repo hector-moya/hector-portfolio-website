@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Collection;
@@ -39,7 +41,7 @@ use Illuminate\Support\Carbon;
  *
  * @mixin Model
  */
-class Taxonomy extends Model
+final class Taxonomy extends Model
 {
     use HasFactory;
     use SoftDeletes;

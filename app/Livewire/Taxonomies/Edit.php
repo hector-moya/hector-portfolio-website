@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Taxonomies;
 
 use App\Livewire\Forms\TaxonomyForm;
@@ -8,7 +10,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Livewire\Component;
 
-class Edit extends Component
+final class Edit extends Component
 {
     public TaxonomyForm $form;
 

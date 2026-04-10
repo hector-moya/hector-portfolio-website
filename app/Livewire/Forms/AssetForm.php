@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Forms;
 
 use App\Actions\Assets\CreateAsset;
@@ -13,7 +15,7 @@ use Livewire\Attributes\Validate;
 use Livewire\Form;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
-class AssetForm extends Form
+final class AssetForm extends Form
 {
     public $folder;
 

@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Actions\Folders;
 
 use App\Models\Folder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 
-class CreateFolder
+final class CreateFolder
 {
     public function create(array $folderData): Folder
     {

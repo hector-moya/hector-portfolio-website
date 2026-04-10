@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services;
 
 use App\Enums\FieldType;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
-class FieldTypeRegistry
+final class FieldTypeRegistry
 {
     /**
      * Returns an array of metadata for all field types.

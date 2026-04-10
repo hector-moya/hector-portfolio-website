@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Actions\Assets;
 
 use App\Models\Asset;
@@ -8,7 +10,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
-class DownloadAsset
+final class DownloadAsset
 {
     public function download(int $assetId): StreamedResponse
     {

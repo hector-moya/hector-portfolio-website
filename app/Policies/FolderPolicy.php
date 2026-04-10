@@ -7,7 +7,7 @@ namespace App\Policies;
 use App\Models\Folder;
 use App\Models\User;
 
-class FolderPolicy
+final class FolderPolicy
 {
     /**
      * Determine whether the user can view any models.

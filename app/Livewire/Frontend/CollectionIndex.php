@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Frontend;
 
 use App\Models\Asset;
@@ -12,7 +14,7 @@ use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-class CollectionIndex extends Component
+final class CollectionIndex extends Component
 {
     use WithPagination;
 
@@ -54,6 +56,11 @@ class CollectionIndex extends Component
         ]);
     }
 
+    public function title(): string
+    {
+        return $this->collection->name;
+    }
+
     private function renderSingle(): View|Factory
     {
         $entry = $this->collection->entries()
@@ -86,7 +93,7 @@ class CollectionIndex extends Component
         }
 
         $assetIds = collect($sections)
-            ->flatMap(fn(array $section): array => match ($section['type']) {
+            ->flatMap(fn (array $section): array => match ($section['type']) {
                 'hero' => [$section['data']['bg_image'] ?? null],
                 'image_text' => [$section['data']['image'] ?? null],
                 'gallery' => $section['data']['images'] ?? [],
@@ -102,10 +109,5 @@ class CollectionIndex extends Component
         }
 
         return Asset::query()->whereIn('id', $assetIds)->get();
-    }
-
-    public function title(): string
-    {
-        return $this->collection->name;
     }
 }

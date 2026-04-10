@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Factories;
 
 use App\Models\Blueprint;
@@ -10,7 +12,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 /**
  * @extends Factory<Entry>
  */
-class EntryFactory extends Factory
+final class EntryFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -23,7 +25,7 @@ class EntryFactory extends Factory
 
         return [
             'blueprint_id' => Blueprint::factory(),
-            'title' => rtrim($title, '.'),
+            'title' => mb_rtrim($title, '.'),
             'slug' => str($title)->slug(),
             'status' => fake()->randomElement(['draft', 'published', 'archived']),
             'author_id' => User::factory(),

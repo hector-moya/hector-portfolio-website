@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Assets;
 
 use App\Models\Asset;
@@ -12,7 +14,7 @@ use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
-class EditModal extends Component
+final class EditModal extends Component
 {
     public ?int $assetId = null;
 

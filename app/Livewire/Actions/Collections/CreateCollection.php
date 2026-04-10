@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Actions\Collections;
 
 use App\Models\Collection;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 
-class CreateCollection
+final class CreateCollection
 {
     public function execute(array $data): Collection
     {

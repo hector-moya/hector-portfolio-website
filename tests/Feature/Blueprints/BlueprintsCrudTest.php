@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Livewire\Blueprints\Create;
 use App\Livewire\Blueprints\Edit;
 use App\Livewire\Blueprints\Index;

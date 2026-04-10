@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Support;
 
-class TemplateLayouts
+final class TemplateLayouts
 {
     /**
      * @return array<string, string>

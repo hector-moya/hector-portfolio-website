@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Forms\Settings;
 
 use App\Livewire\Actions\Settings\UpdateProfile;
@@ -8,7 +10,7 @@ use Illuminate\Validation\Rule;
 use Livewire\Attributes\Validate;
 use Livewire\Form;
 
-class ProfileForm extends Form
+final class ProfileForm extends Form
 {
     #[Validate('required|string|max:255')]
     public string $name = '';

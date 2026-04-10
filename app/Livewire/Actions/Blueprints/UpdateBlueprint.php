@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Actions\Blueprints;
 
 use App\Models\Blueprint;
@@ -7,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 
-class UpdateBlueprint
+final class UpdateBlueprint
 {
     public function update(array $blueprintData = []): Blueprint
     {

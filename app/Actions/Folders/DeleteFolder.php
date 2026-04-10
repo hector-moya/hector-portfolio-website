@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Actions\Folders;
 
 use App\Models\Folder;
 use Illuminate\Support\Facades\Gate;
 
-class DeleteFolder
+final class DeleteFolder
 {
     public function delete(int $folderId): void
     {

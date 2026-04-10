@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Actions;
 
 use App\Models\Activity;
@@ -8,7 +10,7 @@ use App\Models\EntryElement;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
-class UpdateEntry
+final class UpdateEntry
 {
     public function handle(array $entryData): Entry
     {
@@ -58,7 +60,7 @@ class UpdateEntry
         });
     }
 
-    protected function syncEntryElements(Entry $entry, array $fieldsValues): void
+    private function syncEntryElements(Entry $entry, array $fieldsValues): void
     {
         // Get existing elements grouped by field_id
         $existingElements = $entry->elements->groupBy('field_id');

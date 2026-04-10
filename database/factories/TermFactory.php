@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Factories;
 
 use App\Models\Taxonomy;
@@ -10,7 +12,7 @@ use Illuminate\Support\Str;
 /**
  * @extends Factory<Term>
  */
-class TermFactory extends Factory
+final class TermFactory extends Factory
 {
     /**
      * Define the model's default state.

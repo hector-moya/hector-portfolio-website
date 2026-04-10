@@ -7,7 +7,7 @@ namespace App\Actions\Globals;
 use App\Models\GlobalSet;
 use Illuminate\Support\Facades\Gate;
 
-class DeleteGlobal
+final class DeleteGlobal
 {
     public function handle(int $globalSetId): void
     {

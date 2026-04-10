@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Support\SectionTypes;
 
 test('all returns all 6 section types', function () {

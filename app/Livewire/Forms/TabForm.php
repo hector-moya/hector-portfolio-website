@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Forms;
 
 use App\Models\Tab;
@@ -7,7 +9,7 @@ use App\Traits\Blueprints\Sections;
 use Livewire\Attributes\Validate;
 use Livewire\Form;
 
-class TabForm extends Form
+final class TabForm extends Form
 {
     use Sections;
 

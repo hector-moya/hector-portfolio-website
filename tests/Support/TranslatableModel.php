@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Support;
 
 use App\Models\Concerns\HasTranslations;
 use Illuminate\Database\Eloquent\Model;
 
-class TranslatableModel extends Model
+final class TranslatableModel extends Model
 {
     use HasTranslations;
 

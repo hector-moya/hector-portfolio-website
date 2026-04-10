@@ -7,7 +7,7 @@ namespace App\Policies;
 use App\Models\Entry;
 use App\Models\User;
 
-class EntryPolicy
+final class EntryPolicy
 {
     /**
      * Determine whether the user can view any models.

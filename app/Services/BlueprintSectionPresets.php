@@ -1,23 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services;
 
 use App\Enums\FieldType;
 use App\Models\Section;
 use Illuminate\Support\Str;
 
-class BlueprintSectionPresets
+final class BlueprintSectionPresets
 {
     public static function addPreset(Section $section, string $preset): void
     {
         $method = Str::camel("add_{$preset}_fields");
 
-        if (method_exists(static::class, $method)) {
-            static::$method($section);
+        if (method_exists(self::class, $method)) {
+            self::$method($section);
         }
     }
 
-    protected static function addSeoFields(Section $section): void
+    private static function addSeoFields(Section $section): void
     {
         $section->fields()->createMany([
             [
@@ -47,7 +49,7 @@ class BlueprintSectionPresets
         ]);
     }
 
-    protected static function addNavigationFields(Section $section): void
+    private static function addNavigationFields(Section $section): void
     {
         $section->fields()->createMany([
             [
@@ -85,7 +87,7 @@ class BlueprintSectionPresets
         ]);
     }
 
-    protected static function addAssetFields(Section $section): void
+    private static function addAssetFields(Section $section): void
     {
         $section->fields()->createMany([
             [
@@ -123,7 +125,7 @@ class BlueprintSectionPresets
         ]);
     }
 
-    protected static function addUserProfileFields(Section $section): void
+    private static function addUserProfileFields(Section $section): void
     {
         $section->fields()->createMany([
             [

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Forms;
 
 use App\Livewire\Actions\Navigation\CreateNavigation;
@@ -10,7 +12,7 @@ use Illuminate\Validation\Rule;
 use Livewire\Attributes\Validate;
 use Livewire\Form;
 
-class NavigationForm extends Form
+final class NavigationForm extends Form
 {
     public ?int $navigation_id = null;
 

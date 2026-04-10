@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Livewire\Blueprints\Components\FieldCard;
 use App\Models\Field;
 use App\Models\User;

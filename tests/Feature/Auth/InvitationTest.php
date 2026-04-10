@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Livewire\Actions\Users\InviteUser;
 use App\Livewire\Auth\Register;
 use App\Mail\InvitationMail;

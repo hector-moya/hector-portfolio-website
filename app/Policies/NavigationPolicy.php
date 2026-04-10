@@ -7,7 +7,7 @@ namespace App\Policies;
 use App\Models\Navigation;
 use App\Models\User;
 
-class NavigationPolicy
+final class NavigationPolicy
 {
     /**
      * Determine whether the user can view any models.

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Livewire\Collections\Create;
 use App\Livewire\Collections\Edit;
 use App\Livewire\Collections\Index;

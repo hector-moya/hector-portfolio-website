@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Frontend;
 
 use App\Models\Collection as CollectionModel;
@@ -10,7 +12,7 @@ use Illuminate\Contracts\View\View;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
-class EntryShow extends Component
+final class EntryShow extends Component
 {
     public Entry $entry;
 

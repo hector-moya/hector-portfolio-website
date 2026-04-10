@@ -10,7 +10,7 @@ use App\Models\GlobalSet;
 use Illuminate\View\View;
 use Livewire\Component;
 
-class Edit extends Component
+final class Edit extends Component
 {
     public GlobalForm $form;
 

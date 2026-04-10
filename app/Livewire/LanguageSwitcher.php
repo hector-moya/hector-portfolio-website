@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire;
 
 use Illuminate\Contracts\View\Factory;
@@ -8,7 +10,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
 use Livewire\Component;
 
-class LanguageSwitcher extends Component
+final class LanguageSwitcher extends Component
 {
     public string $currentLocale;
 

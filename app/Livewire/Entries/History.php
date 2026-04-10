@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Entries;
 
 use App\Models\Activity;
@@ -12,7 +14,7 @@ use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
-class History extends Component
+final class History extends Component
 {
     public ?int $entryId = null;
 

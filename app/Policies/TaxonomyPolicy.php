@@ -7,7 +7,7 @@ namespace App\Policies;
 use App\Models\Taxonomy;
 use App\Models\User;
 
-class TaxonomyPolicy
+final class TaxonomyPolicy
 {
     /**
      * Determine whether the user can view any taxonomies.

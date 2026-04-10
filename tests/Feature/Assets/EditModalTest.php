@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Livewire\Assets\EditModal;
 use App\Models\Asset;
 use App\Models\Entry;

@@ -9,7 +9,7 @@ use App\Models\GlobalVariable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 
-class GlobalsService
+final class GlobalsService
 {
     /**
      * Get all global sets.

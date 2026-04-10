@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Assets;
 
 use App\Livewire\Forms\AssetForm;
@@ -15,7 +17,7 @@ use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
-class UploadModal extends Component
+final class UploadModal extends Component
 {
     use WithFileUploads;
 
@@ -55,38 +57,6 @@ class UploadModal extends Component
     public function onFolderChanged(?int $folderId): void
     {
         $this->currentFolderId = $folderId;
-    }
-
-    private function prepareAssetAttributes(): void
-    {
-        $disk = config('filesystems.default');
-
-        // For S3 in staging/production
-        $path = $disk === 's3' ? $this->form->upload->storePublicly($this->currentFolder, 's3') : $this->form->upload->storePublicly($this->currentFolder, 'public');
-
-        $mimeType = $this->form->upload->getMimeType();
-        $variants = [];
-
-        if (str_starts_with((string) $mimeType, 'image/')) {
-            $variants = resolve(ImageTransformer::class)->transform((string) $path, (string) $disk);
-        }
-
-        $this->form->filename = basename((string) $path);
-        $this->form->original_filename = $this->form->upload->getClientOriginalName();
-        $this->form->disk = $disk;
-        $this->form->mime_type = $mimeType;
-        $this->form->size = $this->form->upload->getSize();
-        $this->form->path = $path;
-        $this->form->folder_id = $this->currentFolderId;
-        $this->form->uploaded_by = auth()->id();
-        $this->form->updated_by = auth()->id();
-
-        if ($variants !== []) {
-            $this->form->meta = array_merge($this->form->meta ?? [], [
-                'thumbnail' => $variants['thumbnail'],
-                'medium' => $variants['medium'],
-            ]);
-        }
     }
 
     public function selectAsset($assetId = null): void
@@ -132,5 +102,37 @@ class UploadModal extends Component
     {
 
         return view('livewire.assets.upload-modal');
+    }
+
+    private function prepareAssetAttributes(): void
+    {
+        $disk = config('filesystems.default');
+
+        // For S3 in staging/production
+        $path = $disk === 's3' ? $this->form->upload->storePublicly($this->currentFolder, 's3') : $this->form->upload->storePublicly($this->currentFolder, 'public');
+
+        $mimeType = $this->form->upload->getMimeType();
+        $variants = [];
+
+        if (str_starts_with((string) $mimeType, 'image/')) {
+            $variants = resolve(ImageTransformer::class)->transform((string) $path, (string) $disk);
+        }
+
+        $this->form->filename = basename((string) $path);
+        $this->form->original_filename = $this->form->upload->getClientOriginalName();
+        $this->form->disk = $disk;
+        $this->form->mime_type = $mimeType;
+        $this->form->size = $this->form->upload->getSize();
+        $this->form->path = $path;
+        $this->form->folder_id = $this->currentFolderId;
+        $this->form->uploaded_by = auth()->id();
+        $this->form->updated_by = auth()->id();
+
+        if ($variants !== []) {
+            $this->form->meta = array_merge($this->form->meta ?? [], [
+                'thumbnail' => $variants['thumbnail'],
+                'medium' => $variants['medium'],
+            ]);
+        }
     }
 }

@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Actions\Users;
 
 use App\Models\User;
 use Illuminate\Support\Facades\Gate;
 
-class DeleteUser
+final class DeleteUser
 {
     /**
      * Execute the action

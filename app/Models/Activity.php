@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -37,7 +39,7 @@ use Illuminate\Support\Carbon;
  *
  * @mixin Model
  */
-class Activity extends Model
+final class Activity extends Model
 {
     use HasFactory;
 
@@ -56,14 +58,6 @@ class Activity extends Model
         'event',
     ];
 
-    protected function casts(): array
-    {
-        return [
-            'properties' => 'array',
-            'created_at' => 'datetime',
-        ];
-    }
-
     public function subject(): MorphTo
     {
         return $this->morphTo();
@@ -72,5 +66,13 @@ class Activity extends Model
     public function causer(): MorphTo
     {
         return $this->morphTo();
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'properties' => 'array',
+            'created_at' => 'datetime',
+        ];
     }
 }

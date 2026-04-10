@@ -9,7 +9,7 @@ use Flux\Flux;
 use Illuminate\Support\ServiceProvider;
 use Livewire\Blaze\Blaze;
 
-class AppServiceProvider extends ServiceProvider
+final class AppServiceProvider extends ServiceProvider
 {
     /**
      * Register any application services.

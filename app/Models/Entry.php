@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use App\Models\Concerns\HasBlueprintFields;
@@ -54,7 +56,7 @@ use Illuminate\Support\Carbon;
  *
  * @mixin Model
  */
-class Entry extends Model
+final class Entry extends Model
 {
     /** @use HasFactory<EntryFactory> */
     use HasBlueprintFields, HasFactory, SoftDeletes;
@@ -72,14 +74,6 @@ class Entry extends Model
         'seo_description',
         'og_image',
     ];
-
-    protected function casts(): array
-    {
-        return [
-            'published_at' => 'datetime',
-            'layout' => 'array',
-        ];
-    }
 
     public function blueprint(): BelongsTo
     {
@@ -130,5 +124,13 @@ class Entry extends Model
         }
 
         return $this->layout ?? [];
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'published_at' => 'datetime',
+            'layout' => 'array',
+        ];
     }
 }

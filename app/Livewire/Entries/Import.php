@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Entries;
 
 use App\Actions\Entries\ImportEntries;
@@ -9,7 +11,7 @@ use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
-class Import extends Component
+final class Import extends Component
 {
     use WithFileUploads;
 

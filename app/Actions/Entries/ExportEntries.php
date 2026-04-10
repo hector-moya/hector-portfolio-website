@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Actions\Entries;
 
 use App\Models\Entry;
 
-class ExportEntries
+final class ExportEntries
 {
     public function handle(?int $collectionId = null, bool $includeBlueprint = true): string
     {

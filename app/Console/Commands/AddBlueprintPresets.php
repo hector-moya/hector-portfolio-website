@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Console\Commands;
 
 use App\Models\Blueprint;
@@ -7,7 +9,7 @@ use App\Models\Section;
 use App\Services\BlueprintSectionPresets;
 use Illuminate\Console\Command;
 
-class AddBlueprintPresets extends Command
+final class AddBlueprintPresets extends Command
 {
     protected $signature = 'blueprint:add-presets {blueprint : The ID of the blueprint} {preset : The preset to add (seo|navigation|asset|user-profile)}';
 

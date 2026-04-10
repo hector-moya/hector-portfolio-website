@@ -11,7 +11,7 @@ use Illuminate\Validation\ValidationException;
 use Livewire\Attributes\Validate;
 use Livewire\Form;
 
-class PasswordForm extends Form
+final class PasswordForm extends Form
 {
     #[Validate('required|string|current_password')]
     public string $current_password = '';

@@ -6,7 +6,7 @@ namespace App\DataTransferObjects;
 
 use Illuminate\Support\Str;
 
-class SectionDto
+final class SectionDto
 {
     /**
      * @param  array<string, FieldDto>  $fields

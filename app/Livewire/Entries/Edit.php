@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Entries;
 
 use App\Livewire\Forms\EntryForm;
@@ -15,7 +17,7 @@ use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
-class Edit extends Component
+final class Edit extends Component
 {
     use WithFileUploads;
 
@@ -163,6 +165,11 @@ class Edit extends Component
         $this->form->fieldValues[$assetHandle] = $data['value'];
     }
 
+    public function render(): View|Factory
+    {
+        return view('livewire.entries.edit');
+    }
+
     private function handlePageBuilderAsset(string $assetHandle, mixed $value): void
     {
         if (! preg_match('/^section_([0-9a-f-]{36})_(.+)$/', $assetHandle, $matches)) {
@@ -198,10 +205,5 @@ class Edit extends Component
                 return;
             }
         }
-    }
-
-    public function render(): View|Factory
-    {
-        return view('livewire.entries.edit');
     }
 }

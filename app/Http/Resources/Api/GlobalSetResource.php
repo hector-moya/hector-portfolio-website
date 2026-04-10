@@ -8,7 +8,7 @@ use App\Models\GlobalSet;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class GlobalSetResource extends JsonResource
+final class GlobalSetResource extends JsonResource
 {
     /**
      * Transform the resource into an array.

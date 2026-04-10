@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -64,7 +66,7 @@ use Illuminate\Support\Facades\Storage;
  *
  * @mixin Model
  */
-class Asset extends Model
+final class Asset extends Model
 {
     use HasFactory, SoftDeletes;
 
@@ -101,6 +103,26 @@ class Asset extends Model
     public function updater(): BelongsTo
     {
         return $this->belongsTo(User::class, 'updated_by');
+    }
+
+    public function delete()
+    {
+        $disk = Storage::disk($this->disk);
+
+        $disk->delete($this->path);
+
+        foreach (['thumbnail', 'medium'] as $variant) {
+            if (! empty($this->meta[$variant])) {
+                $disk->delete($this->meta[$variant]);
+            }
+        }
+
+        return parent::delete();
+    }
+
+    public function folder(): BelongsTo
+    {
+        return $this->belongsTo(Folder::class, 'folder_id');
     }
 
     /**
@@ -143,25 +165,5 @@ class Asset extends Model
         $path = $this->meta['medium'] ?? null;
 
         return $path ? Storage::disk($this->disk)->url($path) : null;
-    }
-
-    public function delete()
-    {
-        $disk = Storage::disk($this->disk);
-
-        $disk->delete($this->path);
-
-        foreach (['thumbnail', 'medium'] as $variant) {
-            if (! empty($this->meta[$variant])) {
-                $disk->delete($this->meta[$variant]);
-            }
-        }
-
-        return parent::delete();
-    }
-
-    public function folder(): BelongsTo
-    {
-        return $this->belongsTo(Folder::class, 'folder_id');
     }
 }

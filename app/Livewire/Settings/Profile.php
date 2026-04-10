@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Settings;
 
 use App\Livewire\Forms\Settings\ProfileForm;
@@ -7,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Livewire\Component;
 
-class Profile extends Component
+final class Profile extends Component
 {
     public ProfileForm $form;
 

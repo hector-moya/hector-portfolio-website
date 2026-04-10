@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Actions\Entries;
 
 use App\Livewire\Actions\CreateEntry;
@@ -7,7 +9,7 @@ use App\Models\Collection;
 use App\Models\Field;
 use Illuminate\Support\Facades\DB;
 
-class ImportEntries
+final class ImportEntries
 {
     /**
      * @param  array<int, array<string, mixed>>  $entries

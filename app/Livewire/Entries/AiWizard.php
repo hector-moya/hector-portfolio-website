@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Entries;
 
 use App\Ai\Agents\EntryWizardAgent;
@@ -15,7 +17,7 @@ use Livewire\Attributes\Layout;
 use Livewire\Attributes\Locked;
 use Livewire\Component;
 
-class AiWizard extends Component
+final class AiWizard extends Component
 {
     public string $step = 'describe';
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Models\Entry;
 
 test('home page returns 200 with no entry', function () {

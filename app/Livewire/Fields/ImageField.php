@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Fields;
 
 use App\Models\Asset;
@@ -10,7 +12,7 @@ use Livewire\Attributes\Modelable;
 use Livewire\Component;
 
 /** @property array $fieldValues */
-class ImageField extends Component
+final class ImageField extends Component
 {
     public Field $element;
 

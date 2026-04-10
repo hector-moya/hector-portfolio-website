@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Actions\Taxonomies;
 
 use App\Models\Activity;
@@ -7,7 +9,7 @@ use App\Models\Taxonomy;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
-class DeleteTaxonomy
+final class DeleteTaxonomy
 {
     public function execute(Taxonomy $taxonomy): void
     {

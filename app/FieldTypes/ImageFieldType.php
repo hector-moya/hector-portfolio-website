@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\FieldTypes;
 
 use App\Models\Asset;
 
-class ImageFieldType extends BaseFieldType
+final class ImageFieldType extends BaseFieldType
 {
     public function name(): string
     {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Livewire\LanguageSwitcher;
 use Illuminate\Support\Facades\App;
 use Livewire\Livewire;

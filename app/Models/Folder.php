@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Attributes\Scope;
@@ -49,7 +51,7 @@ use Illuminate\Support\Carbon;
  *
  * @mixin Model
  */
-class Folder extends Model
+final class Folder extends Model
 {
     use HasFactory;
     use HasFactory;
@@ -69,14 +71,21 @@ class Folder extends Model
         'deleted_at' => 'datetime',
     ];
 
+    public static function makePath(?self $parent, string $name): string
+    {
+        $segment = mb_trim($name, '/');
+
+        return $parent instanceof self ? mb_rtrim($parent->path, '/').'/'.$segment : $segment;
+    }
+
     public function parent(): BelongsTo
     {
-        return $this->belongsTo(Folder::class, 'parent_id');
+        return $this->belongsTo(self::class, 'parent_id');
     }
 
     public function children(): HasMany
     {
-        return $this->hasMany(Folder::class, 'parent_id');
+        return $this->hasMany(self::class, 'parent_id');
     }
 
     public function assets(): HasMany
@@ -94,22 +103,9 @@ class Folder extends Model
         return $this->belongsTo(User::class, 'updated_by');
     }
 
-    #[Scope]
-    protected function root($query): mixed
-    {
-        return $query->whereNull('parent_id');
-    }
-
-    public static function makePath(?Folder $parent, string $name): string
-    {
-        $segment = trim($name, '/');
-
-        return $parent instanceof Folder ? rtrim($parent->path, '/').'/'.$segment : $segment;
-    }
-
     public function ancestors(): array
     {
-        $trim = trim($this->path, '/');
+        $trim = mb_trim($this->path, '/');
         if ($trim === '') {
             return [];
         }
@@ -121,6 +117,12 @@ class Folder extends Model
             $paths[] = $accum;
         }
 
-        return static::query()->whereIn('path', $paths)->orderByRaw('LENGTH(path)')->get()->all();
+        return self::query()->whereIn('path', $paths)->orderByRaw('LENGTH(path)')->get()->all();
+    }
+
+    #[Scope]
+    protected function root($query): mixed
+    {
+        return $query->whereNull('parent_id');
     }
 }
