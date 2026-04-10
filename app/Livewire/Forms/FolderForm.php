@@ -34,7 +34,7 @@ class FolderForm extends Form
     {
         $this->validate();
 
-        $folder = app(CreateFolder::class)->create([
+        $folder = resolve(CreateFolder::class)->create([
             'name' => $this->name,
             'parent_id' => $this->currentFolderId ?? null,
             'created_by' => auth()->id(),
@@ -56,7 +56,7 @@ class FolderForm extends Form
     {
         $this->validate();
 
-        $folder = app(UpdateFolder::class)->update([
+        $folder = resolve(UpdateFolder::class)->update([
             'id' => $folderId,
             'name' => $this->name,
             'parent_id' => $this->parent_id,
@@ -76,7 +76,7 @@ class FolderForm extends Form
 
     public function destroy(int $folderId): void
     {
-        app(DeleteFolder::class)->delete($folderId);
+        resolve(DeleteFolder::class)->delete($folderId);
 
         Flux::toast(
             heading: 'Folder Deleted',

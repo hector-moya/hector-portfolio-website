@@ -6,8 +6,6 @@ use Illuminate\Support\Facades\Storage;
 
 class ImageTransformer
 {
-    public function __construct() {}
-
     /**
      * Generate thumbnail (150×150 cropped) and medium (800px wide) variants.
      *
@@ -27,7 +25,7 @@ class ImageTransformer
         }
 
         $contents = $storage->get($sourcePath);
-        if ($contents === null || $contents === '' || $contents === '0') {
+        if (in_array($contents, [null, '', '0'], true)) {
             return ['thumbnail' => null, 'medium' => null];
         }
 
@@ -62,13 +60,13 @@ class ImageTransformer
 
         $ratio = $srcW / $srcH;
         if ($ratio > 1) {
-            $cropW = (int) ($srcH * 1);
+            $cropW = $srcH;
             $cropH = $srcH;
             $cropX = (int) (($srcW - $cropW) / 2);
             $cropY = 0;
         } else {
             $cropW = $srcW;
-            $cropH = (int) ($srcW / 1);
+            $cropH = $srcW;
             $cropX = 0;
             $cropY = (int) (($srcH - $cropH) / 2);
         }

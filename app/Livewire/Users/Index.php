@@ -75,7 +75,7 @@ class Index extends Component
 
     public function approve(int $userId): void
     {
-        $user = User::findOrFail($userId);
+        $user = User::query()->findOrFail($userId);
 
         $this->authorize('approve', $user);
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Forms\Settings;
 
 use App\Livewire\Actions\Settings\UpdatePassword;
@@ -35,7 +37,7 @@ class PasswordForm extends Form
             throw $e;
         }
 
-        app(UpdatePassword::class)->update($user, $this->password);
+        resolve(UpdatePassword::class)->update($user, $this->password);
 
         $this->reset('current_password', 'password', 'password_confirmation');
     }

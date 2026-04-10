@@ -12,8 +12,6 @@ class PublishScheduledEntries implements ShouldQueue
 {
     use Queueable;
 
-    public function __construct() {}
-
     public function handle(): void
     {
         $entries = Entry::query()

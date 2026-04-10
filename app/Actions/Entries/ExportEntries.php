@@ -42,7 +42,7 @@ class ExportEntries
         return json_encode([
             'exported_at' => now()->toIso8601String(),
             'count' => $entries->count(),
-            'entries' => $entries->toArray(),
+            'entries' => $entries->all(),
         ], JSON_PRETTY_PRINT);
     }
 }

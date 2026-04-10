@@ -68,7 +68,7 @@ class CollectionForm extends Form
     {
         $this->validate();
 
-        $collection = app(CreateCollection::class)->execute([
+        $collection = resolve(CreateCollection::class)->execute([
             'name' => $this->name,
             'slug' => $this->slug,
             'description' => $this->description,
@@ -96,7 +96,7 @@ class CollectionForm extends Form
     {
         $this->validate();
 
-        $updated = app(UpdateCollection::class)->execute($collection, [
+        $updated = resolve(UpdateCollection::class)->execute($collection, [
             'name' => $this->name,
             'slug' => $this->slug,
             'description' => $this->description,
@@ -122,7 +122,7 @@ class CollectionForm extends Form
     {
         $collection = Collection::query()->findOrFail($collectionId);
 
-        app(DeleteCollection::class)->execute($collection);
+        resolve(DeleteCollection::class)->execute($collection);
 
         Flux::toast(
             heading: 'Collection Deleted',

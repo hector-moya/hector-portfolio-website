@@ -24,7 +24,7 @@ class Export extends Component
 
     public function export(): StreamedResponse
     {
-        $payload = app(ExportEntries::class)->handle($this->collectionId, $this->includeBlueprint);
+        $payload = resolve(ExportEntries::class)->handle($this->collectionId, $this->includeBlueprint);
 
         $filename = 'entries-export-'.now()->format('Y-m-d').'.json';
 

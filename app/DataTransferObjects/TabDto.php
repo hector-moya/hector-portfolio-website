@@ -25,7 +25,7 @@ class TabDto
             handle: $data['handle'] ?? Str::slug($data['name']),
             sortOrder: $data['sort_order'] ?? 0,
             sections: array_map(
-                fn (array $section): SectionDto => SectionDto::fromArray($section),
+                SectionDto::fromArray(...),
                 $data['sections'] ?? []
             ),
         );

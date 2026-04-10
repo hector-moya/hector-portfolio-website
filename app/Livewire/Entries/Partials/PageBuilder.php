@@ -99,26 +99,19 @@ class PageBuilder extends Component
     {
         $handle = $data['handle'];
 
-        if (! str_starts_with($handle, 'section_')) {
+        if (! str_starts_with((string) $handle, 'section_')) {
             return;
         }
 
         // Handle: section_{_id}_{fieldHandle} or section_{_id}_image_{slotIndex}
         // UUIDs use hyphens, field handles use underscores — split after the UUID portion
-        if (! preg_match('/^section_([0-9a-f-]{36})_(.+)$/', $handle, $matches)) {
+        if (! preg_match('/^section_([0-9a-f-]{36})_(.+)$/', (string) $handle, $matches)) {
             return;
         }
 
         $sectionId = $matches[1];
         $fieldPart = $matches[2];
-
-        $sectionIndex = null;
-        foreach ($this->sections as $i => $section) {
-            if ($section['_id'] === $sectionId) {
-                $sectionIndex = $i;
-                break;
-            }
-        }
+        $sectionIndex = array_find_key($this->sections, fn($section): bool => $section['_id'] === $sectionId);
 
         if ($sectionIndex === null) {
             return;
@@ -139,7 +132,7 @@ class PageBuilder extends Component
 
     public function save(): void
     {
-        app(SavePageLayout::class)->handle($this->entry, $this->sections);
+        resolve(SavePageLayout::class)->handle($this->entry, $this->sections);
 
         $this->dispatch('notify', message: 'Page layout saved.');
     }

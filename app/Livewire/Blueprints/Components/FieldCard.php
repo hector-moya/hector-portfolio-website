@@ -31,13 +31,13 @@ class FieldCard extends Component
     #[Computed]
     public function fieldTypeOptions(): array
     {
-        return app(FieldTypeRegistry::class)->optionsForSelect();
+        return resolve(FieldTypeRegistry::class)->optionsForSelect();
     }
 
     #[Computed]
     public function fieldTypeMeta(): array
     {
-        return app(FieldTypeRegistry::class)->all('repeater');
+        return resolve(FieldTypeRegistry::class)->all('repeater');
     }
 
     public function updatedFormLabel(): void

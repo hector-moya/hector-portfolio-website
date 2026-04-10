@@ -58,7 +58,7 @@ class NavigationForm extends Form
     {
         $this->validate();
 
-        return app(CreateNavigation::class)->create([
+        return resolve(CreateNavigation::class)->create([
             'name' => $this->name,
             'handle' => $this->handle,
             'description' => $this->description,
@@ -70,7 +70,7 @@ class NavigationForm extends Form
     {
         $this->validate();
 
-        return app(UpdateNavigation::class)->update($navigation, [
+        return resolve(UpdateNavigation::class)->update($navigation, [
             'name' => $this->name,
             'handle' => $this->handle,
             'description' => $this->description,

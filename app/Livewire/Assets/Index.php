@@ -112,7 +112,7 @@ class Index extends Component
 
         $folder = Folder::query()->findOrFail($folderId);
 
-        app(MoveAsset::class)->move(
+        resolve(MoveAsset::class)->move(
             assetId: $assetId,
             targetFolder: trim((string) $folder->path, '/'),
             folderId: $folderId,

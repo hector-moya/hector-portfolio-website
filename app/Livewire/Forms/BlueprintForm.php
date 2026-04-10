@@ -72,7 +72,7 @@ class BlueprintForm extends Form
         $validated = parent::validate($rules, $messages, $attributes);
 
         // Per-type config validation (including nested repeater blueprints)
-        $registry = app(FieldTypeRegistry::class);
+        $registry = resolve(FieldTypeRegistry::class);
         foreach ($this->fields as $index => $element) {
             $registry->validateConfig($element, $index);
 
@@ -137,7 +137,7 @@ class BlueprintForm extends Form
     {
         $this->validate();
 
-        $blueprint = app(UpdateBlueprint::class)->update(
+        $blueprint = resolve(UpdateBlueprint::class)->update(
             blueprintData: [
                 'id' => $blueprintId,
                 'name' => $this->name,

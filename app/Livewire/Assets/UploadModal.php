@@ -68,7 +68,7 @@ class UploadModal extends Component
         $variants = [];
 
         if (str_starts_with((string) $mimeType, 'image/')) {
-            $variants = app(ImageTransformer::class)->transform((string) $path, (string) $disk);
+            $variants = resolve(ImageTransformer::class)->transform((string) $path, (string) $disk);
         }
 
         $this->form->filename = basename((string) $path);

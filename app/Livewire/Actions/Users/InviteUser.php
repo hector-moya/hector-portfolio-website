@@ -15,7 +15,7 @@ class InviteUser
     {
         Gate::authorize('create', User::class);
 
-        $invitation = Invitation::create([
+        $invitation = Invitation::query()->create([
             'email' => $email,
             'role' => $role,
             'token' => Str::random(64),

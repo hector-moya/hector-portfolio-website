@@ -104,7 +104,7 @@ class AiWizard extends Component
             ];
         }
 
-        $blueprint = app(CreateBlueprint::class)->create([
+        $blueprint = resolve(CreateBlueprint::class)->create([
             'name' => $this->proposal['name'],
             'slug' => $this->proposal['slug'],
             'description' => $this->proposal['description'],

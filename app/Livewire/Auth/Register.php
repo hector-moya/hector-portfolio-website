@@ -34,8 +34,8 @@ class Register extends Component
 
     public function mount(): void
     {
-        if ($this->token) {
-            $invitation = Invitation::where('token', $this->token)
+        if ($this->token !== '' && $this->token !== '0') {
+            $invitation = Invitation::query()->where('token', $this->token)
                 ->whereNull('accepted_at')
                 ->where('expires_at', '>', now())
                 ->first();
@@ -62,7 +62,7 @@ class Register extends Component
         $mode = SiteSetting::get('registration_mode', 'closed');
 
         if ($mode === 'invitation' && $this->token) {
-            $invitation = Invitation::where('token', $this->token)
+            $invitation = Invitation::query()->where('token', $this->token)
                 ->whereNull('accepted_at')
                 ->where('expires_at', '>', now())
                 ->first();
@@ -83,14 +83,14 @@ class Register extends Component
         event(new Registered($user));
 
         if ($mode === 'approval') {
-            $admins = User::where('role', 'admin')->get();
+            $admins = User::query()->where('role', 'admin')->get();
             foreach ($admins as $admin) {
                 Mail::to($admin)->queue(new AdminPendingUserNotification($user));
             }
         }
 
         if ($mode === 'invitation' && $this->token) {
-            Invitation::where('token', $this->token)
+            Invitation::query()->where('token', $this->token)
                 ->whereNull('accepted_at')
                 ->update(['accepted_at' => now()]);
         }

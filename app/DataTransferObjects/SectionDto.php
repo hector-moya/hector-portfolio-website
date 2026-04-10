@@ -27,7 +27,7 @@ class SectionDto
             sortOrder: $data['sort_order'] ?? 0,
             instructions: $data['instructions'] ?? null,
             fields: array_map(
-                fn (array $field): FieldDto => FieldDto::fromArray($field),
+                FieldDto::fromArray(...),
                 $data['fields'] ?? []
             ),
         );

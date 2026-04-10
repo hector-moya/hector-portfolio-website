@@ -60,7 +60,7 @@ class EditModal extends Component
             return 0;
         }
 
-        return app(AssetUsage::class)->count($this->assetId);
+        return resolve(AssetUsage::class)->count($this->assetId);
     }
 
     public function save(): void

@@ -55,7 +55,7 @@ class UserForm extends Form
     {
         $this->validate();
 
-        $user = app(CreateUser::class)->create(
+        $user = resolve(CreateUser::class)->create(
             userData: [
                 'name' => $this->name,
                 'email' => $this->email,
@@ -76,7 +76,7 @@ class UserForm extends Form
     {
         $this->validate();
 
-        $user = app(UpdateUser::class)->update(
+        $user = resolve(UpdateUser::class)->update(
             userData: [
                 'id' => $userId,
                 'name' => $this->name,
@@ -106,7 +106,7 @@ class UserForm extends Form
             return;
         }
 
-        app(DeleteUser::class)->delete($userId);
+        resolve(DeleteUser::class)->delete($userId);
 
         Flux::toast(
             heading: 'User Deleted',

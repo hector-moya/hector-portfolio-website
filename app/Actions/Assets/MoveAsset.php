@@ -23,7 +23,7 @@ class MoveAsset
 
         foreach (['thumbnail', 'medium'] as $variant) {
             if (! empty($meta[$variant])) {
-                $newVariantPath = $prefix.basename($meta[$variant]);
+                $newVariantPath = $prefix.basename((string) $meta[$variant]);
                 $disk->move($meta[$variant], $newVariantPath);
                 $meta[$variant] = $newVariantPath;
             }

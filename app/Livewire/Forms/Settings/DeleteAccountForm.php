@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Forms\Settings;
 
 use App\Livewire\Actions\Settings\DeleteAccount;
@@ -16,6 +18,6 @@ class DeleteAccountForm extends Form
     {
         $this->validate();
 
-        app(DeleteAccount::class)->delete($user);
+        resolve(DeleteAccount::class)->delete($user);
     }
 }

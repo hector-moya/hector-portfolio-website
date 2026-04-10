@@ -153,7 +153,7 @@ class Edit extends Component
         $assetHandle = $data['handle'];
 
         // Page builder asset handles: section_{uuid}_{fieldName}
-        if (str_starts_with($assetHandle, 'section_')) {
+        if (str_starts_with((string) $assetHandle, 'section_')) {
             $this->handlePageBuilderAsset($assetHandle, $data['value']);
 
             return;
@@ -179,10 +179,12 @@ class Edit extends Component
             }
 
             foreach ($fieldValue as $i => $section) {
-                if (! isset($section['_id']) || $section['_id'] !== $sectionId) {
+                if (! isset($section['_id'])) {
                     continue;
                 }
-
+                if ($section['_id'] !== $sectionId) {
+                    continue;
+                }
                 // Gallery slot: image_{slotIndex}
                 if (preg_match('/^image_(\d+)$/', $fieldPart)) {
                     $images = $this->form->fieldValues[$handle][$i]['data']['images'] ?? [];

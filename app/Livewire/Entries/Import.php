@@ -41,7 +41,7 @@ class Import extends Component
         $contents = file_get_contents($this->file->getRealPath());
         $data = json_decode((string) $contents, true);
 
-        $result = app(ImportEntries::class)->handle($data['entries'] ?? []);
+        $result = resolve(ImportEntries::class)->handle($data['entries'] ?? []);
 
         $this->importedCount = $result['imported'];
         $this->skippedCount = $result['skipped'];

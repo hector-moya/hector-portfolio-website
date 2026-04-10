@@ -39,7 +39,7 @@ class History extends Component
 
         $fillable = array_intersect_key($oldValues, array_flip(['title', 'slug', 'status', 'seo_title', 'seo_description', 'og_image']));
 
-        if (! empty($fillable)) {
+        if ($fillable !== []) {
             $entry->update($fillable);
 
             Activity::query()->create([

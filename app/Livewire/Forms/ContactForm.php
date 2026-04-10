@@ -22,7 +22,7 @@ class ContactForm extends Form
     {
         $this->validate();
 
-        $submission = app(SubmitContactForm::class)->handle([
+        $submission = resolve(SubmitContactForm::class)->handle([
             'name' => $this->name,
             'email' => $this->email,
             'message' => $this->message,

@@ -54,7 +54,7 @@ class Security extends Component
             'inviteRole' => ['required', 'in:admin,editor,viewer'],
         ]);
 
-        app(InviteUser::class)->invite(
+        resolve(InviteUser::class)->invite(
             email: $this->inviteEmail,
             role: $this->inviteRole,
         );
@@ -72,8 +72,7 @@ class Security extends Component
     #[Computed]
     public function invitations(): Collection
     {
-        return Invitation::with('invitedBy')
-            ->orderByDesc('created_at')
+        return Invitation::with('invitedBy')->latest()
             ->get();
     }
 

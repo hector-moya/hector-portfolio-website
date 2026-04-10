@@ -34,7 +34,7 @@ class SectionCard extends Component
     #[Computed]
     public function fieldTypeMeta(): array
     {
-        return app(FieldTypeRegistry::class)->all();
+        return resolve(FieldTypeRegistry::class)->all();
     }
 
     public function addField(string $type): void

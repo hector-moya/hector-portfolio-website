@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Middleware\EnsureRegistrationOpen;
 use App\Livewire\Actions\Logout;

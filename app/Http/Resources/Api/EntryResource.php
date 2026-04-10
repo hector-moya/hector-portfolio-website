@@ -32,12 +32,12 @@ class EntryResource extends JsonResource
             'published_at' => $this->published_at?->toIso8601String(),
             'created_at' => $this->created_at->toIso8601String(),
             'updated_at' => $this->updated_at->toIso8601String(),
-            'collection' => $this->whenLoaded('collection', fn () => [
+            'collection' => $this->whenLoaded('collection', fn (): array => [
                 'id' => $this->collection?->id,
                 'name' => $this->collection?->name,
                 'slug' => $this->collection?->slug,
             ]),
-            'author' => $this->whenLoaded('author', fn () => [
+            'author' => $this->whenLoaded('author', fn (): array => [
                 'id' => $this->author?->id,
                 'name' => $this->author?->name,
             ]),

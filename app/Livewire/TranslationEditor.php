@@ -44,7 +44,7 @@ class TranslationEditor extends Component
 
     public function updateTranslation(string $locale, string $value): void
     {
-        app(UpdateTranslation::class)->handle($this->model, $this->field, $locale, $value);
+        resolve(UpdateTranslation::class)->handle($this->model, $this->field, $locale, $value);
 
         $this->loadTranslations();
         $this->dispatch('translation-updated');

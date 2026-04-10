@@ -132,7 +132,7 @@ class MoveModal extends Component
         $folderPath = $folder ? trim((string) $folder->path, '/') : '';
 
         foreach ($this->selected as $assetId) {
-            app(MoveAsset::class)->move(
+            resolve(MoveAsset::class)->move(
                 assetId: (int) $assetId,
                 targetFolder: $folderPath,
                 folderId: $folderId,

@@ -60,11 +60,11 @@ class EntryForm extends Form
 
             // Add children metadata for repeater fields
             if ($field->type === 'repeater') {
-                $fieldArray['children'] = $field->children->map(fn ($child) => [
+                $fieldArray['children'] = $field->children->map(fn ($child): array => [
                     'id' => $child->id,
                     'handle' => $child->handle,
                     'type' => $child->type,
-                ])->toArray();
+                ])->all();
             }
 
             $fieldsValues[] = $fieldArray;
@@ -162,12 +162,11 @@ class EntryForm extends Form
             if ($field->type === 'repeater') {
                 // Reconstruct repeater items from individual elements
                 $items = [];
-
                 if (isset($repeaterElements[$handle])) {
                     // Sort by index and rebuild each item
                     ksort($repeaterElements[$handle]);
 
-                    foreach ($repeaterElements[$handle] as $index => $itemElements) {
+                    foreach ($repeaterElements[$handle] as $itemElements) {
                         $itemData = [];
                         foreach ($field->children as $childField) {
                             $childHandle = $childField->handle;
@@ -178,13 +177,10 @@ class EntryForm extends Form
                         $items[] = $itemData;
                     }
                 }
-
                 $this->fieldValues[$handle] = ['items' => $items];
-            } else {
+            } elseif (isset($regularElements[$handle])) {
                 // Regular field
-                if (isset($regularElements[$handle])) {
-                    $this->fieldValues[$handle] = $regularElements[$handle]->getElementValue();
-                }
+                $this->fieldValues[$handle] = $regularElements[$handle]->getElementValue();
             }
         }
     }
@@ -330,7 +326,7 @@ class EntryForm extends Form
     {
         $this->validate();
 
-        $entry = app(CreateEntry::class)->handle([
+        $entry = resolve(CreateEntry::class)->handle([
             'collection_id' => $this->collection_id,
             'blueprint_id' => $this->blueprint_id,
             'title' => $this->title,
@@ -350,7 +346,7 @@ class EntryForm extends Form
 
     public function update(int $entryId): Entry
     {
-        $entry = app(UpdateEntry::class)->handle([
+        $entry = resolve(UpdateEntry::class)->handle([
             'id' => $entryId,
             'title' => $this->title,
             'slug' => $this->slug,

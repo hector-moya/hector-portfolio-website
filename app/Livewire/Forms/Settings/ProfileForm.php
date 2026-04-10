@@ -39,7 +39,7 @@ class ProfileForm extends Form
     {
         $this->validate();
 
-        return app(UpdateProfile::class)->update($user, [
+        return resolve(UpdateProfile::class)->update($user, [
             'name' => $this->name,
             'email' => $this->email,
         ]);

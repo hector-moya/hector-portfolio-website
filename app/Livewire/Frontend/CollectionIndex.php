@@ -81,18 +81,16 @@ class CollectionIndex extends Component
      */
     private function resolveAssets(array $sections): EloquentCollection
     {
-        if (empty($sections)) {
+        if ($sections === []) {
             return new EloquentCollection;
         }
 
         $assetIds = collect($sections)
-            ->flatMap(function (array $section): array {
-                return match ($section['type']) {
-                    'hero' => [$section['data']['bg_image'] ?? null],
-                    'image_text' => [$section['data']['image'] ?? null],
-                    'gallery' => $section['data']['images'] ?? [],
-                    default => [],
-                };
+            ->flatMap(fn(array $section): array => match ($section['type']) {
+                'hero' => [$section['data']['bg_image'] ?? null],
+                'image_text' => [$section['data']['image'] ?? null],
+                'gallery' => $section['data']['images'] ?? [],
+                default => [],
             })
             ->filter()
             ->unique()

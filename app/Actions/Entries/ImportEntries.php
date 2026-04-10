@@ -54,12 +54,12 @@ class ImportEntries
                         'type' => $field->type,
                         'value' => $entryData['fields'][$handle] ?? null,
                         'children' => $field->type === 'repeater'
-                            ? $field->children->map(fn (Field $c) => ['id' => $c->id, 'handle' => $c->handle, 'type' => $c->type])->toArray()
+                            ? $field->children->map(fn (Field $c): array => ['id' => $c->id, 'handle' => $c->handle, 'type' => $c->type])->all()
                             : [],
                     ];
                 }
 
-                app(CreateEntry::class)->handle([
+                resolve(CreateEntry::class)->handle([
                     'blueprint_id' => $blueprint->id,
                     'title' => $entryData['title'],
                     'slug' => $entryData['slug'],

@@ -54,7 +54,7 @@ class GlobalForm extends Form
     {
         $this->validate();
 
-        $globalSet = app(CreateGlobal::class)->handle([
+        $globalSet = resolve(CreateGlobal::class)->handle([
             'name' => $this->name,
             'handle' => $this->handle,
             'blueprint_id' => $this->blueprint_id,
@@ -73,7 +73,7 @@ class GlobalForm extends Form
     {
         $this->validate();
 
-        $globalSet = app(UpdateGlobal::class)->handle([
+        $globalSet = resolve(UpdateGlobal::class)->handle([
             'id' => $globalSetId,
             'name' => $this->name,
             'handle' => $this->handle,
@@ -92,7 +92,7 @@ class GlobalForm extends Form
 
     public function destroy(int $globalSetId): void
     {
-        app(DeleteGlobal::class)->handle($globalSetId);
+        resolve(DeleteGlobal::class)->handle($globalSetId);
 
         Flux::toast(
             heading: __('Success'),

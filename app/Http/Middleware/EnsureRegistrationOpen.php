@@ -15,7 +15,7 @@ class EnsureRegistrationOpen
         $mode = SiteSetting::get('registration_mode', 'closed');
 
         if ($mode === 'closed') {
-            return redirect()->route('login')
+            return to_route('login')
                 ->with('status', 'Registration is currently closed.');
         }
 
@@ -23,17 +23,17 @@ class EnsureRegistrationOpen
             $token = $request->query('token');
 
             if (! $token) {
-                return redirect()->route('login')
+                return to_route('login')
                     ->with('status', 'Registration is by invitation only.');
             }
 
-            $invitation = Invitation::where('token', $token)
+            $invitation = Invitation::query()->where('token', $token)
                 ->whereNull('accepted_at')
                 ->where('expires_at', '>', now())
                 ->first();
 
             if (! $invitation) {
-                return redirect()->route('login')
+                return to_route('login')
                     ->with('status', 'Invalid or expired invitation link.');
             }
         }

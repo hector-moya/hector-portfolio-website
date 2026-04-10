@@ -88,7 +88,7 @@ class BlogContentSeeder extends Seeder
                                     'sortOrder' => 0,
                                     'instructions' => 'The main title in the hero section',
                                     'is_required' => true,
-                                    'config' => app(FieldTypeRegistry::class)->defaultConfigFor('text'),
+                                    'config' => resolve(FieldTypeRegistry::class)->defaultConfigFor('text'),
                                 ],
                                 [
                                     'label' => 'Hero Subtitle',
@@ -97,7 +97,7 @@ class BlogContentSeeder extends Seeder
                                     'sortOrder' => 1,
                                     'instructions' => 'A subtitle to display below the hero title',
                                     'is_required' => false,
-                                    'config' => app(FieldTypeRegistry::class)->defaultConfigFor('text'),
+                                    'config' => resolve(FieldTypeRegistry::class)->defaultConfigFor('text'),
                                 ],
                                 [
                                     'label' => 'Hero Image',
@@ -106,7 +106,7 @@ class BlogContentSeeder extends Seeder
                                     'sortOrder' => 2,
                                     'instructions' => 'Background image for the hero section',
                                     'is_required' => false,
-                                    'config' => app(FieldTypeRegistry::class)->defaultConfigFor('image'),
+                                    'config' => resolve(FieldTypeRegistry::class)->defaultConfigFor('image'),
 
                                 ],
                             ],
@@ -131,7 +131,7 @@ class BlogContentSeeder extends Seeder
                                     'sortOrder' => 0,
                                     'instructions' => 'The main content of the page',
                                     'is_required' => true,
-                                    'config' => app(FieldTypeRegistry::class)->defaultConfigFor('rich_text'),
+                                    'config' => resolve(FieldTypeRegistry::class)->defaultConfigFor('rich_text'),
 
                                 ],
                             ],
@@ -156,7 +156,7 @@ class BlogContentSeeder extends Seeder
                                     'sortOrder' => 0,
                                     'instructions' => 'Text to display on the primary button',
                                     'is_required' => false,
-                                    'config' => app(FieldTypeRegistry::class)->defaultConfigFor('text'),
+                                    'config' => resolve(FieldTypeRegistry::class)->defaultConfigFor('text'),
 
                                 ],
                                 [
@@ -166,7 +166,7 @@ class BlogContentSeeder extends Seeder
                                     'sortOrder' => 1,
                                     'instructions' => 'Where the primary button should link to',
                                     'is_required' => false,
-                                    'config' => app(FieldTypeRegistry::class)->defaultConfigFor('url'),
+                                    'config' => resolve(FieldTypeRegistry::class)->defaultConfigFor('url'),
 
                                 ],
                             ],
@@ -184,7 +184,7 @@ class BlogContentSeeder extends Seeder
                                     'sortOrder' => 0,
                                     'instructions' => 'Text to display on the secondary button',
                                     'is_required' => false,
-                                    'config' => app(FieldTypeRegistry::class)->defaultConfigFor('text'),
+                                    'config' => resolve(FieldTypeRegistry::class)->defaultConfigFor('text'),
 
                                 ],
                                 [
@@ -194,7 +194,7 @@ class BlogContentSeeder extends Seeder
                                     'sortOrder' => 1,
                                     'instructions' => 'Where the secondary button should link to',
                                     'is_required' => false,
-                                    'config' => app(FieldTypeRegistry::class)->defaultConfigFor('url'),
+                                    'config' => resolve(FieldTypeRegistry::class)->defaultConfigFor('url'),
 
                                 ],
                             ],
@@ -230,7 +230,7 @@ class BlogContentSeeder extends Seeder
                                     'sortOrder' => 0,
                                     'instructions' => 'The title of the blog post',
                                     'is_required' => true,
-                                    'config' => app(FieldTypeRegistry::class)->defaultConfigFor('text'),
+                                    'config' => resolve(FieldTypeRegistry::class)->defaultConfigFor('text'),
 
                                 ],
                                 [
@@ -240,7 +240,7 @@ class BlogContentSeeder extends Seeder
                                     'sortOrder' => 1,
                                     'instructions' => 'The main content of the blog post',
                                     'is_required' => true,
-                                    'config' => app(FieldTypeRegistry::class)->defaultConfigFor('rich_text'),
+                                    'config' => resolve(FieldTypeRegistry::class)->defaultConfigFor('rich_text'),
 
                                 ],
                             ],
@@ -265,7 +265,7 @@ class BlogContentSeeder extends Seeder
                                     'sortOrder' => 0,
                                     'instructions' => 'The main image for this blog post',
                                     'is_required' => true,
-                                    'config' => app(FieldTypeRegistry::class)->defaultConfigFor('image'),
+                                    'config' => resolve(FieldTypeRegistry::class)->defaultConfigFor('image'),
 
                                 ],
                                 [
@@ -275,7 +275,7 @@ class BlogContentSeeder extends Seeder
                                     'sortOrder' => 1,
                                     'instructions' => 'A brief summary of the blog post',
                                     'is_required' => true,
-                                    'config' => app(FieldTypeRegistry::class)->defaultConfigFor('textarea'),
+                                    'config' => resolve(FieldTypeRegistry::class)->defaultConfigFor('textarea'),
 
                                 ],
                             ],
@@ -311,7 +311,7 @@ class BlogContentSeeder extends Seeder
                                     'sortOrder' => 0,
                                     'instructions' => 'The name of your project',
                                     'is_required' => true,
-                                    'config' => app(FieldTypeRegistry::class)->defaultConfigFor('text'),
+                                    'config' => resolve(FieldTypeRegistry::class)->defaultConfigFor('text'),
 
                                 ],
                                 [
@@ -321,7 +321,7 @@ class BlogContentSeeder extends Seeder
                                     'sortOrder' => 1,
                                     'instructions' => 'A detailed description of the project',
                                     'is_required' => true,
-                                    'config' => app(FieldTypeRegistry::class)->defaultConfigFor('rich_text'),
+                                    'config' => resolve(FieldTypeRegistry::class)->defaultConfigFor('rich_text'),
 
                                 ],
                                 [
@@ -331,7 +331,7 @@ class BlogContentSeeder extends Seeder
                                     'sortOrder' => 2,
                                     'instructions' => 'The main image showcasing your project',
                                     'is_required' => true,
-                                    'config' => app(FieldTypeRegistry::class)->defaultConfigFor('image'),
+                                    'config' => resolve(FieldTypeRegistry::class)->defaultConfigFor('image'),
 
                                 ],
                             ],
@@ -356,7 +356,7 @@ class BlogContentSeeder extends Seeder
                                     'sortOrder' => 0,
                                     'instructions' => 'Link to the live project',
                                     'is_required' => false,
-                                    'config' => app(FieldTypeRegistry::class)->defaultConfigFor('url'),
+                                    'config' => resolve(FieldTypeRegistry::class)->defaultConfigFor('url'),
 
                                 ],
                                 [
@@ -366,7 +366,7 @@ class BlogContentSeeder extends Seeder
                                     'sortOrder' => 1,
                                     'instructions' => 'Link to the project repository',
                                     'is_required' => false,
-                                    'config' => app(FieldTypeRegistry::class)->defaultConfigFor('url'),
+                                    'config' => resolve(FieldTypeRegistry::class)->defaultConfigFor('url'),
 
                                 ],
                             ],
@@ -384,7 +384,7 @@ class BlogContentSeeder extends Seeder
                                     'sortOrder' => 0,
                                     'instructions' => 'List of technologies used',
                                     'is_required' => false,
-                                    'config' => app(FieldTypeRegistry::class)->defaultConfigFor('text'),
+                                    'config' => resolve(FieldTypeRegistry::class)->defaultConfigFor('text'),
 
                                 ],
                             ],
@@ -420,7 +420,7 @@ class BlogContentSeeder extends Seeder
                                     'sortOrder' => 0,
                                     'instructions' => 'The main heading for the contact page',
                                     'is_required' => true,
-                                    'config' => app(FieldTypeRegistry::class)->defaultConfigFor('text'),
+                                    'config' => resolve(FieldTypeRegistry::class)->defaultConfigFor('text'),
 
                                 ],
                                 [
@@ -430,7 +430,7 @@ class BlogContentSeeder extends Seeder
                                     'sortOrder' => 1,
                                     'instructions' => 'A brief message below the heading',
                                     'is_required' => false,
-                                    'config' => app(FieldTypeRegistry::class)->defaultConfigFor('text'),
+                                    'config' => resolve(FieldTypeRegistry::class)->defaultConfigFor('text'),
 
                                 ],
                                 [
@@ -440,7 +440,7 @@ class BlogContentSeeder extends Seeder
                                     'sortOrder' => 2,
                                     'instructions' => 'Instructions or additional content for the contact page',
                                     'is_required' => false,
-                                    'config' => app(FieldTypeRegistry::class)->defaultConfigFor('rich_text'),
+                                    'config' => resolve(FieldTypeRegistry::class)->defaultConfigFor('rich_text'),
 
                                 ],
                             ],
@@ -465,7 +465,7 @@ class BlogContentSeeder extends Seeder
                                     'sortOrder' => 0,
                                     'instructions' => 'Your contact email address',
                                     'is_required' => true,
-                                    'config' => app(FieldTypeRegistry::class)->defaultConfigFor('email'),
+                                    'config' => resolve(FieldTypeRegistry::class)->defaultConfigFor('email'),
 
                                 ],
                                 [
@@ -475,7 +475,7 @@ class BlogContentSeeder extends Seeder
                                     'sortOrder' => 1,
                                     'instructions' => 'Your LinkedIn profile URL',
                                     'is_required' => false,
-                                    'config' => app(FieldTypeRegistry::class)->defaultConfigFor('url'),
+                                    'config' => resolve(FieldTypeRegistry::class)->defaultConfigFor('url'),
 
                                 ],
                                 [
@@ -485,7 +485,7 @@ class BlogContentSeeder extends Seeder
                                     'sortOrder' => 2,
                                     'instructions' => 'Your GitHub profile URL',
                                     'is_required' => false,
-                                    'config' => app(FieldTypeRegistry::class)->defaultConfigFor('url'),
+                                    'config' => resolve(FieldTypeRegistry::class)->defaultConfigFor('url'),
 
                                 ],
                             ],

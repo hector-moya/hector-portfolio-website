@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Traits\Blueprints;
 
 use App\Enums\FieldType;
@@ -24,7 +26,7 @@ trait Sections
 
     public function newField(string $type): array
     {
-        $defaultConfig = app(FieldTypeRegistry::class)->defaultConfigFor($type);
+        $defaultConfig = resolve(FieldTypeRegistry::class)->defaultConfigFor($type);
 
         return [
             'id' => Uuid::uuid4()->toString(),

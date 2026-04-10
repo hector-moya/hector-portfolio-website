@@ -99,7 +99,7 @@ class AssetForm extends Form
     {
         $this->validate();
 
-        $asset = app(CreateAsset::class)->create([
+        $asset = resolve(CreateAsset::class)->create([
             'filename' => $this->filename,
             'original_filename' => $this->original_filename,
             'disk' => $this->disk,
@@ -131,7 +131,7 @@ class AssetForm extends Form
 
     public function update(int $assetId, ?int $folderId): Asset
     {
-        $asset = app(UpdateAsset::class)->update([
+        $asset = resolve(UpdateAsset::class)->update([
             'id' => $assetId,
             'filename' => $this->filename,
             'original_filename' => $this->original_filename,
@@ -161,7 +161,7 @@ class AssetForm extends Form
 
     public function destroy(int $assetId): void
     {
-        app(DeleteAsset::class)->delete(
+        resolve(DeleteAsset::class)->delete(
             assetData: [
                 'id' => $assetId,
             ]
@@ -176,7 +176,7 @@ class AssetForm extends Form
 
     public function move(int $assetId, string $targetFolder): void
     {
-        app(MoveAsset::class)->move(
+        resolve(MoveAsset::class)->move(
             assetId: $assetId,
             targetFolder: $targetFolder,
         );
@@ -190,7 +190,7 @@ class AssetForm extends Form
 
     public function download(int $assetId): StreamedResponse
     {
-        return app(DownloadAsset::class)->download(
+        return resolve(DownloadAsset::class)->download(
             assetId: $assetId,
         );
     }

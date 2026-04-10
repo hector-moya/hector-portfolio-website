@@ -56,7 +56,7 @@ class TaxonomyForm extends Form
     {
         $this->validate();
 
-        $taxonomy = app(CreateTaxonomy::class)->create(
+        $taxonomy = resolve(CreateTaxonomy::class)->create(
             taxonomyData: [
                 'name' => $this->name,
                 'handle' => $this->handle,
@@ -80,7 +80,7 @@ class TaxonomyForm extends Form
     {
         $this->validate();
 
-        $taxonomy = app(UpdateTaxonomy::class)->update(
+        $taxonomy = resolve(UpdateTaxonomy::class)->update(
             taxonomyData: [
                 'id' => $taxonomyId,
                 'name' => $this->name,
@@ -103,7 +103,7 @@ class TaxonomyForm extends Form
     {
         $taxonomy = Taxonomy::query()->findOrFail($taxonomyId);
 
-        app(DeleteTaxonomy::class)->execute($taxonomy);
+        resolve(DeleteTaxonomy::class)->execute($taxonomy);
 
         Flux::toast(
             heading: 'Taxonomy Deleted',

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Livewire\Globals\Create as GlobalsCreate;
 use App\Livewire\Globals\Edit as GlobalsEdit;
 use App\Livewire\Globals\Index as GlobalsIndex;

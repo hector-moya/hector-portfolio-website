@@ -32,9 +32,7 @@ class AssetUsage
         $viaLayout = Entry::query()
             ->whereNotNull('layout')
             ->get()
-            ->filter(function (Entry $entry) use ($assetIdString): bool {
-                return $this->layoutContainsAsset($entry->layout ?? [], $assetIdString);
-            });
+            ->filter(fn(Entry $entry): bool => $this->layoutContainsAsset($entry->layout ?? [], $assetIdString));
 
         return $viaElements->merge($viaLayout)->unique('id')->values();
     }

@@ -80,7 +80,7 @@ class AiWizard extends Component
 
         DB::transaction(function (): void {
             // 1. Create collection (blueprint_id set after blueprint is created)
-            $collection = app(CreateCollection::class)->execute([
+            $collection = resolve(CreateCollection::class)->execute([
                 'name' => $this->name,
                 'slug' => $this->slug,
                 'is_active' => true,
@@ -88,7 +88,7 @@ class AiWizard extends Component
             ]);
 
             // 2. Create blueprint with one page_builder field
-            $blueprint = app(CreateBlueprint::class)->create([
+            $blueprint = resolve(CreateBlueprint::class)->create([
                 'name' => $this->name.' Blueprint',
                 'slug' => $this->slug.'-blueprint',
                 'description' => '',
@@ -130,7 +130,7 @@ class AiWizard extends Component
                 ->fields->first();
 
             // 5. Create entry with page builder sections from proposal
-            $entry = app(CreateEntry::class)->handle([
+            $entry = resolve(CreateEntry::class)->handle([
                 'title' => $this->name,
                 'slug' => $this->slug,
                 'blueprint_id' => $blueprint->id,

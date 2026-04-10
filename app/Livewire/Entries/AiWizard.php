@@ -66,8 +66,8 @@ class AiWizard extends Component
             ->flatMap(fn ($tab) => $tab->sections
                 ->sortBy('sort_order')
                 ->flatMap(fn ($section) => $section->fields->sortBy('order')))
-            ->reject(fn ($field) => $field->type === 'page_builder')
-            ->map(fn ($field) => [
+            ->reject(fn ($field): bool => $field->type === 'page_builder')
+            ->map(fn ($field): array => [
                 'id' => $field->id,
                 'type' => $field->type,
                 'label' => $field->label,
@@ -85,7 +85,7 @@ class AiWizard extends Component
             'description' => 'required|string|min:10|max:2000',
         ]);
 
-        $schemaContext = collect($this->blueprintFields)->map(fn ($f) => [
+        $schemaContext = collect($this->blueprintFields)->map(fn ($f): array => [
             'handle' => $f['handle'],
             'type' => $f['type'],
             'label' => $f['label'],
@@ -131,7 +131,7 @@ class AiWizard extends Component
             ];
         }
 
-        $entry = app(CreateEntry::class)->handle([
+        $entry = resolve(CreateEntry::class)->handle([
             'blueprint_id' => $collection->blueprint_id,
             'title' => $this->generatedTitle,
             'slug' => $this->generatedSlug,

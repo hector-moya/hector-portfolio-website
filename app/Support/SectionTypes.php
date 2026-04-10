@@ -96,7 +96,7 @@ class SectionTypes
             return [];
         }
 
-        return array_map(fn (array $field) => $field['default'], $schema['fields']);
+        return array_map(fn (array $field): mixed => $field['default'], $schema['fields']);
     }
 
     /**
@@ -104,6 +104,6 @@ class SectionTypes
      */
     public static function labels(): array
     {
-        return array_map(fn (array $type) => $type['label'], static::all());
+        return array_map(fn (array $type): string => $type['label'], static::all());
     }
 }

@@ -59,7 +59,7 @@ class SectionForm extends Form
 
     public function addField(int $sectionId, string $type): void
     {
-        $defaultConfig = app(FieldTypeRegistry::class)->defaultConfigFor($type);
+        $defaultConfig = resolve(FieldTypeRegistry::class)->defaultConfigFor($type);
 
         $section = Section::query()->findOrFail($sectionId);
         $section->fields()->create([

@@ -121,7 +121,7 @@ class Entry extends Model
     {
         if ($this->relationLoaded('elements')) {
             $pbElement = $this->elements->first(
-                fn (EntryElement $el) => $el->Field?->type === 'page_builder'
+                fn (EntryElement $el): bool => $el->Field?->type === 'page_builder'
             );
 
             if ($pbElement !== null && is_array($pbElement->getElementValue())) {
