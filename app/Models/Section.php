@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -28,29 +29,29 @@ use Illuminate\Support\Carbon;
  * @property-read int|null $fields_count
  * @property-read Tab|null $tab
  *
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Section newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Section newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Section onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Section query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Section whereBlueprintId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Section whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Section whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Section whereHandle($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Section whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Section whereInstructions($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Section whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Section whereSortOrder($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Section whereTabId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Section whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Section withTrashed(bool $withTrashed = true)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Section withoutTrashed()
+ * @method static Builder<static>|Section newModelQuery()
+ * @method static Builder<static>|Section newQuery()
+ * @method static Builder<static>|Section onlyTrashed()
+ * @method static Builder<static>|Section query()
+ * @method static Builder<static>|Section whereBlueprintId($value)
+ * @method static Builder<static>|Section whereCreatedAt($value)
+ * @method static Builder<static>|Section whereDeletedAt($value)
+ * @method static Builder<static>|Section whereHandle($value)
+ * @method static Builder<static>|Section whereId($value)
+ * @method static Builder<static>|Section whereInstructions($value)
+ * @method static Builder<static>|Section whereName($value)
+ * @method static Builder<static>|Section whereSortOrder($value)
+ * @method static Builder<static>|Section whereTabId($value)
+ * @method static Builder<static>|Section whereUpdatedAt($value)
+ * @method static Builder<static>|Section withTrashed(bool $withTrashed = true)
+ * @method static Builder<static>|Section withoutTrashed()
  *
  * @mixin Model
  */
 final class Section extends Model
 {
-    use HasFactory, SoftDeletes;
-
+    use HasFactory;
+    use SoftDeletes;
     protected $fillable = [
         'name',
         'handle',

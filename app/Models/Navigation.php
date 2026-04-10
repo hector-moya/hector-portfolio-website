@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Database\Factories\NavigationFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -21,17 +23,17 @@ use Illuminate\Support\Carbon;
  * @property-read Collection<int, NavigationItem> $items
  * @property-read int|null $items_count
  *
- * @method static \Database\Factories\NavigationFactory factory($count = null, $state = [])
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Navigation newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Navigation newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Navigation query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Navigation whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Navigation whereDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Navigation whereHandle($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Navigation whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Navigation whereIsActive($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Navigation whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Navigation whereUpdatedAt($value)
+ * @method static NavigationFactory factory($count = null, $state = [])
+ * @method static Builder<static>|Navigation newModelQuery()
+ * @method static Builder<static>|Navigation newQuery()
+ * @method static Builder<static>|Navigation query()
+ * @method static Builder<static>|Navigation whereCreatedAt($value)
+ * @method static Builder<static>|Navigation whereDescription($value)
+ * @method static Builder<static>|Navigation whereHandle($value)
+ * @method static Builder<static>|Navigation whereId($value)
+ * @method static Builder<static>|Navigation whereIsActive($value)
+ * @method static Builder<static>|Navigation whereName($value)
+ * @method static Builder<static>|Navigation whereUpdatedAt($value)
  *
  * @mixin Model
  */

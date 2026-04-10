@@ -13,13 +13,13 @@ beforeEach(function (): void {
     SiteSetting::set('registration_mode', 'open');
 });
 
-test('registration screen can be rendered', function () {
+test('registration screen can be rendered', function (): void {
     $response = $this->get('/register');
 
     $response->assertStatus(200);
 });
 
-test('new users can register and are redirected to email verification', function () {
+test('new users can register and are redirected to email verification', function (): void {
     Notification::fake();
 
     $response = Livewire::test(Register::class)
@@ -35,13 +35,13 @@ test('new users can register and are redirected to email verification', function
 
     $this->assertAuthenticated();
 
-    $user = User::where('email', 'test@example.com')->first();
+    $user = User::query()->where('email', 'test@example.com')->first();
     expect($user->hasVerifiedEmail())->toBeFalse();
 
     Notification::assertSentTo($user, VerifyEmail::class);
 });
 
-test('unverified users cannot access the dashboard', function () {
+test('unverified users cannot access the dashboard', function (): void {
     $user = User::factory()->unverified()->create();
 
     $this->actingAs($user)
@@ -49,7 +49,7 @@ test('unverified users cannot access the dashboard', function () {
         ->assertRedirect(route('verification.notice'));
 });
 
-test('verified users are not redirected to email verification', function () {
+test('verified users are not redirected to email verification', function (): void {
     $user = User::factory()->create();
 
     $response = $this->actingAs($user)->get('/dashboard');

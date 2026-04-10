@@ -35,7 +35,7 @@ final class GlobalsService
     public function getValue(string $set, string $variable, mixed $default = null): mixed
     {
         return Cache::rememberForever(
-            "globals.{$set}.{$variable}",
+            sprintf('globals.%s.%s', $set, $variable),
             fn () => GlobalVariable::query()
                 ->whereHas('globalSet', fn ($q) => $q->where('handle', $set))
                 ->where('handle', $variable)
@@ -52,7 +52,7 @@ final class GlobalsService
 
         GlobalVariable::query()->updateOrCreate(['global_set_id' => $globalSet->id, 'handle' => $variable], ['value' => $value]);
 
-        Cache::forget("globals.{$set}.{$variable}");
+        Cache::forget(sprintf('globals.%s.%s', $set, $variable));
     }
 
     /**

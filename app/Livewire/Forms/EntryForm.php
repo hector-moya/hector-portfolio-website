@@ -9,7 +9,6 @@ use App\Livewire\Actions\UpdateEntry;
 use App\Models\Blueprint;
 use App\Models\Collection as ModelsCollection;
 use App\Models\Entry;
-use App\Models\Field;
 use Flux\Flux;
 use Illuminate\Validation\Rule;
 use Livewire\Attributes\Validate;
@@ -80,7 +79,7 @@ final class EntryForm extends Form
         foreach ($blueprint->fields as $element) {
             $handle = $element->handle;
             if (! array_key_exists($handle, $this->fieldValues)) {
-                $this->fieldValues[$handle] = $this->defaultForType($element->type, $element->config ?? []);
+                $this->fieldValues[$handle] = $this->defaultForType($element->type);
             }
         }
     }
@@ -109,8 +108,7 @@ final class EntryForm extends Form
         $newItem = [];
         foreach ($field->children as $childField) {
             $newItem[$childField->handle] = $this->defaultForType(
-                $childField->type,
-                $childField->config ?? []
+                $childField->type
             );
         }
 
@@ -122,6 +120,7 @@ final class EntryForm extends Form
         if (! isset($this->fieldValues[$handle]['items'][$index])) {
             return;
         }
+
         unset($this->fieldValues[$handle]['items'][$index]);
         $this->fieldValues[$handle]['items'] = array_values($this->fieldValues[$handle]['items']);
     }
@@ -149,13 +148,13 @@ final class EntryForm extends Form
         foreach ($bp->fields as $el) {
             $h = $el->handle;
             if (! in_array($el->type, ['repeater', 'page_builder'], true)) {
-                $rules["fieldValues.$h"] = $this->rulesForSimple($el->type, $el->is_required, $el->config ?? []);
+                $rules['fieldValues.' . $h] = $this->rulesForSimple($el->type, $el->is_required, $el->config ?? []);
 
                 continue;
             }
 
             if ($el->type === 'page_builder') {
-                $rules["fieldValues.$h"] = ['nullable', 'array'];
+                $rules['fieldValues.' . $h] = ['nullable', 'array'];
 
                 continue;
             }
@@ -164,15 +163,16 @@ final class EntryForm extends Form
             $min = $el->config['min'] ?? 0;
             $max = $el->config['max'] ?? null;
 
-            $arr = ['array', "min:$min"];
+            $arr = ['array', 'min:' . $min];
             if ($max) {
-                $arr[] = "max:$max";
+                $arr[] = 'max:' . $max;
             }
-            $rules["fieldValues.$h.items"] = $arr;
+
+            $rules[sprintf('fieldValues.%s.items', $h)] = $arr;
 
             // Children from relationship, not config
             foreach ($el->children as $child) {
-                $rules["fieldValues.$h.items.*.{$child->handle}"] = $this->rulesForSimple(
+                $rules[sprintf('fieldValues.%s.items.*.%s', $h, $child->handle)] = $this->rulesForSimple(
                     $child->type,
                     $child->is_required,
                     $child->config ?? []
@@ -243,11 +243,11 @@ final class EntryForm extends Form
         }
 
         foreach ($bp->fields as $el) {
-            $attrs["fieldValues.{$el->handle}"] = $el->label;
+            $attrs['fieldValues.' . $el->handle] = $el->label;
             if ($el->type === 'repeater') {
                 foreach ($el->children as $child) {
-                    $attrs["fieldValues.{$el->handle}.items.*.{$child->handle}"] =
-                        "{$el->label} → {$child->label}";
+                    $attrs[sprintf('fieldValues.%s.items.*.%s', $el->handle, $child->handle)] =
+                        sprintf('%s → %s', $el->label, $child->label);
                 }
             }
         }
@@ -257,7 +257,7 @@ final class EntryForm extends Form
 
     /* ---------- Shared helpers ---------- */
 
-    protected function buildFieldsValuesArray(): array
+    private function buildFieldsValuesArray(): array
     {
         $bp = $this->blueprint();
         if (! $bp instanceof Blueprint) {
@@ -271,7 +271,7 @@ final class EntryForm extends Form
                 'field_id' => $field->id,
                 'handle' => $field->handle,
                 'type' => $field->type,
-                'value' => $this->fieldValues[$field->handle] ?? $this->defaultForType($field->type, $field->config ?? []),
+                'value' => $this->fieldValues[$field->handle] ?? $this->defaultForType($field->type),
             ];
 
             // Add children metadata for repeater fields
@@ -289,14 +289,14 @@ final class EntryForm extends Form
         return $fieldsValues;
     }
 
-    protected function blueprint(): ?Blueprint
+    private function blueprint(): ?Blueprint
     {
         return $this->blueprint_id !== null && $this->blueprint_id !== 0
             ? Blueprint::with('fields')->find($this->blueprint_id)
             : null;
     }
 
-    protected function defaultForType(string $type, array $config = []): mixed
+    private function defaultForType(string $type): mixed
     {
         return match ($type) {
             'checkbox' => false,
@@ -308,7 +308,7 @@ final class EntryForm extends Form
         };
     }
 
-    protected function loadFieldValuesFromEntry(Entry $entry): void
+    private function loadFieldValuesFromEntry(Entry $entry): void
     {
         $blueprint = $this->blueprint();
         if (! $blueprint instanceof Blueprint) {
@@ -359,11 +359,13 @@ final class EntryForm extends Form
                             $childHandle = $childField->handle;
                             $itemData[$childHandle] = isset($itemElements[$childHandle])
                                 ? $itemElements[$childHandle]->getElementValue()
-                                : $this->defaultForType($childField->type, $childField->config ?? []);
+                                : $this->defaultForType($childField->type);
                         }
+
                         $items[] = $itemData;
                     }
                 }
+
                 $this->fieldValues[$handle] = ['items' => $items];
             } elseif (isset($regularElements[$handle])) {
                 // Regular field
@@ -372,7 +374,7 @@ final class EntryForm extends Form
         }
     }
 
-    protected function rulesForSimple(string $type, bool $required, array $config): array
+    private function rulesForSimple(string $type, bool $required, array $config): array
     {
         $base = $required ? ['required'] : ['nullable'];
 

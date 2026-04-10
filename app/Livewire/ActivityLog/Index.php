@@ -50,7 +50,7 @@ final class Index extends Component
         return Activity::query()
             ->with('causer')
             ->when($this->search, function ($query): void {
-                $query->where('description', 'like', "%{$this->search}%");
+                $query->where('description', 'like', sprintf('%%%s%%', $this->search));
             })
             ->when($this->eventFilter, function ($query): void {
                 $query->where('event', $this->eventFilter);

@@ -31,10 +31,10 @@ final class PasswordForm extends Form
     {
         try {
             $this->validate();
-        } catch (ValidationException $e) {
+        } catch (ValidationException $validationException) {
             $this->reset('current_password', 'password', 'password_confirmation');
 
-            throw $e;
+            throw $validationException;
         }
 
         resolve(UpdatePassword::class)->update($user, $this->password);

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Policies;
 
-use App\Models\Entry;
 use App\Models\User;
 
 final class EntryPolicy
@@ -12,17 +11,19 @@ final class EntryPolicy
     /**
      * Determine whether the user can view any models.
      */
-    public function viewAny(User $user): bool
+    public function viewAny(): bool
     {
-        return true; // All authenticated users can view entries
+        return true;
+        // All authenticated users can view entries
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Entry $entry): bool
+    public function view(): bool
     {
-        return true; // All authenticated users can view individual entries
+        return true;
+        // All authenticated users can view individual entries
     }
 
     /**
@@ -36,7 +37,7 @@ final class EntryPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Entry $entry): bool
+    public function update(User $user): bool
     {
         return $user->canEdit(); // Admins and editors can update
     }
@@ -44,7 +45,7 @@ final class EntryPolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Entry $entry): bool
+    public function delete(User $user): bool
     {
         return $user->canEdit(); // Admins and editors can delete
     }
@@ -52,7 +53,7 @@ final class EntryPolicy
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Entry $entry): bool
+    public function restore(User $user): bool
     {
         return $user->isAdmin(); // Only admins can restore
     }
@@ -60,7 +61,7 @@ final class EntryPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, Entry $entry): bool
+    public function forceDelete(User $user): bool
     {
         return $user->isAdmin(); // Only admins can force delete
     }

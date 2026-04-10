@@ -7,18 +7,18 @@ use App\Models\Asset;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
-beforeEach(function () {
+beforeEach(function (): void {
     Storage::fake('public');
 });
 
-test('file field type has correct name and label', function () {
+test('file field type has correct name and label', function (): void {
     $field = new FileFieldType;
 
     expect($field->name())->toBe('file')
         ->and($field->label())->toBe('File');
 });
 
-test('file field type validates asset existence', function () {
+test('file field type validates asset existence', function (): void {
     $field = new FileFieldType;
     $field->setHandle('file');
 
@@ -27,7 +27,7 @@ test('file field type validates asset existence', function () {
     expect($rules)->toContain('exists:assets,id');
 });
 
-test('file field type can hydrate asset', function () {
+test('file field type can hydrate asset', function (): void {
     $file = UploadedFile::fake()->create('test.pdf');
     $asset = Asset::factory()->create([
         'filename' => $file->hashName(),
@@ -44,7 +44,7 @@ test('file field type can hydrate asset', function () {
         ->and($hydrated->id)->toBe($asset->id);
 });
 
-test('file field type can dehydrate asset', function () {
+test('file field type can dehydrate asset', function (): void {
     $file = UploadedFile::fake()->create('test.pdf');
     $asset = Asset::factory()->create([
         'filename' => $file->hashName(),
@@ -60,14 +60,14 @@ test('file field type can dehydrate asset', function () {
     expect($dehydrated)->toBe($asset->id);
 });
 
-test('file field type returns null for invalid asset', function () {
+test('file field type returns null for invalid asset', function (): void {
     $field = new FileFieldType;
 
     expect($field->hydrate(null))->toBeNull()
         ->and($field->dehydrate(null))->toBeNull();
 });
 
-test('file field type renders correct view', function () {
+test('file field type renders correct view', function (): void {
     $field = new FileFieldType;
 
     expect($field->view())->toBe('field-types.file');

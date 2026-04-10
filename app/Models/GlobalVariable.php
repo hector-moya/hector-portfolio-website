@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,9 +13,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * @property-read GlobalSet|null $globalSet
  *
- * @method static \Illuminate\Database\Eloquent\Builder<static>|GlobalVariable newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|GlobalVariable newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|GlobalVariable query()
+ * @method static Builder<static>|GlobalVariable newModelQuery()
+ * @method static Builder<static>|GlobalVariable newQuery()
+ * @method static Builder<static>|GlobalVariable query()
  *
  * @mixin Model
  */

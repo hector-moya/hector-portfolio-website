@@ -46,9 +46,9 @@ final class Index extends Component
         return FormSubmission::query()
             ->when($this->search, function ($query): void {
                 $query->where(function ($q): void {
-                    $q->where('name', 'like', "%{$this->search}%")
-                        ->orWhere('email', 'like', "%{$this->search}%")
-                        ->orWhere('message', 'like', "%{$this->search}%");
+                    $q->where('name', 'like', sprintf('%%%s%%', $this->search))
+                        ->orWhere('email', 'like', sprintf('%%%s%%', $this->search))
+                        ->orWhere('message', 'like', sprintf('%%%s%%', $this->search));
                 });
             })
             ->when($this->readFilter === 'unread', fn ($q) => $q->whereNull('read_at'))

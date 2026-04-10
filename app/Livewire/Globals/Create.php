@@ -22,7 +22,7 @@ final class Create extends Component
 
     public ?string $blueprint_id = null;
 
-    protected $rules = [
+    private array $rules = [
         'name' => ['required', 'string', 'max:255'],
         'handle' => ['required', 'string', 'max:255', 'unique:global_sets,handle'],
         'blueprint_id' => ['nullable', 'exists:blueprints,id'],

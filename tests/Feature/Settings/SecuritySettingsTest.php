@@ -65,7 +65,7 @@ test('admin can send an invitation from security settings', function (): void {
         ->call('sendInvite')
         ->assertHasNoErrors();
 
-    expect(Invitation::where('email', 'newperson@example.com')->exists())->toBeTrue();
+    expect(Invitation::query()->where('email', 'newperson@example.com')->exists())->toBeTrue();
 });
 
 test('invite email must be unique in invitations table', function (): void {

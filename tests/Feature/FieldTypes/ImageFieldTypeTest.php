@@ -7,18 +7,18 @@ use App\Models\Asset;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
-beforeEach(function () {
+beforeEach(function (): void {
     Storage::fake('public');
 });
 
-test('image field type has correct name and label', function () {
+test('image field type has correct name and label', function (): void {
     $field = new ImageFieldType;
 
     expect($field->name())->toBe('image')
         ->and($field->label())->toBe('Image');
 });
 
-test('image field type validates asset existence', function () {
+test('image field type validates asset existence', function (): void {
     $field = new ImageFieldType;
     $field->setHandle('image');
 
@@ -27,7 +27,7 @@ test('image field type validates asset existence', function () {
     expect($rules)->toContain('exists:assets,id');
 });
 
-test('image field type can hydrate asset', function () {
+test('image field type can hydrate asset', function (): void {
     $file = UploadedFile::fake()->image('test.jpg');
     $asset = Asset::factory()->create([
         'filename' => $file->hashName(),
@@ -44,7 +44,7 @@ test('image field type can hydrate asset', function () {
         ->and($hydrated->id)->toBe($asset->id);
 });
 
-test('image field type can dehydrate asset', function () {
+test('image field type can dehydrate asset', function (): void {
     $file = UploadedFile::fake()->image('test.jpg');
     $asset = Asset::factory()->create([
         'filename' => $file->hashName(),
@@ -60,14 +60,14 @@ test('image field type can dehydrate asset', function () {
     expect($dehydrated)->toBe($asset->id);
 });
 
-test('image field type returns null for invalid asset', function () {
+test('image field type returns null for invalid asset', function (): void {
     $field = new ImageFieldType;
 
     expect($field->hydrate(null))->toBeNull()
         ->and($field->dehydrate(null))->toBeNull();
 });
 
-test('image field type renders correct view', function () {
+test('image field type renders correct view', function (): void {
     $field = new ImageFieldType;
 
     expect($field->view())->toBe('field-types.image');

@@ -12,15 +12,15 @@ use Livewire\Livewire;
 
 use function Pest\Laravel\actingAs;
 
-beforeEach(function () {
+beforeEach(function (): void {
     actingAs(User::factory()->create(['role' => 'admin']));
 });
 
-test('landing page ai wizard page loads', function () {
+test('landing page ai wizard page loads', function (): void {
     $this->get(route('landing-pages.ai-wizard'))->assertOk();
 });
 
-test('generate sets proposal from ai agent', function () {
+test('generate sets proposal from ai agent', function (): void {
     LandingPageWizardAgent::fake([[
         'sections' => [
             [
@@ -54,7 +54,7 @@ test('generate sets proposal from ai agent', function () {
         ->assertCount('proposal', 1);
 });
 
-test('remove section removes it from proposal', function () {
+test('remove section removes it from proposal', function (): void {
     LandingPageWizardAgent::fake([[
         'sections' => [
             ['_id' => 'a1', 'type' => 'hero', 'data' => ['title' => 'Hero', 'subtitle' => '', 'content' => '', 'cta_text' => '', 'cta_url' => '', 'secondary_cta_text' => '', 'secondary_cta_url' => '', 'bg_image' => null, 'image' => null, 'images' => [], 'image_position' => 'left', 'alignment' => 'left', 'items' => []]],
@@ -71,7 +71,7 @@ test('remove section removes it from proposal', function () {
         ->assertSet('proposal.0.type', 'cta');
 });
 
-test('save creates collection blueprint and entry as draft', function () {
+test('save creates collection blueprint and entry as draft', function (): void {
     LandingPageWizardAgent::fake([[
         'sections' => [
             [
@@ -103,22 +103,22 @@ test('save creates collection blueprint and entry as draft', function () {
         ->call('save')
         ->assertRedirectContains('/entries/');
 
-    $collection = Collection::where('slug', 'services')->first();
+    $collection = Collection::query()->where('slug', 'services')->first();
     expect($collection)->not->toBeNull();
     expect($collection->settings['type'])->toBe('single');
 
-    $blueprint = Blueprint::find($collection->blueprint_id);
+    $blueprint = Blueprint::query()->find($collection->blueprint_id);
     expect($blueprint)->not->toBeNull();
     expect($blueprint->slug)->toBe('services-blueprint');
 
-    $entry = Entry::where('slug', 'services')->first();
+    $entry = Entry::query()->where('slug', 'services')->first();
     expect($entry)->not->toBeNull();
     expect($entry->status)->toBe('draft');
 
     expect($collection->fresh()->blueprint_id)->toBe($blueprint->id);
 });
 
-it('denies access to viewer role users', function () {
+it('denies access to viewer role users', function (): void {
     $viewer = User::factory()->create(['role' => 'viewer']);
 
     Livewire::actingAs($viewer)
@@ -126,7 +126,7 @@ it('denies access to viewer role users', function () {
         ->assertForbidden();
 });
 
-test('unauthenticated users are redirected to login', function () {
+test('unauthenticated users are redirected to login', function (): void {
     auth()->logout();
     $this->get(route('landing-pages.ai-wizard'))->assertRedirect(route('login'));
 });

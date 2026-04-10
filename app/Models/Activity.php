@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -23,19 +24,19 @@ use Illuminate\Support\Carbon;
  * @property-read Model|Model|null $causer
  * @property-read Model|Model|null $subject
  *
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Activity newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Activity newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Activity query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Activity whereCauserId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Activity whereCauserType($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Activity whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Activity whereDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Activity whereEvent($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Activity whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Activity whereLogName($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Activity whereProperties($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Activity whereSubjectId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Activity whereSubjectType($value)
+ * @method static Builder<static>|Activity newModelQuery()
+ * @method static Builder<static>|Activity newQuery()
+ * @method static Builder<static>|Activity query()
+ * @method static Builder<static>|Activity whereCauserId($value)
+ * @method static Builder<static>|Activity whereCauserType($value)
+ * @method static Builder<static>|Activity whereCreatedAt($value)
+ * @method static Builder<static>|Activity whereDescription($value)
+ * @method static Builder<static>|Activity whereEvent($value)
+ * @method static Builder<static>|Activity whereId($value)
+ * @method static Builder<static>|Activity whereLogName($value)
+ * @method static Builder<static>|Activity whereProperties($value)
+ * @method static Builder<static>|Activity whereSubjectId($value)
+ * @method static Builder<static>|Activity whereSubjectType($value)
  *
  * @mixin Model
  */

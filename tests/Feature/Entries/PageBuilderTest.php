@@ -9,11 +9,11 @@ use Livewire\Livewire;
 
 use function Pest\Laravel\assertDatabaseHas;
 
-beforeEach(function () {
+beforeEach(function (): void {
     $this->user = User::factory()->create();
 });
 
-test('page builder mounts with empty layout', function () {
+test('page builder mounts with empty layout', function (): void {
     $entry = Entry::factory()->create(['layout' => []]);
 
     Livewire::actingAs($this->user)
@@ -21,7 +21,7 @@ test('page builder mounts with empty layout', function () {
         ->assertSet('sections', []);
 });
 
-test('page builder mounts with existing layout sections', function () {
+test('page builder mounts with existing layout sections', function (): void {
     $entry = Entry::factory()->create([
         'layout' => [
             ['_id' => 'abc-123', 'type' => 'hero', 'data' => ['title' => 'Welcome Hero', 'subtitle' => '']],
@@ -34,7 +34,7 @@ test('page builder mounts with existing layout sections', function () {
         ->assertSet('sections.0.data.title', 'Welcome Hero');
 });
 
-test('can add a hero section', function () {
+test('can add a hero section', function (): void {
     $entry = Entry::factory()->create(['layout' => []]);
 
     Livewire::actingAs($this->user)
@@ -45,7 +45,7 @@ test('can add a hero section', function () {
         ->assertSet('sections.0.type', 'hero');
 });
 
-test('add section is ignored for unknown type', function () {
+test('add section is ignored for unknown type', function (): void {
     $entry = Entry::factory()->create(['layout' => []]);
 
     Livewire::actingAs($this->user)
@@ -55,7 +55,7 @@ test('add section is ignored for unknown type', function () {
         ->assertCount('sections', 0);
 });
 
-test('can remove a section', function () {
+test('can remove a section', function (): void {
     $entry = Entry::factory()->create([
         'layout' => [
             ['_id' => 'aaa-111', 'type' => 'hero', 'data' => ['title' => 'First']],
@@ -70,7 +70,7 @@ test('can remove a section', function () {
         ->assertSet('sections.0.type', 'text');
 });
 
-test('can move a section up', function () {
+test('can move a section up', function (): void {
     $entry = Entry::factory()->create([
         'layout' => [
             ['_id' => 'aaa-111', 'type' => 'hero', 'data' => ['title' => 'First']],
@@ -85,7 +85,7 @@ test('can move a section up', function () {
         ->assertSet('sections.1.type', 'hero');
 });
 
-test('move up does nothing for the first section', function () {
+test('move up does nothing for the first section', function (): void {
     $entry = Entry::factory()->create([
         'layout' => [
             ['_id' => 'aaa-111', 'type' => 'hero', 'data' => ['title' => 'First']],
@@ -99,7 +99,7 @@ test('move up does nothing for the first section', function () {
         ->assertSet('sections.0.type', 'hero');
 });
 
-test('can move a section down', function () {
+test('can move a section down', function (): void {
     $entry = Entry::factory()->create([
         'layout' => [
             ['_id' => 'aaa-111', 'type' => 'hero', 'data' => ['title' => 'First']],
@@ -114,7 +114,7 @@ test('can move a section down', function () {
         ->assertSet('sections.1.type', 'hero');
 });
 
-test('save persists layout to database', function () {
+test('save persists layout to database', function (): void {
     $entry = Entry::factory()->create(['layout' => []]);
 
     Livewire::actingAs($this->user)
@@ -125,10 +125,10 @@ test('save persists layout to database', function () {
         ->call('save');
 
     assertDatabaseHas('entries', ['id' => $entry->id]);
-    expect(Entry::find($entry->id)->layout[0]['data']['title'])->toBe('My Hero Title');
+    expect(Entry::query()->find($entry->id)->layout[0]['data']['title'])->toBe('My Hero Title');
 });
 
-test('asset-selected event with section handle updates correct section field', function () {
+test('asset-selected event with section handle updates correct section field', function (): void {
     $sectionId = '550e8400-e29b-41d4-a716-446655440000';
     $entry = Entry::factory()->create([
         'layout' => [
@@ -138,11 +138,11 @@ test('asset-selected event with section handle updates correct section field', f
 
     Livewire::actingAs($this->user)
         ->test(PageBuilder::class, ['entry' => $entry])
-        ->dispatch('asset-selected', ['handle' => "section_{$sectionId}_bg_image", 'value' => 42])
+        ->dispatch('asset-selected', ['handle' => sprintf('section_%s_bg_image', $sectionId), 'value' => 42])
         ->assertSet('sections.0.data.bg_image', 42);
 });
 
-test('asset-selected event with non-section handle is ignored', function () {
+test('asset-selected event with non-section handle is ignored', function (): void {
     $entry = Entry::factory()->create(['layout' => []]);
 
     Livewire::actingAs($this->user)
@@ -151,7 +151,7 @@ test('asset-selected event with non-section handle is ignored', function () {
         ->assertSet('sections', []);
 });
 
-test('can add and remove feature items', function () {
+test('can add and remove feature items', function (): void {
     $entry = Entry::factory()->create([
         'layout' => [
             ['_id' => 'feat-111', 'type' => 'features', 'data' => ['title' => 'Features', 'items' => []]],
@@ -168,7 +168,7 @@ test('can add and remove feature items', function () {
         ->assertCount('sections.0.data.items', 1);
 });
 
-test('gallery images can be removed', function () {
+test('gallery images can be removed', function (): void {
     $entry = Entry::factory()->create([
         'layout' => [
             ['_id' => 'gal-111', 'type' => 'gallery', 'data' => ['title' => 'Gallery', 'images' => [1, 2, 3]]],

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Database\Factories\TaxonomyFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -23,21 +25,21 @@ use Illuminate\Support\Carbon;
  * @property-read Collection<int, Term> $terms
  * @property-read int|null $terms_count
  *
- * @method static \Database\Factories\TaxonomyFactory factory($count = null, $state = [])
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Taxonomy newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Taxonomy newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Taxonomy onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Taxonomy query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Taxonomy whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Taxonomy whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Taxonomy whereHandle($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Taxonomy whereHierarchical($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Taxonomy whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Taxonomy whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Taxonomy whereSingleSelect($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Taxonomy whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Taxonomy withTrashed(bool $withTrashed = true)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Taxonomy withoutTrashed()
+ * @method static TaxonomyFactory factory($count = null, $state = [])
+ * @method static Builder<static>|Taxonomy newModelQuery()
+ * @method static Builder<static>|Taxonomy newQuery()
+ * @method static Builder<static>|Taxonomy onlyTrashed()
+ * @method static Builder<static>|Taxonomy query()
+ * @method static Builder<static>|Taxonomy whereCreatedAt($value)
+ * @method static Builder<static>|Taxonomy whereDeletedAt($value)
+ * @method static Builder<static>|Taxonomy whereHandle($value)
+ * @method static Builder<static>|Taxonomy whereHierarchical($value)
+ * @method static Builder<static>|Taxonomy whereId($value)
+ * @method static Builder<static>|Taxonomy whereName($value)
+ * @method static Builder<static>|Taxonomy whereSingleSelect($value)
+ * @method static Builder<static>|Taxonomy whereUpdatedAt($value)
+ * @method static Builder<static>|Taxonomy withTrashed(bool $withTrashed = true)
+ * @method static Builder<static>|Taxonomy withoutTrashed()
  *
  * @mixin Model
  */

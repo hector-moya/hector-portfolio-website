@@ -14,15 +14,15 @@ use Livewire\Livewire;
 
 use function Pest\Laravel\actingAs;
 
-beforeEach(function () {
+beforeEach(function (): void {
     actingAs(User::factory()->create(['role' => 'admin']));
 });
 
-test('entry ai wizard page loads', function () {
+test('entry ai wizard page loads', function (): void {
     $this->get(route('entries.ai-wizard'))->assertOk();
 });
 
-test('selecting a collection loads blueprint fields', function () {
+test('selecting a collection loads blueprint fields', function (): void {
     $blueprint = Blueprint::factory()->create();
     $collection = Collection::factory()->create(['blueprint_id' => $blueprint->id]);
 
@@ -36,7 +36,7 @@ test('selecting a collection loads blueprint fields', function () {
         ->assertCount('blueprintFields', 1);
 });
 
-test('generate step calls the AI agent and sets generatedFields', function () {
+test('generate step calls the AI agent and sets generatedFields', function (): void {
     EntryWizardAgent::fake([[
         'title' => 'My Generated Post',
         'slug' => 'my-generated-post',
@@ -54,7 +54,7 @@ test('generate step calls the AI agent and sets generatedFields', function () {
         ->assertSet('generatedTitle', 'My Generated Post');
 });
 
-test('save creates entry with generated field values as draft', function () {
+test('save creates entry with generated field values as draft', function (): void {
     $blueprint = Blueprint::factory()->create();
     $collection = Collection::factory()->create(['blueprint_id' => $blueprint->id]);
 
@@ -81,13 +81,13 @@ test('save creates entry with generated field values as draft', function () {
         ->call('save')
         ->assertRedirectContains('/entries/');
 
-    $entry = Entry::where('slug', 'test-entry')->first();
+    $entry = Entry::query()->where('slug', 'test-entry')->first();
     expect($entry)->not->toBeNull();
     expect($entry->status)->toBe('draft');
     expect($entry->elements->firstWhere('handle', 'excerpt')?->value)->toBe('This is the excerpt.');
 });
 
-it('denies access to viewer role users', function () {
+it('denies access to viewer role users', function (): void {
     $viewer = User::factory()->create(['role' => 'viewer']);
 
     Livewire::actingAs($viewer)

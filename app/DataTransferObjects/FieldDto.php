@@ -7,21 +7,21 @@ namespace App\DataTransferObjects;
 use App\Enums\FieldType;
 use Illuminate\Support\Str;
 
-final class FieldDto
+final readonly class FieldDto
 {
     /**
      * @param  array<string, mixed>  $config
      * @param  array<string, mixed>  $validation
      */
     public function __construct(
-        public readonly string $name,
-        public readonly string $handle,
-        public readonly FieldType $type,
-        public readonly int $sortOrder = 0,
-        public readonly ?string $instructions = null,
-        public readonly bool $required = false,
-        public readonly array $config = [],
-        public readonly array $validation = [],
+        public string $name,
+        public string $handle,
+        public FieldType $type,
+        public int $sortOrder = 0,
+        public ?string $instructions = null,
+        public bool $required = false,
+        public array $config = [],
+        public array $validation = [],
     ) {}
 
     public static function fromArray(array $data): self

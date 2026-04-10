@@ -14,15 +14,15 @@ use Illuminate\Queue\SerializesModels;
 
 final class ContactFormSubmissionMail extends Mailable implements ShouldQueue
 {
-    use Queueable, SerializesModels;
-
+    use Queueable;
+    use SerializesModels;
     public function __construct(public FormSubmission $submission) {}
 
     public function envelope(): Envelope
     {
         return new Envelope(
             replyTo: $this->submission->email,
-            subject: "New Contact Form Submission from {$this->submission->name}",
+            subject: 'New Contact Form Submission from ' . $this->submission->name,
         );
     }
 

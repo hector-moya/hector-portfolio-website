@@ -45,7 +45,7 @@ final class FolderForm extends Form
 
         Flux::toast(
             heading: 'Folder Created',
-            text: "The folder '{$folder->name}' has been created successfully.",
+            text: sprintf("The folder '%s' has been created successfully.", $folder->name),
             variant: 'success'
         );
 
@@ -67,7 +67,7 @@ final class FolderForm extends Form
 
         Flux::toast(
             heading: 'Folder Updated',
-            text: "The folder '{$folder->name}' has been updated successfully.",
+            text: sprintf("The folder '%s' has been updated successfully.", $folder->name),
             variant: 'success'
         );
 

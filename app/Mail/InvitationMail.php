@@ -14,14 +14,14 @@ use Illuminate\Queue\SerializesModels;
 
 final class InvitationMail extends Mailable implements ShouldQueue
 {
-    use Queueable, SerializesModels;
-
+    use Queueable;
+    use SerializesModels;
     public function __construct(public readonly Invitation $invitation) {}
 
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'You\'ve been invited to '.config('app.name'),
+            subject: "You've been invited to ".config('app.name'),
         );
     }
 

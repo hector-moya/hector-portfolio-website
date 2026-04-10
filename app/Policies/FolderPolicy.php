@@ -12,17 +12,19 @@ final class FolderPolicy
     /**
      * Determine whether the user can view any models.
      */
-    public function viewAny(User $user): bool
+    public function viewAny(): bool
     {
-        return true; // All authenticated users can view assets
+        return true;
+        // All authenticated users can view assets
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Folder $folder): bool
+    public function view(): bool
     {
-        return true; // All authenticated users can view any folder
+        return true;
+        // All authenticated users can view any folder
     }
 
     /**
@@ -52,7 +54,7 @@ final class FolderPolicy
     /**
      * Determine whether the user can restore the folder.
      */
-    public function restore(User $user, Folder $folder): bool
+    public function restore(): bool
     {
         return false;
     }
@@ -60,7 +62,7 @@ final class FolderPolicy
     /**
      * Determine whether the user can permanently delete the folder.
      */
-    public function forceDelete(User $user, Folder $folder): bool
+    public function forceDelete(): bool
     {
         return false;
     }

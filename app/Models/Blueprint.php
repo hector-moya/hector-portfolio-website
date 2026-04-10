@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use App\Models\Concerns\HasTranslations;
 use Database\Factories\BlueprintFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -35,35 +36,35 @@ use Illuminate\Support\Carbon;
  * @property-read \Illuminate\Database\Eloquent\Collection<int, Translation> $translations
  * @property-read int|null $translations_count
  *
- * @method static \Database\Factories\BlueprintFactory factory($count = null, $state = [])
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Blueprint newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Blueprint newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Blueprint onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Blueprint query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Blueprint whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Blueprint whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Blueprint whereDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Blueprint whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Blueprint whereIsActive($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Blueprint whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Blueprint whereSlug($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Blueprint whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Blueprint withTrashed(bool $withTrashed = true)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Blueprint withoutTrashed()
+ * @method static BlueprintFactory factory($count = null, $state = [])
+ * @method static Builder<static>|Blueprint newModelQuery()
+ * @method static Builder<static>|Blueprint newQuery()
+ * @method static Builder<static>|Blueprint onlyTrashed()
+ * @method static Builder<static>|Blueprint query()
+ * @method static Builder<static>|Blueprint whereCreatedAt($value)
+ * @method static Builder<static>|Blueprint whereDeletedAt($value)
+ * @method static Builder<static>|Blueprint whereDescription($value)
+ * @method static Builder<static>|Blueprint whereId($value)
+ * @method static Builder<static>|Blueprint whereIsActive($value)
+ * @method static Builder<static>|Blueprint whereName($value)
+ * @method static Builder<static>|Blueprint whereSlug($value)
+ * @method static Builder<static>|Blueprint whereUpdatedAt($value)
+ * @method static Builder<static>|Blueprint withTrashed(bool $withTrashed = true)
+ * @method static Builder<static>|Blueprint withoutTrashed()
  *
  * @mixin Model
  */
 final class Blueprint extends Model
 {
-    /** @use HasFactory<BlueprintFactory> */
-    use HasFactory, HasTranslations, SoftDeletes;
-
+    use HasFactory;
+    use HasTranslations;
+    use SoftDeletes;
     /**
      * The attributes that are translatable.
      *
      * @var array<string>
      */
-    protected $translatable = [
+    private array $translatable = [
         'name',
         'description',
     ];

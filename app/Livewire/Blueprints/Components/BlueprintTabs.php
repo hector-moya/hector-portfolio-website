@@ -64,6 +64,7 @@ final class BlueprintTabs extends Component
         if (! $tab) {
             return;
         }
+
         $tab->update([
             'name' => $this->form->name,
             'handle' => $this->form->handle,
@@ -78,6 +79,7 @@ final class BlueprintTabs extends Component
         if (! $tab) {
             return;
         }
+
         $tab->delete();
 
         $this->dispatch('tabs-updated');

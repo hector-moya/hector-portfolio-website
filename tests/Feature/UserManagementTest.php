@@ -11,44 +11,44 @@ use Livewire\Livewire;
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\assertDatabaseHas;
 
-beforeEach(function () {
+beforeEach(function (): void {
     $this->admin = User::factory()->admin()->create();
     $this->editor = User::factory()->editor()->create();
     $this->viewer = User::factory()->viewer()->create();
 });
 
 // Authorization Tests
-test('admin can view users index', function () {
+test('admin can view users index', function (): void {
     actingAs($this->admin)
         ->get(route('users.index'))
         ->assertSuccessful();
 });
 
-test('editor cannot view users index', function () {
+test('editor cannot view users index', function (): void {
     actingAs($this->editor)
         ->get(route('users.index'))
         ->assertForbidden();
 });
 
-test('viewer cannot view users index', function () {
+test('viewer cannot view users index', function (): void {
     actingAs($this->viewer)
         ->get(route('users.index'))
         ->assertForbidden();
 });
 
-test('admin can view create user page', function () {
+test('admin can view create user page', function (): void {
     actingAs($this->admin)
         ->get(route('users.create'))
         ->assertSuccessful();
 });
 
-test('editor cannot view create user page', function () {
+test('editor cannot view create user page', function (): void {
     actingAs($this->editor)
         ->get(route('users.create'))
         ->assertForbidden();
 });
 
-test('users index shows all users', function () {
+test('users index shows all users', function (): void {
     Livewire::actingAs($this->admin)
         ->test(Index::class)
         ->assertSee($this->admin->name)
@@ -57,7 +57,7 @@ test('users index shows all users', function () {
         ->assertSee($this->viewer->name);
 });
 
-test('users index can search by name', function () {
+test('users index can search by name', function (): void {
     $user1 = User::factory()->create(['name' => 'John Doe']);
     $user2 = User::factory()->create(['name' => 'Jane Smith']);
 
@@ -68,7 +68,7 @@ test('users index can search by name', function () {
         ->assertDontSee('Jane Smith');
 });
 
-test('users index can filter by role', function () {
+test('users index can filter by role', function (): void {
     Livewire::actingAs($this->admin)
         ->test(Index::class)
         ->set('roleFilter', 'admin')
@@ -78,7 +78,7 @@ test('users index can filter by role', function () {
 });
 
 // User Creation Tests
-test('admin can create a new user', function () {
+test('admin can create a new user', function (): void {
     Livewire::actingAs($this->admin)
         ->test(Create::class)
         ->set('form.name', 'New User')
@@ -96,7 +96,7 @@ test('admin can create a new user', function () {
     ]);
 });
 
-test('user name is required', function () {
+test('user name is required', function (): void {
     Livewire::actingAs($this->admin)
         ->test(Create::class)
         ->set('form.name', '')
@@ -108,7 +108,7 @@ test('user name is required', function () {
         ->assertHasErrors(['form.name']);
 });
 
-test('user email is required and must be valid', function () {
+test('user email is required and must be valid', function (): void {
     Livewire::actingAs($this->admin)
         ->test(Create::class)
         ->set('form.name', 'Test User')
@@ -130,7 +130,7 @@ test('user email is required and must be valid', function () {
         ->assertHasErrors(['form.email']);
 });
 
-test('user email must be unique', function () {
+test('user email must be unique', function (): void {
     Livewire::actingAs($this->admin)
         ->test(Create::class)
         ->set('form.name', 'Test User')
@@ -142,7 +142,7 @@ test('user email must be unique', function () {
         ->assertHasErrors(['form.email']);
 });
 
-test('user password is required with minimum length', function () {
+test('user password is required with minimum length', function (): void {
     Livewire::actingAs($this->admin)
         ->test(Create::class)
         ->set('form.name', 'Test User')
@@ -154,7 +154,7 @@ test('user password is required with minimum length', function () {
         ->assertHasErrors(['form.password']);
 });
 
-test('user password must be confirmed', function () {
+test('user password must be confirmed', function (): void {
     Livewire::actingAs($this->admin)
         ->test(Create::class)
         ->set('form.name', 'Test User')
@@ -166,7 +166,7 @@ test('user password must be confirmed', function () {
         ->assertHasErrors(['form.password']);
 });
 
-test('user role must be valid', function () {
+test('user role must be valid', function (): void {
     Livewire::actingAs($this->admin)
         ->test(Create::class)
         ->set('form.name', 'Test User')
@@ -179,25 +179,25 @@ test('user role must be valid', function () {
 });
 
 // User Update Tests
-test('admin can edit a user', function () {
+test('admin can edit a user', function (): void {
     actingAs($this->admin)
         ->get(route('users.edit', $this->editor))
         ->assertSuccessful();
 });
 
-test('user can edit themselves', function () {
+test('user can edit themselves', function (): void {
     actingAs($this->editor)
         ->get(route('users.edit', $this->editor))
         ->assertSuccessful();
 });
 
-test('user cannot edit other users', function () {
+test('user cannot edit other users', function (): void {
     actingAs($this->editor)
         ->get(route('users.edit', $this->viewer))
         ->assertForbidden();
 });
 
-test('admin can update a user', function () {
+test('admin can update a user', function (): void {
     Livewire::actingAs($this->admin)
         ->test(Edit::class, ['user' => $this->editor])
         ->set('form.name', 'Updated Name')
@@ -214,7 +214,7 @@ test('admin can update a user', function () {
     ]);
 });
 
-test('user can update themselves', function () {
+test('user can update themselves', function (): void {
     Livewire::actingAs($this->editor)
         ->test(Edit::class, ['user' => $this->editor])
         ->set('form.name', 'My Updated Name')
@@ -227,7 +227,7 @@ test('user can update themselves', function () {
     ]);
 });
 
-test('password is optional when updating user', function () {
+test('password is optional when updating user', function (): void {
     $originalPassword = $this->editor->password;
 
     Livewire::actingAs($this->admin)
@@ -242,7 +242,7 @@ test('password is optional when updating user', function () {
     expect($this->editor->password)->toBe($originalPassword);
 });
 
-test('password is updated when provided', function () {
+test('password is updated when provided', function (): void {
     $originalPassword = $this->editor->password;
 
     Livewire::actingAs($this->admin)
@@ -258,25 +258,25 @@ test('password is updated when provided', function () {
 });
 
 // User Deletion Tests
-test('admin can delete a user', function () {
+test('admin can delete a user', function (): void {
     $userToDelete = User::factory()->create();
 
     Livewire::actingAs($this->admin)
         ->test(Index::class)
         ->call('delete', $userToDelete->id);
 
-    expect(User::find($userToDelete->id))->toBeNull();
+    expect(User::query()->find($userToDelete->id))->toBeNull();
 });
 
-test('admin cannot delete themselves', function () {
+test('admin cannot delete themselves', function (): void {
     Livewire::actingAs($this->admin)
         ->test(Index::class)
         ->call('delete', $this->admin->id);
 
-    expect(User::find($this->admin->id))->not->toBeNull();
+    expect(User::query()->find($this->admin->id))->not->toBeNull();
 });
 
-test('editor cannot access users management at all', function () {
+test('editor cannot access users management at all', function (): void {
     // Editors cannot view users index, so they cannot delete either
     actingAs($this->editor)
         ->get(route('users.index'))

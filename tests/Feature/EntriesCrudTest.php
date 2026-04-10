@@ -16,7 +16,7 @@ use function Pest\Laravel\actingAs;
 use function Pest\Laravel\assertDatabaseHas;
 use function Pest\Laravel\assertSoftDeleted;
 
-beforeEach(function () {
+beforeEach(function (): void {
     $this->user = User::factory()->admin()->create();
 
     $this->blueprint = Blueprint::factory()->create([
@@ -25,7 +25,7 @@ beforeEach(function () {
     ]);
 
     // Create blueprint elements
-    Field::create([
+    Field::query()->create([
         'blueprint_id' => $this->blueprint->id,
         'type' => 'text',
         'label' => 'Subtitle',
@@ -34,7 +34,7 @@ beforeEach(function () {
         'order' => 1,
     ]);
 
-    Field::create([
+    Field::query()->create([
         'blueprint_id' => $this->blueprint->id,
         'type' => 'textarea',
         'label' => 'Excerpt',
@@ -50,13 +50,13 @@ beforeEach(function () {
     ]);
 });
 
-test('entries index page renders successfully', function () {
+test('entries index page renders successfully', function (): void {
     actingAs($this->user)
         ->get(route('entries'))
         ->assertSuccessful();
 });
 
-test('entries index shows all entries', function () {
+test('entries index shows all entries', function (): void {
     $entries = Entry::factory(3)->create([
         'blueprint_id' => $this->blueprint->id,
         'author_id' => $this->user->id,
@@ -69,7 +69,7 @@ test('entries index shows all entries', function () {
         ->assertSee($entries[2]->title);
 });
 
-test('entries index can search by title', function () {
+test('entries index can search by title', function (): void {
     Entry::factory()->create([
         'blueprint_id' => $this->blueprint->id,
         'author_id' => $this->user->id,
@@ -89,7 +89,7 @@ test('entries index can search by title', function () {
         ->assertDontSee('PHP Best Practices');
 });
 
-test('entries index can filter by collection', function () {
+test('entries index can filter by collection', function (): void {
     // Create a second blueprint for the second collection
     $blueprint2 = Blueprint::factory()->create();
 
@@ -118,7 +118,7 @@ test('entries index can filter by collection', function () {
         ->assertDontSee('Entry 2');
 });
 
-test('entries index can filter by status', function () {
+test('entries index can filter by status', function (): void {
     Entry::factory()->create([
         'blueprint_id' => $this->blueprint->id,
         'author_id' => $this->user->id,
@@ -140,13 +140,13 @@ test('entries index can filter by status', function () {
         ->assertDontSee('Published Entry');
 });
 
-test('entries create page renders successfully', function () {
+test('entries create page renders successfully', function (): void {
     actingAs($this->user)
         ->get(route('entries.create'))
         ->assertSuccessful();
 });
 
-test('can create an entry with dynamic fields', function () {
+test('can create an entry with dynamic fields', function (): void {
     Livewire::actingAs($this->user)
         ->test(Create::class)
         ->set('selectedCollectionId', $this->collection->id)
@@ -166,7 +166,7 @@ test('can create an entry with dynamic fields', function () {
         'author_id' => $this->user->id,
     ]);
 
-    $entry = Entry::where('slug', 'my-first-blog-post')->first();
+    $entry = Entry::query()->where('slug', 'my-first-blog-post')->first();
 
     assertDatabaseHas('entry_elements', [
         'entry_id' => $entry->id,
@@ -181,7 +181,7 @@ test('can create an entry with dynamic fields', function () {
     ]);
 });
 
-test('entry title is required', function () {
+test('entry title is required', function (): void {
     Livewire::actingAs($this->user)
         ->test(Create::class)
         ->set('selectedCollectionId', $this->collection->id)
@@ -192,7 +192,7 @@ test('entry title is required', function () {
         ->assertHasErrors(['form.title' => 'required']);
 });
 
-test('entry slug is required', function () {
+test('entry slug is required', function (): void {
     Livewire::actingAs($this->user)
         ->test(Create::class)
         ->set('selectedCollectionId', $this->collection->id)
@@ -203,7 +203,7 @@ test('entry slug is required', function () {
         ->assertHasErrors(['form.slug' => 'required']);
 });
 
-test('required blueprint fields are validated', function () {
+test('required blueprint fields are validated', function (): void {
     Livewire::actingAs($this->user)
         ->test(Create::class)
         ->set('selectedCollectionId', $this->collection->id)
@@ -214,7 +214,7 @@ test('required blueprint fields are validated', function () {
         ->assertHasErrors(['form.fieldValues.excerpt' => 'required']);
 });
 
-test('entries edit page renders successfully', function () {
+test('entries edit page renders successfully', function (): void {
     $entry = Entry::factory()->create([
         'blueprint_id' => $this->blueprint->id,
         'author_id' => $this->user->id,
@@ -225,7 +225,7 @@ test('entries edit page renders successfully', function () {
         ->assertSuccessful();
 });
 
-test('can update an entry', function () {
+test('can update an entry', function (): void {
     $entry = Entry::factory()->create([
         'blueprint_id' => $this->blueprint->id,
         'author_id' => $this->user->id,
@@ -248,7 +248,7 @@ test('can update an entry', function () {
     ]);
 });
 
-test('can update entry field values', function () {
+test('can update entry field values', function (): void {
     $entry = Entry::factory()->create([
         'blueprint_id' => $this->blueprint->id,
         'author_id' => $this->user->id,
@@ -281,7 +281,7 @@ test('can update entry field values', function () {
     ]);
 });
 
-test('can delete an entry', function () {
+test('can delete an entry', function (): void {
     $entry = Entry::factory()->create([
         'blueprint_id' => $this->blueprint->id,
         'author_id' => $this->user->id,
@@ -294,7 +294,7 @@ test('can delete an entry', function () {
     assertSoftDeleted('entries', ['id' => $entry->id]);
 });
 
-test('entry status can be changed to published', function () {
+test('entry status can be changed to published', function (): void {
     $entry = Entry::factory()->create([
         'blueprint_id' => $this->blueprint->id,
         'author_id' => $this->user->id,

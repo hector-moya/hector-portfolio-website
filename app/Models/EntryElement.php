@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Database\Factories\EntryElementFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -23,19 +24,19 @@ use Illuminate\Support\Carbon;
  * @property-read Field $Field
  * @property-read Entry $entry
  *
- * @method static \Database\Factories\EntryElementFactory factory($count = null, $state = [])
- * @method static \Illuminate\Database\Eloquent\Builder<static>|EntryElement newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|EntryElement newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|EntryElement query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|EntryElement whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|EntryElement whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|EntryElement whereEntryId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|EntryElement whereFieldId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|EntryElement whereHandle($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|EntryElement whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|EntryElement whereMeta($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|EntryElement whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|EntryElement whereValue($value)
+ * @method static EntryElementFactory factory($count = null, $state = [])
+ * @method static Builder<static>|EntryElement newModelQuery()
+ * @method static Builder<static>|EntryElement newQuery()
+ * @method static Builder<static>|EntryElement query()
+ * @method static Builder<static>|EntryElement whereCreatedAt($value)
+ * @method static Builder<static>|EntryElement whereDeletedAt($value)
+ * @method static Builder<static>|EntryElement whereEntryId($value)
+ * @method static Builder<static>|EntryElement whereFieldId($value)
+ * @method static Builder<static>|EntryElement whereHandle($value)
+ * @method static Builder<static>|EntryElement whereId($value)
+ * @method static Builder<static>|EntryElement whereMeta($value)
+ * @method static Builder<static>|EntryElement whereUpdatedAt($value)
+ * @method static Builder<static>|EntryElement whereValue($value)
  *
  * @mixin Model
  */

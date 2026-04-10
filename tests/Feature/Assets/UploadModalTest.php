@@ -10,7 +10,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
 
-test('asset upload modal can be rendered', function () {
+test('asset upload modal can be rendered', function (): void {
     $user = User::factory()->create();
 
     Livewire::actingAs($user)
@@ -18,7 +18,7 @@ test('asset upload modal can be rendered', function () {
         ->assertOk();
 });
 
-test('user can upload an asset', function () {
+test('user can upload an asset', function (): void {
     Storage::fake('public');
 
     $user = User::factory()->create(['role' => 'admin']);
@@ -30,7 +30,7 @@ test('user can upload an asset', function () {
         ->call('uploadAsset')
         ->assertOk();
 
-    $asset = Asset::latest()->first();
+    $asset = Asset::query()->latest()->first();
     expect($asset)->not->toBeNull()
         ->and($asset->original_filename)->toBe('test.jpg')
         ->and($asset->mime_type)->toBe('image/jpeg')
@@ -40,7 +40,7 @@ test('user can upload an asset', function () {
     expect(Storage::disk('public')->exists($asset->path))->toBeTrue();
 });
 
-test('user can select an asset', function () {
+test('user can select an asset', function (): void {
     $user = User::factory()->create();
     $asset = Asset::factory()->create([
         'uploaded_by' => $user->id,
@@ -53,7 +53,7 @@ test('user can select an asset', function () {
     expect($component->get('selectedAsset.id'))->toBe($asset->id);
 });
 
-test('user can create folders', function () {
+test('user can create folders', function (): void {
     Storage::fake('public');
 
     $user = User::factory()->create(['role' => 'editor']);
@@ -64,10 +64,10 @@ test('user can create folders', function () {
         ->call('createFolder')
         ->assertOk();
 
-    expect(Folder::where('name', 'Test Folder')->exists())->toBeTrue();
+    expect(Folder::query()->where('name', 'Test Folder')->exists())->toBeTrue();
 });
 
-test('user can navigate folders', function () {
+test('user can navigate folders', function (): void {
     Storage::fake('public');
     $user = User::factory()->create();
 
@@ -80,7 +80,7 @@ test('user can navigate folders', function () {
     expect($component->get('currentFolder'))->toBe('/test-folder');
 });
 
-test('user can search assets', function () {
+test('user can search assets', function (): void {
     $user = User::factory()->create(['role' => 'admin']);
 
     Livewire::actingAs($user)

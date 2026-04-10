@@ -83,8 +83,8 @@ final class Browser extends Component
     {
         return Asset::query()
             ->when($this->search, fn ($q) => $q
-                ->where('original_filename', 'like', "%{$this->search}%")
-                ->orWhere('mime_type', 'like', "%{$this->search}%")
+                ->where('original_filename', 'like', sprintf('%%%s%%', $this->search))
+                ->orWhere('mime_type', 'like', sprintf('%%%s%%', $this->search))
             )
             ->when(
                 $this->mode === 'image',

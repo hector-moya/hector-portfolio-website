@@ -75,7 +75,7 @@ final class FieldTypeRegistry
         $data = $element['config'] ?? [];
         $validator = Validator::make($data, $rules);
         throw_if($validator->fails(), ValidationException::withMessages(
-            collect($validator->errors()->toArray())->mapWithKeys(fn ($messages, $key): array => ["elements.$index.config.$key" => $messages])->all()
+            collect($validator->errors()->toArray())->mapWithKeys(fn ($messages, $key): array => [sprintf('elements.%d.config.%s', $index, $key) => $messages])->all()
         ));
     }
 }

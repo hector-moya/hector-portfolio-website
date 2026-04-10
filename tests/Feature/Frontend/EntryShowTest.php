@@ -7,11 +7,11 @@ use App\Models\Collection;
 use App\Models\Entry;
 use App\Models\Field;
 
-test('entry show returns 404 for unknown collection', function () {
+test('entry show returns 404 for unknown collection', function (): void {
     $this->get('/nonexistent/some-entry')->assertNotFound();
 });
 
-test('entry show returns 404 for draft entry', function () {
+test('entry show returns 404 for draft entry', function (): void {
     $blueprint = Blueprint::factory()->create();
     Collection::factory()->create([
         'slug' => 'my-blog',
@@ -27,7 +27,7 @@ test('entry show returns 404 for draft entry', function () {
     $this->get('/my-blog/draft-post')->assertNotFound();
 });
 
-test('entry show renders published entry with field values', function () {
+test('entry show renders published entry with field values', function (): void {
     $blueprint = Blueprint::factory()->create();
     Collection::factory()->create([
         'slug' => 'my-blog',
@@ -61,7 +61,7 @@ test('entry show renders published entry with field values', function () {
         ->assertSee('This is the excerpt.');
 });
 
-test('entry show uses correct template from blueprint settings', function () {
+test('entry show uses correct template from blueprint settings', function (): void {
     $blueprint = Blueprint::factory()->create([
         'settings' => ['detail_template' => 'minimal'],
     ]);

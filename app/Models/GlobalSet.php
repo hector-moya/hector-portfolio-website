@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use App\Models\Concerns\HasBlueprintFields;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
@@ -24,15 +25,16 @@ use Illuminate\Support\Carbon;
  * @property-read Collection<int, GlobalVariable> $variables
  * @property-read int|null $variables_count
  *
- * @method static \Illuminate\Database\Eloquent\Builder<static>|GlobalSet newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|GlobalSet newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|GlobalSet query()
+ * @method static Builder<static>|GlobalSet newModelQuery()
+ * @method static Builder<static>|GlobalSet newQuery()
+ * @method static Builder<static>|GlobalSet query()
  *
  * @mixin Model
  */
 final class GlobalSet extends Model
 {
-    use HasBlueprintFields, HasUlids;
+    use HasBlueprintFields;
+    use HasUlids;
     use HasFactory;
 
     protected $table = 'globals';

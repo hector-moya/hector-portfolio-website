@@ -23,8 +23,8 @@ final class Index extends Component
     {
         return NavigationModel::query()
             ->when($this->search, function ($query): void {
-                $query->where('name', 'like', "%{$this->search}%")
-                    ->orWhere('handle', 'like', "%{$this->search}%");
+                $query->where('name', 'like', sprintf('%%%s%%', $this->search))
+                    ->orWhere('handle', 'like', sprintf('%%%s%%', $this->search));
             })
             ->latest()
             ->paginate(10);

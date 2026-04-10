@@ -7,7 +7,7 @@ namespace Tests\Feature\View\Components;
 use App\Models\Navigation;
 use App\Models\NavigationItem;
 
-test('menu component can render navigation', function () {
+test('menu component can render navigation', function (): void {
     $navigation = Navigation::factory()->create([
         'name' => 'Main Menu',
         'handle' => 'main-menu',
@@ -32,7 +32,7 @@ test('menu component can render navigation', function () {
         ->assertSee($child->title);
 });
 
-test('menu component handles empty navigation', function () {
+test('menu component handles empty navigation', function (): void {
     $view = $this->blade(
         '<x-menu handle="non-existent" />'
     );

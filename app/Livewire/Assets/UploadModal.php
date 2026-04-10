@@ -89,8 +89,8 @@ final class UploadModal extends Component
         return Asset::query()
             ->when($this->searchQuery, function ($query): void {
                 $query->where(function ($q): void {
-                    $q->where('filename', 'like', "%{$this->searchQuery}%")
-                        ->orWhere('original_filename', 'like', "%{$this->searchQuery}%");
+                    $q->where('filename', 'like', sprintf('%%%s%%', $this->searchQuery))
+                        ->orWhere('original_filename', 'like', sprintf('%%%s%%', $this->searchQuery));
                 });
             })
             ->when($this->currentFolderId, fn ($query) => $query->where('folder_id', $this->currentFolderId))

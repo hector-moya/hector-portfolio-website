@@ -22,12 +22,12 @@ test('admin can send an invitation', function (): void {
     $admin = User::factory()->admin()->create();
     $this->actingAs($admin);
 
-    app(InviteUser::class)->invite(
+    resolve(InviteUser::class)->invite(
         email: 'invited@example.com',
         role: 'editor',
     );
 
-    expect(Invitation::where('email', 'invited@example.com')->exists())->toBeTrue();
+    expect(Invitation::query()->where('email', 'invited@example.com')->exists())->toBeTrue();
     Mail::assertQueued(InvitationMail::class, fn ($mail) => $mail->hasTo('invited@example.com'));
 });
 
@@ -37,12 +37,12 @@ test('invitation expires in 48 hours', function (): void {
     $admin = User::factory()->admin()->create();
     $this->actingAs($admin);
 
-    app(InviteUser::class)->invite(
+    resolve(InviteUser::class)->invite(
         email: 'invited@example.com',
         role: 'viewer',
     );
 
-    $invitation = Invitation::where('email', 'invited@example.com')->first();
+    $invitation = Invitation::query()->where('email', 'invited@example.com')->first();
 
     expect($invitation->expires_at)->toBeBetween(
         now()->addHours(47),
@@ -54,7 +54,7 @@ test('non-admin cannot send an invitation', function (): void {
     $editor = User::factory()->editor()->create();
     $this->actingAs($editor);
 
-    expect(fn () => app(InviteUser::class)->invite(
+    expect(fn () => resolve(InviteUser::class)->invite(
         email: 'invited@example.com',
         role: 'viewer',
     ))->toThrow(AuthorizationException::class);
@@ -66,13 +66,13 @@ test('invitation email contains registration link with token', function (): void
     $admin = User::factory()->admin()->create();
     $this->actingAs($admin);
 
-    app(InviteUser::class)->invite(
+    resolve(InviteUser::class)->invite(
         email: 'invited@example.com',
         role: 'viewer',
     );
 
-    Mail::assertQueued(InvitationMail::class, function (InvitationMail $mail) {
-        $invitation = Invitation::where('email', 'invited@example.com')->first();
+    Mail::assertQueued(InvitationMail::class, function (InvitationMail $mail): bool {
+        $invitation = Invitation::query()->where('email', 'invited@example.com')->first();
 
         return $mail->invitation->token === $invitation->token;
     });
@@ -115,7 +115,7 @@ test('registering in approval mode sets user status to pending', function (): vo
         ->call('register')
         ->assertHasNoErrors();
 
-    $user = User::where('email', 'pending@example.com')->first();
+    $user = User::query()->where('email', 'pending@example.com')->first();
     expect($user->status)->toBe('pending');
 });
 

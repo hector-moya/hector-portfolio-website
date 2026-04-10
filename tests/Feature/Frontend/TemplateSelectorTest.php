@@ -12,11 +12,11 @@ use Livewire\Livewire;
 
 use function Pest\Laravel\actingAs;
 
-beforeEach(function () {
+beforeEach(function (): void {
     actingAs(User::factory()->create(['role' => 'admin']));
 });
 
-test('collection create saves index_template in settings', function () {
+test('collection create saves index_template in settings', function (): void {
     $blueprint = Blueprint::factory()->create();
 
     Livewire::test(CollectionsCreate::class)
@@ -26,10 +26,10 @@ test('collection create saves index_template in settings', function () {
         ->call('save')
         ->assertHasNoErrors();
 
-    expect(Collection::where('name', 'Blog')->first()->settings['index_template'])->toBe('magazine');
+    expect(Collection::query()->where('name', 'Blog')->first()->settings['index_template'])->toBe('magazine');
 });
 
-test('collection edit saves index_template in settings', function () {
+test('collection edit saves index_template in settings', function (): void {
     $collection = Collection::factory()->create(['settings' => ['index_template' => 'card-grid']]);
 
     Livewire::test(CollectionsEdit::class, ['collection' => $collection])
@@ -40,7 +40,7 @@ test('collection edit saves index_template in settings', function () {
     expect($collection->fresh()->settings['index_template'])->toBe('list');
 });
 
-test('blueprint edit saves detail_template in settings', function () {
+test('blueprint edit saves detail_template in settings', function (): void {
     $blueprint = Blueprint::factory()->create();
 
     Livewire::test(BlueprintsEdit::class, ['blueprint' => $blueprint])
@@ -51,7 +51,7 @@ test('blueprint edit saves detail_template in settings', function () {
     expect($blueprint->fresh()->settings['detail_template'])->toBe('full-width');
 });
 
-test('collection edit clears index_template when set to empty', function () {
+test('collection edit clears index_template when set to empty', function (): void {
     $collection = Collection::factory()->create(['settings' => ['index_template' => 'magazine']]);
 
     Livewire::test(CollectionsEdit::class, ['collection' => $collection])
@@ -62,7 +62,7 @@ test('collection edit clears index_template when set to empty', function () {
     expect($collection->fresh()->settings['index_template'])->toBeNull();
 });
 
-test('blueprint edit clears detail_template when set to empty', function () {
+test('blueprint edit clears detail_template when set to empty', function (): void {
     $blueprint = Blueprint::factory()->create(['settings' => ['detail_template' => 'full-width']]);
 
     Livewire::test(BlueprintsEdit::class, ['blueprint' => $blueprint])

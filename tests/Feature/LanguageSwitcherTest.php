@@ -6,13 +6,13 @@ use App\Livewire\LanguageSwitcher;
 use Illuminate\Support\Facades\App;
 use Livewire\Livewire;
 
-test('language switcher can be rendered', function () {
+test('language switcher can be rendered', function (): void {
     $component = Livewire::test(LanguageSwitcher::class);
 
     $component->assertStatus(200);
 });
 
-test('current locale is set correctly', function () {
+test('current locale is set correctly', function (): void {
     App::setLocale('es');
 
     $component = Livewire::test(LanguageSwitcher::class);
@@ -20,7 +20,7 @@ test('current locale is set correctly', function () {
     expect($component->get('currentLocale'))->toBe('es');
 });
 
-test('switching language updates locale and session', function () {
+test('switching language updates locale and session', function (): void {
 
     $component = Livewire::test(LanguageSwitcher::class, [
         'currentRoute' => 'blueprints.index',
@@ -32,7 +32,7 @@ test('switching language updates locale and session', function () {
         ->and($component->get('currentLocale'))->toBe('es');
 });
 
-test('switching to invalid locale does nothing', function () {
+test('switching to invalid locale does nothing', function (): void {
     App::setLocale('en');
 
     $component = Livewire::test(LanguageSwitcher::class)
@@ -43,7 +43,7 @@ test('switching to invalid locale does nothing', function () {
         ->and($component->get('currentLocale'))->toBe('en');
 });
 
-test('switching language dispatches event', function () {
+test('switching language dispatches event', function (): void {
     Livewire::test(LanguageSwitcher::class, [
         'currentRoute' => 'blueprints.index',
     ])
@@ -51,13 +51,13 @@ test('switching language dispatches event', function () {
         ->assertDispatched('language-changed');
 });
 
-test('language names are displayed correctly', function () {
+test('language names are displayed correctly', function (): void {
     Livewire::test(LanguageSwitcher::class)
         ->assertSee('English')
         ->assertSee('Español');
 });
 
-test('translations are loaded correctly', function () {
+test('translations are loaded correctly', function (): void {
     App::setLocale('es');
 
     expect(__('Dashboard'))->toBe('Panel')

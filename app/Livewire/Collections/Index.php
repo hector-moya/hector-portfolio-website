@@ -44,8 +44,8 @@ final class Index extends Component
         return CollectionModel::query()
             ->with('blueprint')
             ->withCount('entries')
-            ->when($this->search, fn ($query) => $query->where('name', 'like', "%{$this->search}%")
-                ->orWhere('slug', 'like', "%{$this->search}%"))
+            ->when($this->search, fn ($query) => $query->where('name', 'like', sprintf('%%%s%%', $this->search))
+                ->orWhere('slug', 'like', sprintf('%%%s%%', $this->search)))
             ->tap(fn ($query) => $this->sortBy !== '' && $this->sortBy !== '0' ? $query->orderBy($this->sortBy, $this->sortDirection) : $query)
             ->latest()
             ->paginate(10);

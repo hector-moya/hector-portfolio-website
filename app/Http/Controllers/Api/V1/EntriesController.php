@@ -19,7 +19,7 @@ final class EntriesController extends Controller
             ->where('status', 'published')
             ->with(['collection', 'author', 'elements'])
             ->when($request->collection, fn ($q) => $q->whereHas('collection', fn ($c) => $c->where('slug', $request->collection)))
-            ->when($request->search, fn ($q) => $q->where('title', 'like', "%{$request->search}%"))
+            ->when($request->search, fn ($q) => $q->where('title', 'like', sprintf('%%%s%%', $request->search)))
             ->latest('published_at')
             ->paginate($request->integer('per_page', 15));
 

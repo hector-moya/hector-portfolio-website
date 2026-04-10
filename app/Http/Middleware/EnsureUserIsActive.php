@@ -16,9 +16,11 @@ final class EnsureUserIsActive
         if (! Auth::check()) {
             return $next($request);
         }
+
         if ((bool) Auth::user()->isActive()) {
             return $next($request);
         }
+
         if (! $request->routeIs(['pending-approval', 'verification.notice', 'verification.verify', 'logout'])) {
             return to_route('pending-approval');
         }

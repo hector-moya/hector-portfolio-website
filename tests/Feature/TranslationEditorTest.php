@@ -8,7 +8,7 @@ use App\Models\Translation;
 use App\Models\User;
 use Livewire\Livewire;
 
-test('translation editor can be rendered', function () {
+test('translation editor can be rendered', function (): void {
     $blueprint = Blueprint::factory()->create([
         'name' => 'Test Blueprint',
     ]);
@@ -19,7 +19,7 @@ test('translation editor can be rendered', function () {
     ])->assertStatus(200);
 });
 
-test('translations can be updated', function () {
+test('translations can be updated', function (): void {
     $user = User::factory()->create(['role' => 'editor']);
 
     $blueprint = Blueprint::factory()->create([
@@ -31,7 +31,7 @@ test('translations can be updated', function () {
         'field' => 'name',
     ])->call('updateTranslation', 'es', 'Blueprint de Prueba');
 
-    $translation = Translation::where('translatable_id', $blueprint->id)
+    $translation = Translation::query()->where('translatable_id', $blueprint->id)
         ->where('translatable_type', $blueprint::class)
         ->where('locale', 'es')
         ->where('field', 'name')
@@ -41,7 +41,7 @@ test('translations can be updated', function () {
         ->and($translation->value)->toBe('Blueprint de Prueba');
 });
 
-test('translations are loaded correctly', function () {
+test('translations are loaded correctly', function (): void {
     $blueprint = Blueprint::factory()->create([
         'name' => 'Test Blueprint',
     ]);
@@ -59,7 +59,7 @@ test('translations are loaded correctly', function () {
         ]);
 });
 
-test('translation changes dispatch event', function () {
+test('translation changes dispatch event', function (): void {
     $user = User::factory()->create(['role' => 'editor']);
 
     $blueprint = Blueprint::factory()->create([

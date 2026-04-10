@@ -49,7 +49,7 @@ final class Import extends Component
         $this->skippedCount = $result['skipped'];
         $this->imported = true;
 
-        $this->dispatch('notify', message: "{$this->importedCount} entries imported, {$this->skippedCount} skipped.");
+        $this->dispatch('notify', message: sprintf('%d entries imported, %d skipped.', $this->importedCount, $this->skippedCount));
     }
 
     public function render(): View|Factory

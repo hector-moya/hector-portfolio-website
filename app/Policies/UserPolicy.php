@@ -61,7 +61,7 @@ final class UserPolicy
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, User $model): bool
+    public function restore(User $user): bool
     {
         return $user->isAdmin(); // Only admins can restore
     }
@@ -77,7 +77,7 @@ final class UserPolicy
     /**
      * Determine whether the user can approve a pending registration.
      */
-    public function approve(User $user, User $model): bool
+    public function approve(User $user): bool
     {
         return $user->isAdmin();
     }

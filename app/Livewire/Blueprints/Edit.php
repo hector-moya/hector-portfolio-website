@@ -16,8 +16,9 @@ use Livewire\Component;
 
 final class Edit extends Component
 {
-    use HasSlug, Sections, Tabs;
-
+    use HasSlug;
+    use Sections;
+    use Tabs;
     public ?Blueprint $blueprint = null;
 
     public BlueprintForm $form;

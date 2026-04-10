@@ -10,11 +10,11 @@ use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
 
-beforeEach(function () {
+beforeEach(function (): void {
     Storage::fake('public');
 });
 
-test('edit modal can be rendered', function () {
+test('edit modal can be rendered', function (): void {
     $user = User::factory()->create();
 
     Livewire::actingAs($user)
@@ -22,7 +22,7 @@ test('edit modal can be rendered', function () {
         ->assertOk();
 });
 
-test('open event loads asset data into form', function () {
+test('open event loads asset data into form', function (): void {
     $user = User::factory()->create(['role' => 'admin']);
     $asset = Asset::factory()->create([
         'uploaded_by' => $user->id,
@@ -44,7 +44,7 @@ test('open event loads asset data into form', function () {
         ->assertSet('copyright', '© 2025 Me');
 });
 
-test('can save updated metadata', function () {
+test('can save updated metadata', function (): void {
     $user = User::factory()->create(['role' => 'admin']);
     $asset = Asset::factory()->create(['uploaded_by' => $user->id]);
 
@@ -65,7 +65,7 @@ test('can save updated metadata', function () {
         ->and($asset->copyright)->toBe('© 2025');
 });
 
-test('usage count reflects entries referencing the asset', function () {
+test('usage count reflects entries referencing the asset', function (): void {
     $user = User::factory()->create(['role' => 'admin']);
     $asset = Asset::factory()->create(['uploaded_by' => $user->id]);
 
@@ -83,7 +83,7 @@ test('usage count reflects entries referencing the asset', function () {
     expect($component->get('usageCount'))->toBe(1);
 });
 
-test('non-admin cannot update another users asset', function () {
+test('non-admin cannot update another users asset', function (): void {
     $owner = User::factory()->create(['role' => 'editor']);
     $other = User::factory()->create(['role' => 'editor']);
     $asset = Asset::factory()->create(['uploaded_by' => $owner->id]);

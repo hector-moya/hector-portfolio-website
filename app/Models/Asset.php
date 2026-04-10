@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Database\Factories\AssetFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -40,36 +42,36 @@ use Illuminate\Support\Facades\Storage;
  * @property-read User|null $updater
  * @property-read User $uploader
  *
- * @method static \Database\Factories\AssetFactory factory($count = null, $state = [])
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Asset newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Asset newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Asset onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Asset query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Asset whereAltText($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Asset whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Asset whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Asset whereDisk($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Asset whereFilename($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Asset whereFolderId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Asset whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Asset whereMeta($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Asset whereMimeType($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Asset whereOriginalFilename($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Asset wherePath($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Asset whereSize($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Asset whereTitle($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Asset whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Asset whereUpdatedBy($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Asset whereUploadedBy($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Asset withTrashed(bool $withTrashed = true)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Asset withoutTrashed()
+ * @method static AssetFactory factory($count = null, $state = [])
+ * @method static Builder<static>|Asset newModelQuery()
+ * @method static Builder<static>|Asset newQuery()
+ * @method static Builder<static>|Asset onlyTrashed()
+ * @method static Builder<static>|Asset query()
+ * @method static Builder<static>|Asset whereAltText($value)
+ * @method static Builder<static>|Asset whereCreatedAt($value)
+ * @method static Builder<static>|Asset whereDeletedAt($value)
+ * @method static Builder<static>|Asset whereDisk($value)
+ * @method static Builder<static>|Asset whereFilename($value)
+ * @method static Builder<static>|Asset whereFolderId($value)
+ * @method static Builder<static>|Asset whereId($value)
+ * @method static Builder<static>|Asset whereMeta($value)
+ * @method static Builder<static>|Asset whereMimeType($value)
+ * @method static Builder<static>|Asset whereOriginalFilename($value)
+ * @method static Builder<static>|Asset wherePath($value)
+ * @method static Builder<static>|Asset whereSize($value)
+ * @method static Builder<static>|Asset whereTitle($value)
+ * @method static Builder<static>|Asset whereUpdatedAt($value)
+ * @method static Builder<static>|Asset whereUpdatedBy($value)
+ * @method static Builder<static>|Asset whereUploadedBy($value)
+ * @method static Builder<static>|Asset withTrashed(bool $withTrashed = true)
+ * @method static Builder<static>|Asset withoutTrashed()
  *
  * @mixin Model
  */
 final class Asset extends Model
 {
-    use HasFactory, SoftDeletes;
-
+    use HasFactory;
+    use SoftDeletes;
     protected $fillable = [
         'filename',
         'original_filename',

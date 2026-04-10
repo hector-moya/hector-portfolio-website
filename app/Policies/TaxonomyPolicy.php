@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Policies;
 
-use App\Models\Taxonomy;
 use App\Models\User;
 
 final class TaxonomyPolicy
@@ -20,7 +19,7 @@ final class TaxonomyPolicy
     /**
      * Determine whether the user can view the taxonomy.
      */
-    public function view(User $user, Taxonomy $taxonomy): bool
+    public function view(): bool
     {
         return true;
     }
@@ -36,7 +35,7 @@ final class TaxonomyPolicy
     /**
      * Determine whether the user can update the taxonomy.
      */
-    public function update(User $user, Taxonomy $taxonomy): bool
+    public function update(User $user): bool
     {
         return $user->canEdit();
     }
@@ -52,7 +51,7 @@ final class TaxonomyPolicy
     /**
      * Determine whether the user can restore the taxonomy.
      */
-    public function restore(User $user, Taxonomy $taxonomy): bool
+    public function restore(User $user): bool
     {
         return $user->isAdmin();
     }
@@ -60,7 +59,7 @@ final class TaxonomyPolicy
     /**
      * Determine whether the user can permanently delete the taxonomy.
      */
-    public function forceDelete(User $user, Taxonomy $taxonomy): bool
+    public function forceDelete(User $user): bool
     {
         return $user->isAdmin();
     }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Database\Factories\NavigationItemFactory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -33,23 +34,23 @@ use Illuminate\Support\Carbon;
  * @property-read Navigation $navigation
  * @property-read NavigationItem|null $parent
  *
- * @method static \Database\Factories\NavigationItemFactory factory($count = null, $state = [])
- * @method static \Illuminate\Database\Eloquent\Builder<static>|NavigationItem newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|NavigationItem newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|NavigationItem query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|NavigationItem whereClass($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|NavigationItem whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|NavigationItem whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|NavigationItem whereIsActive($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|NavigationItem whereLinkableId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|NavigationItem whereLinkableType($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|NavigationItem whereNavigationId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|NavigationItem whereOrder($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|NavigationItem whereParentId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|NavigationItem whereTarget($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|NavigationItem whereTitle($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|NavigationItem whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|NavigationItem whereUrl($value)
+ * @method static NavigationItemFactory factory($count = null, $state = [])
+ * @method static Builder<static>|NavigationItem newModelQuery()
+ * @method static Builder<static>|NavigationItem newQuery()
+ * @method static Builder<static>|NavigationItem query()
+ * @method static Builder<static>|NavigationItem whereClass($value)
+ * @method static Builder<static>|NavigationItem whereCreatedAt($value)
+ * @method static Builder<static>|NavigationItem whereId($value)
+ * @method static Builder<static>|NavigationItem whereIsActive($value)
+ * @method static Builder<static>|NavigationItem whereLinkableId($value)
+ * @method static Builder<static>|NavigationItem whereLinkableType($value)
+ * @method static Builder<static>|NavigationItem whereNavigationId($value)
+ * @method static Builder<static>|NavigationItem whereOrder($value)
+ * @method static Builder<static>|NavigationItem whereParentId($value)
+ * @method static Builder<static>|NavigationItem whereTarget($value)
+ * @method static Builder<static>|NavigationItem whereTitle($value)
+ * @method static Builder<static>|NavigationItem whereUpdatedAt($value)
+ * @method static Builder<static>|NavigationItem whereUrl($value)
  *
  * @mixin Model
  */

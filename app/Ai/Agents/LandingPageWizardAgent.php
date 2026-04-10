@@ -22,7 +22,7 @@ final class LandingPageWizardAgent implements Agent, HasStructuredOutput
             ->map(function (array $type, string $key): string {
                 $fields = collect($type['fields'])
                     ->map(function (array $f, string $handle): string {
-                        $line = "    - {$handle} ({$f['type']}): {$f['label']}";
+                        $line = sprintf('    - %s (%s): %s', $handle, $f['type'], $f['label']);
                         if (isset($f['options'])) {
                             $line .= ' [options: '.implode(', ', array_keys($f['options'])).']';
                         }

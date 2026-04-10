@@ -12,7 +12,7 @@ final class BlueprintSectionPresets
 {
     public static function addPreset(Section $section, string $preset): void
     {
-        $method = Str::camel("add_{$preset}_fields");
+        $method = Str::camel(sprintf('add_%s_fields', $preset));
 
         if (method_exists(self::class, $method)) {
             self::$method($section);

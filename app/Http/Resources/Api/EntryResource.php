@@ -23,6 +23,7 @@ final class EntryResource extends JsonResource
             if (isset($element->meta['parent_handle'])) {
                 continue;
             }
+
             $fields[$element->handle] = $element->getElementValue();
         }
 

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Database\Factories\FolderFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -31,23 +33,23 @@ use Illuminate\Support\Carbon;
  * @property-read Folder|null $parent
  * @property-read User|null $updater
  *
- * @method static \Database\Factories\FolderFactory factory($count = null, $state = [])
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Folder newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Folder newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Folder onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Folder query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Folder root()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Folder whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Folder whereCreatedBy($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Folder whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Folder whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Folder whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Folder whereParentId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Folder wherePath($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Folder whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Folder whereUpdatedBy($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Folder withTrashed(bool $withTrashed = true)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Folder withoutTrashed()
+ * @method static FolderFactory factory($count = null, $state = [])
+ * @method static Builder<static>|Folder newModelQuery()
+ * @method static Builder<static>|Folder newQuery()
+ * @method static Builder<static>|Folder onlyTrashed()
+ * @method static Builder<static>|Folder query()
+ * @method static Builder<static>|Folder root()
+ * @method static Builder<static>|Folder whereCreatedAt($value)
+ * @method static Builder<static>|Folder whereCreatedBy($value)
+ * @method static Builder<static>|Folder whereDeletedAt($value)
+ * @method static Builder<static>|Folder whereId($value)
+ * @method static Builder<static>|Folder whereName($value)
+ * @method static Builder<static>|Folder whereParentId($value)
+ * @method static Builder<static>|Folder wherePath($value)
+ * @method static Builder<static>|Folder whereUpdatedAt($value)
+ * @method static Builder<static>|Folder whereUpdatedBy($value)
+ * @method static Builder<static>|Folder withTrashed(bool $withTrashed = true)
+ * @method static Builder<static>|Folder withoutTrashed()
  *
  * @mixin Model
  */
@@ -109,6 +111,7 @@ final class Folder extends Model
         if ($trim === '') {
             return [];
         }
+
         $bits = explode('/', $trim);
         $paths = [];
         $accum = '';

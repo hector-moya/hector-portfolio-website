@@ -11,11 +11,11 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
 
-beforeEach(function () {
+beforeEach(function (): void {
     Storage::fake('public');
 });
 
-test('index shows list of assets', function () {
+test('index shows list of assets', function (): void {
     $user = User::factory()->create(['role' => 'admin']);
     Asset::factory()->create([
         'uploaded_by' => $user->id,
@@ -28,7 +28,7 @@ test('index shows list of assets', function () {
         ->assertSee('test-file.jpg');
 });
 
-test('can filter assets by folder', function () {
+test('can filter assets by folder', function (): void {
     $user = User::factory()->create();
     $imagesFolder = Folder::factory()->create(['path' => '/images']);
     $documentsFolder = Folder::factory()->create(['path' => '/documents']);
@@ -43,7 +43,7 @@ test('can filter assets by folder', function () {
         ->assertDontSee($asset2->filename);
 });
 
-test('can search assets', function () {
+test('can search assets', function (): void {
     $user = User::factory()->create();
     $asset1 = Asset::factory()->create(['original_filename' => 'findme.jpg', 'uploaded_by' => $user->id]);
     $asset2 = Asset::factory()->create(['original_filename' => 'other.jpg', 'uploaded_by' => $user->id]);
@@ -55,7 +55,7 @@ test('can search assets', function () {
         ->assertDontSee($asset2->filename);
 });
 
-test('can download asset', function () {
+test('can download asset', function (): void {
     $user = User::factory()->create();
     $file = UploadedFile::fake()->create('test.pdf');
 
@@ -76,7 +76,7 @@ test('can download asset', function () {
         ->assertDispatched('download-file');
 });
 
-test('can move asset to different folder', function () {
+test('can move asset to different folder', function (): void {
     $user = User::factory()->create();
     $file = UploadedFile::fake()->create('test.pdf');
     Storage::disk('public')->putFileAs('/', $file, $file->hashName());
@@ -106,7 +106,7 @@ test('can move asset to different folder', function () {
         ->and($asset->path)->toBe('documents/'.$file->hashName());
 });
 
-test('moving asset also moves thumbnail and medium variant files', function () {
+test('moving asset also moves thumbnail and medium variant files', function (): void {
     $user = User::factory()->create();
     $file = UploadedFile::fake()->image('photo.jpg');
     Storage::disk('public')->putFileAs('/', $file, $file->hashName());
@@ -140,7 +140,7 @@ test('moving asset also moves thumbnail and medium variant files', function () {
         ->and(Storage::disk('public')->exists('images/medium_'.$file->hashName()))->toBeTrue();
 });
 
-test('can delete asset', function () {
+test('can delete asset', function (): void {
     $user = User::factory()->create();
     $file = UploadedFile::fake()->create('test.pdf');
     Storage::disk('public')->putFileAs('/', $file, $file->hashName());
@@ -156,6 +156,6 @@ test('can delete asset', function () {
         ->test(Index::class)
         ->call('delete', $asset->id);
 
-    expect(Asset::count())->toBe(0);
+    expect(Asset::query()->count())->toBe(0);
     expect(Storage::disk('public')->exists($file->hashName()))->toBeFalse();
 });

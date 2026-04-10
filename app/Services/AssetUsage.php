@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Models\Entry;
-use App\Models\EntryElement;
 use Illuminate\Support\Collection;
 
 final class AssetUsage

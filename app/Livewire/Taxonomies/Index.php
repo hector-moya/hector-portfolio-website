@@ -41,7 +41,7 @@ final class Index extends Component
     {
         return Taxonomy::query()
             ->withCount('terms')
-            ->when($this->search, fn ($query) => $query->where('name', 'like', "%{$this->search}%"))
+            ->when($this->search, fn ($query) => $query->where('name', 'like', sprintf('%%%s%%', $this->search)))
             ->tap(fn ($query) => $this->sortBy !== '' && $this->sortBy !== '0' ? $query->orderBy($this->sortBy, $this->sortDirection) : $query)
             ->latest()
             ->paginate(10);

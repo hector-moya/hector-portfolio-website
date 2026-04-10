@@ -70,8 +70,8 @@ final class Index extends Component
             ->with(['collection', 'blueprint', 'author'])
             ->when($this->search, function ($query): void {
                 $query->where(function ($q): void {
-                    $q->where('title', 'like', "%{$this->search}%")
-                        ->orWhere('slug', 'like', "%{$this->search}%");
+                    $q->where('title', 'like', sprintf('%%%s%%', $this->search))
+                        ->orWhere('slug', 'like', sprintf('%%%s%%', $this->search));
                 });
             })
             ->when($this->collectionFilter, function ($query): void {
@@ -174,7 +174,7 @@ final class Index extends Component
         $this->selected = [];
         $this->selectAll = false;
 
-        $this->dispatch('notify', message: "{$count} entries published successfully.");
+        $this->dispatch('notify', message: $count . ' entries published successfully.');
     }
 
     public function bulkUnpublish(): void
@@ -191,7 +191,7 @@ final class Index extends Component
         $this->selected = [];
         $this->selectAll = false;
 
-        $this->dispatch('notify', message: "{$count} entries unpublished successfully.");
+        $this->dispatch('notify', message: $count . ' entries unpublished successfully.');
     }
 
     public function bulkDelete(): void
@@ -207,7 +207,7 @@ final class Index extends Component
         $this->selectAll = false;
 
         $this->dispatch('entry-deleted');
-        $this->dispatch('notify', message: "{$count} entries deleted successfully.");
+        $this->dispatch('notify', message: $count . ' entries deleted successfully.');
     }
 
     #[Title('Entries')]

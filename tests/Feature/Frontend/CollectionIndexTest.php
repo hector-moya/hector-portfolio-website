@@ -6,11 +6,11 @@ use App\Models\Blueprint;
 use App\Models\Collection;
 use App\Models\Entry;
 
-test('collection index returns 404 for unknown slug', function () {
+test('collection index returns 404 for unknown slug', function (): void {
     $this->get('/nonexistent-collection')->assertNotFound();
 });
 
-test('collection index renders published entries', function () {
+test('collection index renders published entries', function (): void {
     $blueprint = Blueprint::factory()->create();
     $collection = Collection::factory()->create([
         'slug' => 'my-blog',
@@ -36,7 +36,7 @@ test('collection index renders published entries', function () {
         ->assertDontSee('Draft Entry');
 });
 
-test('collection index uses correct template from settings', function () {
+test('collection index uses correct template from settings', function (): void {
     $blueprint = Blueprint::factory()->create();
     $collection = Collection::factory()->create([
         'slug' => 'my-portfolio',

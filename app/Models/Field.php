@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Database\Factories\FieldFactory;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Collection;
@@ -36,36 +37,35 @@ use Illuminate\Support\Carbon;
  * @property-read int|null $entry_elements_count
  * @property-read Field|null $parent
  *
- * @method static \Database\Factories\FieldFactory factory($count = null, $state = [])
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Field newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Field newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Field onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Field ordered()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Field query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Field whereBlueprintId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Field whereConfig($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Field whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Field whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Field whereHandle($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Field whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Field whereInstructions($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Field whereIsRequired($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Field whereLabel($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Field whereOrder($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Field whereParentId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Field whereSectionId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Field whereType($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Field whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Field withTrashed(bool $withTrashed = true)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Field withoutTrashed()
+ * @method static FieldFactory factory($count = null, $state = [])
+ * @method static Builder<static>|Field newModelQuery()
+ * @method static Builder<static>|Field newQuery()
+ * @method static Builder<static>|Field onlyTrashed()
+ * @method static Builder<static>|Field ordered()
+ * @method static Builder<static>|Field query()
+ * @method static Builder<static>|Field whereBlueprintId($value)
+ * @method static Builder<static>|Field whereConfig($value)
+ * @method static Builder<static>|Field whereCreatedAt($value)
+ * @method static Builder<static>|Field whereDeletedAt($value)
+ * @method static Builder<static>|Field whereHandle($value)
+ * @method static Builder<static>|Field whereId($value)
+ * @method static Builder<static>|Field whereInstructions($value)
+ * @method static Builder<static>|Field whereIsRequired($value)
+ * @method static Builder<static>|Field whereLabel($value)
+ * @method static Builder<static>|Field whereOrder($value)
+ * @method static Builder<static>|Field whereParentId($value)
+ * @method static Builder<static>|Field whereSectionId($value)
+ * @method static Builder<static>|Field whereType($value)
+ * @method static Builder<static>|Field whereUpdatedAt($value)
+ * @method static Builder<static>|Field withTrashed(bool $withTrashed = true)
+ * @method static Builder<static>|Field withoutTrashed()
  *
  * @mixin Model
  */
 final class Field extends Model
 {
-    /** @use HasFactory<FieldFactory> */
-    use HasFactory, SoftDeletes;
-
+    use HasFactory;
+    use SoftDeletes;
     protected $fillable = [
         'blueprint_id',
         'section_id',

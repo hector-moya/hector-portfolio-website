@@ -10,15 +10,15 @@ use Livewire\Livewire;
 
 use function Pest\Laravel\actingAs;
 
-beforeEach(function () {
+beforeEach(function (): void {
     actingAs(User::factory()->create(['role' => 'admin']));
 });
 
-test('blueprint ai wizard page loads', function () {
+test('blueprint ai wizard page loads', function (): void {
     $this->get(route('blueprints.ai-wizard'))->assertOk();
 });
 
-test('generate step calls the AI agent and sets proposal', function () {
+test('generate step calls the AI agent and sets proposal', function (): void {
     BlueprintWizardAgent::fake([[
         'name' => 'Blog Post',
         'slug' => 'blog-post',
@@ -47,7 +47,7 @@ test('generate step calls the AI agent and sets proposal', function () {
         ->assertSet('proposal.name', 'Blog Post');
 });
 
-test('save creates blueprint with tabs sections and fields', function () {
+test('save creates blueprint with tabs sections and fields', function (): void {
     BlueprintWizardAgent::fake([[
         'name' => 'Portfolio Item',
         'slug' => 'portfolio-item',
@@ -76,14 +76,14 @@ test('save creates blueprint with tabs sections and fields', function () {
         ->call('save')
         ->assertRedirectContains('/blueprints/');
 
-    $blueprint = Blueprint::where('slug', 'portfolio-item')->first();
+    $blueprint = Blueprint::query()->where('slug', 'portfolio-item')->first();
     expect($blueprint)->not->toBeNull();
     expect($blueprint->tabs)->toHaveCount(1);
     expect($blueprint->tabs->first()->sections)->toHaveCount(1);
     expect($blueprint->tabs->first()->sections->first()->fields)->toHaveCount(2);
 });
 
-it('denies access to viewer role users', function () {
+it('denies access to viewer role users', function (): void {
     $viewer = User::factory()->create(['role' => 'viewer']);
 
     Livewire::actingAs($viewer)
@@ -91,7 +91,7 @@ it('denies access to viewer role users', function () {
         ->assertForbidden();
 });
 
-test('remove tab removes it from proposal', function () {
+test('remove tab removes it from proposal', function (): void {
     Livewire::test(AiWizard::class)
         ->set('step', 'review')
         ->set('proposal', [

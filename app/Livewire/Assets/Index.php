@@ -124,7 +124,7 @@ final class Index extends Component
 
         Flux::toast(
             heading: 'Asset Moved',
-            text: "Moved to {$folder->name}.",
+            text: sprintf('Moved to %s.', $folder->name),
             variant: 'success',
         );
     }
@@ -173,7 +173,7 @@ final class Index extends Component
             ])
             ->with(['updater'])
             ->where('parent_id', $this->folderForm->currentFolderId)
-            ->when($this->search, fn ($query) => $query->where('name', 'like', "%{$this->search}%")
+            ->when($this->search, fn ($query) => $query->where('name', 'like', sprintf('%%%s%%', $this->search))
             );
 
         // Assets query
@@ -191,7 +191,7 @@ final class Index extends Component
             ])
             ->with(['updater'])
             ->where('folder_id', $this->folderForm->currentFolderId)
-            ->when($this->search, fn ($query) => $query->where('original_filename', 'like', "%{$this->search}%")
+            ->when($this->search, fn ($query) => $query->where('original_filename', 'like', sprintf('%%%s%%', $this->search))
             )
             ->when($this->filter, fn ($query) => match ($this->filter) {
                 'images' => $query->where('mime_type', 'like', 'image/%'),

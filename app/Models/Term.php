@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Database\Factories\TermFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -29,21 +31,21 @@ use Illuminate\Support\Carbon;
  * @property-read Term|null $parent
  * @property-read Taxonomy $taxonomy
  *
- * @method static \Database\Factories\TermFactory factory($count = null, $state = [])
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Term newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Term newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Term onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Term query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Term whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Term whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Term whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Term whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Term whereParentId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Term whereSlug($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Term whereTaxonomyId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Term whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Term withTrashed(bool $withTrashed = true)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Term withoutTrashed()
+ * @method static TermFactory factory($count = null, $state = [])
+ * @method static Builder<static>|Term newModelQuery()
+ * @method static Builder<static>|Term newQuery()
+ * @method static Builder<static>|Term onlyTrashed()
+ * @method static Builder<static>|Term query()
+ * @method static Builder<static>|Term whereCreatedAt($value)
+ * @method static Builder<static>|Term whereDeletedAt($value)
+ * @method static Builder<static>|Term whereId($value)
+ * @method static Builder<static>|Term whereName($value)
+ * @method static Builder<static>|Term whereParentId($value)
+ * @method static Builder<static>|Term whereSlug($value)
+ * @method static Builder<static>|Term whereTaxonomyId($value)
+ * @method static Builder<static>|Term whereUpdatedAt($value)
+ * @method static Builder<static>|Term withTrashed(bool $withTrashed = true)
+ * @method static Builder<static>|Term withoutTrashed()
  *
  * @mixin Model
  */

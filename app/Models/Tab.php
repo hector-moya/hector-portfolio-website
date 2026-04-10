@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -25,27 +26,27 @@ use Illuminate\Support\Carbon;
  * @property-read Collection<int, Section> $sections
  * @property-read int|null $sections_count
  *
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Tab newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Tab newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Tab onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Tab query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Tab whereBlueprintId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Tab whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Tab whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Tab whereHandle($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Tab whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Tab whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Tab whereSortOrder($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Tab whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Tab withTrashed(bool $withTrashed = true)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Tab withoutTrashed()
+ * @method static Builder<static>|Tab newModelQuery()
+ * @method static Builder<static>|Tab newQuery()
+ * @method static Builder<static>|Tab onlyTrashed()
+ * @method static Builder<static>|Tab query()
+ * @method static Builder<static>|Tab whereBlueprintId($value)
+ * @method static Builder<static>|Tab whereCreatedAt($value)
+ * @method static Builder<static>|Tab whereDeletedAt($value)
+ * @method static Builder<static>|Tab whereHandle($value)
+ * @method static Builder<static>|Tab whereId($value)
+ * @method static Builder<static>|Tab whereName($value)
+ * @method static Builder<static>|Tab whereSortOrder($value)
+ * @method static Builder<static>|Tab whereUpdatedAt($value)
+ * @method static Builder<static>|Tab withTrashed(bool $withTrashed = true)
+ * @method static Builder<static>|Tab withoutTrashed()
  *
  * @mixin Model
  */
 final class Tab extends Model
 {
-    use HasFactory, SoftDeletes;
-
+    use HasFactory;
+    use SoftDeletes;
     protected $fillable = [
         'name',
         'handle',

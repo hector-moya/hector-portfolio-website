@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 use App\Models\Entry;
 
-test('home page returns 200 with no entry', function () {
+test('home page returns 200 with no entry', function (): void {
     $this->get('/')->assertStatus(200);
 });
 
-test('home page renders hero section title from layout', function () {
+test('home page renders hero section title from layout', function (): void {
     Entry::factory()->create([
         'slug' => 'home',
         'status' => 'published',
@@ -24,7 +24,7 @@ test('home page renders hero section title from layout', function () {
     $this->get('/')->assertSee('Welcome to My Portfolio');
 });
 
-test('home page renders multiple section types', function () {
+test('home page renders multiple section types', function (): void {
     Entry::factory()->create([
         'slug' => 'home',
         'status' => 'published',
@@ -53,11 +53,11 @@ test('home page renders multiple section types', function () {
         ->assertSee('Our Features');
 });
 
-test('home page renders empty state when no entry exists', function () {
+test('home page renders empty state when no entry exists', function (): void {
     $this->get('/')->assertSee('Welcome');
 });
 
-test('draft home entry does not render sections', function () {
+test('draft home entry does not render sections', function (): void {
     Entry::factory()->create([
         'slug' => 'home',
         'status' => 'draft',

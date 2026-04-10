@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Policies;
 
-use App\Models\Collection;
 use App\Models\User;
 
 final class CollectionPolicy
@@ -12,17 +11,19 @@ final class CollectionPolicy
     /**
      * Determine whether the user can view any models.
      */
-    public function viewAny(User $user): bool
+    public function viewAny(): bool
     {
-        return true; // All authenticated users can view collections
+        return true;
+        // All authenticated users can view collections
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Collection $collection): bool
+    public function view(): bool
     {
-        return true; // All authenticated users can view individual collections
+        return true;
+        // All authenticated users can view individual collections
     }
 
     /**
@@ -36,7 +37,7 @@ final class CollectionPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Collection $collection): bool
+    public function update(User $user): bool
     {
         return $user->canEdit(); // Admins and editors can update
     }
@@ -44,7 +45,7 @@ final class CollectionPolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Collection $collection): bool
+    public function delete(User $user): bool
     {
         return $user->isAdmin(); // Only admins can delete
     }
@@ -52,7 +53,7 @@ final class CollectionPolicy
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Collection $collection): bool
+    public function restore(User $user): bool
     {
         return $user->isAdmin(); // Only admins can restore
     }
@@ -60,7 +61,7 @@ final class CollectionPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, Collection $collection): bool
+    public function forceDelete(User $user): bool
     {
         return $user->isAdmin(); // Only admins can force delete
     }

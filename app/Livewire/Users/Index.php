@@ -60,8 +60,8 @@ final class Index extends Component
     public function users(): LengthAwarePaginator
     {
         return User::query()
-            ->when($this->search, fn ($query) => $query->where('name', 'like', "%{$this->search}%")
-                ->orWhere('email', 'like', "%{$this->search}%"))
+            ->when($this->search, fn ($query) => $query->where('name', 'like', sprintf('%%%s%%', $this->search))
+                ->orWhere('email', 'like', sprintf('%%%s%%', $this->search)))
             ->when($this->roleFilter, fn ($query) => $query->where('role', $this->roleFilter))
             ->tap(fn ($query) => $this->sortBy !== '' && $this->sortBy !== '0' ? $query->orderBy($this->sortBy, $this->sortDirection) : $query)
             ->latest()
@@ -87,7 +87,7 @@ final class Index extends Component
 
         Flux::toast(
             heading: 'User Approved',
-            text: "{$user->name} has been approved and notified.",
+            text: $user->name . ' has been approved and notified.',
             variant: 'success',
         );
     }

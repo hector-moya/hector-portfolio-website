@@ -18,6 +18,7 @@ trait HasBlueprintFields
             if (! isset($values[$part])) {
                 return null;
             }
+
             $values = $values[$part];
         }
 
@@ -36,6 +37,7 @@ trait HasBlueprintFields
                 if (! isset($values[$part])) {
                     $values[$part] = [];
                 }
+
                 $values = &$values[$part];
             }
         }

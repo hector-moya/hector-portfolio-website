@@ -7,9 +7,9 @@ namespace App\Livewire\Actions\Settings;
 use App\Livewire\Actions\Logout;
 use App\Models\User;
 
-final class DeleteAccount
+final readonly class DeleteAccount
 {
-    public function __construct(private readonly Logout $logout) {}
+    public function __construct(private Logout $logout) {}
 
     public function delete(User $user): void
     {

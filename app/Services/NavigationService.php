@@ -17,7 +17,7 @@ final class NavigationService
      */
     public function get(string $handle, bool $activeOnly = true): ?Navigation
     {
-        return Cache::rememberForever("navigation.{$handle}", function () use ($handle, $activeOnly) {
+        return Cache::rememberForever('navigation.' . $handle, function () use ($handle, $activeOnly) {
             $query = Navigation::with(['items' => function ($query) use ($activeOnly): void {
                 $query->with('children')->orderBy('order');
 
@@ -85,8 +85,8 @@ final class NavigationService
         Cache::forget('navigation.all');
         Cache::forget('navigation.all.active');
 
-        Navigation::query()->pluck('handle')->each(function ($handle): void {
-            Cache::forget("navigation.{$handle}");
+        Navigation::query()->pluck('handle')->each(function (string $handle): void {
+            Cache::forget('navigation.' . $handle);
         });
     }
 

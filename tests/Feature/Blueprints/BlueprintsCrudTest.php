@@ -11,19 +11,19 @@ use Livewire\Livewire;
 
 use function Pest\Laravel\actingAs;
 
-beforeEach(function () {
+beforeEach(function (): void {
     $user = User::factory()->admin()->create();
     actingAs($user);
 });
 
-test('can view blueprints index page', function () {
+test('can view blueprints index page', function (): void {
     $response = $this->get(route('blueprints.index'));
 
     $response->assertSuccessful();
     $response->assertSee('Blueprints');
 });
 
-test('can list blueprints', function () {
+test('can list blueprints', function (): void {
     $blueprints = Blueprint::factory()->count(3)->create();
 
     Livewire::test(Index::class)
@@ -31,7 +31,7 @@ test('can list blueprints', function () {
         ->assertSee($blueprints->last()->name);
 });
 
-test('can search blueprints', function () {
+test('can search blueprints', function (): void {
     $blueprint1 = Blueprint::factory()->create(['name' => 'Blog Post']);
     $blueprint2 = Blueprint::factory()->create(['name' => 'Product']);
 
@@ -41,7 +41,7 @@ test('can search blueprints', function () {
         ->assertDontSee('Product');
 });
 
-test('can view create blueprint page', function () {
+test('can view create blueprint page', function (): void {
     $blueprint = Blueprint::factory()->create();
 
     $response = $this->get(route('blueprints.create', $blueprint));
@@ -50,7 +50,7 @@ test('can view create blueprint page', function () {
     $response->assertSee('Create Blueprint');
 });
 
-test('can create a blueprint with fields', function () {
+test('can create a blueprint with fields', function (): void {
     $blueprint = Blueprint::factory()->create(['name' => 'Test Blueprint']);
 
     Livewire::test(Create::class, ['blueprint' => $blueprint])
@@ -62,12 +62,12 @@ test('can create a blueprint with fields', function () {
         ->assertHasNoErrors()
         ->assertRedirect(route('blueprints.index'));
 
-    $blueprint = Blueprint::where('slug', 'blog-post')->first();
+    $blueprint = Blueprint::query()->where('slug', 'blog-post')->first();
     expect($blueprint)->not->toBeNull();
     expect($blueprint->name)->toBe('Blog Post');
 });
 
-test('validates required fields when creating blueprint', function () {
+test('validates required fields when creating blueprint', function (): void {
     $blueprint = Blueprint::factory()->create();
 
     Livewire::test(Create::class, ['blueprint' => $blueprint])
@@ -76,7 +76,7 @@ test('validates required fields when creating blueprint', function () {
         ->assertHasErrors(['form.name']);
 });
 
-test('auto-generates slug when creating blueprint', function () {
+test('auto-generates slug when creating blueprint', function (): void {
     $blueprint = Blueprint::factory()->create();
 
     Livewire::test(Create::class, ['blueprint' => $blueprint])
@@ -84,10 +84,10 @@ test('auto-generates slug when creating blueprint', function () {
         ->call('save')
         ->assertHasNoErrors();
 
-    expect(Blueprint::where('slug', 'blog-post')->exists())->toBeTrue();
+    expect(Blueprint::query()->where('slug', 'blog-post')->exists())->toBeTrue();
 });
 
-test('can view edit blueprint page', function () {
+test('can view edit blueprint page', function (): void {
     $blueprint = Blueprint::factory()->create();
 
     $response = $this->get(route('blueprints.edit', $blueprint));
@@ -96,7 +96,7 @@ test('can view edit blueprint page', function () {
     $response->assertSee('Edit Blueprint');
 });
 
-test('can update a blueprint', function () {
+test('can update a blueprint', function (): void {
     $blueprint = Blueprint::factory()->create([
         'name' => 'Old Name',
         'slug' => 'old-slug',
@@ -113,25 +113,25 @@ test('can update a blueprint', function () {
     expect($blueprint->slug)->toBe('new-slug');
 });
 
-test('can delete a blueprint', function () {
+test('can delete a blueprint', function (): void {
     $blueprint = Blueprint::factory()->create();
 
     Livewire::test(Index::class)
         ->call('delete', $blueprint->id)
         ->assertDispatched('blueprint-deleted');
 
-    expect(Blueprint::find($blueprint->id))->toBeNull();
+    expect(Blueprint::query()->find($blueprint->id))->toBeNull();
 });
 
 // TODO: Update these tests for the new tabs/sections/fields structure
-test('can add and remove fields dynamically', function () {
+test('can add and remove fields dynamically', function (): void {
     $blueprint = Blueprint::factory()->create();
 
     // This test needs to be updated for the new structure
     expect($blueprint)->not->toBeNull();
 })->skip('Needs updating for new tabs/sections/fields structure');
 
-test('preserves field order when creating blueprint', function () {
+test('preserves field order when creating blueprint', function (): void {
     $blueprint = Blueprint::factory()->create();
 
     // This test needs to be updated for the new structure

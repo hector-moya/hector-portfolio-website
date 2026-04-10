@@ -10,26 +10,26 @@ use Livewire\Livewire;
 
 use function Pest\Laravel\actingAs;
 
-beforeEach(function () {
+beforeEach(function (): void {
     actingAs(User::factory()->create(['role' => 'admin']));
 });
 
-test('collection type defaults to standard', function () {
+test('collection type defaults to standard', function (): void {
     Livewire::test(Create::class)
         ->assertSet('form.type', 'standard');
 });
 
-test('create collection stores type in settings', function () {
+test('create collection stores type in settings', function (): void {
     Livewire::test(Create::class)
         ->set('form.name', 'About Page')
         ->set('form.type', 'single')
         ->call('save');
 
-    $collection = Collection::where('slug', 'about-page')->first();
+    $collection = Collection::query()->where('slug', 'about-page')->first();
     expect($collection->settings['type'])->toBe('single');
 });
 
-test('edit collection loads type from settings', function () {
+test('edit collection loads type from settings', function (): void {
     $collection = Collection::factory()->create([
         'settings' => ['type' => 'single'],
     ]);
@@ -38,7 +38,7 @@ test('edit collection loads type from settings', function () {
         ->assertSet('form.type', 'single');
 });
 
-test('update collection persists type change', function () {
+test('update collection persists type change', function (): void {
     $collection = Collection::factory()->create([
         'settings' => ['type' => 'standard'],
     ]);
@@ -50,11 +50,11 @@ test('update collection persists type change', function () {
     expect($collection->fresh()->settings['type'])->toBe('single');
 });
 
-test('create standard collection omits type from settings', function () {
+test('create standard collection omits type from settings', function (): void {
     Livewire::test(Create::class)
         ->set('form.name', 'Blog')
         ->call('save');
 
-    $collection = Collection::where('slug', 'blog')->first();
+    $collection = Collection::query()->where('slug', 'blog')->first();
     expect($collection->settings)->not->toHaveKey('type');
 });

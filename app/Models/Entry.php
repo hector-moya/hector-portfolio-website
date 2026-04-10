@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use App\Models\Concerns\HasBlueprintFields;
 use Database\Factories\EntryFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -35,32 +36,32 @@ use Illuminate\Support\Carbon;
  * @property-read \Illuminate\Database\Eloquent\Collection<int, Term> $terms
  * @property-read int|null $terms_count
  *
- * @method static \Database\Factories\EntryFactory factory($count = null, $state = [])
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Entry newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Entry newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Entry onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Entry query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Entry whereAuthorId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Entry whereBlueprintId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Entry whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Entry whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Entry whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Entry whereLayout($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Entry wherePublishedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Entry whereSlug($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Entry whereStatus($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Entry whereTitle($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Entry whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Entry withTrashed(bool $withTrashed = true)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Entry withoutTrashed()
+ * @method static EntryFactory factory($count = null, $state = [])
+ * @method static Builder<static>|Entry newModelQuery()
+ * @method static Builder<static>|Entry newQuery()
+ * @method static Builder<static>|Entry onlyTrashed()
+ * @method static Builder<static>|Entry query()
+ * @method static Builder<static>|Entry whereAuthorId($value)
+ * @method static Builder<static>|Entry whereBlueprintId($value)
+ * @method static Builder<static>|Entry whereCreatedAt($value)
+ * @method static Builder<static>|Entry whereDeletedAt($value)
+ * @method static Builder<static>|Entry whereId($value)
+ * @method static Builder<static>|Entry whereLayout($value)
+ * @method static Builder<static>|Entry wherePublishedAt($value)
+ * @method static Builder<static>|Entry whereSlug($value)
+ * @method static Builder<static>|Entry whereStatus($value)
+ * @method static Builder<static>|Entry whereTitle($value)
+ * @method static Builder<static>|Entry whereUpdatedAt($value)
+ * @method static Builder<static>|Entry withTrashed(bool $withTrashed = true)
+ * @method static Builder<static>|Entry withoutTrashed()
  *
  * @mixin Model
  */
 final class Entry extends Model
 {
-    /** @use HasFactory<EntryFactory> */
-    use HasBlueprintFields, HasFactory, SoftDeletes;
-
+    use HasBlueprintFields;
+    use HasFactory;
+    use SoftDeletes;
     protected $fillable = [
         'blueprint_id',
         'title',

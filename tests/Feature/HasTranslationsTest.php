@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 use App\Models\Blueprint;
 
-test('models can get and set translations', function () {
+test('models can get and set translations', function (): void {
     $blueprint = Blueprint::factory()->create([
         'name' => 'Test Blueprint',
     ]);
 
     $blueprint->setTranslation('name', 'es', 'Blueprint de Prueba');
+
     expect($blueprint->translate('name', 'es'))->toBe('Blueprint de Prueba');
 });
 
-test('models fallback to default locale when translation missing', function () {
+test('models fallback to default locale when translation missing', function (): void {
     $blueprint = Blueprint::factory()->create([
         'name' => 'Test Blueprint',
     ]);
@@ -21,7 +22,7 @@ test('models fallback to default locale when translation missing', function () {
     expect($blueprint->translate('name', 'es'))->toBe('Test Blueprint');
 });
 
-test('models can get all translations', function () {
+test('models can get all translations', function (): void {
     $blueprint = Blueprint::factory()->create([
         'name' => 'Test Blueprint',
     ]);

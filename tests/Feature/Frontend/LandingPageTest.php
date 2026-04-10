@@ -6,7 +6,7 @@ use App\Models\Blueprint;
 use App\Models\Collection;
 use App\Models\Entry;
 
-test('single-type collection renders entry directly at collection url', function () {
+test('single-type collection renders entry directly at collection url', function (): void {
     $blueprint = Blueprint::factory()->create();
     $collection = Collection::factory()->create([
         'slug' => 'about',
@@ -44,7 +44,7 @@ test('single-type collection renders entry directly at collection url', function
         ->assertSee('We Build Things');
 });
 
-test('single-type collection returns 404 for inactive collection', function () {
+test('single-type collection returns 404 for inactive collection', function (): void {
     Blueprint::factory()->create();
     Collection::factory()->create([
         'slug' => 'inactive-page',
@@ -55,7 +55,7 @@ test('single-type collection returns 404 for inactive collection', function () {
     $this->get('/inactive-page')->assertNotFound();
 });
 
-test('single-type collection with no published entry shows empty state', function () {
+test('single-type collection with no published entry shows empty state', function (): void {
     $blueprint = Blueprint::factory()->create();
     Collection::factory()->create([
         'slug' => 'empty-page',
@@ -67,7 +67,7 @@ test('single-type collection with no published entry shows empty state', functio
     $this->get('/empty-page')->assertOk();
 });
 
-test('standard collection type still renders listing', function () {
+test('standard collection type still renders listing', function (): void {
     $blueprint = Blueprint::factory()->create();
     $collection = Collection::factory()->create([
         'slug' => 'my-blog',

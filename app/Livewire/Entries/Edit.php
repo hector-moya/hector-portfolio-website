@@ -189,9 +189,11 @@ final class Edit extends Component
                 if (! isset($section['_id'])) {
                     continue;
                 }
+
                 if ($section['_id'] !== $sectionId) {
                     continue;
                 }
+
                 // Gallery slot: image_{slotIndex}
                 if (preg_match('/^image_(\d+)$/', $fieldPart)) {
                     $images = $this->form->fieldValues[$handle][$i]['data']['images'] ?? [];
