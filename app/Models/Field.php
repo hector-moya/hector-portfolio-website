@@ -66,6 +66,7 @@ final class Field extends Model
 {
     use HasFactory;
     use SoftDeletes;
+
     protected $fillable = [
         'blueprint_id',
         'section_id',

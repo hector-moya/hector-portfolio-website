@@ -137,7 +137,7 @@ final class Browser extends Component
             }
         }
 
-        Asset::create([
+        Asset::query()->create([
             'filename' => basename((string) $path),
             'original_filename' => $file->getClientOriginalName(),
             'disk' => $disk,

@@ -62,6 +62,7 @@ final class Entry extends Model
     use HasBlueprintFields;
     use HasFactory;
     use SoftDeletes;
+
     protected $fillable = [
         'blueprint_id',
         'title',

@@ -19,6 +19,7 @@ final class Edit extends Component
     use HasSlug;
     use Sections;
     use Tabs;
+
     public ?Blueprint $blueprint = null;
 
     public BlueprintForm $form;

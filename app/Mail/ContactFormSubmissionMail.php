@@ -16,6 +16,7 @@ final class ContactFormSubmissionMail extends Mailable implements ShouldQueue
 {
     use Queueable;
     use SerializesModels;
+
     public function __construct(public FormSubmission $submission) {}
 
     public function envelope(): Envelope

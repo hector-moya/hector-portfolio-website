@@ -16,6 +16,7 @@ final class InvitationMail extends Mailable implements ShouldQueue
 {
     use Queueable;
     use SerializesModels;
+
     public function __construct(public readonly Invitation $invitation) {}
 
     public function envelope(): Envelope

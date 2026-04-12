@@ -16,6 +16,7 @@ final class AdminPendingUserNotification extends Mailable implements ShouldQueue
 {
     use Queueable;
     use SerializesModels;
+
     public function __construct(public readonly User $pendingUser) {}
 
     public function envelope(): Envelope

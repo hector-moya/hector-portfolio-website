@@ -59,6 +59,7 @@ final class Blueprint extends Model
     use HasFactory;
     use HasTranslations;
     use SoftDeletes;
+
     /**
      * The attributes that are translatable.
      *

@@ -47,6 +47,7 @@ final class Tab extends Model
 {
     use HasFactory;
     use SoftDeletes;
+
     protected $fillable = [
         'name',
         'handle',

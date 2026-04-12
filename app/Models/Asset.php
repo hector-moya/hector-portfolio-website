@@ -72,6 +72,7 @@ final class Asset extends Model
 {
     use HasFactory;
     use SoftDeletes;
+
     protected $fillable = [
         'filename',
         'original_filename',
