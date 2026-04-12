@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Livewire\Auth;
 
-use Illuminate\Validation\Rules\Password;
 use App\Mail\AdminPendingUserNotification;
 use App\Models\Invitation;
 use App\Models\SiteSetting;
@@ -14,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Validation\Rules\Password;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Locked;
 use Livewire\Attributes\Url;

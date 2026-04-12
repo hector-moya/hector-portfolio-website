@@ -31,7 +31,7 @@ final class UpdateFolder
 
             // Cascade update descendant paths if path changed
             if ($oldPath !== $newPath) {
-                Folder::query()->where('path', 'like', $oldPath . '/%')->get()
+                Folder::query()->where('path', 'like', $oldPath.'/%')->get()
                     ->each(function ($child) use ($oldPath, $newPath): void {
                         $child->update([
                             'path' => preg_replace(sprintf('#^%s#', $oldPath), $newPath, (string) $child->path),

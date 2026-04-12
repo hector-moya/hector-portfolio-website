@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Builder;
 use App\Models\Concerns\HasBlueprintFields;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -34,8 +34,8 @@ use Illuminate\Support\Carbon;
 final class GlobalSet extends Model
 {
     use HasBlueprintFields;
-    use HasUlids;
     use HasFactory;
+    use HasUlids;
 
     protected $table = 'globals';
 

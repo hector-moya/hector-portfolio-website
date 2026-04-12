@@ -148,13 +148,13 @@ final class EntryForm extends Form
         foreach ($bp->fields as $el) {
             $h = $el->handle;
             if (! in_array($el->type, ['repeater', 'page_builder'], true)) {
-                $rules['fieldValues.' . $h] = $this->rulesForSimple($el->type, $el->is_required, $el->config ?? []);
+                $rules['fieldValues.'.$h] = $this->rulesForSimple($el->type, $el->is_required, $el->config ?? []);
 
                 continue;
             }
 
             if ($el->type === 'page_builder') {
-                $rules['fieldValues.' . $h] = ['nullable', 'array'];
+                $rules['fieldValues.'.$h] = ['nullable', 'array'];
 
                 continue;
             }
@@ -163,9 +163,9 @@ final class EntryForm extends Form
             $min = $el->config['min'] ?? 0;
             $max = $el->config['max'] ?? null;
 
-            $arr = ['array', 'min:' . $min];
+            $arr = ['array', 'min:'.$min];
             if ($max) {
-                $arr[] = 'max:' . $max;
+                $arr[] = 'max:'.$max;
             }
 
             $rules[sprintf('fieldValues.%s.items', $h)] = $arr;
@@ -243,7 +243,7 @@ final class EntryForm extends Form
         }
 
         foreach ($bp->fields as $el) {
-            $attrs['fieldValues.' . $el->handle] = $el->label;
+            $attrs['fieldValues.'.$el->handle] = $el->label;
             if ($el->type === 'repeater') {
                 foreach ($el->children as $child) {
                     $attrs[sprintf('fieldValues.%s.items.*.%s', $el->handle, $child->handle)] =

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Builder;
 use App\Models\Concerns\HasTranslations;
 use Database\Factories\BlueprintFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -60,6 +60,14 @@ final class Blueprint extends Model
     use HasTranslations;
     use SoftDeletes;
 
+    protected $fillable = [
+        'name',
+        'slug',
+        'description',
+        'is_active',
+        'settings',
+    ];
+
     /**
      * The attributes that are translatable.
      *
@@ -68,14 +76,6 @@ final class Blueprint extends Model
     private array $translatable = [
         'name',
         'description',
-    ];
-
-    protected $fillable = [
-        'name',
-        'slug',
-        'description',
-        'is_active',
-        'settings',
     ];
 
     public function fields(): HasMany

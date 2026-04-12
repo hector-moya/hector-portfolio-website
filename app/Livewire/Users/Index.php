@@ -87,7 +87,7 @@ final class Index extends Component
 
         Flux::toast(
             heading: 'User Approved',
-            text: $user->name . ' has been approved and notified.',
+            text: $user->name.' has been approved and notified.',
             variant: 'success',
         );
     }
