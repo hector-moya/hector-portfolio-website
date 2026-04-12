@@ -52,6 +52,7 @@ final class Section extends Model
 {
     use HasFactory;
     use SoftDeletes;
+
     protected $fillable = [
         'name',
         'handle',
@@ -73,6 +74,6 @@ final class Section extends Model
 
     public function fields(): HasMany
     {
-        return $this->hasMany(Field::class, 'section_id')->orderBy('sort_order');
+        return $this->hasMany(Field::class, 'section_id')->orderBy('order');
     }
 }
