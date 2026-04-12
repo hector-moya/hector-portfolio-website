@@ -65,6 +65,8 @@
                                                             :component="'entries.fields.' . $field->type"
                                                             :field="$field"
                                                             :form="$form"
+                                                            :editingSectionHandle="$editingSectionHandle"
+                                                            :editingSectionIndex="$editingSectionIndex"
                                                         />
                                                     </div>
                                                 @endforeach

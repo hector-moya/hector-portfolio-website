@@ -1,6 +1,8 @@
 @props([
     'field' => null,
     'form' => null,
+    'editingSectionHandle' => '',
+    'editingSectionIndex' => -1,
 ])
 
 @php
