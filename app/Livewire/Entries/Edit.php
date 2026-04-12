@@ -30,6 +30,10 @@ final class Edit extends Component
     /** @var array<string, string> Pending section type per page builder field handle */
     public array $pendingSectionTypes = [];
 
+    public string $editingSectionHandle = '';
+
+    public int $editingSectionIndex = -1;
+
     public function mount(Entry $entry): void
     {
         $this->entry = $entry->load('collection.blueprint.tabs.sections.fields', 'collection.blueprint.fields', 'elements.field');
@@ -76,6 +80,13 @@ final class Edit extends Component
     }
 
     /* ---------- Page Builder operations ---------- */
+
+    public function openSectionEditor(string $handle, int $index): void
+    {
+        $this->editingSectionHandle = $handle;
+        $this->editingSectionIndex = $index;
+        Flux::modal('edit-page-builder-section')->show();
+    }
 
     public function addPageBuilderSection(string $handle): void
     {

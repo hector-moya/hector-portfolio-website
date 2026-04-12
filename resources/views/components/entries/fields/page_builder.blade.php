@@ -19,7 +19,7 @@
     @forelse ($sections as $section)
         @php $idx = $loop->index; @endphp
         <div wire:key="pb-{{ $handle }}-{{ $section['_id'] }}" class="rounded-lg border border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-800">
-            <div x-data="{ isExpanded: false }" class="flex items-center gap-3 p-4">
+            <div class="flex items-center gap-3 p-4">
                 {{-- Reorder buttons --}}
                 <div class="flex flex-col gap-0.5">
                     <button
@@ -52,8 +52,15 @@
                     @endif
                 </div>
 
-                {{-- Expand/delete --}}
+                {{-- Edit / delete --}}
                 <div class="flex items-center gap-2">
+                    <flux:button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        icon="pencil-square"
+                        wire:click="openSectionEditor('{{ $handle }}', {{ $idx }})"
+                    />
                     <flux:button
                         type="button"
                         variant="ghost"
@@ -63,36 +70,48 @@
                         wire:confirm="{{ __('Remove this section?') }}"
                         class="text-red-500 hover:text-red-600"
                     />
-                    <button
-                        type="button"
-                        @click="isExpanded = !isExpanded"
-                        class="rounded p-1.5 text-zinc-400 transition-colors hover:bg-zinc-100 hover:text-zinc-600 dark:hover:bg-zinc-700 dark:hover:text-zinc-300"
-                    >
-                        <flux:icon.chevron-down class="size-4 transition-transform" ::class="{ 'rotate-180': isExpanded }" />
-                    </button>
                 </div>
             </div>
+        </div>
+    @empty
+        <div class="flex flex-col items-center gap-2 rounded-lg border-2 border-dashed border-zinc-300 py-8 text-center dark:border-zinc-700">
+            <flux:icon.squares-plus class="size-8 text-zinc-400" />
+            <flux:text class="text-zinc-500">{{ __('No sections yet. Add one below to build your page.') }}</flux:text>
+        </div>
+    @endforelse
 
-            {{-- Expanded section fields --}}
-            <div x-show="isExpanded" x-collapse class="border-t border-zinc-200 p-4 dark:border-zinc-700">
-                @switch($section['type'])
+    {{-- Shared section edit modal --}}
+    <flux:modal name="edit-page-builder-section" class="w-2xl max-h-[90vh] overflow-y-auto">
+        @php
+            $esHandle  = $editingSectionHandle;
+            $esIdx     = $editingSectionIndex;
+            $esSection = ($esHandle !== '' && $esIdx >= 0)
+                ? ($form->fieldValues[$esHandle][$esIdx] ?? null)
+                : null;
+        @endphp
+        @if ($esSection)
+            <div class="space-y-6">
+                <flux:heading size="lg">
+                    {{ __('Edit: :type', ['type' => $sectionTypeLabels[$esSection['type']] ?? $esSection['type']]) }}
+                </flux:heading>
+
+                @switch($esSection['type'])
                     @case('hero')
                         <div class="space-y-4">
-                            <flux:input label="{{ __('Title') }}" wire:model="form.fieldValues.{{ $handle }}.{{ $idx }}.data.title" />
-                            <flux:input label="{{ __('Subtitle') }}" wire:model="form.fieldValues.{{ $handle }}.{{ $idx }}.data.subtitle" />
-                            <flux:textarea label="{{ __('Content') }}" wire:model="form.fieldValues.{{ $handle }}.{{ $idx }}.data.content" rows="3" />
+                            <flux:input label="{{ __('Title') }}" wire:model="form.fieldValues.{{ $esHandle }}.{{ $esIdx }}.data.title" />
+                            <flux:input label="{{ __('Subtitle') }}" wire:model="form.fieldValues.{{ $esHandle }}.{{ $esIdx }}.data.subtitle" />
+                            <flux:textarea label="{{ __('Content') }}" wire:model="form.fieldValues.{{ $esHandle }}.{{ $esIdx }}.data.content" rows="3" />
 
-                            {{-- Background Image --}}
                             @php
-                                $bgHandle = 'section_' . $section['_id'] . '_bg_image';
-                                $bgAsset = ($section['data']['bg_image'] ?? null) ? \App\Models\Asset::find($section['data']['bg_image']) : null;
+                                $bgHandle = 'section_' . $esSection['_id'] . '_bg_image';
+                                $bgAsset  = ($esSection['data']['bg_image'] ?? null) ? \App\Models\Asset::find($esSection['data']['bg_image']) : null;
                             @endphp
                             <div class="space-y-2">
                                 <flux:label>{{ __('Background Image') }}</flux:label>
                                 @if ($bgAsset)
                                     <div class="group relative w-48 overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700">
                                         <img src="{{ $bgAsset->thumbnail_url ?? $bgAsset->url }}" alt="{{ $bgAsset->alt_text }}" class="aspect-video w-full object-cover" />
-                                        <button type="button" wire:click="removePageBuilderSectionImage('{{ $handle }}', {{ $idx }}, 'bg_image')" class="absolute right-2 top-2 rounded-full bg-white p-1 opacity-0 shadow transition-opacity group-hover:opacity-100 dark:bg-zinc-800">
+                                        <button type="button" wire:click="removePageBuilderSectionImage('{{ $esHandle }}', {{ $esIdx }}, 'bg_image')" class="absolute right-2 top-2 rounded-full bg-white p-1 opacity-0 shadow transition-opacity group-hover:opacity-100 dark:bg-zinc-800">
                                             <flux:icon.x-mark class="size-4 text-zinc-500" />
                                         </button>
                                     </div>
@@ -108,20 +127,20 @@
                             </flux:modal>
 
                             <div class="grid grid-cols-2 gap-4">
-                                <flux:input label="{{ __('Primary CTA Text') }}" wire:model="form.fieldValues.{{ $handle }}.{{ $idx }}.data.cta_text" />
-                                <flux:input label="{{ __('Primary CTA URL') }}" wire:model="form.fieldValues.{{ $handle }}.{{ $idx }}.data.cta_url" placeholder="/" />
+                                <flux:input label="{{ __('Primary CTA Text') }}" wire:model="form.fieldValues.{{ $esHandle }}.{{ $esIdx }}.data.cta_text" />
+                                <flux:input label="{{ __('Primary CTA URL') }}" wire:model="form.fieldValues.{{ $esHandle }}.{{ $esIdx }}.data.cta_url" placeholder="/" />
                             </div>
                             <div class="grid grid-cols-2 gap-4">
-                                <flux:input label="{{ __('Secondary CTA Text') }}" wire:model="form.fieldValues.{{ $handle }}.{{ $idx }}.data.secondary_cta_text" />
-                                <flux:input label="{{ __('Secondary CTA URL') }}" wire:model="form.fieldValues.{{ $handle }}.{{ $idx }}.data.secondary_cta_url" placeholder="/" />
+                                <flux:input label="{{ __('Secondary CTA Text') }}" wire:model="form.fieldValues.{{ $esHandle }}.{{ $esIdx }}.data.secondary_cta_text" />
+                                <flux:input label="{{ __('Secondary CTA URL') }}" wire:model="form.fieldValues.{{ $esHandle }}.{{ $esIdx }}.data.secondary_cta_url" placeholder="/" />
                             </div>
                         </div>
                     @break
 
                     @case('text')
                         <div class="space-y-4">
-                            <flux:textarea label="{{ __('Content') }}" wire:model="form.fieldValues.{{ $handle }}.{{ $idx }}.data.content" rows="6" />
-                            <flux:select label="{{ __('Alignment') }}" wire:model="form.fieldValues.{{ $handle }}.{{ $idx }}.data.alignment">
+                            <flux:textarea label="{{ __('Content') }}" wire:model="form.fieldValues.{{ $esHandle }}.{{ $esIdx }}.data.content" rows="6" />
+                            <flux:select label="{{ __('Alignment') }}" wire:model="form.fieldValues.{{ $esHandle }}.{{ $esIdx }}.data.alignment">
                                 <flux:select.option value="left">{{ __('Left') }}</flux:select.option>
                                 <flux:select.option value="center">{{ __('Center') }}</flux:select.option>
                                 <flux:select.option value="right">{{ __('Right') }}</flux:select.option>
@@ -131,23 +150,23 @@
 
                     @case('image_text')
                         <div class="space-y-4">
-                            <flux:input label="{{ __('Title') }}" wire:model="form.fieldValues.{{ $handle }}.{{ $idx }}.data.title" />
-                            <flux:textarea label="{{ __('Content') }}" wire:model="form.fieldValues.{{ $handle }}.{{ $idx }}.data.content" rows="4" />
-                            <flux:select label="{{ __('Image Position') }}" wire:model="form.fieldValues.{{ $handle }}.{{ $idx }}.data.image_position">
+                            <flux:input label="{{ __('Title') }}" wire:model="form.fieldValues.{{ $esHandle }}.{{ $esIdx }}.data.title" />
+                            <flux:textarea label="{{ __('Content') }}" wire:model="form.fieldValues.{{ $esHandle }}.{{ $esIdx }}.data.content" rows="4" />
+                            <flux:select label="{{ __('Image Position') }}" wire:model="form.fieldValues.{{ $esHandle }}.{{ $esIdx }}.data.image_position">
                                 <flux:select.option value="left">{{ __('Left') }}</flux:select.option>
                                 <flux:select.option value="right">{{ __('Right') }}</flux:select.option>
                             </flux:select>
 
                             @php
-                                $imgHandle = 'section_' . $section['_id'] . '_image';
-                                $imgAsset = ($section['data']['image'] ?? null) ? \App\Models\Asset::find($section['data']['image']) : null;
+                                $imgHandle = 'section_' . $esSection['_id'] . '_image';
+                                $imgAsset  = ($esSection['data']['image'] ?? null) ? \App\Models\Asset::find($esSection['data']['image']) : null;
                             @endphp
                             <div class="space-y-2">
                                 <flux:label>{{ __('Image') }}</flux:label>
                                 @if ($imgAsset)
                                     <div class="group relative w-48 overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700">
                                         <img src="{{ $imgAsset->thumbnail_url ?? $imgAsset->url }}" alt="{{ $imgAsset->alt_text }}" class="aspect-video w-full object-cover" />
-                                        <button type="button" wire:click="removePageBuilderSectionImage('{{ $handle }}', {{ $idx }}, 'image')" class="absolute right-2 top-2 rounded-full bg-white p-1 opacity-0 shadow transition-opacity group-hover:opacity-100 dark:bg-zinc-800">
+                                        <button type="button" wire:click="removePageBuilderSectionImage('{{ $esHandle }}', {{ $esIdx }}, 'image')" class="absolute right-2 top-2 rounded-full bg-white p-1 opacity-0 shadow transition-opacity group-hover:opacity-100 dark:bg-zinc-800">
                                             <flux:icon.x-mark class="size-4 text-zinc-500" />
                                         </button>
                                     </div>
@@ -163,33 +182,33 @@
                             </flux:modal>
 
                             <div class="grid grid-cols-2 gap-4">
-                                <flux:input label="{{ __('CTA Text') }}" wire:model="form.fieldValues.{{ $handle }}.{{ $idx }}.data.cta_text" />
-                                <flux:input label="{{ __('CTA URL') }}" wire:model="form.fieldValues.{{ $handle }}.{{ $idx }}.data.cta_url" placeholder="/" />
+                                <flux:input label="{{ __('CTA Text') }}" wire:model="form.fieldValues.{{ $esHandle }}.{{ $esIdx }}.data.cta_text" />
+                                <flux:input label="{{ __('CTA URL') }}" wire:model="form.fieldValues.{{ $esHandle }}.{{ $esIdx }}.data.cta_url" placeholder="/" />
                             </div>
                         </div>
                     @break
 
                     @case('gallery')
                         <div class="space-y-4">
-                            <flux:input label="{{ __('Title') }}" wire:model="form.fieldValues.{{ $handle }}.{{ $idx }}.data.title" />
+                            <flux:input label="{{ __('Title') }}" wire:model="form.fieldValues.{{ $esHandle }}.{{ $esIdx }}.data.title" />
 
                             <div>
-                                <flux:label>{{ __('Images') }} <span class="text-zinc-400">({{ count($section['data']['images'] ?? []) }}/6)</span></flux:label>
+                                <flux:label>{{ __('Images') }} <span class="text-zinc-400">({{ count($esSection['data']['images'] ?? []) }}/6)</span></flux:label>
                                 <div class="mt-2 grid grid-cols-3 gap-3 sm:grid-cols-6">
-                                    @foreach ($section['data']['images'] ?? [] as $imgIdx => $assetId)
+                                    @foreach ($esSection['data']['images'] ?? [] as $imgIdx => $assetId)
                                         @php $galleryAsset = \App\Models\Asset::find($assetId); @endphp
                                         <div class="group relative aspect-square overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700">
                                             @if ($galleryAsset)
                                                 <img src="{{ $galleryAsset->thumbnail_url ?? $galleryAsset->url }}" alt="{{ $galleryAsset->alt_text }}" class="h-full w-full object-cover" />
                                             @endif
-                                            <button type="button" wire:click="removePageBuilderGalleryImage('{{ $handle }}', {{ $idx }}, {{ $imgIdx }})" class="absolute right-1 top-1 rounded-full bg-white p-0.5 opacity-0 shadow transition-opacity group-hover:opacity-100 dark:bg-zinc-800">
+                                            <button type="button" wire:click="removePageBuilderGalleryImage('{{ $esHandle }}', {{ $esIdx }}, {{ $imgIdx }})" class="absolute right-1 top-1 rounded-full bg-white p-0.5 opacity-0 shadow transition-opacity group-hover:opacity-100 dark:bg-zinc-800">
                                                 <flux:icon.x-mark class="size-3 text-zinc-500" />
                                             </button>
                                         </div>
                                     @endforeach
 
-                                    @if (count($section['data']['images'] ?? []) < 6)
-                                        @php $slotHandle = 'section_' . $section['_id'] . '_image_' . count($section['data']['images'] ?? []); @endphp
+                                    @if (count($esSection['data']['images'] ?? []) < 6)
+                                        @php $slotHandle = 'section_' . $esSection['_id'] . '_image_' . count($esSection['data']['images'] ?? []); @endphp
                                         <flux:modal.trigger name="asset-browser-{{ $slotHandle }}">
                                             <button type="button" class="flex aspect-square items-center justify-center rounded-lg border-2 border-dashed border-zinc-300 text-zinc-400 transition-colors hover:border-teal-400 hover:text-teal-500 dark:border-zinc-600 dark:hover:border-teal-500">
                                                 <flux:icon.plus class="size-6" />
@@ -206,49 +225,50 @@
 
                     @case('cta')
                         <div class="space-y-4">
-                            <flux:input label="{{ __('Title') }}" wire:model="form.fieldValues.{{ $handle }}.{{ $idx }}.data.title" />
-                            <flux:textarea label="{{ __('Content') }}" wire:model="form.fieldValues.{{ $handle }}.{{ $idx }}.data.content" rows="3" />
+                            <flux:input label="{{ __('Title') }}" wire:model="form.fieldValues.{{ $esHandle }}.{{ $esIdx }}.data.title" />
+                            <flux:textarea label="{{ __('Content') }}" wire:model="form.fieldValues.{{ $esHandle }}.{{ $esIdx }}.data.content" rows="3" />
                             <div class="grid grid-cols-2 gap-4">
-                                <flux:input label="{{ __('CTA Text') }}" wire:model="form.fieldValues.{{ $handle }}.{{ $idx }}.data.cta_text" />
-                                <flux:input label="{{ __('CTA URL') }}" wire:model="form.fieldValues.{{ $handle }}.{{ $idx }}.data.cta_url" placeholder="/" />
+                                <flux:input label="{{ __('CTA Text') }}" wire:model="form.fieldValues.{{ $esHandle }}.{{ $esIdx }}.data.cta_text" />
+                                <flux:input label="{{ __('CTA URL') }}" wire:model="form.fieldValues.{{ $esHandle }}.{{ $esIdx }}.data.cta_url" placeholder="/" />
                             </div>
                         </div>
                     @break
 
                     @case('features')
                         <div class="space-y-4">
-                            <flux:input label="{{ __('Title') }}" wire:model="form.fieldValues.{{ $handle }}.{{ $idx }}.data.title" />
+                            <flux:input label="{{ __('Title') }}" wire:model="form.fieldValues.{{ $esHandle }}.{{ $esIdx }}.data.title" />
 
                             <div class="space-y-3">
                                 <flux:label>{{ __('Feature Items') }}</flux:label>
 
-                                @foreach ($section['data']['items'] ?? [] as $itemIdx => $item)
-                                    <div wire:key="feature-{{ $section['_id'] }}-{{ $itemIdx }}" class="space-y-3 rounded-lg border border-zinc-200 p-4 dark:border-zinc-700">
+                                @foreach ($esSection['data']['items'] ?? [] as $itemIdx => $item)
+                                    <div wire:key="feature-{{ $esSection['_id'] }}-{{ $itemIdx }}" class="space-y-3 rounded-lg border border-zinc-200 p-4 dark:border-zinc-700">
                                         <div class="flex items-center justify-between">
                                             <flux:text size="sm" class="font-medium">{{ __('Item :number', ['number' => $itemIdx + 1]) }}</flux:text>
-                                            <flux:button type="button" variant="ghost" size="sm" icon="trash" wire:click="removePageBuilderFeatureItem('{{ $handle }}', {{ $idx }}, {{ $itemIdx }})" class="text-red-500" />
+                                            <flux:button type="button" variant="ghost" size="sm" icon="trash" wire:click="removePageBuilderFeatureItem('{{ $esHandle }}', {{ $esIdx }}, {{ $itemIdx }})" class="text-red-500" />
                                         </div>
-                                        <flux:input label="{{ __('Icon (Heroicon name)') }}" wire:model="form.fieldValues.{{ $handle }}.{{ $idx }}.data.items.{{ $itemIdx }}.icon" placeholder="bolt" />
-                                        <flux:input label="{{ __('Title') }}" wire:model="form.fieldValues.{{ $handle }}.{{ $idx }}.data.items.{{ $itemIdx }}.item_title" />
-                                        <flux:textarea label="{{ __('Description') }}" wire:model="form.fieldValues.{{ $handle }}.{{ $idx }}.data.items.{{ $itemIdx }}.item_description" rows="2" />
+                                        <flux:input label="{{ __('Icon (Heroicon name)') }}" wire:model="form.fieldValues.{{ $esHandle }}.{{ $esIdx }}.data.items.{{ $itemIdx }}.icon" placeholder="bolt" />
+                                        <flux:input label="{{ __('Title') }}" wire:model="form.fieldValues.{{ $esHandle }}.{{ $esIdx }}.data.items.{{ $itemIdx }}.item_title" />
+                                        <flux:textarea label="{{ __('Description') }}" wire:model="form.fieldValues.{{ $esHandle }}.{{ $esIdx }}.data.items.{{ $itemIdx }}.item_description" rows="2" />
                                     </div>
                                 @endforeach
 
-                                <flux:button type="button" variant="ghost" size="sm" icon="plus" wire:click="addPageBuilderFeatureItem('{{ $handle }}', {{ $idx }})">
+                                <flux:button type="button" variant="ghost" size="sm" icon="plus" wire:click="addPageBuilderFeatureItem('{{ $esHandle }}', {{ $esIdx }})">
                                     {{ __('Add Feature') }}
                                 </flux:button>
                             </div>
                         </div>
                     @break
                 @endswitch
+
+                <div class="flex justify-end border-t border-zinc-200 pt-4 dark:border-zinc-700">
+                    <flux:modal.close>
+                        <flux:button variant="primary">{{ __('Done') }}</flux:button>
+                    </flux:modal.close>
+                </div>
             </div>
-        </div>
-    @empty
-        <div class="flex flex-col items-center gap-2 rounded-lg border-2 border-dashed border-zinc-300 py-8 text-center dark:border-zinc-700">
-            <flux:icon.squares-plus class="size-8 text-zinc-400" />
-            <flux:text class="text-zinc-500">{{ __('No sections yet. Add one below to build your page.') }}</flux:text>
-        </div>
-    @endforelse
+        @endif
+    </flux:modal>
 
     {{-- Add Section button --}}
     <div class="pt-1">
