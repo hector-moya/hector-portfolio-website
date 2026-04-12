@@ -6,6 +6,7 @@ namespace App\Livewire\Assets;
 
 use App\Models\Asset;
 use App\Models\Folder;
+use App\Services\ImageTransformer;
 use Flux\Flux;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\View\Factory;
@@ -13,10 +14,12 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Collection;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 
 final class Browser extends Component
 {
+    use WithFileUploads;
     use WithPagination;
 
     public string $fieldHandle;
@@ -27,6 +30,11 @@ final class Browser extends Component
     public string $mode = 'image';
 
     public ?int $currentFolderId = null;
+
+    /** @var array<int, mixed> Files staged for upload */
+    public array $pendingUploads = [];
+
+    public int $lastUploadCount = 0;
 
     public function mount(string $fieldHandle, string $mode = 'image'): void
     {
@@ -48,6 +56,16 @@ final class Browser extends Component
     {
         $this->currentFolderId = $folderId;
         $this->resetPage();
+    }
+
+    public function uploadFiles(): void
+    {
+        foreach ($this->pendingUploads as $file) {
+            $this->processUpload($file);
+        }
+
+        $this->lastUploadCount = count($this->pendingUploads);
+        $this->pendingUploads = [];
     }
 
     #[Computed]
@@ -94,5 +112,42 @@ final class Browser extends Component
             ->where('folder_id', $this->currentFolderId)
             ->latest()
             ->paginate(12);
+    }
+
+    private function processUpload(mixed $file): void
+    {
+        $disk = config('filesystems.default');
+        $folder = '/';
+
+        $path = $disk === 's3'
+            ? $file->storePublicly($folder, 's3')
+            : $file->storePublicly($folder, 'public');
+
+        $mimeType = $file->getMimeType();
+        $meta = null;
+
+        if (str_starts_with((string) $mimeType, 'image/')) {
+            $variants = resolve(ImageTransformer::class)->transform((string) $path, (string) $disk);
+
+            if ($variants !== []) {
+                $meta = [
+                    'thumbnail' => $variants['thumbnail'],
+                    'medium' => $variants['medium'],
+                ];
+            }
+        }
+
+        Asset::create([
+            'filename' => basename((string) $path),
+            'original_filename' => $file->getClientOriginalName(),
+            'disk' => $disk,
+            'mime_type' => $mimeType,
+            'size' => $file->getSize(),
+            'path' => $path,
+            'folder_id' => $this->currentFolderId,
+            'uploaded_by' => auth()->id(),
+            'updated_by' => auth()->id(),
+            'meta' => $meta,
+        ]);
     }
 }
