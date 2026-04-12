@@ -24,8 +24,13 @@
                     @foreach ($items as $item)
                         <div class="flex flex-col gap-4 rounded-2xl border border-zinc-200 p-6 dark:border-zinc-700">
                             @if (!empty($item['icon']))
+                                @php $iconName = Str::kebab($item['icon']); @endphp
                                 <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-teal-600 text-white">
-                                    <flux:icon :name="$item['icon']" class="size-6" />
+                                    @if (view()->exists('flux::icon.' . $iconName))
+                                        <flux:icon :name="$iconName" class="size-6" />
+                                    @else
+                                        <flux:icon name="sparkles" class="size-6" />
+                                    @endif
                                 </div>
                             @endif
 

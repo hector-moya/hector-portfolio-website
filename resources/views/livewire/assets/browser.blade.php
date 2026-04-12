@@ -128,90 +128,97 @@
         {{-- ── Upload tab ── --}}
         <flux:tab.panel name="upload" class="px-4 pb-4 space-y-4">
 
+            {{-- Loading overlay: covers the whole tab during temp-upload and processing --}}
             <div
-                x-data="{
-                    dragging: false,
-                    handleDrop(e) {
-                        this.dragging = false;
-                        const dt = e.dataTransfer;
-                        if (!dt?.files?.length) return;
-                        const input = $refs.fileInput;
-                        const transfer = new DataTransfer();
-                        Array.from(dt.files).forEach(f => transfer.items.add(f));
-                        input.files = transfer.files;
-                        input.dispatchEvent(new Event('change'));
-                    }
-                }"
-                @dragover.prevent="dragging = true"
-                @dragleave.prevent="dragging = false"
-                @drop.prevent="handleDrop($event)"
+                wire:loading
+                wire:target="pendingUploads,uploadFiles"
+                class="flex flex-col items-center gap-3 rounded-xl border-2 border-dashed border-teal-300 bg-teal-50 p-8 text-center dark:border-teal-700 dark:bg-teal-900/20"
             >
-                {{-- Drop zone --}}
-                <label
-                    for="browser-file-input-{{ $fieldHandle }}"
-                    :class="dragging ? 'border-teal-400 bg-teal-50 dark:bg-teal-900/20' : 'border-zinc-300 dark:border-zinc-600 hover:border-teal-400 hover:bg-zinc-50 dark:hover:bg-zinc-800/50'"
-                    class="flex cursor-pointer flex-col items-center gap-3 rounded-xl border-2 border-dashed p-8 transition-colors text-center"
-                >
-                    <flux:icon name="arrow-up-tray" class="size-8 text-zinc-400" />
-                    <div>
-                        <p class="text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                            {{ __('Drop files here or click to browse') }}
-                        </p>
-                        <p class="mt-0.5 text-xs text-zinc-400">
-                            {{ $mode === 'image' ? __('PNG, JPG, GIF, WebP, SVG') : __('Any file type') }}
-                        </p>
-                    </div>
-                    <input
-                        id="browser-file-input-{{ $fieldHandle }}"
-                        x-ref="fileInput"
-                        type="file"
-                        wire:model="pendingUploads"
-                        @if ($mode === 'image') accept="image/*" @endif
-                        multiple
-                        class="sr-only"
-                    />
-                </label>
+                <svg class="h-7 w-7 animate-spin text-teal-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <p class="text-sm font-medium text-teal-700 dark:text-teal-300" wire:loading wire:target="pendingUploads">{{ __('Preparing files…') }}</p>
+                <p class="text-sm font-medium text-teal-700 dark:text-teal-300" wire:loading wire:target="uploadFiles">{{ __('Uploading and processing…') }}</p>
             </div>
 
-            {{-- Staged files list --}}
-            @if (count($pendingUploads) > 0)
-                <div class="space-y-2">
-                    <flux:text size="sm" class="font-medium text-zinc-700 dark:text-zinc-300">
-                        {{ trans_choice(':count file ready to upload.|:count files ready to upload.', count($pendingUploads), ['count' => count($pendingUploads)]) }}
-                    </flux:text>
+            {{-- Drop zone + staged list (hidden while loading) --}}
+            <div wire:loading.remove wire:target="pendingUploads,uploadFiles">
 
-                    <div class="max-h-40 overflow-y-auto divide-y divide-zinc-100 dark:divide-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700">
-                        @foreach ($pendingUploads as $file)
-                            <div class="flex items-center gap-3 px-3 py-2">
-                                <flux:icon name="{{ str_starts_with($file->getMimeType(), 'image/') ? 'photo' : 'document' }}" size="micro" class="shrink-0 text-zinc-400" />
-                                <span class="min-w-0 flex-1 truncate text-sm">{{ $file->getClientOriginalName() }}</span>
-                                <span class="shrink-0 text-xs text-zinc-400">{{ number_format($file->getSize() / 1024, 1) }} KB</span>
-                            </div>
-                        @endforeach
-                    </div>
+                <div
+                    x-data="{
+                        dragging: false,
+                        handleDrop(e) {
+                            this.dragging = false;
+                            const dt = e.dataTransfer;
+                            if (!dt?.files?.length) return;
+                            const input = $refs.fileInput;
+                            const transfer = new DataTransfer();
+                            Array.from(dt.files).forEach(f => transfer.items.add(f));
+                            input.files = transfer.files;
+                            input.dispatchEvent(new Event('change'));
+                        }
+                    }"
+                    @dragover.prevent="dragging = true"
+                    @dragleave.prevent="dragging = false"
+                    @drop.prevent="handleDrop($event)"
+                >
+                    <label
+                        for="browser-file-input-{{ $fieldHandle }}"
+                        :class="dragging ? 'border-teal-400 bg-teal-50 dark:bg-teal-900/20' : 'border-zinc-300 dark:border-zinc-600 hover:border-teal-400 hover:bg-zinc-50 dark:hover:bg-zinc-800/50'"
+                        class="flex cursor-pointer flex-col items-center gap-3 rounded-xl border-2 border-dashed p-8 transition-colors text-center"
+                    >
+                        <flux:icon name="arrow-up-tray" class="size-8 text-zinc-400" />
+                        <div>
+                            <p class="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                                {{ __('Drop files here or click to browse') }}
+                            </p>
+                            <p class="mt-0.5 text-xs text-zinc-400">
+                                {{ $mode === 'image' ? __('PNG, JPG, GIF, WebP, SVG') : __('Any file type') }}
+                            </p>
+                        </div>
+                        <input
+                            id="browser-file-input-{{ $fieldHandle }}"
+                            x-ref="fileInput"
+                            type="file"
+                            wire:model="pendingUploads"
+                            @if ($mode === 'image') accept="image/*" @endif
+                            multiple
+                            class="sr-only"
+                        />
+                    </label>
                 </div>
 
-                <flux:button
-                    type="button"
-                    variant="primary"
-                    icon="arrow-up-tray"
-                    wire:click="uploadFiles"
-                    wire:loading.attr="disabled"
-                    wire:target="uploadFiles"
-                    class="w-full"
-                >
-                    <span wire:loading.remove wire:target="uploadFiles">
-                        {{ trans_choice('Upload :count file|Upload :count files', count($pendingUploads), ['count' => count($pendingUploads)]) }}
-                    </span>
-                    <span wire:loading wire:target="uploadFiles">
-                        {{ __('Uploading…') }}
-                    </span>
-                </flux:button>
-            @else
-                <flux:text size="sm" class="text-center text-zinc-500">
-                    {{ __('No files selected yet.') }}
-                </flux:text>
-            @endif
+                {{-- Staged files list --}}
+                @if (count($pendingUploads) > 0)
+                    <div class="mt-4 space-y-3">
+                        <flux:text size="sm" class="font-medium text-zinc-700 dark:text-zinc-300">
+                            {{ trans_choice(':count file ready to upload.|:count files ready to upload.', count($pendingUploads), ['count' => count($pendingUploads)]) }}
+                        </flux:text>
+
+                        <div class="max-h-40 overflow-y-auto divide-y divide-zinc-100 dark:divide-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700">
+                            @foreach ($pendingUploads as $file)
+                                <div class="flex items-center gap-3 px-3 py-2">
+                                    <flux:icon name="{{ str_starts_with($file->getMimeType(), 'image/') ? 'photo' : 'document' }}" size="micro" class="shrink-0 text-zinc-400" />
+                                    <span class="min-w-0 flex-1 truncate text-sm">{{ $file->getClientOriginalName() }}</span>
+                                    <span class="shrink-0 text-xs text-zinc-400">{{ number_format($file->getSize() / 1024, 1) }} KB</span>
+                                </div>
+                            @endforeach
+                        </div>
+
+                        <flux:button
+                            type="button"
+                            variant="primary"
+                            icon="arrow-up-tray"
+                            wire:click="uploadFiles"
+                            class="w-full"
+                        >
+                            {{ trans_choice('Upload :count file|Upload :count files', count($pendingUploads), ['count' => count($pendingUploads)]) }}
+                        </flux:button>
+                    </div>
+                @endif
+
+            </div>
 
         </flux:tab.panel>
     </flux:tab.group>

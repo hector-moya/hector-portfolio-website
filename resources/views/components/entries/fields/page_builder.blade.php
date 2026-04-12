@@ -10,6 +10,13 @@
     $sections = $form->fieldValues[$handle] ?? [];
     $allowedTypes = $field->config['allowed_section_types'] ?? array_keys(\App\Support\SectionTypes::labels());
     $sectionTypeLabels = collect(\App\Support\SectionTypes::labels())->only($allowedTypes)->all();
+
+    // Resolve the section currently open in the editor (used by the modal AND the sibling asset-browser modals)
+    $esHandle  = $editingSectionHandle;
+    $esIdx     = $editingSectionIndex;
+    $esSection = ($esHandle !== '' && $esIdx >= 0)
+        ? ($form->fieldValues[$esHandle][$esIdx] ?? null)
+        : null;
 @endphp
 
 <div class="space-y-3">
@@ -82,15 +89,12 @@
         </div>
     @endforelse
 
-    {{-- Shared section edit modal --}}
+    {{-- ─────────────────────────────────────────────────
+         Section edit modal
+         Note: asset-browser modals are rendered OUTSIDE
+         this modal (as siblings below) to avoid nesting.
+    ───────────────────────────────────────────────────── --}}
     <flux:modal name="edit-page-builder-section" class="w-2xl max-h-[90vh] overflow-y-auto">
-        @php
-            $esHandle  = $editingSectionHandle;
-            $esIdx     = $editingSectionIndex;
-            $esSection = ($esHandle !== '' && $esIdx >= 0)
-                ? ($form->fieldValues[$esHandle][$esIdx] ?? null)
-                : null;
-        @endphp
         @if ($esSection)
             <div class="space-y-6">
                 <flux:heading size="lg">
@@ -99,15 +103,15 @@
 
                 @switch($esSection['type'])
                     @case('hero')
+                        @php
+                            $bgHandle = 'section_' . $esSection['_id'] . '_bg_image';
+                            $bgAsset  = ($esSection['data']['bg_image'] ?? null) ? \App\Models\Asset::find($esSection['data']['bg_image']) : null;
+                        @endphp
                         <div class="space-y-4">
                             <flux:input label="{{ __('Title') }}" wire:model="form.fieldValues.{{ $esHandle }}.{{ $esIdx }}.data.title" />
                             <flux:input label="{{ __('Subtitle') }}" wire:model="form.fieldValues.{{ $esHandle }}.{{ $esIdx }}.data.subtitle" />
                             <flux:textarea label="{{ __('Content') }}" wire:model="form.fieldValues.{{ $esHandle }}.{{ $esIdx }}.data.content" rows="3" />
 
-                            @php
-                                $bgHandle = 'section_' . $esSection['_id'] . '_bg_image';
-                                $bgAsset  = ($esSection['data']['bg_image'] ?? null) ? \App\Models\Asset::find($esSection['data']['bg_image']) : null;
-                            @endphp
                             <div class="space-y-2">
                                 <flux:label>{{ __('Background Image') }}</flux:label>
                                 @if ($bgAsset)
@@ -124,9 +128,6 @@
                                     </flux:button>
                                 </flux:modal.trigger>
                             </div>
-                            <flux:modal name="asset-browser-{{ $bgHandle }}" class="w-3xl">
-                                <livewire:assets.browser :fieldHandle="$bgHandle" :key="'pb-' . $bgHandle" />
-                            </flux:modal>
 
                             <div class="grid grid-cols-2 gap-4">
                                 <flux:input label="{{ __('Primary CTA Text') }}" wire:model="form.fieldValues.{{ $esHandle }}.{{ $esIdx }}.data.cta_text" />
@@ -151,6 +152,10 @@
                     @break
 
                     @case('image_text')
+                        @php
+                            $imgHandle = 'section_' . $esSection['_id'] . '_image';
+                            $imgAsset  = ($esSection['data']['image'] ?? null) ? \App\Models\Asset::find($esSection['data']['image']) : null;
+                        @endphp
                         <div class="space-y-4">
                             <flux:input label="{{ __('Title') }}" wire:model="form.fieldValues.{{ $esHandle }}.{{ $esIdx }}.data.title" />
                             <flux:textarea label="{{ __('Content') }}" wire:model="form.fieldValues.{{ $esHandle }}.{{ $esIdx }}.data.content" rows="4" />
@@ -159,10 +164,6 @@
                                 <flux:select.option value="right">{{ __('Right') }}</flux:select.option>
                             </flux:select>
 
-                            @php
-                                $imgHandle = 'section_' . $esSection['_id'] . '_image';
-                                $imgAsset  = ($esSection['data']['image'] ?? null) ? \App\Models\Asset::find($esSection['data']['image']) : null;
-                            @endphp
                             <div class="space-y-2">
                                 <flux:label>{{ __('Image') }}</flux:label>
                                 @if ($imgAsset)
@@ -179,9 +180,6 @@
                                     </flux:button>
                                 </flux:modal.trigger>
                             </div>
-                            <flux:modal name="asset-browser-{{ $imgHandle }}" class="w-3xl">
-                                <livewire:assets.browser :fieldHandle="$imgHandle" :key="'pb-' . $imgHandle" />
-                            </flux:modal>
 
                             <div class="grid grid-cols-2 gap-4">
                                 <flux:input label="{{ __('CTA Text') }}" wire:model="form.fieldValues.{{ $esHandle }}.{{ $esIdx }}.data.cta_text" />
@@ -191,11 +189,12 @@
                     @break
 
                     @case('gallery')
+                        @php $gallerySlot = count($esSection['data']['images'] ?? []); @endphp
                         <div class="space-y-4">
                             <flux:input label="{{ __('Title') }}" wire:model="form.fieldValues.{{ $esHandle }}.{{ $esIdx }}.data.title" />
 
                             <div>
-                                <flux:label>{{ __('Images') }} <span class="text-zinc-400">({{ count($esSection['data']['images'] ?? []) }}/6)</span></flux:label>
+                                <flux:label>{{ __('Images') }} <span class="text-zinc-400">({{ $gallerySlot }}/6)</span></flux:label>
                                 <div class="mt-2 grid grid-cols-3 gap-3 sm:grid-cols-6">
                                     @foreach ($esSection['data']['images'] ?? [] as $imgIdx => $assetId)
                                         @php $galleryAsset = \App\Models\Asset::find($assetId); @endphp
@@ -209,16 +208,13 @@
                                         </div>
                                     @endforeach
 
-                                    @if (count($esSection['data']['images'] ?? []) < 6)
-                                        @php $slotHandle = 'section_' . $esSection['_id'] . '_image_' . count($esSection['data']['images'] ?? []); @endphp
+                                    @if ($gallerySlot < 6)
+                                        @php $slotHandle = 'section_' . $esSection['_id'] . '_image_' . $gallerySlot; @endphp
                                         <flux:modal.trigger name="asset-browser-{{ $slotHandle }}">
                                             <button type="button" class="flex aspect-square items-center justify-center rounded-lg border-2 border-dashed border-zinc-300 text-zinc-400 transition-colors hover:border-teal-400 hover:text-teal-500 dark:border-zinc-600 dark:hover:border-teal-500">
                                                 <flux:icon.plus class="size-6" />
                                             </button>
                                         </flux:modal.trigger>
-                                        <flux:modal name="asset-browser-{{ $slotHandle }}" class="w-3xl">
-                                            <livewire:assets.browser :fieldHandle="$slotHandle" :key="'pb-' . $slotHandle" />
-                                        </flux:modal>
                                     @endif
                                 </div>
                             </div>
@@ -249,7 +245,7 @@
                                             <flux:text size="sm" class="font-medium">{{ __('Item :number', ['number' => $itemIdx + 1]) }}</flux:text>
                                             <flux:button type="button" variant="ghost" size="sm" icon="trash" wire:click="removePageBuilderFeatureItem('{{ $esHandle }}', {{ $esIdx }}, {{ $itemIdx }})" class="text-red-500" />
                                         </div>
-                                        <flux:input label="{{ __('Icon (Heroicon name)') }}" wire:model="form.fieldValues.{{ $esHandle }}.{{ $esIdx }}.data.items.{{ $itemIdx }}.icon" placeholder="bolt" />
+                                        <flux:input label="{{ __('Icon (Heroicon name)') }}" wire:model="form.fieldValues.{{ $esHandle }}.{{ $esIdx }}.data.items.{{ $itemIdx }}.icon" placeholder="bolt" description="{{ __('Use kebab-case, e.g. light-bulb, arrow-right, check-circle') }}" />
                                         <flux:input label="{{ __('Title') }}" wire:model="form.fieldValues.{{ $esHandle }}.{{ $esIdx }}.data.items.{{ $itemIdx }}.item_title" />
                                         <flux:textarea label="{{ __('Description') }}" wire:model="form.fieldValues.{{ $esHandle }}.{{ $esIdx }}.data.items.{{ $itemIdx }}.item_description" rows="2" />
                                     </div>
@@ -271,6 +267,40 @@
             </div>
         @endif
     </flux:modal>
+
+    {{-- ─────────────────────────────────────────────────────────
+         Asset-browser modals — rendered as SIBLINGS of the
+         section editor modal, NOT nested inside it.
+         Flux resolves modal names globally, so triggers inside
+         the section editor modal still open these correctly.
+    ─────────────────────────────────────────────────────────── --}}
+    @if ($esSection)
+        @switch($esSection['type'])
+            @case('hero')
+                @php $bgHandle = 'section_' . $esSection['_id'] . '_bg_image'; @endphp
+                <flux:modal name="asset-browser-{{ $bgHandle }}" class="w-3xl">
+                    <livewire:assets.browser :fieldHandle="$bgHandle" :key="'pb-' . $bgHandle" />
+                </flux:modal>
+            @break
+
+            @case('image_text')
+                @php $imgHandle = 'section_' . $esSection['_id'] . '_image'; @endphp
+                <flux:modal name="asset-browser-{{ $imgHandle }}" class="w-3xl">
+                    <livewire:assets.browser :fieldHandle="$imgHandle" :key="'pb-' . $imgHandle" />
+                </flux:modal>
+            @break
+
+            @case('gallery')
+                @php $gallerySlot = count($esSection['data']['images'] ?? []); @endphp
+                @if ($gallerySlot < 6)
+                    @php $slotHandle = 'section_' . $esSection['_id'] . '_image_' . $gallerySlot; @endphp
+                    <flux:modal name="asset-browser-{{ $slotHandle }}" class="w-3xl">
+                        <livewire:assets.browser :fieldHandle="$slotHandle" :key="'pb-' . $slotHandle" />
+                    </flux:modal>
+                @endif
+            @break
+        @endswitch
+    @endif
 
     {{-- Add Section button --}}
     <div class="pt-1">
