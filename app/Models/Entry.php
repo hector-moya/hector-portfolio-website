@@ -125,32 +125,21 @@ final class Entry extends Model
             foreach ($this->elements as $element) {
                 $sectionType = SectionType::tryFrom($element->Field?->type ?? '');
                 if ($sectionType === null) {
-                    // Legacy page_builder field — check if value is an array of sections
-                    if ($element->Field?->type === 'page_builder') {
-                        $value = $element->getElementValue();
-                        if (is_array($value)) {
-                            foreach ($value as $section) {
-                                if (isset($section['_id'], $section['type'], $section['data'])) {
-                                    $sections[] = $section;
-                                }
-                            }
-                        }
-
-                        continue;
-                    }
-
                     continue;
                 }
 
-                $data = $element->getElementValue();
-                if (! is_array($data)) {
-                    $data = $sectionType->defaultData();
+                // Only include elements with associative meta arrays (new section format).
+                // Skip elements with null meta (old string-value fields) or sequential
+                // list meta (old page_builder nested-section format).
+                $meta = $element->meta;
+                if (! is_array($meta) || array_is_list($meta)) {
+                    continue;
                 }
 
                 $sections[] = [
                     '_id' => (string) Str::uuid(),
                     'type' => $sectionType->value,
-                    'data' => $data,
+                    'data' => $meta,
                 ];
             }
 

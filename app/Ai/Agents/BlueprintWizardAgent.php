@@ -22,14 +22,13 @@ final class BlueprintWizardAgent implements Agent, HasStructuredOutput
         structured blueprint definition with tabs, sections, and fields.
 
         Rules:
-        - Always include a "Content" tab with the main content fields.
-        - Always include an "SEO" tab with seo_title (text) and seo_description (textarea) fields.
+        - Always include a "Content" tab with the main content sections.
+        - Always include an "SEO" tab with seo_title (text) and seo_description (text) fields.
         - Field handles must be snake_case, unique within the blueprint, and derived from the label.
         - Section handles must be snake_case derived from the section name.
         - Tab handles must be snake_case derived from the tab name.
-        - Only use these field types: text, textarea, richtext, number, email, url, date, time,
-          toggle, select, radio, image, file, repeater, page_builder.
-        - For select and radio fields, include sensible default options in the config.
+        - Only use these field types: hero, text, image_text, gallery, cta, features, richtext, form.
+          Each field represents a page section of that type.
         - Keep the structure practical: 2–4 tabs, 1–3 sections per tab, 3–8 fields per section.
         - Generate a name and URL-safe slug from the description.
         INSTRUCTIONS;

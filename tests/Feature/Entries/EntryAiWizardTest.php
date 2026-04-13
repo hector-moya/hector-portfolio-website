@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use App\Ai\Agents\EntryWizardAgent;
-use App\Enums\FieldType;
+use App\Enums\SectionType;
 use App\Livewire\Entries\AiWizard;
 use App\Models\Blueprint;
 use App\Models\Collection;
@@ -60,10 +60,10 @@ test('save creates entry with generated field values as draft', function (): voi
 
     $tab = $blueprint->tabs()->create(['name' => 'Content', 'handle' => 'content', 'sort_order' => 0]);
     $section = $tab->sections()->create(['name' => 'Main', 'handle' => 'main', 'blueprint_id' => $blueprint->id, 'instructions' => '', 'sort_order' => 0]);
-    $field = Field::factory()->create([
+    Field::factory()->create([
         'blueprint_id' => $blueprint->id,
         'section_id' => $section->id,
-        'type' => FieldType::Textarea->value,
+        'type' => SectionType::Text->value,
         'label' => 'Excerpt',
         'handle' => 'excerpt',
     ]);
@@ -71,7 +71,7 @@ test('save creates entry with generated field values as draft', function (): voi
     EntryWizardAgent::fake([[
         'title' => 'Test Entry',
         'slug' => 'test-entry',
-        'fields' => ['excerpt' => 'This is the excerpt.'],
+        'fields' => ['excerpt' => ['content' => 'This is the excerpt.', 'alignment' => 'left']],
     ]]);
 
     Livewire::test(AiWizard::class)
@@ -84,7 +84,7 @@ test('save creates entry with generated field values as draft', function (): voi
     $entry = Entry::query()->where('slug', 'test-entry')->first();
     expect($entry)->not->toBeNull();
     expect($entry->status)->toBe('draft');
-    expect($entry->elements->firstWhere('handle', 'excerpt')?->value)->toBe('This is the excerpt.');
+    expect($entry->elements->firstWhere('handle', 'excerpt')?->meta)->toBe(['content' => 'This is the excerpt.', 'alignment' => 'left']);
 });
 
 it('denies access to viewer role users', function (): void {

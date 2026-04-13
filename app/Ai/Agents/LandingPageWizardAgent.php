@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Ai\Agents;
 
-use App\Support\SectionTypes;
+use App\Enums\SectionType;
 use Illuminate\Contracts\JsonSchema\JsonSchema;
 use Laravel\Ai\Attributes\UseSmartestModel;
 use Laravel\Ai\Contracts\Agent;
@@ -18,9 +18,9 @@ final class LandingPageWizardAgent implements Agent, HasStructuredOutput
 
     public function instructions(): string
     {
-        $sectionDocs = collect(SectionTypes::all())
-            ->map(function (array $type, string $key): string {
-                $fields = collect($type['fields'])
+        $sectionDocs = collect(SectionType::cases())
+            ->map(function (SectionType $type): string {
+                $fields = collect($type->fieldSchema())
                     ->map(function (array $f, string $handle): string {
                         $line = sprintf('    - %s (%s): %s', $handle, $f['type'], $f['label']);
                         if (isset($f['options'])) {
@@ -31,7 +31,7 @@ final class LandingPageWizardAgent implements Agent, HasStructuredOutput
                     })
                     ->implode("\n");
 
-                return "- **{$key}** ({$type['label']}):\n{$fields}";
+                return "- **{$type->value}** ({$type->label()}):\n{$fields}";
             })
             ->implode("\n\n");
 

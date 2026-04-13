@@ -9,8 +9,8 @@
     >
         <div class="flex flex-wrap gap-2">
             <flux:checkbox.all label="{{ __('All') }}" />
-            @foreach (\App\Support\SectionTypes::labels() as $value => $label)
-                <flux:checkbox value="{{ $value }}" label="{{ $label }}" />
+            @foreach (\App\Enums\SectionType::cases() as $sectionType)
+                <flux:checkbox value="{{ $sectionType->value }}" label="{{ $sectionType->label() }}" />
             @endforeach
         </div>
     </flux:checkbox.group>

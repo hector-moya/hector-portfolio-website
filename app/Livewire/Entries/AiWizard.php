@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Livewire\Entries;
 
 use App\Ai\Agents\EntryWizardAgent;
+use App\Enums\SectionType;
 use App\Livewire\Actions\CreateEntry;
 use App\Models\Blueprint;
 use App\Models\Collection;
@@ -68,7 +69,7 @@ final class AiWizard extends Component
             ->flatMap(fn ($tab) => $tab->sections
                 ->sortBy('sort_order')
                 ->flatMap(fn ($section) => $section->fields->sortBy('order')))
-            ->reject(fn ($field): bool => $field->type === 'page_builder')
+            ->reject(fn ($field): bool => SectionType::tryFrom($field->type) === null)
             ->map(fn ($field): array => [
                 'id' => $field->id,
                 'type' => $field->type,
@@ -120,8 +121,9 @@ final class AiWizard extends Component
         foreach ($this->blueprintFields as $field) {
             $value = $this->generatedFields[$field['handle']] ?? null;
 
-            if ($value === null && in_array($field['type'], ['image', 'file', 'page_builder', 'repeater'])) {
-                continue;
+            // Fall back to default section data if the AI returned a non-array value
+            if (! is_array($value)) {
+                $value = SectionType::from($field['type'])->defaultData();
             }
 
             $fieldsValues[] = [

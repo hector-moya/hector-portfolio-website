@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Livewire\LandingPages;
 
 use App\Ai\Agents\LandingPageWizardAgent;
+use App\Enums\SectionType;
 use App\Livewire\Actions\Blueprints\CreateBlueprint;
 use App\Livewire\Actions\Collections\CreateCollection;
 use App\Livewire\Actions\CreateEntry;
@@ -89,7 +90,22 @@ final class AiWizard extends Component
                 'settings' => ['type' => 'single'],
             ]);
 
-            // 2. Create blueprint with one page_builder field
+            // 2. Build one blueprint field per section from the proposal
+            $blueprintFields = [];
+            foreach ($this->proposal as $idx => $section) {
+                $sectionType = SectionType::from($section['type']);
+                $blueprintFields[] = [
+                    'label' => $sectionType->defaultLabel(),
+                    'handle' => $section['type'].'_'.($idx + 1),
+                    'type' => $sectionType->value,
+                    'instructions' => '',
+                    'is_required' => false,
+                    'config' => $sectionType->defaultConfig(),
+                    'sortOrder' => $idx,
+                ];
+            }
+
+            // 3. Create blueprint with one field per section
             $blueprint = resolve(CreateBlueprint::class)->create([
                 'name' => $this->name.' Blueprint',
                 'slug' => $this->slug.'-blueprint',
@@ -106,46 +122,42 @@ final class AiWizard extends Component
                                 'handle' => 'page_builder',
                                 'instructions' => '',
                                 'sortOrder' => 0,
-                                'fields' => [
-                                    [
-                                        'label' => 'Page Sections',
-                                        'handle' => 'page_sections',
-                                        'type' => 'page_builder',
-                                        'instructions' => '',
-                                        'is_required' => false,
-                                        'config' => [],
-                                        'sortOrder' => 0,
-                                    ],
-                                ],
+                                'fields' => $blueprintFields,
                             ],
                         ],
                     ],
                 ],
             ]);
 
-            // 3. Link blueprint to collection
+            // 4. Link blueprint to collection
             $collection->update(['blueprint_id' => $blueprint->id]);
 
-            // 4. Get the page_builder field to pass its ID to CreateEntry
-            $pageBuilderField = $blueprint->tabs->first()
-                ->sections->first()
-                ->fields->first();
+            // 5. Build entry elements — one per section, value is the section data array
+            $fieldsValues = [];
+            $fields = $blueprint->tabs->first()->sections->first()->fields->sortBy('order')->values();
 
-            // 5. Create entry with page builder sections from proposal
+            foreach ($this->proposal as $idx => $section) {
+                $field = $fields->get($idx);
+                if ($field === null) {
+                    continue;
+                }
+
+                $fieldsValues[] = [
+                    'field_id' => $field->id,
+                    'handle' => $field->handle,
+                    'type' => $field->type,
+                    'value' => $section['data'],
+                    'children' => [],
+                ];
+            }
+
+            // 6. Create entry with one element per section
             $entry = resolve(CreateEntry::class)->handle([
                 'title' => $this->name,
                 'slug' => $this->slug,
                 'blueprint_id' => $blueprint->id,
                 'status' => 'draft',
-                'fieldsValues' => [
-                    [
-                        'field_id' => $pageBuilderField->id,
-                        'handle' => 'page_sections',
-                        'type' => 'page_builder',
-                        'value' => $this->proposal,
-                        'children' => [],
-                    ],
-                ],
+                'fieldsValues' => $fieldsValues,
             ]);
 
             $this->redirect(route('entries.edit', $entry), navigate: true);
