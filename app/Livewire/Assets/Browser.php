@@ -44,10 +44,7 @@ final class Browser extends Component
 
     public function selectAsset(int $assetId): void
     {
-        $this->dispatch('asset-selected', [
-            'handle' => $this->fieldHandle,
-            'value' => $assetId,
-        ]);
+        $this->dispatch('asset-selected', handle: $this->fieldHandle, value: $assetId);
 
         Flux::modal('asset-browser-'.$this->fieldHandle)->close();
     }

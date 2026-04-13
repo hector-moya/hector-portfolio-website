@@ -138,7 +138,7 @@ test('asset-selected event with section handle updates correct section field', f
 
     Livewire::actingAs($this->user)
         ->test(PageBuilder::class, ['entry' => $entry])
-        ->dispatch('asset-selected', ['handle' => sprintf('section_%s_bg_image', $sectionId), 'value' => 42])
+        ->dispatch('asset-selected', handle: sprintf('section_%s_bg_image', $sectionId), value: 42)
         ->assertSet('sections.0.data.bg_image', 42);
 });
 
@@ -147,7 +147,7 @@ test('asset-selected event with non-section handle is ignored', function (): voi
 
     Livewire::actingAs($this->user)
         ->test(PageBuilder::class, ['entry' => $entry])
-        ->dispatch('asset-selected', ['handle' => 'some_regular_field', 'value' => 99])
+        ->dispatch('asset-selected', handle: 'some_regular_field', value: 99)
         ->assertSet('sections', []);
 });
 

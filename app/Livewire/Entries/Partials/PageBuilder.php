@@ -97,17 +97,15 @@ final class PageBuilder extends Component
     }
 
     #[On('asset-selected')]
-    public function onAssetSelected(array $data): void
+    public function onAssetSelected(string $handle, mixed $value): void
     {
-        $handle = $data['handle'];
-
-        if (! str_starts_with((string) $handle, 'section_')) {
+        if (! str_starts_with($handle, 'section_')) {
             return;
         }
 
         // Handle: section_{_id}_{fieldHandle} or section_{_id}_image_{slotIndex}
         // UUIDs use hyphens, field handles use underscores — split after the UUID portion
-        if (! preg_match('/^section_([0-9a-f-]{36})_(.+)$/', (string) $handle, $matches)) {
+        if (! preg_match('/^section_([0-9a-f-]{36})_(.+)$/', $handle, $matches)) {
             return;
         }
 
@@ -123,13 +121,13 @@ final class PageBuilder extends Component
         if (preg_match('/^image_(\d+)$/', $fieldPart, $slotMatches)) {
             $images = $this->sections[$sectionIndex]['data']['images'] ?? [];
             if (count($images) < 6) {
-                $this->sections[$sectionIndex]['data']['images'][] = $data['value'];
+                $this->sections[$sectionIndex]['data']['images'][] = $value;
             }
 
             return;
         }
 
-        $this->sections[$sectionIndex]['data'][$fieldPart] = $data['value'];
+        $this->sections[$sectionIndex]['data'][$fieldPart] = $value;
     }
 
     public function save(): void

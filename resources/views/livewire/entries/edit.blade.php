@@ -65,6 +65,7 @@
                                                             :component="'entries.fields.' . $field->type"
                                                             :field="$field"
                                                             :form="$form"
+                                                            :pageBuilderValues="$pageBuilderValues"
                                                             :editingSectionHandle="$editingSectionHandle"
                                                             :editingSectionIndex="$editingSectionIndex"
                                                         />

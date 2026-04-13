@@ -1,13 +1,14 @@
 @props([
     'field' => null,
     'form' => null,
+    'pageBuilderValues' => [],
     'editingSectionHandle' => '',
     'editingSectionIndex' => -1,
 ])
 
 @php
     $handle = $field->handle;
-    $sections = $form->fieldValues[$handle] ?? [];
+    $sections = $pageBuilderValues[$handle] ?? [];
     $allowedTypes = $field->config['allowed_section_types'] ?? array_keys(\App\Support\SectionTypes::labels());
     $sectionTypeLabels = collect(\App\Support\SectionTypes::labels())->only($allowedTypes)->all();
 
@@ -15,7 +16,7 @@
     $esHandle  = $editingSectionHandle;
     $esIdx     = $editingSectionIndex;
     $esSection = ($esHandle !== '' && $esIdx >= 0)
-        ? ($form->fieldValues[$esHandle][$esIdx] ?? null)
+        ? ($pageBuilderValues[$esHandle][$esIdx] ?? null)
         : null;
 @endphp
 
@@ -108,9 +109,9 @@
                             $bgAsset  = ($esSection['data']['bg_image'] ?? null) ? \App\Models\Asset::find($esSection['data']['bg_image']) : null;
                         @endphp
                         <div class="space-y-4">
-                            <flux:input label="{{ __('Title') }}" wire:model="form.fieldValues.{{ $esHandle }}.{{ $esIdx }}.data.title" />
-                            <flux:input label="{{ __('Subtitle') }}" wire:model="form.fieldValues.{{ $esHandle }}.{{ $esIdx }}.data.subtitle" />
-                            <flux:textarea label="{{ __('Content') }}" wire:model="form.fieldValues.{{ $esHandle }}.{{ $esIdx }}.data.content" rows="3" />
+                            <flux:input label="{{ __('Title') }}" wire:model="pageBuilderValues.{{ $esHandle }}.{{ $esIdx }}.data.title" />
+                            <flux:input label="{{ __('Subtitle') }}" wire:model="pageBuilderValues.{{ $esHandle }}.{{ $esIdx }}.data.subtitle" />
+                            <flux:textarea label="{{ __('Content') }}" wire:model="pageBuilderValues.{{ $esHandle }}.{{ $esIdx }}.data.content" rows="3" />
 
                             <div class="space-y-2">
                                 <flux:label>{{ __('Background Image') }}</flux:label>
@@ -130,20 +131,20 @@
                             </div>
 
                             <div class="grid grid-cols-2 gap-4">
-                                <flux:input label="{{ __('Primary CTA Text') }}" wire:model="form.fieldValues.{{ $esHandle }}.{{ $esIdx }}.data.cta_text" />
-                                <flux:input label="{{ __('Primary CTA URL') }}" wire:model="form.fieldValues.{{ $esHandle }}.{{ $esIdx }}.data.cta_url" placeholder="/" />
+                                <flux:input label="{{ __('Primary CTA Text') }}" wire:model="pageBuilderValues.{{ $esHandle }}.{{ $esIdx }}.data.cta_text" />
+                                <flux:input label="{{ __('Primary CTA URL') }}" wire:model="pageBuilderValues.{{ $esHandle }}.{{ $esIdx }}.data.cta_url" placeholder="/" />
                             </div>
                             <div class="grid grid-cols-2 gap-4">
-                                <flux:input label="{{ __('Secondary CTA Text') }}" wire:model="form.fieldValues.{{ $esHandle }}.{{ $esIdx }}.data.secondary_cta_text" />
-                                <flux:input label="{{ __('Secondary CTA URL') }}" wire:model="form.fieldValues.{{ $esHandle }}.{{ $esIdx }}.data.secondary_cta_url" placeholder="/" />
+                                <flux:input label="{{ __('Secondary CTA Text') }}" wire:model="pageBuilderValues.{{ $esHandle }}.{{ $esIdx }}.data.secondary_cta_text" />
+                                <flux:input label="{{ __('Secondary CTA URL') }}" wire:model="pageBuilderValues.{{ $esHandle }}.{{ $esIdx }}.data.secondary_cta_url" placeholder="/" />
                             </div>
                         </div>
                     @break
 
                     @case('text')
                         <div class="space-y-4">
-                            <flux:textarea label="{{ __('Content') }}" wire:model="form.fieldValues.{{ $esHandle }}.{{ $esIdx }}.data.content" rows="6" />
-                            <flux:select label="{{ __('Alignment') }}" wire:model="form.fieldValues.{{ $esHandle }}.{{ $esIdx }}.data.alignment">
+                            <flux:textarea label="{{ __('Content') }}" wire:model="pageBuilderValues.{{ $esHandle }}.{{ $esIdx }}.data.content" rows="6" />
+                            <flux:select label="{{ __('Alignment') }}" wire:model="pageBuilderValues.{{ $esHandle }}.{{ $esIdx }}.data.alignment">
                                 <flux:select.option value="left">{{ __('Left') }}</flux:select.option>
                                 <flux:select.option value="center">{{ __('Center') }}</flux:select.option>
                                 <flux:select.option value="right">{{ __('Right') }}</flux:select.option>
@@ -157,9 +158,9 @@
                             $imgAsset  = ($esSection['data']['image'] ?? null) ? \App\Models\Asset::find($esSection['data']['image']) : null;
                         @endphp
                         <div class="space-y-4">
-                            <flux:input label="{{ __('Title') }}" wire:model="form.fieldValues.{{ $esHandle }}.{{ $esIdx }}.data.title" />
-                            <flux:textarea label="{{ __('Content') }}" wire:model="form.fieldValues.{{ $esHandle }}.{{ $esIdx }}.data.content" rows="4" />
-                            <flux:select label="{{ __('Image Position') }}" wire:model="form.fieldValues.{{ $esHandle }}.{{ $esIdx }}.data.image_position">
+                            <flux:input label="{{ __('Title') }}" wire:model="pageBuilderValues.{{ $esHandle }}.{{ $esIdx }}.data.title" />
+                            <flux:textarea label="{{ __('Content') }}" wire:model="pageBuilderValues.{{ $esHandle }}.{{ $esIdx }}.data.content" rows="4" />
+                            <flux:select label="{{ __('Image Position') }}" wire:model="pageBuilderValues.{{ $esHandle }}.{{ $esIdx }}.data.image_position">
                                 <flux:select.option value="left">{{ __('Left') }}</flux:select.option>
                                 <flux:select.option value="right">{{ __('Right') }}</flux:select.option>
                             </flux:select>
@@ -182,8 +183,8 @@
                             </div>
 
                             <div class="grid grid-cols-2 gap-4">
-                                <flux:input label="{{ __('CTA Text') }}" wire:model="form.fieldValues.{{ $esHandle }}.{{ $esIdx }}.data.cta_text" />
-                                <flux:input label="{{ __('CTA URL') }}" wire:model="form.fieldValues.{{ $esHandle }}.{{ $esIdx }}.data.cta_url" placeholder="/" />
+                                <flux:input label="{{ __('CTA Text') }}" wire:model="pageBuilderValues.{{ $esHandle }}.{{ $esIdx }}.data.cta_text" />
+                                <flux:input label="{{ __('CTA URL') }}" wire:model="pageBuilderValues.{{ $esHandle }}.{{ $esIdx }}.data.cta_url" placeholder="/" />
                             </div>
                         </div>
                     @break
@@ -191,7 +192,7 @@
                     @case('gallery')
                         @php $gallerySlot = count($esSection['data']['images'] ?? []); @endphp
                         <div class="space-y-4">
-                            <flux:input label="{{ __('Title') }}" wire:model="form.fieldValues.{{ $esHandle }}.{{ $esIdx }}.data.title" />
+                            <flux:input label="{{ __('Title') }}" wire:model="pageBuilderValues.{{ $esHandle }}.{{ $esIdx }}.data.title" />
 
                             <div>
                                 <flux:label>{{ __('Images') }} <span class="text-zinc-400">({{ $gallerySlot }}/6)</span></flux:label>
@@ -223,18 +224,18 @@
 
                     @case('cta')
                         <div class="space-y-4">
-                            <flux:input label="{{ __('Title') }}" wire:model="form.fieldValues.{{ $esHandle }}.{{ $esIdx }}.data.title" />
-                            <flux:textarea label="{{ __('Content') }}" wire:model="form.fieldValues.{{ $esHandle }}.{{ $esIdx }}.data.content" rows="3" />
+                            <flux:input label="{{ __('Title') }}" wire:model="pageBuilderValues.{{ $esHandle }}.{{ $esIdx }}.data.title" />
+                            <flux:textarea label="{{ __('Content') }}" wire:model="pageBuilderValues.{{ $esHandle }}.{{ $esIdx }}.data.content" rows="3" />
                             <div class="grid grid-cols-2 gap-4">
-                                <flux:input label="{{ __('CTA Text') }}" wire:model="form.fieldValues.{{ $esHandle }}.{{ $esIdx }}.data.cta_text" />
-                                <flux:input label="{{ __('CTA URL') }}" wire:model="form.fieldValues.{{ $esHandle }}.{{ $esIdx }}.data.cta_url" placeholder="/" />
+                                <flux:input label="{{ __('CTA Text') }}" wire:model="pageBuilderValues.{{ $esHandle }}.{{ $esIdx }}.data.cta_text" />
+                                <flux:input label="{{ __('CTA URL') }}" wire:model="pageBuilderValues.{{ $esHandle }}.{{ $esIdx }}.data.cta_url" placeholder="/" />
                             </div>
                         </div>
                     @break
 
                     @case('features')
                         <div class="space-y-4">
-                            <flux:input label="{{ __('Title') }}" wire:model="form.fieldValues.{{ $esHandle }}.{{ $esIdx }}.data.title" />
+                            <flux:input label="{{ __('Title') }}" wire:model="pageBuilderValues.{{ $esHandle }}.{{ $esIdx }}.data.title" />
 
                             <div class="space-y-3">
                                 <flux:label>{{ __('Feature Items') }}</flux:label>
@@ -245,9 +246,9 @@
                                             <flux:text size="sm" class="font-medium">{{ __('Item :number', ['number' => $itemIdx + 1]) }}</flux:text>
                                             <flux:button type="button" variant="ghost" size="sm" icon="trash" wire:click="removePageBuilderFeatureItem('{{ $esHandle }}', {{ $esIdx }}, {{ $itemIdx }})" class="text-red-500" />
                                         </div>
-                                        <flux:input label="{{ __('Icon (Heroicon name)') }}" wire:model="form.fieldValues.{{ $esHandle }}.{{ $esIdx }}.data.items.{{ $itemIdx }}.icon" placeholder="bolt" description="{{ __('Use kebab-case, e.g. light-bulb, arrow-right, check-circle') }}" />
-                                        <flux:input label="{{ __('Title') }}" wire:model="form.fieldValues.{{ $esHandle }}.{{ $esIdx }}.data.items.{{ $itemIdx }}.item_title" />
-                                        <flux:textarea label="{{ __('Description') }}" wire:model="form.fieldValues.{{ $esHandle }}.{{ $esIdx }}.data.items.{{ $itemIdx }}.item_description" rows="2" />
+                                        <flux:input label="{{ __('Icon (Heroicon name)') }}" wire:model="pageBuilderValues.{{ $esHandle }}.{{ $esIdx }}.data.items.{{ $itemIdx }}.icon" placeholder="bolt" description="{{ __('Use kebab-case, e.g. light-bulb, arrow-right, check-circle') }}" />
+                                        <flux:input label="{{ __('Title') }}" wire:model="pageBuilderValues.{{ $esHandle }}.{{ $esIdx }}.data.items.{{ $itemIdx }}.item_title" />
+                                        <flux:textarea label="{{ __('Description') }}" wire:model="pageBuilderValues.{{ $esHandle }}.{{ $esIdx }}.data.items.{{ $itemIdx }}.item_description" rows="2" />
                                     </div>
                                 @endforeach
 

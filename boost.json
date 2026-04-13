@@ -6,18 +6,20 @@
     "mcp": true,
     "nightwatch_mcp": false,
     "packages": [
-        "livewire/blaze"
+        "livewire/blaze",
+        "laravel/ai",
+        "laravel/fortify"
     ],
     "sail": false,
     "skills": [
-        "ai-sdk-development",
-        "fortify-development",
         "laravel-best-practices",
         "fluxui-development",
         "livewire-development",
         "volt-development",
         "pest-testing",
         "tailwindcss-development",
+        "ai-sdk-development",
+        "fortify-development",
         "blaze-optimize"
     ]
 }
