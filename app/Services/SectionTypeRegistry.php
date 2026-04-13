@@ -4,74 +4,87 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Enums\FieldType;
+use App\Enums\SectionType;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
-final class FieldTypeRegistry
+final class SectionTypeRegistry
 {
     /**
-     * Returns an array of metadata for all field types.
-     * Each item: ['value' => string, 'label' => string, 'icon' => string, 'default_config' => array]
+     * Returns metadata for all section types.
+     *
+     * @return array<int, array{value: string, label: string, icon: string, default_config: array<string, mixed>}>
      */
-    public function all(string $exceptType = ''): array
+    public function all(): array
     {
-        return array_map(fn (FieldType $type): array => [
+        return array_map(fn (SectionType $type): array => [
             'value' => $type->value,
             'label' => $type->label(),
             'icon' => $type->icon(),
             'default_config' => $type->defaultConfig(),
-        ], array_filter(FieldType::cases(), fn (FieldType $type): bool => $type->value !== $exceptType));
+        ], SectionType::cases());
     }
 
     /**
      * Returns [value => label] pairs for selects.
+     *
+     * @return array<string, string>
      */
     public function optionsForSelect(): array
     {
         $options = [];
-        foreach (FieldType::cases() as $type) {
+        foreach (SectionType::cases() as $type) {
             $options[$type->value] = $type->label();
         }
 
         return $options;
     }
 
-    public function defaultConfigFor(string $value): array
+    /**
+     * @return array<string, mixed>
+     */
+    public function defaultDataFor(string $value): array
     {
-        foreach (FieldType::cases() as $type) {
-            if ($type->value === $value) {
-                return $type->defaultConfig();
-            }
-        }
+        $type = SectionType::tryFrom($value);
 
-        return [];
-    }
-
-    public function configRulesFor(string $value): array
-    {
-        foreach (FieldType::cases() as $type) {
-            if ($type->value === $value) {
-                return $type->configRules();
-            }
-        }
-
-        return [];
+        return $type?->defaultData() ?? [];
     }
 
     /**
-     * Validate a single element's config array against its type.
+     * @return array<string, mixed>
+     */
+    public function defaultConfigFor(string $value): array
+    {
+        $type = SectionType::tryFrom($value);
+
+        return $type?->defaultConfig() ?? [];
+    }
+
+    /**
+     * @return array<string, array<int, string>>
+     */
+    public function configRulesFor(string $value): array
+    {
+        $type = SectionType::tryFrom($value);
+
+        return $type?->configRules() ?? [];
+    }
+
+    /**
+     * Validate a field element's config array against its section type.
      */
     public function validateConfig(array $element, int $index): void
     {
-        $type = collect(FieldType::cases())->firstWhere('value', $element['type'] ?? null);
+        $type = SectionType::tryFrom($element['type'] ?? '');
         if (! $type) {
             return;
         }
 
         $rules = $type->configRules();
+        if ($rules === []) {
+            return;
+        }
 
-        // namespacing for nicer error keys: elements.{i}.config.*
         $data = $element['config'] ?? [];
         $validator = Validator::make($data, $rules);
         throw_if($validator->fails(), ValidationException::withMessages(

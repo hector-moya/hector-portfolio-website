@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace App\Traits\Blueprints;
 
-use App\Enums\FieldType;
-use App\Services\FieldTypeRegistry;
+use App\Enums\SectionType;
 use Illuminate\Support\Str;
 use Ramsey\Uuid\Uuid;
 
@@ -29,26 +28,26 @@ trait Tabs
                         'fields' => [
                             [
                                 'id' => Uuid::uuid4()->toString(),
-                                'label' => __('Title'),
-                                'handle' => 'title',
-                                'type' => 'text',
-                                'icon' => FieldType::Text->icon(),
+                                'label' => __('Hero'),
+                                'handle' => 'hero',
+                                'type' => SectionType::Hero->value,
+                                'icon' => SectionType::Hero->icon(),
                                 'sort_order' => 0,
-                                'instructions' => __('The title of your content'),
-                                'is_required' => true,
-                                'config' => resolve(FieldTypeRegistry::class)->defaultConfigFor('text'),
+                                'instructions' => __('The hero section of your page'),
+                                'is_required' => false,
+                                'config' => SectionType::Hero->defaultConfig(),
                                 'validation' => [],
                             ],
                             [
                                 'id' => Uuid::uuid4()->toString(),
                                 'label' => __('Content'),
                                 'handle' => 'content',
-                                'type' => 'richtext',
-                                'icon' => FieldType::RichText->icon(),
+                                'type' => SectionType::RichText->value,
+                                'icon' => SectionType::RichText->icon(),
                                 'sort_order' => 1,
                                 'instructions' => __('The main content body'),
-                                'is_required' => true,
-                                'config' => resolve(FieldTypeRegistry::class)->defaultConfigFor('rich_text'),
+                                'is_required' => false,
+                                'config' => SectionType::RichText->defaultConfig(),
                                 'validation' => [],
                             ],
                         ],
@@ -70,14 +69,14 @@ trait Tabs
                         'fields' => [
                             [
                                 'id' => Uuid::uuid4()->toString(),
-                                'label' => __('Excerpt'),
-                                'handle' => 'excerpt',
-                                'type' => 'textarea',
-                                'icon' => FieldType::Textarea->icon(),
+                                'label' => __('Text'),
+                                'handle' => 'text',
+                                'type' => SectionType::Text->value,
+                                'icon' => SectionType::Text->icon(),
                                 'sort_order' => 0,
-                                'instructions' => __('A brief summary of the content'),
+                                'instructions' => __('A text content section'),
                                 'is_required' => false,
-                                'config' => resolve(FieldTypeRegistry::class)->defaultConfigFor('textarea'),
+                                'config' => SectionType::Text->defaultConfig(),
                                 'validation' => [],
                             ],
                         ],

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Livewire\Forms;
 
+use App\Enums\SectionType;
 use App\Livewire\Actions\CreateEntry;
 use App\Livewire\Actions\UpdateEntry;
 use App\Models\Blueprint;
@@ -38,6 +39,7 @@ final class EntryForm extends Form
 
     public string $og_image = '';
 
+    /** @var array<string, mixed> */
     public array $fieldValues = [];
 
     /* ---------- Lifecycle ---------- */
@@ -54,11 +56,8 @@ final class EntryForm extends Form
         $this->seo_description = $entry->seo_description ?? '';
         $this->og_image = $entry->og_image ?? '';
 
-        // Load field values from entry elements (with Field relationship for legacy support)
         $entry->load('elements.Field');
         $this->loadFieldValuesFromEntry($entry);
-
-        // Ensure defaults for any new fields that might have been added to the blueprint
         $this->initializeFieldValues();
     }
 
@@ -76,53 +75,13 @@ final class EntryForm extends Form
             return;
         }
 
-        foreach ($blueprint->fields as $element) {
-            $handle = $element->handle;
+        foreach ($blueprint->fields as $field) {
+            $handle = $field->handle;
             if (! array_key_exists($handle, $this->fieldValues)) {
-                $this->fieldValues[$handle] = $this->defaultForType($element->type);
+                $sectionType = SectionType::tryFrom($field->type);
+                $this->fieldValues[$handle] = $sectionType?->defaultData() ?? [];
             }
         }
-    }
-
-    /* ---------- Repeater actions (entries) ---------- */
-
-    public function addRepeaterItem(string $handle): void
-    {
-        $this->fieldValues[$handle] ??= ['items' => []];
-
-        $bp = $this->blueprint();
-        if (! $bp instanceof Blueprint) {
-            $this->fieldValues[$handle]['items'][] = [];
-
-            return;
-        }
-
-        $field = $bp->fields->firstWhere('handle', $handle);
-        if (! $field || $field->children->isEmpty()) {
-            $this->fieldValues[$handle]['items'][] = [];
-
-            return;
-        }
-
-        // Initialize new item with defaults for each child field
-        $newItem = [];
-        foreach ($field->children as $childField) {
-            $newItem[$childField->handle] = $this->defaultForType(
-                $childField->type
-            );
-        }
-
-        $this->fieldValues[$handle]['items'][] = $newItem;
-    }
-
-    public function removeRepeaterItem(string $handle, int $index): void
-    {
-        if (! isset($this->fieldValues[$handle]['items'][$index])) {
-            return;
-        }
-
-        unset($this->fieldValues[$handle]['items'][$index]);
-        $this->fieldValues[$handle]['items'] = array_values($this->fieldValues[$handle]['items']);
     }
 
     /* ---------- Validation ---------- */
@@ -145,39 +104,8 @@ final class EntryForm extends Form
             return $rules;
         }
 
-        foreach ($bp->fields as $el) {
-            $h = $el->handle;
-            if (! in_array($el->type, ['repeater', 'page_builder'], true)) {
-                $rules['fieldValues.'.$h] = $this->rulesForSimple($el->type, $el->is_required, $el->config ?? []);
-
-                continue;
-            }
-
-            if ($el->type === 'page_builder') {
-                $rules['fieldValues.'.$h] = ['nullable', 'array'];
-
-                continue;
-            }
-
-            // Repeater container
-            $min = $el->config['min'] ?? 0;
-            $max = $el->config['max'] ?? null;
-
-            $arr = ['array', 'min:'.$min];
-            if ($max) {
-                $arr[] = 'max:'.$max;
-            }
-
-            $rules[sprintf('fieldValues.%s.items', $h)] = $arr;
-
-            // Children from relationship, not config
-            foreach ($el->children as $child) {
-                $rules[sprintf('fieldValues.%s.items.*.%s', $h, $child->handle)] = $this->rulesForSimple(
-                    $child->type,
-                    $child->is_required,
-                    $child->config ?? []
-                );
-            }
+        foreach ($bp->fields as $field) {
+            $rules['fieldValues.'.$field->handle] = ['nullable', 'array'];
         }
 
         return $rules;
@@ -242,14 +170,8 @@ final class EntryForm extends Form
             return $attrs;
         }
 
-        foreach ($bp->fields as $el) {
-            $attrs['fieldValues.'.$el->handle] = $el->label;
-            if ($el->type === 'repeater') {
-                foreach ($el->children as $child) {
-                    $attrs[sprintf('fieldValues.%s.items.*.%s', $el->handle, $child->handle)] =
-                        sprintf('%s → %s', $el->label, $child->label);
-                }
-            }
+        foreach ($bp->fields as $field) {
+            $attrs['fieldValues.'.$field->handle] = $field->label;
         }
 
         return $attrs;
@@ -267,23 +189,12 @@ final class EntryForm extends Form
         $fieldsValues = [];
 
         foreach ($bp->fields as $field) {
-            $fieldArray = [
+            $fieldsValues[] = [
                 'field_id' => $field->id,
                 'handle' => $field->handle,
                 'type' => $field->type,
-                'value' => $this->fieldValues[$field->handle] ?? $this->defaultForType($field->type),
+                'value' => $this->fieldValues[$field->handle] ?? [],
             ];
-
-            // Add children metadata for repeater fields
-            if ($field->type === 'repeater') {
-                $fieldArray['children'] = $field->children->map(fn ($child): array => [
-                    'id' => $child->id,
-                    'handle' => $child->handle,
-                    'type' => $child->type,
-                ])->all();
-            }
-
-            $fieldsValues[] = $fieldArray;
         }
 
         return $fieldsValues;
@@ -296,18 +207,6 @@ final class EntryForm extends Form
             : null;
     }
 
-    private function defaultForType(string $type): mixed
-    {
-        return match ($type) {
-            'checkbox' => false,
-            'number' => null,
-            'select', 'radio', 'email', 'url' => '',
-            'repeater' => ['items' => []],
-            'page_builder' => [],
-            default => '',
-        };
-    }
-
     private function loadFieldValuesFromEntry(Entry $entry): void
     {
         $blueprint = $this->blueprint();
@@ -315,84 +214,14 @@ final class EntryForm extends Form
             return;
         }
 
-        // Group all elements by their parent_handle (null for regular fields)
-        $regularElements = [];
-        $repeaterElements = [];
-
-        foreach ($entry->elements as $element) {
-            $parentHandle = $element->meta['parent_handle'] ?? null;
-
-            // Handle legacy data: if no parent_handle but field has a parent_id, look up the parent
-            if ($parentHandle === null && $element->Field && $element->Field->parent_id) {
-                $parentField = $blueprint->fields->firstWhere('id', $element->Field->parent_id);
-                if ($parentField && $parentField->type === 'repeater') {
-                    $parentHandle = $parentField->handle;
-                    // For legacy data without index, we'll group them sequentially
-                    $index = $element->meta['index'] ?? 0;
-                }
-            }
-
-            if ($parentHandle === null) {
-                // Regular field
-                $regularElements[$element->handle] = $element;
-            } else {
-                // Repeater child field
-                $index = $element->meta['index'] ?? 0;
-                $repeaterElements[$parentHandle][$index][$element->handle] = $element;
-            }
-        }
-
-        // Load values for each field in the blueprint
         foreach ($blueprint->fields as $field) {
             $handle = $field->handle;
 
-            if ($field->type === 'repeater') {
-                // Reconstruct repeater items from individual elements
-                $items = [];
-                if (isset($repeaterElements[$handle])) {
-                    // Sort by index and rebuild each item
-                    ksort($repeaterElements[$handle]);
-
-                    foreach ($repeaterElements[$handle] as $itemElements) {
-                        $itemData = [];
-                        foreach ($field->children as $childField) {
-                            $childHandle = $childField->handle;
-                            $itemData[$childHandle] = isset($itemElements[$childHandle])
-                                ? $itemElements[$childHandle]->getElementValue()
-                                : $this->defaultForType($childField->type);
-                        }
-
-                        $items[] = $itemData;
-                    }
-                }
-
-                $this->fieldValues[$handle] = ['items' => $items];
-            } elseif (isset($regularElements[$handle])) {
-                // Regular field
-                $this->fieldValues[$handle] = $regularElements[$handle]->getElementValue();
+            // Find the entry element for this field
+            $element = $entry->elements->firstWhere('handle', $handle);
+            if ($element !== null) {
+                $this->fieldValues[$handle] = $element->getElementValue() ?? [];
             }
         }
-    }
-
-    private function rulesForSimple(string $type, bool $required, array $config): array
-    {
-        $base = $required ? ['required'] : ['nullable'];
-
-        return array_merge($base, match ($type) {
-            'text' => ['string', 'max:'.($config['max'] ?? 255)],
-            'textarea' => ['string'],
-            'richtext' => ['string'],
-            'email' => ['email', 'max:255'],
-            'url' => ['url', 'max:255'],
-            'number' => ['numeric'],
-            'date' => ['date'],
-            'time' => ['date_format:H:i'],
-            'calendar' => ['date'],
-            'checkbox' => ['boolean'],
-            'select', 'radio' => ['string'],
-            'image', 'file' => ['string'], // your uploader will refine later
-            'page_builder' => ['array'],
-            default => ['string'],
-        });
     }
 }

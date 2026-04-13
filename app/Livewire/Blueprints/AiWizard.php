@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Livewire\Blueprints;
 
 use App\Ai\Agents\BlueprintWizardAgent;
-use App\Enums\FieldType;
+use App\Enums\SectionType;
 use App\Livewire\Actions\Blueprints\CreateBlueprint;
 use App\Models\Blueprint;
 use Illuminate\Contracts\View\Factory;
@@ -76,7 +76,7 @@ final class AiWizard extends Component
                 $fields = [];
 
                 foreach ($section['fields'] as $fieldIndex => $field) {
-                    $type = FieldType::tryFrom($field['type']) ?? FieldType::Text;
+                    $type = SectionType::tryFrom($field['type']) ?? SectionType::Text;
 
                     $fields[] = [
                         'label' => $field['label'],

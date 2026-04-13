@@ -2,181 +2,198 @@
 
 declare(strict_types=1);
 
-use App\Livewire\Entries\Partials\PageBuilder;
+use App\Models\Blueprint;
 use App\Models\Entry;
+use App\Models\EntryElement;
+use App\Models\Field;
 use App\Models\User;
 use Livewire\Livewire;
-
-use function Pest\Laravel\assertDatabaseHas;
 
 beforeEach(function (): void {
     $this->user = User::factory()->create();
 });
 
-test('page builder mounts with empty layout', function (): void {
-    $entry = Entry::factory()->create(['layout' => []]);
+// ── Entry::getPageBuilderSections() ─────────────────────────────────────────
 
-    Livewire::actingAs($this->user)
-        ->test(PageBuilder::class, ['entry' => $entry])
-        ->assertSet('sections', []);
+test('getPageBuilderSections returns empty array when no elements', function (): void {
+    $entry = Entry::factory()->create();
+    $entry->load('elements.Field');
+
+    expect($entry->getPageBuilderSections())->toBe([]);
 });
 
-test('page builder mounts with existing layout sections', function (): void {
-    $entry = Entry::factory()->create([
-        'layout' => [
-            ['_id' => 'abc-123', 'type' => 'hero', 'data' => ['title' => 'Welcome Hero', 'subtitle' => '']],
-        ],
+test('getPageBuilderSections builds sections from entry elements', function (): void {
+    $blueprint = Blueprint::factory()->create();
+    $field = Field::factory()->create(['blueprint_id' => $blueprint->id, 'type' => 'hero', 'handle' => 'main_hero']);
+    $entry = Entry::factory()->create(['blueprint_id' => $blueprint->id]);
+
+    $element = EntryElement::factory()->create([
+        'entry_id' => $entry->id,
+        'field_id' => $field->id,
+        'handle' => 'main_hero',
+        'meta' => ['title' => 'Welcome', 'subtitle' => 'Sub', 'content' => '', 'bg_image' => null, 'cta_text' => '', 'cta_url' => '', 'secondary_cta_text' => '', 'secondary_cta_url' => ''],
     ]);
 
-    Livewire::actingAs($this->user)
-        ->test(PageBuilder::class, ['entry' => $entry])
-        ->assertSet('sections.0.type', 'hero')
-        ->assertSet('sections.0.data.title', 'Welcome Hero');
+    $entry->load('elements.Field');
+    $sections = $entry->getPageBuilderSections();
+
+    expect($sections)->toHaveCount(1)
+        ->and($sections[0]['type'])->toBe('hero')
+        ->and($sections[0]['data']['title'])->toBe('Welcome');
 });
 
-test('can add a hero section', function (): void {
-    $entry = Entry::factory()->create(['layout' => []]);
+test('getPageBuilderSections skips elements with unknown field type', function (): void {
+    $blueprint = Blueprint::factory()->create();
+    $field = Field::factory()->create(['blueprint_id' => $blueprint->id, 'type' => 'unknown_type', 'handle' => 'bad_field']);
+    $entry = Entry::factory()->create(['blueprint_id' => $blueprint->id]);
 
-    Livewire::actingAs($this->user)
-        ->test(PageBuilder::class, ['entry' => $entry])
-        ->set('pendingSectionType', 'hero')
-        ->call('addSection')
-        ->assertCount('sections', 1)
-        ->assertSet('sections.0.type', 'hero');
-});
-
-test('add section is ignored for unknown type', function (): void {
-    $entry = Entry::factory()->create(['layout' => []]);
-
-    Livewire::actingAs($this->user)
-        ->test(PageBuilder::class, ['entry' => $entry])
-        ->set('pendingSectionType', 'nonexistent')
-        ->call('addSection')
-        ->assertCount('sections', 0);
-});
-
-test('can remove a section', function (): void {
-    $entry = Entry::factory()->create([
-        'layout' => [
-            ['_id' => 'aaa-111', 'type' => 'hero', 'data' => ['title' => 'First']],
-            ['_id' => 'bbb-222', 'type' => 'text', 'data' => ['content' => 'Second', 'alignment' => 'left']],
-        ],
+    EntryElement::factory()->create([
+        'entry_id' => $entry->id,
+        'field_id' => $field->id,
+        'handle' => 'bad_field',
+        'value' => 'some value',
     ]);
 
-    Livewire::actingAs($this->user)
-        ->test(PageBuilder::class, ['entry' => $entry])
-        ->call('removeSection', 0)
-        ->assertCount('sections', 1)
-        ->assertSet('sections.0.type', 'text');
+    $entry->load('elements.Field');
+
+    expect($entry->getPageBuilderSections())->toBe([]);
 });
 
-test('can move a section up', function (): void {
-    $entry = Entry::factory()->create([
-        'layout' => [
-            ['_id' => 'aaa-111', 'type' => 'hero', 'data' => ['title' => 'First']],
-            ['_id' => 'bbb-222', 'type' => 'text', 'data' => ['content' => 'Second', 'alignment' => 'left']],
-        ],
+test('getPageBuilderSections falls back to defaultData when element value is not an array', function (): void {
+    $blueprint = Blueprint::factory()->create();
+    $field = Field::factory()->create(['blueprint_id' => $blueprint->id, 'type' => 'text', 'handle' => 'body']);
+    $entry = Entry::factory()->create(['blueprint_id' => $blueprint->id]);
+
+    EntryElement::factory()->create([
+        'entry_id' => $entry->id,
+        'field_id' => $field->id,
+        'handle' => 'body',
+        'value' => 'plain string',
     ]);
 
-    Livewire::actingAs($this->user)
-        ->test(PageBuilder::class, ['entry' => $entry])
-        ->call('moveSectionUp', 1)
-        ->assertSet('sections.0.type', 'text')
-        ->assertSet('sections.1.type', 'hero');
+    $entry->load('elements.Field');
+    $sections = $entry->getPageBuilderSections();
+
+    expect($sections)->toHaveCount(1)
+        ->and($sections[0]['type'])->toBe('text')
+        ->and($sections[0]['data'])->toBe(App\Enums\SectionType::Text->defaultData());
 });
 
-test('move up does nothing for the first section', function (): void {
-    $entry = Entry::factory()->create([
-        'layout' => [
-            ['_id' => 'aaa-111', 'type' => 'hero', 'data' => ['title' => 'First']],
-            ['_id' => 'bbb-222', 'type' => 'text', 'data' => ['content' => 'Second', 'alignment' => 'left']],
-        ],
-    ]);
+// ── Features section component ────────────────────────────────────────────────
+
+test('features section can add an item', function (): void {
+    $field = Field::factory()->create(['type' => 'features', 'handle' => 'my_features']);
 
     Livewire::actingAs($this->user)
-        ->test(PageBuilder::class, ['entry' => $entry])
-        ->call('moveSectionUp', 0)
-        ->assertSet('sections.0.type', 'hero');
+        ->test('sections.features', ['field' => $field, 'data' => ['title' => '', 'items' => []]])
+        ->call('addFeatureItem')
+        ->assertCount('data.items', 1);
 });
 
-test('can move a section down', function (): void {
-    $entry = Entry::factory()->create([
-        'layout' => [
-            ['_id' => 'aaa-111', 'type' => 'hero', 'data' => ['title' => 'First']],
-            ['_id' => 'bbb-222', 'type' => 'text', 'data' => ['content' => 'Second', 'alignment' => 'left']],
-        ],
-    ]);
+test('features section can remove an item', function (): void {
+    $field = Field::factory()->create(['type' => 'features', 'handle' => 'my_features']);
 
     Livewire::actingAs($this->user)
-        ->test(PageBuilder::class, ['entry' => $entry])
-        ->call('moveSectionDown', 0)
-        ->assertSet('sections.0.type', 'text')
-        ->assertSet('sections.1.type', 'hero');
+        ->test('sections.features', [
+            'field' => $field,
+            'data' => ['title' => '', 'items' => [
+                ['icon' => 'bolt', 'item_title' => 'First', 'item_description' => ''],
+                ['icon' => 'star', 'item_title' => 'Second', 'item_description' => ''],
+            ]],
+        ])
+        ->call('removeFeatureItem', 0)
+        ->assertCount('data.items', 1)
+        ->assertSet('data.items.0.item_title', 'Second');
 });
 
-test('save persists layout to database', function (): void {
-    $entry = Entry::factory()->create(['layout' => []]);
+// ── Gallery section component ─────────────────────────────────────────────────
+
+test('gallery section can remove an image', function (): void {
+    $field = Field::factory()->create(['type' => 'gallery', 'handle' => 'my_gallery']);
 
     Livewire::actingAs($this->user)
-        ->test(PageBuilder::class, ['entry' => $entry])
-        ->set('pendingSectionType', 'hero')
-        ->call('addSection')
-        ->set('sections.0.data.title', 'My Hero Title')
-        ->call('save');
-
-    assertDatabaseHas('entries', ['id' => $entry->id]);
-    expect(Entry::query()->find($entry->id)->layout[0]['data']['title'])->toBe('My Hero Title');
+        ->test('sections.gallery', [
+            'field' => $field,
+            'data' => ['title' => '', 'images' => [10, 20, 30]],
+        ])
+        ->call('removeGalleryImage', 1)
+        ->assertSet('data.images', [10, 30]);
 });
 
-test('asset-selected event with section handle updates correct section field', function (): void {
-    $sectionId = '550e8400-e29b-41d4-a716-446655440000';
-    $entry = Entry::factory()->create([
-        'layout' => [
-            ['_id' => $sectionId, 'type' => 'hero', 'data' => ['title' => '', 'bg_image' => null]],
-        ],
-    ]);
+test('gallery section asset-selected appends image', function (): void {
+    $field = Field::factory()->create(['type' => 'gallery', 'handle' => 'my_gallery']);
 
     Livewire::actingAs($this->user)
-        ->test(PageBuilder::class, ['entry' => $entry])
-        ->dispatch('asset-selected', handle: sprintf('section_%s_bg_image', $sectionId), value: 42)
-        ->assertSet('sections.0.data.bg_image', 42);
+        ->test('sections.gallery', [
+            'field' => $field,
+            'data' => ['title' => '', 'images' => []],
+        ])
+        ->dispatch('asset-selected', handle: 'my_gallery_gallery', value: 99)
+        ->assertCount('data.images', 1)
+        ->assertSet('data.images.0', 99);
 });
 
-test('asset-selected event with non-section handle is ignored', function (): void {
-    $entry = Entry::factory()->create(['layout' => []]);
+// ── Hero section component ────────────────────────────────────────────────────
+
+test('hero section asset-selected updates bg_image', function (): void {
+    $field = Field::factory()->create(['type' => 'hero', 'handle' => 'page_hero']);
 
     Livewire::actingAs($this->user)
-        ->test(PageBuilder::class, ['entry' => $entry])
-        ->dispatch('asset-selected', handle: 'some_regular_field', value: 99)
-        ->assertSet('sections', []);
+        ->test('sections.hero', [
+            'field' => $field,
+            'data' => App\Enums\SectionType::Hero->defaultData(),
+        ])
+        ->dispatch('asset-selected', handle: 'page_hero_bg_image', value: 42)
+        ->assertSet('data.bg_image', 42);
 });
 
-test('can add and remove feature items', function (): void {
-    $entry = Entry::factory()->create([
-        'layout' => [
-            ['_id' => 'feat-111', 'type' => 'features', 'data' => ['title' => 'Features', 'items' => []]],
-        ],
-    ]);
-
-    $component = Livewire::actingAs($this->user)
-        ->test(PageBuilder::class, ['entry' => $entry])
-        ->call('addFeatureItem', 0)
-        ->assertCount('sections.0.data.items', 1)
-        ->call('addFeatureItem', 0)
-        ->assertCount('sections.0.data.items', 2)
-        ->call('removeFeatureItem', 0, 0)
-        ->assertCount('sections.0.data.items', 1);
-});
-
-test('gallery images can be removed', function (): void {
-    $entry = Entry::factory()->create([
-        'layout' => [
-            ['_id' => 'gal-111', 'type' => 'gallery', 'data' => ['title' => 'Gallery', 'images' => [1, 2, 3]]],
-        ],
-    ]);
+test('hero section asset-selected with wrong handle is ignored', function (): void {
+    $field = Field::factory()->create(['type' => 'hero', 'handle' => 'page_hero']);
 
     Livewire::actingAs($this->user)
-        ->test(PageBuilder::class, ['entry' => $entry])
-        ->call('removeGalleryImage', 0, 1)
-        ->assertSet('sections.0.data.images', [1, 3]);
+        ->test('sections.hero', [
+            'field' => $field,
+            'data' => App\Enums\SectionType::Hero->defaultData(),
+        ])
+        ->dispatch('asset-selected', handle: 'other_field_bg_image', value: 42)
+        ->assertSet('data.bg_image', null);
+});
+
+test('hero section can remove bg image', function (): void {
+    $field = Field::factory()->create(['type' => 'hero', 'handle' => 'page_hero']);
+
+    Livewire::actingAs($this->user)
+        ->test('sections.hero', [
+            'field' => $field,
+            'data' => array_merge(App\Enums\SectionType::Hero->defaultData(), ['bg_image' => 5]),
+        ])
+        ->call('removeBgImage')
+        ->assertSet('data.bg_image', null);
+});
+
+// ── Form section component ────────────────────────────────────────────────────
+
+test('form section can add a field', function (): void {
+    $field = Field::factory()->create(['type' => 'form', 'handle' => 'contact_form']);
+
+    Livewire::actingAs($this->user)
+        ->test('sections.form', ['field' => $field, 'data' => ['title' => '', 'fields' => []]])
+        ->call('addFormField')
+        ->assertCount('data.fields', 1);
+});
+
+test('form section can remove a field', function (): void {
+    $field = Field::factory()->create(['type' => 'form', 'handle' => 'contact_form']);
+
+    Livewire::actingAs($this->user)
+        ->test('sections.form', [
+            'field' => $field,
+            'data' => ['title' => '', 'fields' => [
+                ['type' => 'text', 'label' => 'Name', 'handle' => 'name', 'required' => false],
+                ['type' => 'email', 'label' => 'Email', 'handle' => 'email', 'required' => true],
+            ]],
+        ])
+        ->call('removeFormField', 0)
+        ->assertCount('data.fields', 1)
+        ->assertSet('data.fields.0.handle', 'email');
 });

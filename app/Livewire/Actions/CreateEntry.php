@@ -6,7 +6,6 @@ namespace App\Livewire\Actions;
 
 use App\Models\Activity;
 use App\Models\Entry;
-use App\Models\EntryElement;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -18,7 +17,6 @@ final class CreateEntry
         Gate::authorize('create', Entry::class);
 
         return DB::transaction(function () use ($entryData) {
-            // Create the entry
             $entry = Entry::query()->create([
                 'blueprint_id' => $entryData['blueprint_id'],
                 'author_id' => auth()->id(),
@@ -31,10 +29,8 @@ final class CreateEntry
                 'og_image' => $entryData['og_image'] ?? null,
             ]);
 
-            // Create entry elements from fields values
             $this->createEntryElements($entry, $entryData['fieldsValues'] ?? []);
 
-            // Log activity
             Activity::query()->create([
                 'log_name' => 'entry',
                 'description' => 'Created entry',
@@ -56,47 +52,13 @@ final class CreateEntry
     private function createEntryElements(Entry $entry, array $fieldsValues): void
     {
         foreach ($fieldsValues as $fieldData) {
-            $fieldId = $fieldData['field_id'];
-            $handle = $fieldData['handle'];
-            $type = $fieldData['type'];
-            $value = $fieldData['value'];
-            $children = $fieldData['children'] ?? [];
-
-            // Handle repeater fields - create individual elements for each child field in each item
-            if ($type === 'repeater') {
-                $items = $value['items'] ?? [];
-
-                foreach ($items as $index => $itemData) {
-                    // Create an entry_element for each child field within this repeater item
-                    foreach ($children as $childField) {
-                        $childHandle = $childField['handle'];
-                        $childValue = $itemData[$childHandle] ?? null;
-
-                        /** @var EntryElement $element */
-                        $element = $entry->elements()->create([
-                            'field_id' => $childField['id'],
-                            'handle' => $childHandle,
-                            'meta' => [
-                                'parent_handle' => $handle,
-                                'index' => $index,
-                            ],
-                        ]);
-
-                        $element->setElementValue($childValue);
-                        $element->save();
-                    }
-                }
-
-                continue;
-            }
-
-            /** @var EntryElement $element */
             $element = $entry->elements()->create([
-                'field_id' => $fieldId,
-                'handle' => $handle,
+                'field_id' => $fieldData['field_id'],
+                'handle' => $fieldData['handle'],
             ]);
 
-            $element->setElementValue($value);
+            // Store section data as the element value (arrays go into meta)
+            $element->setElementValue($fieldData['value']);
             $element->save();
         }
     }

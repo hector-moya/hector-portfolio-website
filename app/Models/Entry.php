@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\SectionType;
 use App\Models\Concerns\HasBlueprintFields;
 use Database\Factories\EntryFactory;
 use Illuminate\Database\Eloquent\Builder;
@@ -15,6 +16,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 
 /**
  * @property int $id
@@ -108,23 +110,56 @@ final class Entry extends Model
     }
 
     /**
-     * Returns page builder sections, checking entry_elements first (new format),
-     * then falling back to the legacy entries.layout column.
+     * Returns page builder sections by building from entry elements.
+     * Each entry element with a valid section type becomes a section.
+     * Falls back to legacy entries.layout column for old data.
      *
      * @return array<int, array{_id: string, type: string, data: array<string, mixed>}>
      */
     public function getPageBuilderSections(): array
     {
-        if ($this->relationLoaded('elements')) {
-            $pbElement = $this->elements->first(
-                fn (EntryElement $el): bool => $el->Field?->type === 'page_builder'
-            );
+        // Try new format: each element is a section
+        if ($this->relationLoaded('elements') && $this->elements->isNotEmpty()) {
+            $sections = [];
 
-            if ($pbElement !== null && is_array($pbElement->getElementValue())) {
-                return $pbElement->getElementValue();
+            foreach ($this->elements as $element) {
+                $sectionType = SectionType::tryFrom($element->Field?->type ?? '');
+                if ($sectionType === null) {
+                    // Legacy page_builder field — check if value is an array of sections
+                    if ($element->Field?->type === 'page_builder') {
+                        $value = $element->getElementValue();
+                        if (is_array($value)) {
+                            foreach ($value as $section) {
+                                if (isset($section['_id'], $section['type'], $section['data'])) {
+                                    $sections[] = $section;
+                                }
+                            }
+                        }
+
+                        continue;
+                    }
+
+                    continue;
+                }
+
+                $data = $element->getElementValue();
+                if (! is_array($data)) {
+                    $data = $sectionType->defaultData();
+                }
+
+                $sections[] = [
+                    '_id' => (string) Str::uuid(),
+                    'type' => $sectionType->value,
+                    'data' => $data,
+                ];
+            }
+
+            if ($sections !== []) {
+                return $sections;
             }
         }
 
+        // Legacy fallback: entries.layout column
         return $this->layout ?? [];
     }
 

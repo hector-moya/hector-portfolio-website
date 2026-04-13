@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Livewire\Forms;
 
-use App\Enums\FieldType;
+use App\Enums\SectionType;
 use App\Models\Section;
-use App\Services\FieldTypeRegistry;
+use App\Services\SectionTypeRegistry;
 use Illuminate\Support\Collection;
 use Livewire\Attributes\Validate;
 use Livewire\Form;
@@ -61,13 +61,16 @@ final class SectionForm extends Form
 
     public function addField(int $sectionId, string $type): void
     {
-        $defaultConfig = resolve(FieldTypeRegistry::class)->defaultConfigFor($type);
+        $sectionType = SectionType::tryFrom($type);
+        $defaultConfig = $sectionType
+            ? $sectionType->defaultConfig()
+            : resolve(SectionTypeRegistry::class)->defaultConfigFor($type);
 
         $section = Section::query()->findOrFail($sectionId);
         $section->fields()->create([
             'type' => $type,
             'blueprint_id' => $section->blueprint_id,
-            'label' => FieldType::from($type)->defaultLabel(),
+            'label' => $sectionType?->defaultLabel() ?? 'New Field',
             'handle' => '',
             'instructions' => '',
             'is_required' => false,

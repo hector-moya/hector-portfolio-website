@@ -19,7 +19,7 @@
         </div>
 
         <form wire:submit="save">
-            <div class="grid grid-cols-3 gap-6 items-start">
+            <div class="grid grid-cols-3 items-start gap-6">
 
                 {{-- ─── Main Column ─── --}}
                 <div class="col-span-2 space-y-6">
@@ -30,7 +30,7 @@
                         <flux:input label="{{ __('Slug') }}" wire:model="form.slug" badge="{{ __('Required') }}" />
                     </flux:card>
 
-                    {{-- Dynamic Blueprint Fields with Tabs --}}
+                    {{-- Dynamic Blueprint Sections with Tabs --}}
                     @if ($this->blueprint && $this->blueprint->tabs->isNotEmpty())
                         <flux:tab.group>
                             <flux:tabs variant="segmented">
@@ -43,7 +43,7 @@
                                 <flux:tab.panel :name="'tab-' . $tab->id" class="space-y-4 pt-6">
                                     @foreach ($tab->sections as $section)
                                         <flux:card class="!p-0">
-                                            {{-- Section header (blueprint-style) --}}
+                                            {{-- Section header --}}
                                             <div class="flex items-center gap-2 px-4 py-3">
                                                 <flux:icon.squares-2x2 variant="micro" class="shrink-0 text-zinc-400" />
                                                 <flux:separator vertical class="h-4" />
@@ -61,14 +61,21 @@
                                             <div class="space-y-5 p-5">
                                                 @foreach ($section->fields as $field)
                                                     <div wire:key="field-{{ $field->id }}">
-                                                        <x-dynamic-component
-                                                            :component="'entries.fields.' . $field->type"
-                                                            :field="$field"
-                                                            :form="$form"
-                                                            :pageBuilderValues="$pageBuilderValues"
-                                                            :editingSectionHandle="$editingSectionHandle"
-                                                            :editingSectionIndex="$editingSectionIndex"
-                                                        />
+                                                        @php $sectionType = \App\Enums\SectionType::tryFrom($field->type); @endphp
+                                                        @if ($sectionType)
+                                                            <div class="space-y-2">
+                                                                <div class="flex items-center gap-2">
+                                                                    <flux:icon :name="$sectionType->icon()" class="size-4 text-zinc-400" />
+                                                                    <flux:text size="sm" class="font-medium">{{ $field->label }}</flux:text>
+                                                                    <flux:badge size="sm" color="teal">{{ $sectionType->label() }}</flux:badge>
+                                                                </div>
+                                                                @if ($field->instructions)
+                                                                    <flux:text size="sm" class="text-zinc-500">{{ $field->instructions }}</flux:text>
+                                                                @endif
+                                                                <flux:separator text="*****" class="my-6"/>
+                                                                <livewire:dynamic-component :is="'sections.' . str_replace('_', '-', $field->type)" :$field wire:model="sectionValues.{{ $field->handle }}" :wire:key="'section-' . $field->id" />
+                                                            </div>
+                                                        @endif
                                                     </div>
                                                 @endforeach
                                             </div>
@@ -112,27 +119,12 @@
                     <flux:card class="space-y-4">
                         <flux:heading size="sm">{{ __('SEO') }}</flux:heading>
 
-                        <flux:input
-                            label="{{ __('SEO Title') }}"
-                            wire:model="form.seo_title"
-                            placeholder="{{ $form->title }}"
-                            description="{{ __('Recommended: 50–60 characters.') }}"
-                        />
+                        <flux:input label="{{ __('SEO Title') }}" wire:model="form.seo_title" placeholder="{{ $form->title }}" description="{{ __('Recommended: 50–60 characters.') }}" />
 
-                        <flux:textarea
-                            label="{{ __('SEO Description') }}"
-                            wire:model="form.seo_description"
-                            rows="3"
-                            placeholder="{{ __('A brief summary for search engines...') }}"
-                            description="{{ __('Recommended: 120–160 characters.') }}"
-                        />
+                        <flux:textarea label="{{ __('SEO Description') }}" wire:model="form.seo_description" rows="3" placeholder="{{ __('A brief summary for search engines...') }}"
+                                       description="{{ __('Recommended: 120–160 characters.') }}" />
 
-                        <flux:input
-                            label="{{ __('OG Image URL') }}"
-                            wire:model="form.og_image"
-                            placeholder="https://..."
-                            description="{{ __('Recommended: 1200×630px.') }}"
-                        />
+                        <flux:input label="{{ __('OG Image URL') }}" wire:model="form.og_image" placeholder="https://..." description="{{ __('Recommended: 1200×630px.') }}" />
                     </flux:card>
 
                 </div>

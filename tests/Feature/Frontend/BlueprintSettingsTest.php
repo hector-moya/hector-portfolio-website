@@ -6,8 +6,8 @@ use App\Models\Blueprint;
 
 test('blueprint can store and read settings', function (): void {
     $blueprint = Blueprint::factory()->create([
-        'settings' => ['detail_template' => 'article'],
+        'settings' => ['theme' => 'greenpeace'],
     ]);
 
-    expect($blueprint->fresh()->settings['detail_template'])->toBe('article');
+    expect($blueprint->fresh()->settings['theme'])->toBe('greenpeace');
 });

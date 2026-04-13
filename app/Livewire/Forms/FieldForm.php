@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Livewire\Forms;
 
-use App\Enums\FieldType;
+use App\Enums\SectionType;
 use App\Models\Field;
 use Illuminate\Support\Collection;
 use Livewire\Form;
@@ -43,7 +43,7 @@ final class FieldForm extends Form
         $this->type = $field->type;
         $this->label = $field->label;
         $this->handle = $field->handle;
-        $this->icon = FieldType::from($field->type)->icon();
+        $this->icon = SectionType::tryFrom($field->type)?->icon() ?? 'document-text';
         $this->instructions = $field->instructions ?? '';
         $this->config = $field->config ?? [];
         $this->is_required = $field->is_required;

@@ -28,7 +28,7 @@ final class EntryElementFactory extends Factory
             'field_id' => Field::factory(),
             'handle' => $handle,
             'value' => fake()->sentence(),
-            'meta' => [],
+            'meta' => null,
         ];
     }
 }

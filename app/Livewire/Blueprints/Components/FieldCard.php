@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Livewire\Blueprints\Components;
 
-use App\Enums\FieldType;
+use App\Enums\SectionType;
 use App\Livewire\Forms\FieldForm;
 use App\Models\Field;
-use App\Services\FieldTypeRegistry;
+use App\Services\SectionTypeRegistry;
 use App\Traits\HasSlug;
 use Flux\Flux;
 use Illuminate\Contracts\View\Factory;
@@ -33,13 +33,13 @@ final class FieldCard extends Component
     #[Computed]
     public function fieldTypeOptions(): array
     {
-        return resolve(FieldTypeRegistry::class)->optionsForSelect();
+        return resolve(SectionTypeRegistry::class)->optionsForSelect();
     }
 
     #[Computed]
     public function fieldTypeMeta(): array
     {
-        return resolve(FieldTypeRegistry::class)->all('repeater');
+        return resolve(SectionTypeRegistry::class)->all();
     }
 
     public function updatedFormLabel(): void
@@ -86,15 +86,17 @@ final class FieldCard extends Component
 
     public function addNestedField(string $type = 'text'): void
     {
+        $sectionType = SectionType::tryFrom($type);
+
         $this->field = Field::query()->create([
             'parent_id' => $this->fieldId,
             'blueprint_id' => $this->form->blueprint_id,
             'type' => $type,
-            'label' => FieldType::from($type)->defaultLabel(),
-            'handle' => $this->generateSlug(FieldType::from($type)->defaultLabel()),
+            'label' => $sectionType?->defaultLabel() ?? 'New Field',
+            'handle' => $this->generateSlug($sectionType?->defaultLabel() ?? 'New Field'),
             'instructions' => '',
             'is_required' => false,
-            'config' => FieldType::from($type)->defaultConfig(),
+            'config' => $sectionType?->defaultConfig() ?? [],
             'order' => $this->form->children->count() + 1,
         ]);
 

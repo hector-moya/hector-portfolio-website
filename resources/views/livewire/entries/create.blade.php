@@ -36,7 +36,7 @@
                             <flux:input label="{{ __('Slug') }}" wire:model="form.slug" badge="{{ __('Required') }}" />
                         </flux:card>
 
-                        {{-- Dynamic Blueprint Fields with Tabs --}}
+                        {{-- Dynamic Blueprint Sections with Tabs --}}
                         @if ($this->blueprint->tabs->isNotEmpty())
                             <flux:tab.group>
                                 <flux:tabs variant="segmented">
@@ -49,7 +49,7 @@
                                     <flux:tab.panel :name="'tab-' . $tab->id" class="space-y-4 pt-6">
                                         @foreach ($tab->sections as $section)
                                             <flux:card class="!p-0">
-                                                {{-- Section header (blueprint-style) --}}
+                                                {{-- Section header --}}
                                                 <div class="flex items-center gap-2 px-4 py-3">
                                                     <flux:icon.squares-2x2 variant="micro" class="shrink-0 text-zinc-400" />
                                                     <flux:separator vertical class="h-4" />
@@ -67,11 +67,20 @@
                                                 <div class="space-y-5 p-5">
                                                     @foreach ($section->fields as $field)
                                                         <div wire:key="field-{{ $field->id }}">
-                                                            <x-dynamic-component
-                                                                :component="'entries.fields.' . $field->type"
-                                                                :field="$field"
-                                                                :form="$form"
-                                                            />
+                                                            @php $sectionType = \App\Enums\SectionType::tryFrom($field->type); @endphp
+                                                            @if ($sectionType)
+                                                                <div class="space-y-2">
+                                                                    <div class="flex items-center gap-2">
+                                                                        <flux:icon :name="$sectionType->icon()" class="size-4 text-zinc-400" />
+                                                                        <flux:text size="sm" class="font-medium">{{ $field->label }}</flux:text>
+                                                                        <flux:badge size="sm" variant="pill" color="teal">{{ $sectionType->label() }}</flux:badge>
+                                                                    </div>
+                                                                    @if ($field->instructions)
+                                                                        <flux:text size="sm" class="text-zinc-500">{{ $field->instructions }}</flux:text>
+                                                                    @endif
+                                                                    <livewire:dynamic-component :is="'sections.' . str_replace('_', '-', $field->type)" :$field wire:model="sectionValues.{{ $field->handle }}" :wire:key="'section-' . $field->id" />
+                                                                </div>
+                                                            @endif
                                                         </div>
                                                     @endforeach
                                                 </div>

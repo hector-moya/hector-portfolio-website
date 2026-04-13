@@ -70,7 +70,7 @@
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
-                    <flux:input label="{{ __('Handle') }}" wire:model="form.handle" placeholder="post_title" description="{{ __('Used in templates to retrieve this value, e.g. firstWhere(\'handle\', \'post_title\')') }}" />
+                    <flux:input label="{{ __('Handle') }}" wire:model="form.handle" placeholder="post_title" />
 
                     <flux:input label="{{ __('Instructions') }}" wire:model="form.instructions" placeholder="Enter the post title" />
                 </div>

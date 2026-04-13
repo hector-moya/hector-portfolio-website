@@ -4,50 +4,35 @@ declare(strict_types=1);
 
 namespace App\Livewire\Entries;
 
+use App\Enums\SectionType;
 use App\Livewire\Forms\EntryForm;
 use App\Models\Blueprint;
 use App\Models\Entry;
-use App\Support\SectionTypes;
-use Flux\Flux;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Computed;
-use Livewire\Attributes\On;
 use Livewire\Component;
-use Livewire\WithFileUploads;
 
 final class Edit extends Component
 {
-    use WithFileUploads;
-
     public EntryForm $form;
-
-    public array $uploads = [];
 
     public Entry $entry;
 
-    /** @var array<string, string> Pending section type per page builder field handle */
-    public array $pendingSectionTypes = [];
-
-    public string $editingSectionHandle = '';
-
-    public int $editingSectionIndex = -1;
-
     /**
-     * Page builder sections keyed by field handle.
-     * Kept as a top-level component property to avoid Livewire's reactive
-     * proxy recursion that occurs when mutating deeply-nested Form properties.
+     * Section data keyed by field handle.
+     * Each value is a section data array (e.g., ['title' => '', 'content' => '', ...]).
      *
-     * @var array<string, list<array{_id: string, type: string, data: array<string, mixed>}>>
+     * @var array<string, array<string, mixed>>
      */
-    public array $pageBuilderValues = [];
+    public array $sectionValues = [];
 
     public function mount(Entry $entry): void
     {
         $this->entry = $entry->load('collection.blueprint.tabs.sections.fields', 'collection.blueprint.fields', 'elements.field');
         $this->form->setEntry($this->entry);
-        $this->initializePageBuilderValues();
+        $this->initializeSectionValues();
     }
 
     public function updatedFormTitle(): void
@@ -67,126 +52,15 @@ final class Edit extends Component
         return Blueprint::with(['tabs.sections.fields', 'fields'])->find($this->form->blueprint_id);
     }
 
-    #[On('asset-uploaded')]
     public function save(): void
     {
-        // Sync page builder sections back into the form before validation and persistence
-        foreach ($this->pageBuilderValues as $handle => $sections) {
-            $this->form->fieldValues[$handle] = $sections;
+        // Sync section values back into the form before validation and persistence
+        foreach ($this->sectionValues as $handle => $data) {
+            $this->form->fieldValues[$handle] = $data;
         }
 
-        $this->form->validate();
+        // $this->form->validate();
         $this->form->update($this->form->entry->id);
-    }
-
-    public function addRepeaterItem(string $handle): void
-    {
-        $this->form->addRepeaterItem($handle);
-    }
-
-    public function removeRepeaterItem(string $handle, int $index): void
-    {
-        $this->form->removeRepeaterItem($handle, $index);
-    }
-
-    public function openAssetBrowser(string $handle): void
-    {
-        Flux::modal('asset-browser-'.$handle)->show();
-    }
-
-    /* ---------- Page Builder operations ---------- */
-
-    public function openSectionEditor(string $handle, int $index): void
-    {
-        $this->editingSectionHandle = $handle;
-        $this->editingSectionIndex = $index;
-        Flux::modal('edit-page-builder-section')->show();
-    }
-
-    public function addPageBuilderSection(string $handle): void
-    {
-        $sectionType = $this->pendingSectionTypes[$handle] ?? '';
-
-        if (SectionTypes::get($sectionType) === null) {
-            return;
-        }
-
-        $this->pageBuilderValues[$handle][] = [
-            '_id' => (string) Str::uuid(),
-            'type' => $sectionType,
-            'data' => SectionTypes::defaults($sectionType),
-        ];
-
-        $this->pendingSectionTypes[$handle] = '';
-        Flux::modal('add-section-'.$handle)->close();
-    }
-
-    public function removePageBuilderSection(string $handle, int $index): void
-    {
-        array_splice($this->pageBuilderValues[$handle], $index, 1);
-    }
-
-    public function movePageBuilderSectionUp(string $handle, int $index): void
-    {
-        if ($index === 0) {
-            return;
-        }
-
-        $sections = $this->pageBuilderValues[$handle];
-        [$sections[$index - 1], $sections[$index]] = [$sections[$index], $sections[$index - 1]];
-        $this->pageBuilderValues[$handle] = $sections;
-    }
-
-    public function movePageBuilderSectionDown(string $handle, int $index): void
-    {
-        $sections = $this->pageBuilderValues[$handle];
-
-        if ($index >= count($sections) - 1) {
-            return;
-        }
-
-        [$sections[$index], $sections[$index + 1]] = [$sections[$index + 1], $sections[$index]];
-        $this->pageBuilderValues[$handle] = $sections;
-    }
-
-    public function addPageBuilderFeatureItem(string $handle, int $sectionIndex): void
-    {
-        $this->pageBuilderValues[$handle][$sectionIndex]['data']['items'][] = [
-            'icon' => '',
-            'item_title' => '',
-            'item_description' => '',
-        ];
-    }
-
-    public function removePageBuilderFeatureItem(string $handle, int $sectionIndex, int $itemIndex): void
-    {
-        array_splice($this->pageBuilderValues[$handle][$sectionIndex]['data']['items'], $itemIndex, 1);
-    }
-
-    public function removePageBuilderSectionImage(string $handle, int $sectionIndex, string $field): void
-    {
-        $this->pageBuilderValues[$handle][$sectionIndex]['data'][$field] = null;
-    }
-
-    public function removePageBuilderGalleryImage(string $handle, int $sectionIndex, int $imageIndex): void
-    {
-        array_splice($this->pageBuilderValues[$handle][$sectionIndex]['data']['images'], $imageIndex, 1);
-    }
-
-    /* ---------- Asset selection ---------- */
-
-    #[On('asset-selected')]
-    public function onAssetSelected(string $handle, mixed $value): void
-    {
-        // Page builder asset handles: section_{uuid}_{fieldName}
-        if (str_starts_with($handle, 'section_')) {
-            $this->handlePageBuilderAsset($handle, $value);
-
-            return;
-        }
-
-        // Regular form field
-        $this->form->fieldValues[$handle] = $value;
     }
 
     public function render(): View|Factory
@@ -194,7 +68,7 @@ final class Edit extends Component
         return view('livewire.entries.edit');
     }
 
-    private function initializePageBuilderValues(): void
+    private function initializeSectionValues(): void
     {
         $blueprint = $this->blueprint;
 
@@ -203,39 +77,10 @@ final class Edit extends Component
         }
 
         foreach ($blueprint->fields as $field) {
-            if ($field->type === 'page_builder') {
-                $handle = $field->handle;
-                $this->pageBuilderValues[$handle] = $this->form->fieldValues[$handle] ?? [];
-            }
-        }
-    }
-
-    private function handlePageBuilderAsset(string $assetHandle, mixed $value): void
-    {
-        if (! preg_match('/^section_([0-9a-f-]{36})_(.+)$/', $assetHandle, $matches)) {
-            return;
-        }
-
-        $sectionId = $matches[1];
-        $fieldPart = $matches[2];
-
-        foreach ($this->pageBuilderValues as $handle => $sections) {
-            foreach ($sections as $i => $section) {
-                if (! isset($section['_id']) || $section['_id'] !== $sectionId) {
-                    continue;
-                }
-
-                // Gallery slot: image_{slotIndex}
-                if (preg_match('/^image_(\d+)$/', $fieldPart)) {
-                    $images = $this->pageBuilderValues[$handle][$i]['data']['images'] ?? [];
-                    if (count($images) < 6) {
-                        $this->pageBuilderValues[$handle][$i]['data']['images'][] = $value;
-                    }
-                } else {
-                    $this->pageBuilderValues[$handle][$i]['data'][$fieldPart] = $value;
-                }
-
-                return;
+            $sectionType = SectionType::tryFrom($field->type);
+            if ($sectionType) {
+                $this->sectionValues[$field->handle] = $this->form->fieldValues[$field->handle]
+                    ?? $sectionType->defaultData();
             }
         }
     }

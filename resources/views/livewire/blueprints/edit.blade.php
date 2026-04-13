@@ -29,15 +29,6 @@
                     </div>
                     <flux:separator />
 
-                    {{-- Detail Template --}}
-                    <div class="px-6">
-                        <flux:select label="{{ __('Detail Template') }}" wire:model="form.detail_template" description="{{ __('Layout used when displaying an individual entry') }}">
-                            <flux:select.option value="">{{ __('Default (Article)') }}</flux:select.option>
-                            @foreach (\App\Support\TemplateLayouts::detailTemplates() as $value => $label)
-                                <flux:select.option value="{{ $value }}">{{ $label }}</flux:select.option>
-                            @endforeach
-                        </flux:select>
-                    </div>
                     <flux:separator />
 
                     {{-- Status --}}

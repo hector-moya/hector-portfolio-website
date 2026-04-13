@@ -4,16 +4,15 @@ declare(strict_types=1);
 
 namespace App\Livewire\Entries;
 
+use App\Enums\SectionType;
 use App\Livewire\Forms\EntryForm;
 use App\Models\Blueprint;
 use App\Models\Collection as ModelsCollection;
-use Flux\Flux;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Computed;
-use Livewire\Attributes\On;
 use Livewire\Component;
 
 final class Create extends Component
@@ -22,14 +21,21 @@ final class Create extends Component
 
     public ?int $selectedCollectionId = null;
 
+    /**
+     * Section data keyed by field handle.
+     *
+     * @var array<string, array<string, mixed>>
+     */
+    public array $sectionValues = [];
+
     public function mount(): void
     {
-        // Auto-select collection if only one exists
         $collections = ModelsCollection::with('blueprint.fields')->get();
 
         if ($collections->count() === 1) {
             $this->selectedCollectionId = $collections->first()->id;
             $this->form->setCollection($collections->first());
+            $this->initializeSectionValues();
         }
     }
 
@@ -38,6 +44,7 @@ final class Create extends Component
         if ($this->selectedCollectionId !== null && $this->selectedCollectionId !== 0) {
             $collection = ModelsCollection::with('blueprint.fields')->findOrFail($this->selectedCollectionId);
             $this->form->setCollection($collection);
+            $this->initializeSectionValues();
         }
     }
 
@@ -65,41 +72,40 @@ final class Create extends Component
             return null;
         }
 
-        return Blueprint::with(['tabs.sections.fields.children', 'fields.children'])->find($this->form->blueprint_id);
+        return Blueprint::with(['tabs.sections.fields', 'fields'])->find($this->form->blueprint_id);
     }
 
     public function save(): void
     {
+        // Sync section values back into the form
+        foreach ($this->sectionValues as $handle => $data) {
+            $this->form->fieldValues[$handle] = $data;
+        }
+
         $this->form->create();
         $this->dispatch('notify', message: 'Entry created successfully.');
         $this->redirect(route('entries'), navigate: true);
     }
 
-    public function addRepeaterItem(string $handle): void
-    {
-        $this->form->addRepeaterItem($handle);
-    }
-
-    public function removeRepeaterItem(string $handle, int $index): void
-    {
-        $this->form->removeRepeaterItem($handle, $index);
-    }
-
-    public function openAssetBrowser(string $handle): void
-    {
-        // Open the modal for the specific field
-        Flux::modal('asset-browser-'.$handle)->show();
-    }
-
-    #[On('asset-selected')]
-    public function onAssetSelected(array $data): void
-    {
-        // Update the form field value
-        $this->form->fieldValues[$data['handle']] = $data['value'];
-    }
-
     public function render(): View|Factory
     {
         return view('livewire.entries.create');
+    }
+
+    private function initializeSectionValues(): void
+    {
+        $blueprint = $this->blueprint;
+
+        if (! $blueprint instanceof Blueprint) {
+            return;
+        }
+
+        foreach ($blueprint->fields as $field) {
+            $sectionType = SectionType::tryFrom($field->type);
+            if ($sectionType) {
+                $this->sectionValues[$field->handle] = $this->form->fieldValues[$field->handle]
+                    ?? $sectionType->defaultData();
+            }
+        }
     }
 }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\DataTransferObjects;
 
-use App\Enums\FieldType;
+use App\Enums\SectionType;
 use Illuminate\Support\Str;
 
 final readonly class FieldDto
@@ -16,7 +16,7 @@ final readonly class FieldDto
     public function __construct(
         public string $name,
         public string $handle,
-        public FieldType $type,
+        public SectionType $type,
         public int $sortOrder = 0,
         public ?string $instructions = null,
         public bool $required = false,
@@ -29,7 +29,7 @@ final readonly class FieldDto
         return new self(
             name: $data['name'],
             handle: $data['handle'] ?? Str::slug($data['name']),
-            type: FieldType::from($data['type']),
+            type: SectionType::from($data['type']),
             sortOrder: $data['sort_order'] ?? 0,
             instructions: $data['instructions'] ?? null,
             required: $data['required'] ?? false,

@@ -6,7 +6,7 @@ namespace App\Livewire\Frontend;
 
 use App\Models\Asset;
 use App\Models\Collection as CollectionModel;
-use App\Support\TemplateLayouts;
+use App\Support\TemplateLayouts; // Used for index templates (card-grid, list, magazine)
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;

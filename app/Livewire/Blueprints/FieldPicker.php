@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Livewire\Blueprints;
 
-use App\Enums\FieldType;
+use App\Enums\SectionType;
 use App\Models\Field;
 use App\Models\Section;
 use Illuminate\Contracts\View\Factory;
@@ -49,7 +49,7 @@ final class FieldPicker extends Component
     public function render(): View|Factory
     {
         return view('livewire.blueprints.field-picker', [
-            'fieldTypes' => FieldType::cases(),
+            'fieldTypes' => SectionType::cases(),
         ]);
     }
 }

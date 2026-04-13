@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Enums\FieldType;
+use App\Enums\SectionType;
 use App\Models\Section;
 use Illuminate\Support\Str;
 
@@ -23,7 +23,7 @@ final class BlueprintSectionPresets
     {
         $section->fields()->createMany([
             [
-                'type' => FieldType::Text->value,
+                'type' => SectionType::Text->value,
                 'label' => 'Meta Title',
                 'handle' => 'meta_title',
                 'instructions' => 'The title that appears in search engine results',
@@ -31,7 +31,7 @@ final class BlueprintSectionPresets
                 'sort_order' => 0,
             ],
             [
-                'type' => FieldType::Textarea->value,
+                'type' => SectionType::Text->value,
                 'label' => 'Meta Description',
                 'handle' => 'meta_description',
                 'instructions' => 'A brief description for search engine results',
@@ -39,7 +39,7 @@ final class BlueprintSectionPresets
                 'sort_order' => 1,
             ],
             [
-                'type' => FieldType::Text->value,
+                'type' => SectionType::Text->value,
                 'label' => 'Canonical URL',
                 'handle' => 'canonical_url',
                 'instructions' => 'The preferred version of this page for search engines',
@@ -53,7 +53,7 @@ final class BlueprintSectionPresets
     {
         $section->fields()->createMany([
             [
-                'type' => FieldType::Text->value,
+                'type' => SectionType::Text->value,
                 'label' => 'Link Text',
                 'handle' => 'link_text',
                 'instructions' => 'The text shown in the navigation',
@@ -61,7 +61,7 @@ final class BlueprintSectionPresets
                 'sort_order' => 0,
             ],
             [
-                'type' => FieldType::Text->value,
+                'type' => SectionType::Text->value,
                 'label' => 'URL',
                 'handle' => 'url',
                 'instructions' => 'The URL this item links to',
@@ -69,7 +69,7 @@ final class BlueprintSectionPresets
                 'sort_order' => 1,
             ],
             [
-                'type' => FieldType::Toggle->value,
+                'type' => SectionType::Text->value,
                 'label' => 'Open in New Window',
                 'handle' => 'new_window',
                 'instructions' => 'Should this link open in a new window?',
@@ -77,7 +77,7 @@ final class BlueprintSectionPresets
                 'sort_order' => 2,
             ],
             [
-                'type' => FieldType::Text->value,
+                'type' => SectionType::Text->value,
                 'label' => 'Icon Class',
                 'handle' => 'icon_class',
                 'instructions' => 'CSS class for the icon (optional)',
@@ -91,7 +91,7 @@ final class BlueprintSectionPresets
     {
         $section->fields()->createMany([
             [
-                'type' => FieldType::Text->value,
+                'type' => SectionType::Text->value,
                 'label' => 'Alt Text',
                 'handle' => 'alt_text',
                 'instructions' => 'Alternative text for screen readers',
@@ -99,7 +99,7 @@ final class BlueprintSectionPresets
                 'sort_order' => 0,
             ],
             [
-                'type' => FieldType::Text->value,
+                'type' => SectionType::Text->value,
                 'label' => 'Caption',
                 'handle' => 'caption',
                 'instructions' => 'A caption to display with the asset',
@@ -107,7 +107,7 @@ final class BlueprintSectionPresets
                 'sort_order' => 1,
             ],
             [
-                'type' => FieldType::Text->value,
+                'type' => SectionType::Text->value,
                 'label' => 'Copyright',
                 'handle' => 'copyright',
                 'instructions' => 'Copyright information',
@@ -115,7 +115,7 @@ final class BlueprintSectionPresets
                 'sort_order' => 2,
             ],
             [
-                'type' => FieldType::Text->value,
+                'type' => SectionType::Text->value,
                 'label' => 'Credit',
                 'handle' => 'credit',
                 'instructions' => 'Credit for the asset (photographer, artist, etc.)',
@@ -129,7 +129,7 @@ final class BlueprintSectionPresets
     {
         $section->fields()->createMany([
             [
-                'type' => FieldType::Text->value,
+                'type' => SectionType::Text->value,
                 'label' => 'Display Name',
                 'handle' => 'display_name',
                 'instructions' => 'The name to display publicly',
@@ -137,7 +137,7 @@ final class BlueprintSectionPresets
                 'sort_order' => 0,
             ],
             [
-                'type' => FieldType::Textarea->value,
+                'type' => SectionType::Text->value,
                 'label' => 'Bio',
                 'handle' => 'bio',
                 'instructions' => 'A brief biography',
@@ -145,7 +145,7 @@ final class BlueprintSectionPresets
                 'sort_order' => 1,
             ],
             [
-                'type' => FieldType::Text->value,
+                'type' => SectionType::Text->value,
                 'label' => 'Twitter Handle',
                 'handle' => 'twitter',
                 'instructions' => 'Your Twitter username',
@@ -153,7 +153,7 @@ final class BlueprintSectionPresets
                 'sort_order' => 2,
             ],
             [
-                'type' => FieldType::Text->value,
+                'type' => SectionType::Text->value,
                 'label' => 'Website',
                 'handle' => 'website',
                 'instructions' => 'Your personal website',

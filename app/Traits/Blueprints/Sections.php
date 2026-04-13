@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace App\Traits\Blueprints;
 
-use App\Enums\FieldType;
-use App\Services\FieldTypeRegistry;
+use App\Enums\SectionType;
 use Ramsey\Uuid\Uuid;
 
 trait Sections
@@ -26,18 +25,18 @@ trait Sections
 
     public function newField(string $type): array
     {
-        $defaultConfig = resolve(FieldTypeRegistry::class)->defaultConfigFor($type);
+        $sectionType = SectionType::tryFrom($type);
 
         return [
             'id' => Uuid::uuid4()->toString(),
-            'name' => FieldType::from($type)->defaultLabel(),
+            'name' => $sectionType?->defaultLabel() ?? 'New Field',
             'type' => $type,
-            'icon' => FieldType::from($type)->icon(),
-            'label' => FieldType::from($type)->defaultLabel(),
+            'icon' => $sectionType?->icon() ?? 'document-text',
+            'label' => $sectionType?->defaultLabel() ?? 'New Field',
             'handle' => '',
             'instructions' => '',
             'is_required' => false,
-            'config' => $defaultConfig,
+            'config' => $sectionType?->defaultConfig() ?? [],
         ];
     }
 }

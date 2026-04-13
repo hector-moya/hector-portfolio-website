@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Models\Blueprint;
 use App\Models\Collection;
 use App\Models\Entry;
+use App\Models\EntryElement;
 use App\Models\Field;
 
 test('entry show returns 404 for unknown collection', function (): void {
@@ -27,7 +28,7 @@ test('entry show returns 404 for draft entry', function (): void {
     $this->get('/my-blog/draft-post')->assertNotFound();
 });
 
-test('entry show renders published entry with field values', function (): void {
+test('entry show renders published entry with section content', function (): void {
     $blueprint = Blueprint::factory()->create();
     Collection::factory()->create([
         'slug' => 'my-blog',
@@ -44,27 +45,25 @@ test('entry show renders published entry with field values', function (): void {
 
     $field = Field::factory()->create([
         'blueprint_id' => $blueprint->id,
-        'type' => 'textarea',
-        'handle' => 'excerpt',
-        'label' => 'Excerpt',
+        'type' => 'text',
+        'handle' => 'body',
+        'label' => 'Body',
     ]);
 
-    $entry->elements()->create([
+    EntryElement::factory()->create([
+        'entry_id' => $entry->id,
         'field_id' => $field->id,
-        'handle' => 'excerpt',
-        'value' => 'This is the excerpt.',
+        'handle' => 'body',
+        'meta' => ['content' => 'This is the excerpt.', 'alignment' => 'left'],
     ]);
 
     $this->get('/my-blog/my-test-post')
         ->assertOk()
-        ->assertSee('My Test Post')
         ->assertSee('This is the excerpt.');
 });
 
-test('entry show uses correct template from blueprint settings', function (): void {
-    $blueprint = Blueprint::factory()->create([
-        'settings' => ['detail_template' => 'minimal'],
-    ]);
+test('entry show renders published entry with no sections', function (): void {
+    $blueprint = Blueprint::factory()->create();
     Collection::factory()->create([
         'slug' => 'my-portfolio',
         'blueprint_id' => $blueprint->id,

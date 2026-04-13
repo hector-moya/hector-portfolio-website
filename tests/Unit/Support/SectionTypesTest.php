@@ -2,54 +2,53 @@
 
 declare(strict_types=1);
 
-use App\Support\SectionTypes;
+use App\Enums\SectionType;
 
-test('all returns all 6 section types', function (): void {
-    expect(SectionTypes::all())->toHaveKeys(['hero', 'text', 'image_text', 'gallery', 'cta', 'features']);
+test('SectionType enum has all 8 cases', function (): void {
+    expect(SectionType::cases())->toHaveCount(8);
 });
 
-test('each section type has a label and fields', function (): void {
-    foreach (SectionTypes::all() as $schema) {
-        expect($schema)->toHaveKeys(['label', 'fields'])
-            ->and($schema['label'])->toBeString()->not->toBeEmpty()
-            ->and($schema['fields'])->toBeArray()->not->toBeEmpty();
+test('each section type has a non-empty label', function (): void {
+    foreach (SectionType::cases() as $type) {
+        expect($type->label())->toBeString()->not->toBeEmpty();
     }
 });
 
-test('get returns the schema for a known type', function (): void {
-    $schema = SectionTypes::get('hero');
-
-    expect($schema)->toBeArray()
-        ->and($schema['label'])->toBe('Hero')
-        ->and($schema['fields'])->toHaveKey('title');
-});
-
-test('get returns null for an unknown type', function (): void {
-    expect(SectionTypes::get('nonexistent'))->toBeNull();
-});
-
-test('defaults returns an array with correct keys for each type', function (): void {
-    foreach (array_keys(SectionTypes::all()) as $type) {
-        $defaults = SectionTypes::defaults($type);
-        $fields = SectionTypes::get($type)['fields'];
-
-        expect($defaults)->toBeArray()->toHaveKeys(array_keys($fields));
+test('each section type has a non-empty icon', function (): void {
+    foreach (SectionType::cases() as $type) {
+        expect($type->icon())->toBeString()->not->toBeEmpty();
     }
 });
 
-test('defaults for gallery type returns empty array for images', function (): void {
-    expect(SectionTypes::defaults('gallery')['images'])->toBe([]);
+test('each section type defaultData returns an array', function (): void {
+    foreach (SectionType::cases() as $type) {
+        expect($type->defaultData())->toBeArray()->not->toBeEmpty();
+    }
 });
 
-test('defaults for features type returns empty array for items', function (): void {
-    expect(SectionTypes::defaults('features')['items'])->toBe([]);
+test('hero defaultData has expected keys', function (): void {
+    $data = SectionType::Hero->defaultData();
+
+    expect($data)->toHaveKeys(['title', 'subtitle', 'content', 'bg_image', 'cta_text', 'cta_url', 'secondary_cta_text', 'secondary_cta_url']);
 });
 
-test('labels returns associative array of type to display name', function (): void {
-    $labels = SectionTypes::labels();
+test('gallery defaultData has empty images array', function (): void {
+    expect(SectionType::Gallery->defaultData()['images'])->toBe([]);
+});
 
-    expect($labels)
-        ->toHaveKey('hero', 'Hero')
-        ->toHaveKey('cta', 'Call to Action')
-        ->toHaveKey('features', 'Features');
+test('features defaultData has empty items array', function (): void {
+    expect(SectionType::Features->defaultData()['items'])->toBe([]);
+});
+
+test('form defaultData has empty fields array', function (): void {
+    expect(SectionType::Form->defaultData()['fields'])->toBe([]);
+});
+
+test('tryFrom returns correct case for valid value', function (): void {
+    expect(SectionType::tryFrom('hero'))->toBe(SectionType::Hero)
+        ->and(SectionType::tryFrom('image_text'))->toBe(SectionType::ImageText);
+});
+
+test('tryFrom returns null for unknown type', function (): void {
+    expect(SectionType::tryFrom('nonexistent'))->toBeNull();
 });

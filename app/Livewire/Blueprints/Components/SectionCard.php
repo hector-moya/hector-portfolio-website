@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Livewire\Blueprints\Components;
 
 use App\Livewire\Forms\SectionForm;
-use App\Services\FieldTypeRegistry;
+use App\Services\SectionTypeRegistry;
 use App\Traits\HasSlug;
 use Flux\Flux;
 use Illuminate\Contracts\View\Factory;
@@ -36,7 +36,7 @@ final class SectionCard extends Component
     #[Computed]
     public function fieldTypeMeta(): array
     {
-        return resolve(FieldTypeRegistry::class)->all();
+        return resolve(SectionTypeRegistry::class)->all();
     }
 
     public function addField(string $type): void
