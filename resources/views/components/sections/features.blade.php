@@ -9,27 +9,34 @@
     <div class="bg-white py-16 dark:bg-zinc-900 sm:py-24">
         <div class="mx-auto max-w-7xl px-6 lg:px-8">
             @if (!empty($data['title']))
-                <flux:heading class="mb-12 text-center !text-3xl font-bold sm:!text-4xl" level="2">
-                    {{ $data['title'] }}
-                </flux:heading>
+                <div data-animate class="mx-auto max-w-2xl text-center">
+                    <flux:heading class="text-3xl! font-bold sm:text-4xl!" level="2">
+                        {{ $data['title'] }}
+                    </flux:heading>
+                </div>
             @endif
 
             @if (!empty($items))
                 <div @class([
-                    'grid gap-8',
+                    'mt-12 grid gap-6',
                     'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3' => count($items) > 2,
-                    'grid-cols-1 sm:grid-cols-2' => count($items) === 2,
-                    'grid-cols-1 max-w-md mx-auto' => count($items) === 1,
+                    'grid-cols-1 sm:grid-cols-2'               => count($items) === 2,
+                    'mx-auto max-w-md grid-cols-1'             => count($items) === 1,
                 ])>
-                    @foreach ($items as $item)
-                        <div class="flex flex-col gap-4 rounded-2xl border border-zinc-200 p-6 dark:border-zinc-700">
+                    @foreach ($items as $i => $item)
+                        @php $delay = min(($i + 1) * 100, 500); @endphp
+                        <div
+                            data-animate
+                            data-delay="{{ $delay }}"
+                            class="group flex flex-col gap-4 rounded-2xl border border-zinc-200 bg-zinc-50/50 p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg dark:border-zinc-700/60 dark:bg-zinc-800/50 dark:hover:border-teal-700/50"
+                        >
                             @if (!empty($item['icon']))
                                 @php $iconName = Str::kebab($item['icon']); @endphp
-                                <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-teal-600 text-white">
+                                <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-linear-to-br from-teal-500 to-green-600 text-white shadow-sm shadow-teal-500/30">
                                     @if (view()->exists('flux::icon.' . $iconName))
-                                        <flux:icon :name="$iconName" class="size-6" />
+                                        <flux:icon :name="$iconName" class="size-5" />
                                     @else
-                                        <flux:icon name="sparkles" class="size-6" />
+                                        <flux:icon name="sparkles" class="size-5" />
                                     @endif
                                 </div>
                             @endif
@@ -41,7 +48,7 @@
                             @endif
 
                             @if (!empty($item['item_description']))
-                                <flux:text class="text-zinc-600 dark:text-zinc-400">
+                                <flux:text class="text-zinc-500 dark:text-zinc-400">
                                     {{ $item['item_description'] }}
                                 </flux:text>
                             @endif

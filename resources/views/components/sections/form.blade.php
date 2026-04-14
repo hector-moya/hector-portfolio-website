@@ -6,54 +6,71 @@
 @endphp
 
 @if (!empty($fields))
-    <section class="bg-white py-16 dark:bg-zinc-900">
+    <section class="bg-zinc-50 py-16 dark:bg-zinc-800/50 sm:py-24">
         <div class="mx-auto max-w-2xl px-6 lg:px-8">
             @if ($title)
-                <h2 class="mb-8 text-center text-3xl font-bold tracking-tight text-zinc-900 dark:text-white">{{ $title }}</h2>
+                <div data-animate class="mb-10 text-center">
+                    <flux:heading class="text-3xl! font-bold sm:text-4xl!" level="2">
+                        {{ $title }}
+                    </flux:heading>
+                </div>
             @endif
 
-            <div class="space-y-6">
-                @foreach ($fields as $field)
-                    <div>
-                        <label class="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                            {{ $field['label'] ?? $field['handle'] ?? '' }}
-                            @if ($field['required'] ?? false)
-                                <span class="text-red-500">*</span>
-                            @endif
-                        </label>
+            <div data-animate data-delay="100" class="rounded-2xl border border-zinc-200 bg-white p-8 shadow-sm dark:border-zinc-700 dark:bg-zinc-900">
+                <div class="space-y-5">
+                    @foreach ($fields as $field)
+                        <flux:field>
+                            <flux:label>
+                                {{ $field['label'] ?? $field['handle'] ?? '' }}
+                                @if ($field['required'] ?? false)
+                                    <flux:label class="text-red-500">*</flux:label>
+                                @endif
+                            </flux:label>
 
-                        @switch($field['type'] ?? 'text')
-                            @case('textarea')
-                                <textarea
-                                    class="w-full rounded-lg border border-zinc-300 px-4 py-2.5 text-zinc-900 shadow-sm focus:border-teal-500 focus:ring-teal-500 dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
-                                    rows="4"
-                                    placeholder="{{ $field['label'] ?? '' }}"
-                                ></textarea>
-                            @break
+                            @switch($field['type'] ?? 'text')
+                                @case('textarea')
+                                    <flux:textarea
+                                        rows="4"
+                                        placeholder="{{ $field['label'] ?? '' }}"
+                                    />
+                                @break
 
-                            @case('toggle')
-                                <div class="flex items-center gap-3">
-                                    <input type="checkbox" class="h-5 w-5 rounded border-zinc-300 text-teal-600 focus:ring-teal-500" />
-                                    <span class="text-sm text-zinc-600 dark:text-zinc-400">{{ $field['label'] ?? '' }}</span>
-                                </div>
-                            @break
+                                @case('toggle')
+                                    <flux:switch />
+                                @break
 
-                            @case('select')
-                                <select class="w-full rounded-lg border border-zinc-300 px-4 py-2.5 text-zinc-900 shadow-sm focus:border-teal-500 focus:ring-teal-500 dark:border-zinc-600 dark:bg-zinc-800 dark:text-white">
-                                    <option value="">{{ __('Select...') }}</option>
-                                </select>
-                            @break
+                                @case('select')
+                                    <flux:select placeholder="{{ __('Select...') }}">
+                                        @foreach ($field['options'] ?? [] as $value => $label)
+                                            <flux:option value="{{ $value }}">{{ $label }}</flux:option>
+                                        @endforeach
+                                    </flux:select>
+                                @break
 
-                            @default
-                                <input
-                                    type="{{ $field['type'] ?? 'text' }}"
-                                    class="w-full rounded-lg border border-zinc-300 px-4 py-2.5 text-zinc-900 shadow-sm focus:border-teal-500 focus:ring-teal-500 dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
-                                    placeholder="{{ $field['label'] ?? '' }}"
-                                />
-                            @break
-                        @endswitch
+                                @case('radio')
+                                    <flux:radio.group>
+                                        @foreach ($field['options'] ?? [] as $value => $label)
+                                            <flux:radio value="{{ $value }}" label="{{ $label }}" />
+                                        @endforeach
+                                    </flux:radio.group>
+                                @break
+
+                                @default
+                                    <flux:input
+                                        type="{{ $field['type'] ?? 'text' }}"
+                                        placeholder="{{ $field['label'] ?? '' }}"
+                                    />
+                                @break
+                            @endswitch
+                        </flux:field>
+                    @endforeach
+
+                    <div class="pt-2">
+                        <flux:button variant="primary" class="w-full">
+                            {{ __('Submit') }}
+                        </flux:button>
                     </div>
-                @endforeach
+                </div>
             </div>
         </div>
     </section>

@@ -122,6 +122,52 @@ select:focus[data-flux-control] {
     animation: slide-in-from-right 1s ease-out forwards;
 }
 
-/* \[:where(&)\]:size-4 {
-    @apply size-4;
-} */
+/* ─── Floating orb animations ─────────────────────────────────────────── */
+
+@keyframes float-slow {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50%       { transform: translateY(-24px) scale(1.04); }
+}
+
+@keyframes float-slower {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50%       { transform: translateY(20px) scale(0.97); }
+}
+
+@keyframes pulse-slow {
+    0%, 100% { opacity: 0.08; transform: translateX(-50%) scale(1); }
+    50%       { opacity: 0.15; transform: translateX(-50%) scale(1.08); }
+}
+
+@utility animate-float-slow {
+    animation: float-slow 8s ease-in-out infinite;
+}
+
+@utility animate-float-slower {
+    animation: float-slower 11s ease-in-out infinite;
+}
+
+@utility animate-pulse-slow {
+    animation: pulse-slow 7s ease-in-out infinite;
+}
+
+/* ─── Scroll-reveal animations ────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: no-preference) {
+    [data-animate] {
+        opacity: 0;
+        transform: translateY(1.75rem);
+        transition: opacity 0.55s ease-out, transform 0.55s ease-out;
+    }
+
+    [data-animate].in-view {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    [data-animate][data-delay="100"] { transition-delay: 100ms; }
+    [data-animate][data-delay="200"] { transition-delay: 200ms; }
+    [data-animate][data-delay="300"] { transition-delay: 300ms; }
+    [data-animate][data-delay="400"] { transition-delay: 400ms; }
+    [data-animate][data-delay="500"] { transition-delay: 500ms; }
+}

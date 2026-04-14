@@ -9,7 +9,7 @@
 @if ($navigation)
     <nav
         @class([
-            'flex gap-8',
+            'flex gap-6',
             $class,
         ])
     >
@@ -17,32 +17,32 @@
             <a
                 href="{{ $item->url }}"
                 @class([
-                    'inline-flex items-center gap-2 transition',
-                    'text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200' => !request()->is(trim($item->url, '/')),
-                    'text-gray-900 dark:text-white' => request()->is(trim($item->url, '/')),
+                    'inline-flex items-center gap-1.5 transition-opacity duration-150',
+                    'opacity-60 hover:opacity-100' => ! request()->is(trim($item->url, '/')),
+                    'opacity-100 font-semibold' => request()->is(trim($item->url, '/')),
                 ])
             >
                 @if ($item->icon)
-                    <flux:icon name="{{ $item->icon }}" class="h-5 w-5" />
+                    <flux:icon name="{{ $item->icon }}" class="size-4" />
                 @endif
 
                 <span>{{ $item->title }}</span>
 
                 @if ($item->children->count())
-                    <flux:icon name="chevron-down" class="h-4 w-4" />
+                    <flux:icon name="chevron-down" class="size-3.5" />
                 @endif
             </a>
 
             @if ($item->children->count())
                 <div class="relative">
-                    <div class="absolute left-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-zinc-800" role="menu">
+                    <div class="absolute left-0 z-10 mt-2 w-52 origin-top-left rounded-xl border border-zinc-200/80 bg-white/95 shadow-lg backdrop-blur-sm dark:border-zinc-700/80 dark:bg-zinc-800/95" role="menu">
                         @foreach ($item->children as $child)
                             <a
                                 href="{{ $child->url }}"
                                 @class([
-                                    'block px-4 py-2 text-sm transition',
-                                    'text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200' => !request()->is(trim($child->url, '/')),
-                                    'text-gray-900 dark:text-white' => request()->is(trim($child->url, '/')),
+                                    'block px-4 py-2.5 text-sm transition-opacity first:rounded-t-xl last:rounded-b-xl',
+                                    'opacity-60 hover:opacity-100 hover:bg-zinc-50 dark:hover:bg-zinc-700/50' => ! request()->is(trim($child->url, '/')),
+                                    'opacity-100 font-medium bg-zinc-50 dark:bg-zinc-700/50' => request()->is(trim($child->url, '/')),
                                 ])
                                 role="menuitem"
                             >

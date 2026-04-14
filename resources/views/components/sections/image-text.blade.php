@@ -14,25 +14,25 @@
         ])>
             {{-- Image column --}}
             @if ($image)
-                <div class="lg:w-1/2">
+                <div data-animate class="lg:w-1/2">
                     <img
                         src="{{ $image->url }}"
                         alt="{{ $image->alt_text }}"
-                        class="w-full rounded-2xl object-cover shadow-xl ring-1 ring-zinc-900/10 dark:ring-white/10"
+                        class="w-full rounded-2xl object-cover shadow-2xl ring-1 ring-zinc-900/10 dark:ring-white/10"
                     />
                 </div>
             @endif
 
             {{-- Text column --}}
-            <div class="{{ $image ? 'lg:w-1/2' : 'w-full' }} space-y-6">
+            <div data-animate data-delay="100" class="{{ $image ? 'lg:w-1/2' : 'w-full' }} space-y-6">
                 @if (!empty($data['title']))
-                    <flux:heading class="!text-3xl font-bold sm:!text-4xl" level="2">
+                    <flux:heading class="text-3xl! font-bold sm:text-4xl!" level="2">
                         {{ $data['title'] }}
                     </flux:heading>
                 @endif
 
                 @if (!empty($data['content']))
-                    <flux:text class="text-lg leading-8 text-zinc-600 dark:text-zinc-400">
+                    <flux:text class="text-lg leading-8 text-zinc-500 dark:text-zinc-400">
                         {!! nl2br(e($data['content'])) !!}
                     </flux:text>
                 @endif
@@ -41,6 +41,7 @@
                     <div>
                         <flux:button variant="primary" href="{{ $data['cta_url'] ?? '#' }}">
                             {{ $data['cta_text'] }}
+                            <flux:icon name="arrow-right" class="size-4" />
                         </flux:button>
                     </div>
                 @endif
