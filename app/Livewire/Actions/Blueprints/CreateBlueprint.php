@@ -64,7 +64,9 @@ final class CreateBlueprint
                 }
             }
 
-            return $blueprint->fresh(['tabs.sections.fields']);
+            $blueprint->load(['tabs.sections.fields']);
+
+            return $blueprint;
 
         });
     }
