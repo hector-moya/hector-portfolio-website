@@ -8,6 +8,7 @@ use App\Models\Blueprint;
 use App\Models\Entry;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 /**
  * @extends Factory<Entry>
@@ -26,7 +27,7 @@ final class EntryFactory extends Factory
         return [
             'blueprint_id' => Blueprint::factory(),
             'title' => mb_rtrim($title, '.'),
-            'slug' => str($title)->slug(),
+            'slug' => Str::slug(mb_rtrim($title, '.')),
             'status' => fake()->randomElement(['draft', 'published', 'archived']),
             'author_id' => User::factory(),
             'published_at' => fake()->boolean(70) ? fake()->dateTimeBetween('-1 year') : null,
