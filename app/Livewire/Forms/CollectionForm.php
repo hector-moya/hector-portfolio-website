@@ -53,7 +53,7 @@ final class CollectionForm extends Form
         ];
     }
 
-    public function setCollection($collection): void
+    public function setCollection(Collection $collection): void
     {
         $this->collection_id = $collection->id;
         $this->name = $collection->name;
