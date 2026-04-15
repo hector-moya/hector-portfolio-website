@@ -7,6 +7,7 @@ namespace Database\Factories;
 use App\Models\Blueprint;
 use App\Models\Collection;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 /**
  * @extends Factory<Collection>
@@ -24,7 +25,7 @@ final class CollectionFactory extends Factory
 
         return [
             'name' => ucfirst($name),
-            'slug' => str($name)->slug(),
+            'slug' => Str::slug($name),
             'description' => fake()->sentence(),
             'blueprint_id' => Blueprint::factory(),
             'is_active' => true,
