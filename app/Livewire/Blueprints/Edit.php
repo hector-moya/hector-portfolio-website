@@ -8,7 +8,6 @@ use App\Livewire\Forms\BlueprintForm;
 use App\Models\Blueprint;
 use App\Traits\Blueprints\Sections;
 use App\Traits\Blueprints\Tabs;
-use App\Traits\HasSlug;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Livewire\Attributes\Title;
@@ -16,7 +15,6 @@ use Livewire\Component;
 
 final class Edit extends Component
 {
-    use HasSlug;
     use Sections;
     use Tabs;
 
