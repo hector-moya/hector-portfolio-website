@@ -37,7 +37,7 @@ final class Preview extends Component
             return null;
         }
 
-        return Entry::with(['collection', 'blueprint', 'author', 'elements.Field'])
+        return Entry::with(['collection', 'blueprint', 'author', 'elements.field'])
             ->find($this->entryId);
     }
 

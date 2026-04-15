@@ -37,7 +37,7 @@ final class CollectionIndex extends Component
 
         $entries = $this->collection->entries()
             ->where('status', 'published')
-            ->with(['elements.Field', 'author'])
+            ->with(['elements.field', 'author'])
             ->latest('published_at')
             ->paginate(9);
 
@@ -65,7 +65,7 @@ final class CollectionIndex extends Component
     {
         $entry = $this->collection->entries()
             ->where('status', 'published')
-            ->with(['elements.Field', 'blueprint'])
+            ->with(['elements.field', 'blueprint'])
             ->latest('published_at')
             ->first();
 

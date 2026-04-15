@@ -21,7 +21,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property string|null $deleted_at
- * @property-read Field $Field
+ * @property-read Field $field
  * @property-read Entry $entry
  *
  * @method static EntryElementFactory factory($count = null, $state = [])
@@ -93,7 +93,7 @@ final class EntryElement extends Model
         return $this->belongsTo(Entry::class);
     }
 
-    public function Field(): BelongsTo
+    public function field(): BelongsTo
     {
         return $this->belongsTo(Field::class);
     }

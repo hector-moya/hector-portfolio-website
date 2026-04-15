@@ -30,7 +30,7 @@ final class EntryShow extends Component
             ->where('slug', $entrySlug)
             ->where('blueprint_id', $this->collection->blueprint_id)
             ->where('status', 'published')
-            ->with(['elements.Field', 'blueprint.tabs.sections.fields', 'author'])
+            ->with(['elements.field', 'blueprint.tabs.sections.fields', 'author'])
             ->firstOrFail();
     }
 
