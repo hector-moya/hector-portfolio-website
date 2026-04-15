@@ -6,6 +6,7 @@ namespace Database\Factories;
 
 use App\Models\Blueprint;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 /**
  * @extends Factory<Blueprint>
@@ -23,7 +24,7 @@ final class BlueprintFactory extends Factory
 
         return [
             'name' => ucfirst($name),
-            'slug' => str($name)->slug(),
+            'slug' => Str::slug($name),
             'description' => fake()->sentence(),
             'is_active' => true,
         ];
