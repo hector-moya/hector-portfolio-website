@@ -56,7 +56,7 @@ final class EntryForm extends Form
         $this->seo_description = $entry->seo_description ?? '';
         $this->og_image = $entry->og_image ?? '';
 
-        $entry->load('elements.Field');
+        $entry->load('elements.field');
         $this->loadFieldValuesFromEntry($entry);
         $this->initializeFieldValues();
     }
@@ -105,7 +105,7 @@ final class EntryForm extends Form
         }
 
         foreach ($bp->fields as $field) {
-            $rules['fieldValues.'.$field->handle] = ['nullable', 'array'];
+            $rules['fieldValues.'.$field->handle] = ['nullable'];
         }
 
         return $rules;
@@ -137,8 +137,11 @@ final class EntryForm extends Form
 
     public function update(int $entryId): Entry
     {
-        $entry = resolve(UpdateEntry::class)->handle([
-            'id' => $entryId,
+        $this->validate();
+
+        $entry = Entry::query()->findOrFail($entryId);
+
+        $entry = resolve(UpdateEntry::class)->execute($entry, [
             'title' => $this->title,
             'slug' => $this->slug,
             'status' => $this->status,
@@ -202,9 +205,9 @@ final class EntryForm extends Form
 
     private function blueprint(): ?Blueprint
     {
-        return $this->blueprint_id !== null && $this->blueprint_id !== 0
+        return once(fn () => $this->blueprint_id !== null && $this->blueprint_id !== 0
             ? Blueprint::with('fields')->find($this->blueprint_id)
-            : null;
+            : null);
     }
 
     private function loadFieldValuesFromEntry(Entry $entry): void
