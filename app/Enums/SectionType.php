@@ -14,6 +14,7 @@ enum SectionType: string
     case Features = 'features';
     case RichText = 'richtext';
     case Form = 'form';
+    case CardGrid = 'card_grid';
 
     public function label(): string
     {
@@ -26,6 +27,7 @@ enum SectionType: string
             self::Features => 'Features',
             self::RichText => 'Rich Text',
             self::Form => 'Form',
+            self::CardGrid => 'Card Grid',
         };
     }
 
@@ -40,6 +42,7 @@ enum SectionType: string
             self::Features => 'rectangle-group',
             self::RichText => 'book-open',
             self::Form => 'clipboard-document-list',
+            self::CardGrid => 'rectangle-stack',
         };
     }
 
@@ -54,6 +57,7 @@ enum SectionType: string
             self::Features => 'Features Section',
             self::RichText => 'Rich Text Section',
             self::Form => 'Form Section',
+            self::CardGrid => 'Card Grid Section',
         };
     }
 
@@ -107,6 +111,11 @@ enum SectionType: string
             self::Form => [
                 'title' => '',
                 'fields' => [],
+            ],
+            self::CardGrid => [
+                'title' => '',
+                'subtitle' => '',
+                'cards' => [],
             ],
         };
     }
@@ -172,6 +181,11 @@ enum SectionType: string
                 'title' => ['type' => 'text', 'label' => 'Title', 'default' => ''],
                 'fields' => ['type' => 'form_fields', 'label' => 'Form Fields', 'default' => []],
             ],
+            self::CardGrid => [
+                'title' => ['type' => 'text', 'label' => 'Title', 'default' => ''],
+                'subtitle' => ['type' => 'text', 'label' => 'Subtitle', 'default' => ''],
+                'cards' => ['type' => 'repeater', 'label' => 'Cards', 'default' => []],
+            ],
         };
     }
 
@@ -212,6 +226,10 @@ enum SectionType: string
             self::Form => [
                 'available_field_types' => ['text', 'textarea', 'email', 'number', 'date', 'time', 'toggle', 'select', 'radio'],
             ],
+            self::CardGrid => [
+                'columns' => 3,
+                'max_items' => null,
+            ],
         };
     }
 
@@ -224,6 +242,10 @@ enum SectionType: string
     {
         return match ($this) {
             self::Hero, self::Text, self::ImageText, self::Cta => [],
+            self::CardGrid => [
+                'columns' => ['nullable', 'integer', 'in:2,3,4'],
+                'max_items' => ['nullable', 'integer', 'min:1'],
+            ],
             self::Gallery => [
                 'max_images' => ['nullable', 'integer', 'min:1', 'max:20'],
             ],

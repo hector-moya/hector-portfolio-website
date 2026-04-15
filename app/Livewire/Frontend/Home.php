@@ -51,6 +51,7 @@ final class Home extends Component
                 'hero' => [$section['data']['bg_image'] ?? null],
                 'image_text' => [$section['data']['image'] ?? null],
                 'gallery' => $section['data']['images'] ?? [],
+                'card_grid' => collect($section['data']['cards'] ?? [])->pluck('image')->filter()->all(),
                 default => [],
             })
             ->filter()

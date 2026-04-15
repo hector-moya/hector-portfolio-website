@@ -4,8 +4,15 @@ declare(strict_types=1);
 
 use App\Enums\SectionType;
 
-test('SectionType enum has all 8 cases', function (): void {
-    expect(SectionType::cases())->toHaveCount(8);
+test('SectionType enum has all 9 cases', function (): void {
+    expect(SectionType::cases())->toHaveCount(9);
+});
+
+test('card_grid defaultData has expected keys', function (): void {
+    $data = SectionType::CardGrid->defaultData();
+
+    expect($data)->toHaveKeys(['title', 'subtitle', 'cards'])
+        ->and($data['cards'])->toBe([]);
 });
 
 test('each section type has a non-empty label', function (): void {
