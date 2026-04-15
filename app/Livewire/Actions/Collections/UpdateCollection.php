@@ -19,6 +19,6 @@ final class UpdateCollection
 
         $collection->update($data);
 
-        return $collection->fresh();
+        return $collection;
     }
 }
