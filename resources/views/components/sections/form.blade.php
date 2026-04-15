@@ -42,7 +42,7 @@
                                 @case('select')
                                     <flux:select placeholder="{{ __('Select...') }}">
                                         @foreach ($field['options'] ?? [] as $value => $label)
-                                            <flux:option value="{{ $value }}">{{ $label }}</flux:option>
+                                            <flux:select.option value="{{ $value }}">{{ $label }}</flux:select.option>
                                         @endforeach
                                     </flux:select>
                                 @break
