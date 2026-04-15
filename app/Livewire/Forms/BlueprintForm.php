@@ -97,15 +97,15 @@ final class BlueprintForm extends Form
     public function create(): Blueprint
     {
         $tabs = $this->initializeTabs();
-        // TODO: Uncomment $this->validate() once the create flow populates name/slug before saving.
-        //       Currently hardcodes 'New Blueprint' / 'new-blueprint' as a workaround; this should instead
-        //       use $this->name and $this->slug so the validation covers actual user-supplied values.
-        // $this->validate();
+
+        $this->name = 'New Blueprint';
+        $this->slug = Str::slug($this->name).'-'.mb_substr((string) Str::uuid(), 0, 8);
+        $this->validate();
 
         $blueprint = (new CreateBlueprint)->create(
             blueprintData: [
-                'name' => 'New Blueprint',
-                'slug' => 'new-blueprint',
+                'name' => $this->name,
+                'slug' => $this->slug,
                 'description' => '',
                 'is_active' => false,
                 'tabs' => $tabs,
@@ -126,9 +126,11 @@ final class BlueprintForm extends Form
     {
         $this->validate();
 
+        $blueprint = Blueprint::query()->findOrFail($blueprintId);
+
         $blueprint = resolve(UpdateBlueprint::class)->update(
+            blueprint: $blueprint,
             blueprintData: [
-                'id' => $blueprintId,
                 'name' => $this->name,
                 'slug' => $this->slug,
                 'description' => $this->description,
