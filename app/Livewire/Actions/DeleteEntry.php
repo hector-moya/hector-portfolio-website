@@ -7,11 +7,14 @@ namespace App\Livewire\Actions;
 use App\Models\Activity;
 use App\Models\Entry;
 use App\Models\User;
+use Illuminate\Support\Facades\Gate;
 
 final class DeleteEntry
 {
     public function execute(Entry $entry): bool
     {
+        Gate::authorize('delete', $entry);
+
         // Log activity before deletion
         Activity::query()->create([
             'log_name' => 'entry',
