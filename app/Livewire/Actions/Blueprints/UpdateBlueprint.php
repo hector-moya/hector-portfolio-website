@@ -11,14 +11,11 @@ use Illuminate\Support\Str;
 
 final class UpdateBlueprint
 {
-    public function update(array $blueprintData = []): Blueprint
+    public function update(Blueprint $blueprint, array $blueprintData = []): Blueprint
     {
+        Gate::authorize('update', $blueprint);
 
-        return DB::transaction(function () use ($blueprintData) {
-            $blueprint = Blueprint::query()->findOrFail($blueprintData['id']);
-
-            Gate::authorize('update', $blueprint);
-
+        return DB::transaction(function () use ($blueprint, $blueprintData) {
             if (empty($blueprintData['slug'])) {
                 $blueprintData['slug'] = Str::slug($blueprintData['name']);
             }
@@ -31,8 +28,9 @@ final class UpdateBlueprint
                 'settings' => array_merge($blueprint->settings ?? [], $blueprintData['settings'] ?? []),
             ]);
 
-            return $blueprint->fresh('fields');
-        }
-        );
+            $blueprint->load('fields');
+
+            return $blueprint;
+        });
     }
 }
