@@ -64,4 +64,11 @@ final class Tab extends Model
     {
         return $this->hasMany(Section::class, 'tab_id')->orderBy('sort_order');
     }
+
+    protected function casts(): array
+    {
+        return [
+            'sort_order' => 'integer',
+        ];
+    }
 }

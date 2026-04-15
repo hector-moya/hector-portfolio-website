@@ -76,4 +76,11 @@ final class Section extends Model
     {
         return $this->hasMany(Field::class, 'section_id')->orderBy('order');
     }
+
+    protected function casts(): array
+    {
+        return [
+            'sort_order' => 'integer',
+        ];
+    }
 }
