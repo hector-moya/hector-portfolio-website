@@ -9,14 +9,15 @@ use App\Models\Entry;
 use App\Models\EntryElement;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 final class UpdateEntry
 {
-    public function handle(array $entryData): Entry
+    public function execute(Entry $entry, array $entryData): Entry
     {
-        return DB::transaction(function () use ($entryData) {
-            $entry = Entry::query()->findOrFail($entryData['id']);
+        Gate::authorize('update', $entry);
 
+        return DB::transaction(function () use ($entry, $entryData) {
             $oldValues = [
                 'title' => $entry->title,
                 'slug' => $entry->slug,
@@ -53,7 +54,9 @@ final class UpdateEntry
                 ],
             ]);
 
-            return $entry->fresh(['elements', 'blueprint']);
+            $entry->load(['elements', 'blueprint']);
+
+            return $entry;
         });
     }
 
