@@ -29,6 +29,12 @@
     x-init="window.addEventListener('scroll', () => { scrolled = window.scrollY > 40 }, { passive: true })"
     class="flex min-h-screen flex-col justify-between bg-white font-sans antialiased dark:bg-zinc-900"
 >
+    @php
+        $siteName = \App\Facades\Globals::get('branding.site_name', config('app.name'));
+        $tagline  = \App\Facades\Globals::get('branding.tagline', '');
+        $logoUrl  = \App\Facades\Globals::get('branding.logo_url', '');
+    @endphp
+
     <!-- Navigation -->
     <header
         :class="scrolled
@@ -45,7 +51,7 @@
                     :class="scrolled ? 'text-zinc-900 dark:text-white' : 'text-white'"
                 >
                     <span class="text-xl font-semibold transition-colors duration-300">
-                        {{ config('app.name') }}
+                        {{ $siteName }}
                     </span>
                 </a>
             </div>
@@ -132,7 +138,7 @@
         >
             <div class="flex items-center justify-between">
                 <a href="/" class="-m-1.5 p-1.5">
-                    <span class="text-xl font-semibold text-white">{{ config('app.name') }}</span>
+                    <span class="text-xl font-semibold text-white">{{ $siteName }}</span>
                 </a>
                 <button
                     @click="mobileOpen = false"
@@ -173,7 +179,7 @@
         <div class="mx-auto max-w-7xl px-6 py-12 lg:px-8">
             <div class="flex flex-col items-center justify-between gap-6 sm:flex-row">
                 <a href="/" class="text-sm font-semibold text-zinc-900 transition-opacity hover:opacity-75 dark:text-white">
-                    {{ config('app.name') }}
+                    {{ $siteName }}
                 </a>
                 <x-menu
                     :navigation="\App\Facades\Navigation::get('footer-menu')"
@@ -182,7 +188,7 @@
             </div>
             <div class="mt-8 border-t border-zinc-200 pt-6 dark:border-zinc-800">
                 <p class="text-center text-xs text-zinc-400 dark:text-zinc-500">
-                    &copy; {{ date('Y') }} {{ config('app.name') }}. {{ __('All rights reserved') }}.
+                    &copy; {{ date('Y') }} {{ $siteName }}. {{ __('All rights reserved') }}.
                 </p>
             </div>
         </div>

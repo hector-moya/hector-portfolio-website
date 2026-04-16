@@ -30,6 +30,20 @@ final class GlobalsService
     }
 
     /**
+     * Get a variable value using dot notation: "set.variable".
+     */
+    public function get(string $key, mixed $default = null): mixed
+    {
+        [$set, $variable] = array_pad(explode('.', $key, 2), 2, null);
+
+        if (! $set || ! $variable) {
+            return $default;
+        }
+
+        return $this->getValue($set, $variable, $default);
+    }
+
+    /**
      * Get a variable value by its set and handle.
      */
     public function getValue(string $set, string $variable, mixed $default = null): mixed
