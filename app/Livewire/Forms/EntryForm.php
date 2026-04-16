@@ -105,7 +105,9 @@ final class EntryForm extends Form
         }
 
         foreach ($bp->fields as $field) {
-            $rules['fieldValues.'.$field->handle] = ['nullable'];
+            $rules['fieldValues.'.$field->handle] = $field->is_required
+                ? ['required']
+                : ['nullable'];
         }
 
         return $rules;
