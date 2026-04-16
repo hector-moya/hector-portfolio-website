@@ -128,18 +128,18 @@ final class Entry extends Model
                     continue;
                 }
 
-                // Only include elements with associative meta arrays (new section format).
-                // Skip elements with null meta (old string-value fields) or sequential
-                // list meta (old page_builder nested-section format).
                 $meta = $element->meta;
-                if (! is_array($meta) || array_is_list($meta)) {
-                    continue;
-                }
+
+                // Fall back to default data when meta is not an associative array
+                // (e.g. old string-value fields or sequential list meta).
+                $data = (is_array($meta) && ! array_is_list($meta))
+                    ? $meta
+                    : $sectionType->defaultData();
 
                 $sections[] = [
                     '_id' => (string) Str::uuid(),
                     'type' => $sectionType->value,
-                    'data' => $meta,
+                    'data' => $data,
                 ];
             }
 
