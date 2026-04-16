@@ -15,12 +15,11 @@ use Livewire\Form;
 
 final class GlobalForm extends Form
 {
-    public ?int $global_set_id = null;
+    public ?string $global_set_id = null;
 
     #[Validate('required|string|max:255')]
     public string $name = '';
 
-    #[Validate('required|string|max:255')]
     public string $handle = '';
 
     #[Validate('required|integer|exists:blueprints,id')]
@@ -36,7 +35,7 @@ final class GlobalForm extends Form
                 'required',
                 'string',
                 'max:255',
-                Rule::unique('global_sets', 'handle')->ignore($this->global_set_id),
+                Rule::unique('globals', 'handle')->ignore($this->global_set_id),
             ],
         ];
     }

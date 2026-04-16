@@ -16,18 +16,6 @@ final class Create extends Component
 
     public GlobalForm $form;
 
-    public string $name = '';
-
-    public string $handle = '';
-
-    public ?string $blueprint_id = null;
-
-    private array $rules = [
-        'name' => ['required', 'string', 'max:255'],
-        'handle' => ['required', 'string', 'max:255', 'unique:global_sets,handle'],
-        'blueprint_id' => ['nullable', 'exists:blueprints,id'],
-    ];
-
     public function save(): void
     {
         $globalSet = $this->form->create();
@@ -35,9 +23,9 @@ final class Create extends Component
         $this->redirect(route('admin.globals.edit', $globalSet));
     }
 
-    public function updatedName(): void
+    public function updatedFormName(): void
     {
-        $this->handle = $this->generateSlug($this->form->name);
+        $this->form->handle = $this->generateSlug($this->form->name);
     }
 
     public function render(): View
