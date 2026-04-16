@@ -26,20 +26,19 @@
                         </flux:select>
                     </div>
 
-                    @if($form->blueprint_id)
-                        <div class="border-t border-zinc-200 pt-4">
-                            @foreach($globalSet->blueprint->elements as $element)
-                                @include('entries.fields.' . $element->type, [
-                                    'element' => $element,
-                                    'form' => $this,
-                                ])
+                    @if($globalSet->blueprint && $globalSet->blueprint->fields->isNotEmpty())
+                        <div class="border-t border-zinc-200 pt-4 space-y-4">
+                            @foreach($globalSet->blueprint->fields as $field)
+                                <div wire:key="field-{{ $field->id }}">
+                                    <flux:textarea wire:model="form.variables.{{ $field->handle }}" label="{{ $field->label }}" placeholder="{{ __('Enter a value...') }}" />
+                                </div>
                             @endforeach
                         </div>
-                    @else
-                        <div class="border-t border-zinc-200 pt-4">
+                    @elseif($globalSet->variables->isNotEmpty())
+                        <div class="border-t border-zinc-200 pt-4 space-y-4">
                             @foreach($globalSet->variables as $variable)
-                                <div class="mb-4">
-                                    <flux:textarea wire:model="form.variables.{{ $variable->handle }}" label="{{ $variable->handle }}" placeholder="Enter a value..." />
+                                <div wire:key="variable-{{ $variable->id }}">
+                                    <flux:textarea wire:model="form.variables.{{ $variable->handle }}" label="{{ $variable->handle }}" placeholder="{{ __('Enter a value...') }}" />
                                 </div>
                             @endforeach
                         </div>
