@@ -47,5 +47,5 @@ test('collection edit clears index_template when set to empty', function (): voi
         ->call('save')
         ->assertHasNoErrors();
 
-    expect($collection->fresh()->settings['index_template'])->toBeNull();
+    expect($collection->fresh()->settings['index_template'] ?? null)->toBeNull();
 });
