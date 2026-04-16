@@ -73,7 +73,7 @@
                                     <div class="flex items-center justify-between py-1">
                                         <div class="flex items-center gap-2">
                                             <flux:badge size="sm" variant="zinc">{{ $field['type'] }}</flux:badge>
-                                            <flux:text class="text-sm">{{ $field['label'] }}</flux:text>
+                                            <flux:text class="text-sm">{{ $field['label'] ?? $field['name'] ?? '' }}</flux:text>
                                             <flux:text class="text-xs text-zinc-400">{{ $field['handle'] }}</flux:text>
                                             @if(!empty($field['is_required']))
                                                 <flux:badge size="sm" variant="primary">required</flux:badge>

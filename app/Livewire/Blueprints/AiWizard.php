@@ -79,7 +79,7 @@ final class AiWizard extends Component
                     $type = SectionType::tryFrom($field['type']) ?? SectionType::Text;
 
                     $fields[] = [
-                        'label' => $field['label'],
+                        'label' => $field['label'] ?? $field['name'] ?? '',
                         'handle' => $field['handle'],
                         'type' => $type->value,
                         'instructions' => $field['instructions'] ?? '',
