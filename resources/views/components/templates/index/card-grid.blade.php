@@ -11,7 +11,7 @@
         @forelse($entries as $entry)
             @php
                 $featuredImage = $entry->elements->firstWhere('handle', 'featured_image')?->getElementValue();
-                $excerpt = $entry->elements->first(fn($el) => in_array($el->Field?->type, ['textarea', 'text']) && $el->getElementValue())?->getElementValue();
+                $excerpt = $entry->elements->first(fn($el) => in_array($el->Field?->type, ['textarea', 'text', 'text_block']) && $el->getElementValue())?->getElementValue();
             @endphp
             <flux:card class="p-0! overflow-hidden hover:shadow-xl transition">
                 @if($featuredImage)

@@ -83,7 +83,7 @@
                         <flux:text class="text-sm font-medium">{{ $field['label'] }}</flux:text>
                         <flux:badge variant="zinc" class="mt-1">{{ __('Upload/configure after saving') }}</flux:badge>
                     </div>
-                @elseif($field['type'] === 'richtext')
+                @elseif($field['type'] === 'richtext_block')
                     <div>
                         <flux:label>{{ $field['label'] }}</flux:label>
                         <flux:textarea wire:model="generatedFields.{{ $field['handle'] }}" rows="8" />

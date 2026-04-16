@@ -7,12 +7,12 @@ namespace App\Enums;
 enum SectionType: string
 {
     case Hero = 'hero';
-    case Text = 'text';
+    case Text = 'text_block';
     case ImageText = 'image_text';
     case Gallery = 'gallery';
     case Cta = 'cta';
     case Features = 'features';
-    case RichText = 'richtext';
+    case RichText = 'richtext_block';
     case Form = 'form';
     case CardGrid = 'card_grid';
 

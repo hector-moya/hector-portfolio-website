@@ -61,7 +61,7 @@ test('getPageBuilderSections skips elements with unknown field type', function (
 
 test('getPageBuilderSections falls back to defaultData when element value is not an array', function (): void {
     $blueprint = Blueprint::factory()->create();
-    $field = Field::factory()->create(['blueprint_id' => $blueprint->id, 'type' => 'text', 'handle' => 'body']);
+    $field = Field::factory()->create(['blueprint_id' => $blueprint->id, 'type' => 'text_block', 'handle' => 'body']);
     $entry = Entry::factory()->create(['blueprint_id' => $blueprint->id]);
 
     EntryElement::factory()->create([
@@ -75,7 +75,7 @@ test('getPageBuilderSections falls back to defaultData when element value is not
     $sections = $entry->getPageBuilderSections();
 
     expect($sections)->toHaveCount(1)
-        ->and($sections[0]['type'])->toBe('text')
+        ->and($sections[0]['type'])->toBe('text_block')
         ->and($sections[0]['data'])->toBe(App\Enums\SectionType::Text->defaultData());
 });
 

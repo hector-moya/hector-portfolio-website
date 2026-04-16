@@ -12,7 +12,7 @@
     @if($featured)
         @php
             $featuredImage = $featured->elements->firstWhere('handle', 'featured_image')?->getElementValue();
-            $excerpt = $featured->elements->first(fn($el) => in_array($el->Field?->type, ['textarea', 'text']) && $el->getElementValue())?->getElementValue();
+            $excerpt = $featured->elements->first(fn($el) => in_array($el->Field?->type, ['textarea', 'text', 'text_block']) && $el->getElementValue())?->getElementValue();
         @endphp
         <flux:card class="p-0! overflow-hidden mb-8">
             @if($featuredImage)
@@ -38,7 +38,7 @@
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         @foreach($rest as $entry)
             @php
-                $excerpt = $entry->elements->first(fn($el) => in_array($el->Field?->type, ['textarea', 'text']) && $el->getElementValue())?->getElementValue();
+                $excerpt = $entry->elements->first(fn($el) => in_array($el->Field?->type, ['textarea', 'text', 'text_block']) && $el->getElementValue())?->getElementValue();
             @endphp
             <flux:card>
                 <flux:heading size="md">

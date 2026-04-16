@@ -51,7 +51,7 @@
 
                             @switch($element->Field->type)
                                 @case('textarea')
-                                @case('richtext')
+                                @case('richtext_block')
                                     <div class="whitespace-pre-wrap text-zinc-900 dark:text-zinc-100">
                                         {{ $element->value }}
                                     </div>

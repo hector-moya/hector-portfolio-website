@@ -28,7 +28,7 @@ test('selecting a collection loads blueprint fields', function (): void {
 
     $tab = $blueprint->tabs()->create(['name' => 'Content', 'handle' => 'content', 'sort_order' => 0]);
     $section = $tab->sections()->create(['name' => 'Main', 'handle' => 'main', 'blueprint_id' => $blueprint->id, 'instructions' => '', 'sort_order' => 0]);
-    Field::factory()->create(['blueprint_id' => $blueprint->id, 'section_id' => $section->id, 'type' => 'text', 'label' => 'Title', 'handle' => 'title']);
+    Field::factory()->create(['blueprint_id' => $blueprint->id, 'section_id' => $section->id, 'type' => 'text_block', 'label' => 'Title', 'handle' => 'title']);
 
     Livewire::test(AiWizard::class)
         ->set('collectionId', $collection->id)

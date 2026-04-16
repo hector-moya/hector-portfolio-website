@@ -45,7 +45,7 @@ test('entry show renders published entry with section content', function (): voi
 
     $field = Field::factory()->create([
         'blueprint_id' => $blueprint->id,
-        'type' => 'text',
+        'type' => 'text_block',
         'handle' => 'body',
         'label' => 'Body',
     ]);
