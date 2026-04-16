@@ -23,7 +23,7 @@ final class FileFieldType extends BaseFieldType
         return 'field-types.file';
     }
 
-    public function rules(): array
+    protected function fieldRules(): array
     {
         return [
             'required_if:is_required,true',
@@ -32,14 +32,14 @@ final class FileFieldType extends BaseFieldType
         ];
     }
 
-    public function messages(): array
+    protected function fieldMessages(): array
     {
         return [
             'exists' => 'Please select a valid file from the media library.',
         ];
     }
 
-    public function hydrate(mixed $value): mixed
+    protected function transformHydrate(mixed $value): mixed
     {
         if (! $value) {
             return null;
@@ -48,7 +48,7 @@ final class FileFieldType extends BaseFieldType
         return Asset::query()->find($value);
     }
 
-    public function dehydrate(mixed $value): mixed
+    protected function transformDehydrate(mixed $value): mixed
     {
         if (! $value) {
             return null;

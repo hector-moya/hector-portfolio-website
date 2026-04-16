@@ -22,12 +22,12 @@ abstract class BaseFieldType
 
     final public function rules(): array
     {
-        return [];
+        return $this->fieldRules();
     }
 
     final public function messages(): array
     {
-        return [];
+        return $this->fieldMessages();
     }
 
     final public function setHandle(string $handle): self
@@ -68,12 +68,12 @@ abstract class BaseFieldType
 
     final public function hydrate(mixed $value): mixed
     {
-        return $value;
+        return $this->transformHydrate($value);
     }
 
     final public function dehydrate(mixed $value): mixed
     {
-        return $value;
+        return $this->transformDehydrate($value);
     }
 
     final public function toArray(): array
@@ -84,5 +84,25 @@ abstract class BaseFieldType
             'is_required' => $this->is_required,
             'config' => $this->config,
         ];
+    }
+
+    protected function fieldRules(): array
+    {
+        return [];
+    }
+
+    protected function fieldMessages(): array
+    {
+        return [];
+    }
+
+    protected function transformHydrate(mixed $value): mixed
+    {
+        return $value;
+    }
+
+    protected function transformDehydrate(mixed $value): mixed
+    {
+        return $value;
     }
 }
