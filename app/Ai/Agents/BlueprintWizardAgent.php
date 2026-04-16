@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Ai\Agents;
 
+use App\Enums\SectionType;
 use Illuminate\Contracts\JsonSchema\JsonSchema;
 use Laravel\Ai\Attributes\UseSmartestModel;
 use Laravel\Ai\Contracts\Agent;
@@ -17,17 +18,22 @@ final class BlueprintWizardAgent implements Agent, HasStructuredOutput
 
     public function instructions(): string
     {
-        return <<<'INSTRUCTIONS'
+        $typeList = collect(SectionType::cases())
+            ->map(fn (SectionType $type): string => sprintf('  - %s (%s)', $type->value, $type->label()))
+            ->implode("\n");
+
+        return <<<INSTRUCTIONS
         You are a CMS blueprint architect. Given a description of a content type, you produce a
         structured blueprint definition with tabs, sections, and fields.
 
         Rules:
         - Always include a "Content" tab with the main content sections.
-        - Always include an "SEO" tab with seo_title (text) and seo_description (text) fields.
+        - Always include an "SEO" tab with seo_title (text_block) and seo_description (text_block) fields.
         - Field handles must be snake_case, unique within the blueprint, and derived from the label.
         - Section handles must be snake_case derived from the section name.
         - Tab handles must be snake_case derived from the tab name.
-        - Only use these field types: hero, text, image_text, gallery, cta, features, richtext, form.
+        - Only use these field types (use the exact string value):
+        {$typeList}
           Each field represents a page section of that type.
         - Keep the structure practical: 2–4 tabs, 1–3 sections per tab, 3–8 fields per section.
         - Generate a name and URL-safe slug from the description.

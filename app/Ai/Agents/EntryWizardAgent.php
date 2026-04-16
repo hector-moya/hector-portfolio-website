@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Ai\Agents;
 
+use App\Enums\SectionType;
 use Illuminate\Contracts\JsonSchema\JsonSchema;
 use Laravel\Ai\Attributes\UseSmartestModel;
 use Laravel\Ai\Contracts\Agent;
@@ -17,31 +18,37 @@ final class EntryWizardAgent implements Agent, HasStructuredOutput
 
     public function instructions(): string
     {
-        return <<<'INSTRUCTIONS'
+        $sectionDocs = collect(SectionType::cases())
+            ->map(function (SectionType $type): string {
+                $fields = collect($type->fieldSchema())
+                    ->map(function (array $f, string $handle): string {
+                        $line = sprintf('    - %s (%s): %s', $handle, $f['type'], $f['label']);
+                        if (isset($f['options'])) {
+                            $line .= ' [options: '.implode(', ', array_keys($f['options'])).']';
+                        }
+
+                        return $line;
+                    })
+                    ->implode("\n");
+
+                return "- **{$type->value}** ({$type->label()}):\n{$fields}";
+            })
+            ->implode("\n\n");
+
+        return <<<INSTRUCTIONS
         You are a CMS content writer. Given a blueprint schema (list of section-type fields with their
         types and handles) and a topic brief, you generate appropriate content for each section field.
 
-        Each field represents a page section. The field type is one of:
-          hero, text, image_text, gallery, cta, features, richtext, form.
+        Each field represents a page section. Available field types and their data shapes:
 
-        For each field, return an object matching that section type's data shape:
-          - hero: { title, subtitle, content, bg_image (null), cta_text, cta_url,
-                    secondary_cta_text, secondary_cta_url }
-          - text: { content, alignment ("left"|"center"|"right") }
-          - image_text: { title, content, image (null), image_position ("left"|"right"),
-                          cta_text, cta_url }
-          - gallery: { title, images ([]) }
-          - cta: { title, content, cta_text, cta_url }
-          - features: { title, items ([{ icon, item_title, item_description }, ...]) }
-          - richtext: { content (full HTML using <p>, <h2>, <ul>, <strong>, <em>) }
-          - form: { title, fields ([]) }
+        {$sectionDocs}
 
         Rules:
         - Fill all text fields with realistic, relevant content for the given topic.
         - Set all image/asset fields (bg_image, image, images) to null or [].
         - For features items, include 3 items with a Heroicon name (e.g. "bolt", "star", "check").
-        - For seo_title fields (type text): generate a concise, keyword-rich title under 60 characters.
-        - For seo_description fields (type text): generate a compelling meta description under 160 characters.
+        - For seo_title fields (type text_block): generate a concise, keyword-rich title under 60 characters.
+        - For seo_description fields (type text_block): generate a compelling meta description under 160 characters.
         - Return a flat JSON object where each key is the field handle and the value is the section data object.
         INSTRUCTIONS;
     }
