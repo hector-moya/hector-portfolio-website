@@ -61,7 +61,7 @@ final class Create extends Component
         return ModelsCollection::query()
             ->with('blueprint')
             ->where('is_active', true)
-            ->orderBy('title')
+            ->orderBy('name')
             ->get();
     }
 
