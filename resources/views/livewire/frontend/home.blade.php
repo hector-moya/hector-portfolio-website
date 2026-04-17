@@ -2,7 +2,7 @@
     @if ($entry && !empty($layout))
         @foreach ($layout as $section)
             <x-dynamic-component
-                :component="'sections.' . str_replace('_', '-', $section['type'])"
+                :component="'fields.' . str_replace('_', '-', $section['type'])"
                 :section="$section"
                 :assets="$assets"
                 wire:key="section-{{ $section['_id'] }}"

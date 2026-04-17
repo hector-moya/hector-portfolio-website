@@ -73,7 +73,7 @@
                                                                     <flux:text size="sm" class="text-zinc-500">{{ $field->instructions }}</flux:text>
                                                                 @endif
                                                                 <flux:separator text="*****" class="my-6"/>
-                                                                <livewire:dynamic-component :is="'sections.' . str_replace('_', '-', $field->type)" :$field wire:model="sectionValues.{{ $field->handle }}" :wire:key="'section-' . $field->id" />
+                                                                <livewire:dynamic-component :is="'fields.' . str_replace('_', '-', $field->type)" :$field wire:model="sectionValues.{{ $field->handle }}" :wire:key="'section-' . $field->id" />
                                                             </div>
                                                         @endif
                                                     </div>

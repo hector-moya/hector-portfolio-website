@@ -61,7 +61,7 @@
                 {{-- Expanded section editor --}}
                 <div x-show="open" x-collapse class="border-t border-zinc-200 p-4 dark:border-zinc-700">
                     <x-dynamic-component
-                        :component="'sections.editors.' . str_replace('_', '-', $section['type'])"
+                        :component="'fields.editors.' . str_replace('_', '-', $section['type'])"
                         :section="$section"
                         :sectionIndex="$idx"
                     />
