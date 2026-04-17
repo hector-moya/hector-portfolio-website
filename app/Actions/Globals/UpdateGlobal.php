@@ -6,6 +6,7 @@ namespace App\Actions\Globals;
 
 use App\Models\GlobalSet;
 use App\Models\GlobalVariable;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Gate;
 
 final class UpdateGlobal
@@ -27,6 +28,8 @@ final class UpdateGlobal
                 ['global_set_id' => $globalSet->id, 'handle' => $handle],
                 ['value' => $value]
             );
+
+            Cache::forget(sprintf('globals.%s.%s', $globalSet->handle, $handle));
         }
 
         return $globalSet->fresh();

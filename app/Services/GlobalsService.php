@@ -30,17 +30,33 @@ final class GlobalsService
     }
 
     /**
-     * Get a variable value using dot notation: "set.variable".
+     * Get a variable value using dot notation: "set.variable" or "set.variable.path".
+     *
+     * When a third segment is provided, the variable value (an array) is drilled
+     * into using data_get() with the remaining path.
      */
     public function get(string $key, mixed $default = null): mixed
     {
-        [$set, $variable] = array_pad(explode('.', $key, 2), 2, null);
+        $parts = explode('.', $key, 3);
+        $set = $parts[0] ?? null;
+        $variable = $parts[1] ?? null;
+        $path = $parts[2] ?? null;
 
         if (! $set || ! $variable) {
             return $default;
         }
 
-        return $this->getValue($set, $variable, $default);
+        $value = $this->getValue($set, $variable, null);
+
+        if ($value === null) {
+            return $default;
+        }
+
+        if ($path !== null && is_array($value)) {
+            return data_get($value, $path, $default);
+        }
+
+        return $value;
     }
 
     /**

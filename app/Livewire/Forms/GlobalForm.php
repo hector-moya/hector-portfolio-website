@@ -68,7 +68,7 @@ final class GlobalForm extends Form
         return $globalSet;
     }
 
-    public function update(int $globalSetId): GlobalSet
+    public function update(string $globalSetId): GlobalSet
     {
         $this->validate();
 
@@ -89,7 +89,7 @@ final class GlobalForm extends Form
         return $globalSet;
     }
 
-    public function destroy(int $globalSetId): void
+    public function destroy(string $globalSetId): void
     {
         resolve(DeleteGlobal::class)->handle($globalSetId);
 

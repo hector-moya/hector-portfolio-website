@@ -30,9 +30,9 @@
     class="flex min-h-screen flex-col justify-between bg-white font-sans antialiased dark:bg-zinc-900"
 >
     @php
-        $siteName = \App\Facades\Globals::get('branding.site_name', config('app.name'));
-        $tagline  = \App\Facades\Globals::get('branding.tagline', '');
-        $logoUrl  = \App\Facades\Globals::get('branding.logo_url', '');
+        $siteName = \App\Facades\Globals::get('branding.site_name.content', config('app.name')) ?: config('app.name');
+        $logoAssetId = \App\Facades\Globals::get('branding.logo.image');
+        $logoAsset = $logoAssetId ? \App\Models\Asset::find($logoAssetId) : null;
     @endphp
 
     <!-- Navigation -->
@@ -50,9 +50,13 @@
                     class="-m-1.5 p-1.5 transition-opacity hover:opacity-75"
                     :class="scrolled ? 'text-zinc-900 dark:text-white' : 'text-white'"
                 >
-                    <span class="text-xl font-semibold transition-colors duration-300">
-                        {{ $siteName }}
-                    </span>
+                    @if ($logoAsset)
+                        <img src="{{ $logoAsset->url }}" alt="{{ $siteName }}" class="h-8 w-auto" />
+                    @else
+                        <span class="text-xl font-semibold transition-colors duration-300">
+                            {{ $siteName }}
+                        </span>
+                    @endif
                 </a>
             </div>
 
@@ -138,7 +142,11 @@
         >
             <div class="flex items-center justify-between">
                 <a href="/" class="-m-1.5 p-1.5">
-                    <span class="text-xl font-semibold text-white">{{ $siteName }}</span>
+                    @if ($logoAsset)
+                        <img src="{{ $logoAsset->url }}" alt="{{ $siteName }}" class="h-8 w-auto brightness-0 invert" />
+                    @else
+                        <span class="text-xl font-semibold text-white">{{ $siteName }}</span>
+                    @endif
                 </a>
                 <button
                     @click="mobileOpen = false"
