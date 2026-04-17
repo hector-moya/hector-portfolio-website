@@ -85,7 +85,7 @@ test('features section can add an item', function (): void {
     $field = Field::factory()->create(['type' => 'features', 'handle' => 'my_features']);
 
     Livewire::actingAs($this->user)
-        ->test('sections.features', ['field' => $field, 'data' => ['title' => '', 'items' => []]])
+        ->test('fields.features', ['field' => $field, 'data' => ['title' => '', 'items' => []]])
         ->call('addFeatureItem')
         ->assertCount('data.items', 1);
 });
@@ -94,7 +94,7 @@ test('features section can remove an item', function (): void {
     $field = Field::factory()->create(['type' => 'features', 'handle' => 'my_features']);
 
     Livewire::actingAs($this->user)
-        ->test('sections.features', [
+        ->test('fields.features', [
             'field' => $field,
             'data' => ['title' => '', 'items' => [
                 ['icon' => 'bolt', 'item_title' => 'First', 'item_description' => ''],
@@ -112,7 +112,7 @@ test('gallery section can remove an image', function (): void {
     $field = Field::factory()->create(['type' => 'gallery', 'handle' => 'my_gallery']);
 
     Livewire::actingAs($this->user)
-        ->test('sections.gallery', [
+        ->test('fields.gallery', [
             'field' => $field,
             'data' => ['title' => '', 'images' => [10, 20, 30]],
         ])
@@ -124,7 +124,7 @@ test('gallery section asset-selected appends image', function (): void {
     $field = Field::factory()->create(['type' => 'gallery', 'handle' => 'my_gallery']);
 
     Livewire::actingAs($this->user)
-        ->test('sections.gallery', [
+        ->test('fields.gallery', [
             'field' => $field,
             'data' => ['title' => '', 'images' => []],
         ])
@@ -139,7 +139,7 @@ test('hero section asset-selected updates bg_image', function (): void {
     $field = Field::factory()->create(['type' => 'hero', 'handle' => 'page_hero']);
 
     Livewire::actingAs($this->user)
-        ->test('sections.hero', [
+        ->test('fields.hero', [
             'field' => $field,
             'data' => App\Enums\SectionType::Hero->defaultData(),
         ])
@@ -151,7 +151,7 @@ test('hero section asset-selected with wrong handle is ignored', function (): vo
     $field = Field::factory()->create(['type' => 'hero', 'handle' => 'page_hero']);
 
     Livewire::actingAs($this->user)
-        ->test('sections.hero', [
+        ->test('fields.hero', [
             'field' => $field,
             'data' => App\Enums\SectionType::Hero->defaultData(),
         ])
@@ -163,7 +163,7 @@ test('hero section can remove bg image', function (): void {
     $field = Field::factory()->create(['type' => 'hero', 'handle' => 'page_hero']);
 
     Livewire::actingAs($this->user)
-        ->test('sections.hero', [
+        ->test('fields.hero', [
             'field' => $field,
             'data' => array_merge(App\Enums\SectionType::Hero->defaultData(), ['bg_image' => 5]),
         ])
@@ -177,7 +177,7 @@ test('form section can add a field', function (): void {
     $field = Field::factory()->create(['type' => 'form', 'handle' => 'contact_form']);
 
     Livewire::actingAs($this->user)
-        ->test('sections.form', ['field' => $field, 'data' => ['title' => '', 'fields' => []]])
+        ->test('fields.form', ['field' => $field, 'data' => ['title' => '', 'fields' => []]])
         ->call('addFormField')
         ->assertCount('data.fields', 1);
 });
@@ -186,7 +186,7 @@ test('form section can remove a field', function (): void {
     $field = Field::factory()->create(['type' => 'form', 'handle' => 'contact_form']);
 
     Livewire::actingAs($this->user)
-        ->test('sections.form', [
+        ->test('fields.form', [
             'field' => $field,
             'data' => ['title' => '', 'fields' => [
                 ['type' => 'text', 'label' => 'Name', 'handle' => 'name', 'required' => false],
