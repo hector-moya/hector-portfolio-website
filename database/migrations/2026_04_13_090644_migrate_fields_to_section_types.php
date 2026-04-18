@@ -44,8 +44,11 @@ return new class extends Migration
             ->get(['id', 'layout', 'blueprint_id']);
 
         foreach ($entriesWithLayout as $entry) {
-            $layout = json_decode($entry->layout, true);
-            if (! is_array($layout) || $layout === []) {
+            $layout = json_decode((string) $entry->layout, true);
+            if (! is_array($layout)) {
+                continue;
+            }
+            if ($layout === []) {
                 continue;
             }
 

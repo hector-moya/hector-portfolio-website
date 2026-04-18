@@ -106,7 +106,7 @@ final class Blueprint extends Model
     protected static function booted(): void
     {
         self::deleting(function (self $model): void {
-            $model->updateQuietly(['slug' => "{$model->slug}__deleted_{$model->id}"]);
+            $model->updateQuietly(['slug' => sprintf('%s__deleted_%d', $model->slug, $model->id)]);
         });
     }
 

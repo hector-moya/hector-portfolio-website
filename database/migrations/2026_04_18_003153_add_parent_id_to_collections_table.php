@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('collections', function (Blueprint $table) {
+        Schema::table('collections', function (Blueprint $table): void {
             $table->unsignedBigInteger('parent_id')->nullable()->after('id');
             $table->foreign('parent_id')->references('id')->on('collections')->nullOnDelete();
         });
@@ -24,7 +24,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('collections', function (Blueprint $table) {
+        Schema::table('collections', function (Blueprint $table): void {
             $table->dropForeign(['parent_id']);
             $table->dropColumn('parent_id');
         });

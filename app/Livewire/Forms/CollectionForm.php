@@ -113,7 +113,7 @@ final class CollectionForm extends Form
             'is_active' => $this->is_active,
             'settings' => array_filter(array_merge($collection->settings ?? [], [
                 'theme' => $this->theme ?: null,
-                'index_template' => in_array($this->type, ['single', 'child']) ? null : ($this->index_template ?: null),
+                'index_template' => in_array($this->type, ['single', 'child'], true) ? null : ($this->index_template ?: null),
                 'type' => $this->type !== 'standard' ? $this->type : null,
             ])),
         ]);

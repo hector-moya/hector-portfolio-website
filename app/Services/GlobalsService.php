@@ -46,7 +46,7 @@ final class GlobalsService
             return $default;
         }
 
-        $value = $this->getValue($set, $variable, null);
+        $value = $this->getValue($set, $variable);
 
         if ($value === null) {
             return $default;

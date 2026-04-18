@@ -15,7 +15,7 @@ final class UpdateBlueprint
     {
         Gate::authorize('update', $blueprint);
 
-        return DB::transaction(function () use ($blueprint, $blueprintData) {
+        return DB::transaction(function () use ($blueprint, $blueprintData): Blueprint {
             if (empty($blueprintData['slug'])) {
                 $blueprintData['slug'] = Str::slug($blueprintData['name']);
             }

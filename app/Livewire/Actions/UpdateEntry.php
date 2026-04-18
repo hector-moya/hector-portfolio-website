@@ -17,7 +17,7 @@ final class UpdateEntry
     {
         Gate::authorize('update', $entry);
 
-        return DB::transaction(function () use ($entry, $entryData) {
+        return DB::transaction(function () use ($entry, $entryData): Entry {
             $oldValues = [
                 'title' => $entry->title,
                 'slug' => $entry->slug,

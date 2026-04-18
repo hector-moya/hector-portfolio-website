@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Enums\SectionType;
 use App\Models\Blueprint;
 use App\Models\Entry;
 use App\Models\EntryElement;
@@ -76,7 +77,7 @@ test('getPageBuilderSections falls back to defaultData when element value is not
 
     expect($sections)->toHaveCount(1)
         ->and($sections[0]['type'])->toBe('text_block')
-        ->and($sections[0]['data'])->toBe(App\Enums\SectionType::Text->defaultData());
+        ->and($sections[0]['data'])->toBe(SectionType::Text->defaultData());
 });
 
 // ── Features section component ────────────────────────────────────────────────
@@ -141,7 +142,7 @@ test('hero section asset-selected updates bg_image', function (): void {
     Livewire::actingAs($this->user)
         ->test('fields.hero', [
             'field' => $field,
-            'data' => App\Enums\SectionType::Hero->defaultData(),
+            'data' => SectionType::Hero->defaultData(),
         ])
         ->dispatch('asset-selected', handle: 'page_hero_bg_image', value: 42)
         ->assertSet('data.bg_image', 42);
@@ -153,7 +154,7 @@ test('hero section asset-selected with wrong handle is ignored', function (): vo
     Livewire::actingAs($this->user)
         ->test('fields.hero', [
             'field' => $field,
-            'data' => App\Enums\SectionType::Hero->defaultData(),
+            'data' => SectionType::Hero->defaultData(),
         ])
         ->dispatch('asset-selected', handle: 'other_field_bg_image', value: 42)
         ->assertSet('data.bg_image', null);
@@ -165,7 +166,7 @@ test('hero section can remove bg image', function (): void {
     Livewire::actingAs($this->user)
         ->test('fields.hero', [
             'field' => $field,
-            'data' => array_merge(App\Enums\SectionType::Hero->defaultData(), ['bg_image' => 5]),
+            'data' => array_merge(SectionType::Hero->defaultData(), ['bg_image' => 5]),
         ])
         ->call('removeBgImage')
         ->assertSet('data.bg_image', null);
