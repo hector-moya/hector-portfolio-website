@@ -15,7 +15,9 @@ return new class extends Migration
             $table->unsignedInteger('order')->default(0)->after('id');
         });
 
-        DB::statement('UPDATE entries SET `order` = (SELECT COUNT(*) FROM entries e2 WHERE e2.created_at <= entries.created_at) - 1');
+        foreach (DB::table('entries')->orderBy('created_at')->pluck('id') as $index => $id) {
+            DB::table('entries')->where('id', $id)->update(['order' => $index]);
+        }
     }
 
     public function down(): void

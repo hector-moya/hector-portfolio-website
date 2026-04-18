@@ -16,7 +16,9 @@ return new class extends Migration
         });
 
         // Seed existing rows with sequential order based on created_at
-        DB::statement('UPDATE blueprints SET `order` = (SELECT COUNT(*) FROM blueprints b2 WHERE b2.created_at <= blueprints.created_at) - 1');
+        foreach (DB::table('blueprints')->orderBy('created_at')->pluck('id') as $index => $id) {
+            DB::table('blueprints')->where('id', $id)->update(['order' => $index]);
+        }
     }
 
     public function down(): void
