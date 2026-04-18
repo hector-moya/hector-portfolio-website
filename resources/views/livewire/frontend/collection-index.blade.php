@@ -8,6 +8,15 @@
             :assets="$assets ?? collect()"
             :theme="$theme"
         />
+    @elseif($template === 'main')
+        <x-templates.index.main
+            :collection="$collection"
+            :sections="$sections ?? []"
+            :assets="$assets ?? collect()"
+            :child-entries="$childEntries ?? collect()"
+            :child-template="$childTemplate ?? 'card-grid'"
+            :theme="$theme"
+        />
     @else
         <x-dynamic-component
             :component="'templates.index.' . $template"

@@ -41,17 +41,39 @@
                 <flux:select
                     label="{{ __('Collection Type') }}"
                     wire:model.live="form.type"
-                    description="{{ __('Standard shows an entry listing. Single Page renders one entry directly (for landing pages).') }}"
+                    description="{{ __('Main: CMS-editable landing page with child collections. Child: entries accessible at /{parent}/{slug}. Standard: entry listing. Single Page: one entry (landing pages).') }}"
                 >
                     <flux:select.option value="standard">{{ __('Standard') }}</flux:select.option>
                     <flux:select.option value="single">{{ __('Single Page') }}</flux:select.option>
+                    <flux:select.option value="main">{{ __('Main (parent with child collections)') }}</flux:select.option>
+                    <flux:select.option value="child">{{ __('Child (entries under a parent collection)') }}</flux:select.option>
                 </flux:select>
 
-                {{-- Index Template --}}
-                @if($form->type !== 'single')
+                {{-- Parent Collection (child type only) --}}
+                @if($form->type === 'child')
+                <flux:select label="{{ __('Parent Collection') }}" wire:model="form.parent_id" description="{{ __('Entries will be accessible at /{parent-slug}/{entry-slug}') }}" badge="{{ __('Required') }}">
+                    <flux:select.option value="">{{ __('Select a parent collection') }}</flux:select.option>
+                    @foreach ($mainCollections as $mainCollection)
+                        <flux:select.option value="{{ $mainCollection->id }}">{{ $mainCollection->name }}</flux:select.option>
+                    @endforeach
+                </flux:select>
+                @endif
+
+                {{-- Index Template (standard and main types) --}}
+                @if(in_array($form->type, ['standard', 'main']))
                 <flux:select label="{{ __('Index Template') }}" wire:model="form.index_template" description="{{ __('Layout used for the collection listing page') }}">
                     <flux:select.option value="">{{ __('Default (Card Grid)') }}</flux:select.option>
                     @foreach (\App\Support\TemplateLayouts::indexTemplates() as $value => $label)
+                        <flux:select.option value="{{ $value }}">{{ $label }}</flux:select.option>
+                    @endforeach
+                </flux:select>
+                @endif
+
+                {{-- Detail Template (child and standard types) --}}
+                @if(in_array($form->type, ['child', 'standard']))
+                <flux:select label="{{ __('Detail Template') }}" wire:model="form.detail_template" description="{{ __('Template used to render individual entry pages') }}">
+                    <flux:select.option value="">{{ __('Default (Landing Page)') }}</flux:select.option>
+                    @foreach (\App\Support\TemplateLayouts::detailTemplates() as $value => $label)
                         <flux:select.option value="{{ $value }}">{{ $label }}</flux:select.option>
                     @endforeach
                 </flux:select>
