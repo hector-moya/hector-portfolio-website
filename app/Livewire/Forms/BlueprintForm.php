@@ -46,7 +46,7 @@ final class BlueprintForm extends Form
                 'nullable',
                 'string',
                 'max:255',
-                Rule::unique('blueprints', 'slug')->ignore($this->blueprint_id),
+                Rule::unique('blueprints', 'slug')->ignore($this->blueprint_id)->whereNull('deleted_at'),
             ],
             'fields.*.type' => 'required|string',
             'fields.*.label' => 'required|string|max:255',

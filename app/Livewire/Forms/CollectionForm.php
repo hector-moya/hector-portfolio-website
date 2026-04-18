@@ -51,7 +51,8 @@ final class CollectionForm extends Form
                 'string',
                 'max:255',
                 Rule::unique('collections', 'slug')
-                    ->ignore($this->collection_id),
+                    ->ignore($this->collection_id)
+                    ->whereNull('deleted_at'),
             ],
         ];
     }

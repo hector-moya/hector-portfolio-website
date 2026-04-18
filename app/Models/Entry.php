@@ -157,6 +157,13 @@ final class Entry extends Model
         return $this->layout ?? [];
     }
 
+    protected static function booted(): void
+    {
+        self::deleting(function (self $model): void {
+            $model->updateQuietly(['slug' => "{$model->slug}__deleted_{$model->id}"]);
+        });
+    }
+
     protected function casts(): array
     {
         return [

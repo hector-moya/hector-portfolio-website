@@ -103,6 +103,13 @@ final class Blueprint extends Model
         return $this->hasMany(Section::class)->orderBy('sort_order');
     }
 
+    protected static function booted(): void
+    {
+        self::deleting(function (self $model): void {
+            $model->updateQuietly(['slug' => "{$model->slug}__deleted_{$model->id}"]);
+        });
+    }
+
     protected function casts(): array
     {
         return [

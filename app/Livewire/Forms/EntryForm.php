@@ -91,7 +91,7 @@ final class EntryForm extends Form
         $rules = [
             'blueprint_id' => ['required', 'exists:blueprints,id'],
             'title' => ['required', 'string', 'max:255'],
-            'slug' => ['required', 'string', 'max:255', Rule::unique('entries', 'slug')->ignore($this->entry?->id)],
+            'slug' => ['required', 'string', 'max:255', Rule::unique('entries', 'slug')->ignore($this->entry?->id)->whereNull('deleted_at')],
             'status' => ['required', Rule::in(['draft', 'published', 'archived'])],
             'published_at' => ['nullable', 'date'],
             'seo_title' => ['nullable', 'string', 'max:255'],
