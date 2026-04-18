@@ -94,9 +94,19 @@ final class Edit extends Component
         ]);
     }
 
-    public function reorder($items): void
+    public function reorder(int $id, int $position): void
     {
-        Navigation::reorder($items);
+        $items = $this->navigation->items()->whereNull('parent_id')->orderBy('order')->get();
+
+        $item = $items->firstWhere('id', $id);
+        $rest = $items->reject(fn ($i) => $i->id === $id)->values();
+        $rest->splice($position, 0, [$item]);
+
+        foreach ($rest as $index => $i) {
+            $i->update(['order' => $index]);
+        }
+
+        Navigation::flush();
 
         $this->dispatch('notify', [
             'type' => 'success',

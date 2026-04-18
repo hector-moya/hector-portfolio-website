@@ -69,10 +69,10 @@
                                 <flux:text>{{ __('No items added yet.') }}</flux:text>
                             </flux:card>
                         @else
-                            <div wire:sortable="reorder" class="flex flex-col gap-2">
+                            <div wire:sort="reorder" class="flex flex-col gap-2">
                                 @foreach($items as $item)
-                                    <div wire:key="item-{{ $item->id }}" wire:sortable.item="{{ $item->id }}" class="relative flex items-center gap-4 rounded-lg border border-neutral-200 bg-neutral-50 p-4 dark:border-neutral-700 dark:bg-neutral-800">
-                                        <div wire:sortable.handle class="cursor-move">
+                                    <div wire:key="item-{{ $item->id }}" wire:sort:item="{{ $item->id }}" class="relative flex items-center gap-4 rounded-lg border border-neutral-200 bg-neutral-50 p-4 dark:border-neutral-700 dark:bg-neutral-800">
+                                        <div wire:sort:handle class="cursor-move">
                                             <flux:icon.chevron-up-down class="h-5 w-5 text-neutral-400" />
                                         </div>
 
@@ -112,28 +112,5 @@
         </div>
     </div>
 
-    @script
-    <script>
-        Alpine.data('navigationBuilder', () => ({
-            init() {
-                new Sortable(this.$el.querySelector('[wire\\:sortable]'), {
-                    animation: 150,
-                    handle: '[wire\\:sortable\\.handle]',
-                    ghostClass: 'opacity-50',
-                    onEnd: (evt) => {
-                        this.$wire.reorder(this.getOrder());
-                    }
-                });
-            },
-            getOrder() {
-                return Array.from(this.$el.querySelectorAll('[wire\\:sortable\\.item]')).map((el) => {
-                    return {
-                        id: el.getAttribute('wire:sortable.item'),
-                        children: []
-                    };
-                });
-            }
-        }));
-    </script>
-    @endscript
+
 </div>
