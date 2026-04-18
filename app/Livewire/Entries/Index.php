@@ -38,9 +38,9 @@ final class Index extends Component
 
     public bool $selectAll = false;
 
-    public string $sortBy = 'created_at';
+    public string $sortBy = '';
 
-    public string $sortDirection = 'desc';
+    public string $sortDirection = 'asc';
 
     public function updatedSearch(): void
     {
@@ -61,6 +61,30 @@ final class Index extends Component
     public function updatedStatusFilter(): void
     {
         $this->resetPage();
+    }
+
+    public function canReorder(): bool
+    {
+        return $this->search === '' && $this->collectionFilter === null && $this->statusFilter === null;
+    }
+
+    public function reorder(int $id, int $position): void
+    {
+        if (! $this->canReorder()) {
+            return;
+        }
+
+        $entries = Entry::query()->orderBy('order')->get();
+
+        $entry = $entries->firstWhere('id', $id);
+        $rest = $entries->reject(fn ($e) => $e->id === $id)->values();
+        $rest->splice($position, 0, [$entry]);
+
+        foreach ($rest as $index => $e) {
+            $e->update(['order' => $index]);
+        }
+
+        $this->dispatch('notify', message: __('Order updated.'));
     }
 
     #[Computed]
@@ -90,7 +114,7 @@ final class Index extends Component
                 if ($this->sortBy !== '' && $this->sortBy !== '0') {
                     $query->orderBy($this->sortBy, $this->sortDirection);
                 } else {
-                    $query->latest();
+                    $query->orderBy('order');
                 }
             })
             ->paginate(15);

@@ -65,6 +65,7 @@ final class Collection extends Model
         'parent_id',
         'is_active',
         'settings',
+        'order',
     ];
 
     public function blueprint(): BelongsTo
@@ -89,6 +90,12 @@ final class Collection extends Model
 
     protected static function booted(): void
     {
+        self::creating(function (self $model): void {
+            if ($model->order === 0 || $model->order === null) {
+                $model->order = (static::query()->max('order') ?? -1) + 1;
+            }
+        });
+
         self::deleting(function (self $model): void {
             $model->updateQuietly(['slug' => sprintf('%s__deleted_%d', $model->slug, $model->id)]);
         });

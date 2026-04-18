@@ -88,6 +88,7 @@
             <flux:card>
                 <flux:table :paginate="$this->entries">
                     <flux:table.columns>
+                        <flux:table.column class="{{ $this->canReorder() ? 'w-8' : 'hidden' }}"></flux:table.column>
                         <flux:table.column class="w-12">
                             <flux:checkbox wire:model.live="selectAll" />
                         </flux:table.column>
@@ -99,9 +100,12 @@
                         <flux:table.column>{{ __('Actions') }}</flux:table.column>
                     </flux:table.columns>
 
-                    <flux:table.rows>
+                    <flux:table.rows wire:sort="reorder">
                         @foreach ($this->entries as $entry)
-                            <flux:table.row :key="$entry->id">
+                            <flux:table.row :key="$entry->id" wire:sort:item="{{ $entry->id }}">
+                                <flux:table.cell class="{{ $this->canReorder() ? 'w-8 px-2' : 'hidden' }}">
+                                    <flux:icon.grip-vertical wire:sort:handle class="size-4 cursor-move text-zinc-400" />
+                                </flux:table.cell>
                                 <flux:table.cell>
                                     <flux:checkbox wire:model.live="selected" value="{{ $entry->id }}" />
                                 </flux:table.cell>

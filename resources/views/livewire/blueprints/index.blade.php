@@ -1,5 +1,5 @@
 <div>
-    <div class="flex h-full w-full max-w-4xl mx-auto flex-1 flex-col gap-6">
+    <div class="mx-auto flex h-full w-full max-w-4xl flex-1 flex-col gap-6">
         {{-- Header --}}
         <div class="flex items-center justify-between">
             <div>
@@ -18,13 +18,14 @@
 
         {{-- Search --}}
         <div class="flex items-center gap-4">
-            <flux:input wire:model.live.debounce.300ms="search" icon="magnifying-glass" placeholder="Search blueprints..." class="flex-grow" />
+            <flux:input wire:model.live.debounce.300ms="search" icon="magnifying-glass" placeholder="Search blueprints..." class="grow" />
         </div>
 
         {{-- Blueprints Table --}}
         <flux:card>
             <flux:table :paginate="$this->blueprints">
                 <flux:table.columns>
+                    <flux:table.column class="{{ $this->canReorder() ? 'w-8' : 'hidden' }}"></flux:table.column>
                     <flux:table.column sortable :sorted="$sortBy === 'name'" :direction="$sortDirection" wire:click="sort('name')">{{ __('Name') }}</flux:table.column>
                     <flux:table.column sortable :sorted="$sortBy === 'slug'" :direction="$sortDirection" wire:click="sort('slug')">{{ __('Slug') }}</flux:table.column>
                     <flux:table.column sortable :sorted="$sortBy === 'fields'" :direction="$sortDirection" wire:click="sort('fields')">{{ __('Fields') }}</flux:table.column>
@@ -32,9 +33,12 @@
                     <flux:table.column sortable :sorted="$sortBy === 'status'" :direction="$sortDirection" wire:click="sort('status')">{{ __('Status') }}</flux:table.column>
                     <flux:table.column class="flex justify-end">{{ __('Actions') }}</flux:table.column>
                 </flux:table.columns>
-                <flux:table.rows>
+                <flux:table.rows wire:sort="reorder">
                     @forelse ($this->blueprints as $blueprint)
-                        <flux:table.row wire:key="blueprint-{{ $blueprint->id }}">
+                        <flux:table.row wire:key="blueprint-{{ $blueprint->id }}" wire:sort:item="{{ $blueprint->id }}">
+                            <flux:table.cell class="{{ $this->canReorder() ? 'w-8 px-2' : 'hidden' }}">
+                                <flux:icon.grip-vertical wire:sort:handle class="size-4 cursor-move text-zinc-400" />
+                            </flux:table.cell>
                             <flux:table.cell class="px-6 py-4">
                                 <div>
                                     <flux:heading level="5">{{ $blueprint->name }}</flux:heading>
@@ -76,7 +80,7 @@
                         </flux:table.row>
                     @empty
                         <flux:table.row>
-                            <flux:table.cell colspan="6" class="px-6 py-12 text-center">
+                            <flux:table.cell colspan="7" class="px-6 py-12 text-center">
                                 <div class="flex flex-col items-center gap-2">
                                     <flux:icon.document class="size-12 text-zinc-400" />
                                     <flux:text>{{ __('No blueprints found') }}</flux:text>

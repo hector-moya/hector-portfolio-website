@@ -77,6 +77,7 @@ final class Entry extends Model
         'seo_title',
         'seo_description',
         'og_image',
+        'order',
     ];
 
     public function blueprint(): BelongsTo
@@ -159,6 +160,12 @@ final class Entry extends Model
 
     protected static function booted(): void
     {
+        self::creating(function (self $model): void {
+            if ($model->order === 0 || $model->order === null) {
+                $model->order = (static::query()->max('order') ?? -1) + 1;
+            }
+        });
+
         self::deleting(function (self $model): void {
             $model->updateQuietly(['slug' => sprintf('%s__deleted_%d', $model->slug, $model->id)]);
         });

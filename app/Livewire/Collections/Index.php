@@ -22,13 +22,37 @@ final class Index extends Component
 
     public string $search = '';
 
-    public string $sortBy = 'created_at';
+    public string $sortBy = '';
 
-    public string $sortDirection = 'desc';
+    public string $sortDirection = 'asc';
 
     public function updatingSearch(): void
     {
         $this->resetPage();
+    }
+
+    public function canReorder(): bool
+    {
+        return $this->search === '';
+    }
+
+    public function reorder(int $id, int $position): void
+    {
+        if (! $this->canReorder()) {
+            return;
+        }
+
+        $collections = CollectionModel::query()->orderBy('order')->get();
+
+        $collection = $collections->firstWhere('id', $id);
+        $rest = $collections->reject(fn ($c) => $c->id === $id)->values();
+        $rest->splice($position, 0, [$collection]);
+
+        foreach ($rest as $index => $c) {
+            $c->update(['order' => $index]);
+        }
+
+        $this->dispatch('notify', type: 'success', message: __('Order updated.'));
     }
 
     public function delete(int $id): void
@@ -46,8 +70,7 @@ final class Index extends Component
             ->withCount('entries')
             ->when($this->search, fn ($query) => $query->where('name', 'like', sprintf('%%%s%%', $this->search))
                 ->orWhere('slug', 'like', sprintf('%%%s%%', $this->search)))
-            ->tap(fn ($query) => $this->sortBy !== '' && $this->sortBy !== '0' ? $query->orderBy($this->sortBy, $this->sortDirection) : $query)
-            ->latest()
+            ->when($this->sortBy !== '', fn ($query) => $query->orderBy($this->sortBy, $this->sortDirection), fn ($query) => $query->orderBy('order'))
             ->paginate(10);
     }
 

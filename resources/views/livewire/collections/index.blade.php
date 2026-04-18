@@ -25,6 +25,7 @@
         <flux:card>
             <flux:table :paginate="$this->collectionModels">
                 <flux:table.columns>
+                    <flux:table.column class="{{ $this->canReorder() ? 'w-8' : 'hidden' }}"></flux:table.column>
                     <flux:table.column sortable :sorted="$sortBy === 'name'" :direction="$sortDirection" wire:click="sort('name')">{{ __('Name') }}</flux:table.column>
                     <flux:table.column sortable :sorted="$sortBy === 'slug'" :direction="$sortDirection" wire:click="sort('slug')">{{ __('Slug') }}</flux:table.column>
                     <flux:table.column sortable :sorted="$sortBy === 'blueprint'" :direction="$sortDirection" wire:click="sort('blueprint')">{{ __('Blueprint') }}</flux:table.column>
@@ -32,9 +33,12 @@
                     <flux:table.column sortable :sorted="$sortBy === 'entries'" :direction="$sortDirection" wire:click="sort('entries')">{{ __('Entries') }}</flux:table.column>
                     <flux:table.column class="text-right">{{ __('Actions') }}</flux:table.column>
                 </flux:table.columns>
-                <flux:table.rows>
+                <flux:table.rows wire:sort="reorder">
                     @forelse ($this->collectionModels as $collection)
-                        <flux:table.row wire:key="collection-{{ $collection->id }}">
+                        <flux:table.row wire:key="collection-{{ $collection->id }}" wire:sort:item="{{ $collection->id }}">
+                            <flux:table.cell class="{{ $this->canReorder() ? 'w-8 px-2' : 'hidden' }}">
+                                <flux:icon.grip-vertical wire:sort:handle class="size-4 cursor-move text-zinc-400" />
+                            </flux:table.cell>
                             <flux:table.cell>
                                 <div>
                                     <flux:heading level="5">{{ $collection->name }}</flux:heading>
@@ -74,7 +78,7 @@
                         </flux:table.row>
                     @empty
                         <flux:table.row>
-                            <flux:table.cell colspan="6" class="px-6 py-12 text-center">
+                            <flux:table.cell colspan="7" class="px-6 py-12 text-center">
                                 <div class="flex flex-col items-center gap-2">
                                     <flux:icon.folder class="size-12 text-neutral-400" />
                                     <flux:text>{{ __('No collections found') }}</flux:text>
