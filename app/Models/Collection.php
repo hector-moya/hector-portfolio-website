@@ -15,6 +15,7 @@ use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
+ * @property int|null $parent_id
  * @property string $name
  * @property string $slug
  * @property string|null $description
@@ -25,6 +26,9 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
  * @property-read Blueprint|null $blueprint
+ * @property-read Collection|null $parent
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Collection> $children
+ * @property-read int|null $children_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, Entry> $entries
  * @property-read int|null $entries_count
  *
@@ -58,6 +62,7 @@ final class Collection extends Model
         'slug',
         'description',
         'blueprint_id',
+        'parent_id',
         'is_active',
         'settings',
     ];
@@ -65,6 +70,16 @@ final class Collection extends Model
     public function blueprint(): BelongsTo
     {
         return $this->belongsTo(Blueprint::class);
+    }
+
+    public function parent(): BelongsTo
+    {
+        return $this->belongsTo(self::class, 'parent_id');
+    }
+
+    public function children(): HasMany
+    {
+        return $this->hasMany(self::class, 'parent_id');
     }
 
     public function entries(): HasMany
