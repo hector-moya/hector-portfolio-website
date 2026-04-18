@@ -122,7 +122,12 @@ final class Entry extends Model
         if ($this->relationLoaded('elements') && $this->elements->isNotEmpty()) {
             $sections = [];
 
-            foreach ($this->elements as $element) {
+            $ordered = $this->elements->sortBy([
+                [fn ($el) => $el->field?->order ?? 0, 'asc'],
+                ['id', 'asc'],
+            ]);
+
+            foreach ($ordered as $element) {
                 $sectionType = SectionType::tryFrom($element->Field?->type ?? '');
                 if ($sectionType === null) {
                     continue;
