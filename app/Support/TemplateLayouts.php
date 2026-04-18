@@ -22,4 +22,20 @@ final class TemplateLayouts
     {
         return 'card-grid';
     }
+
+    /**
+     * @return array<string, string>
+     */
+    public static function detailTemplates(): array
+    {
+        return [
+            'landing-page' => 'Landing Page',
+            'article' => 'Article',
+        ];
+    }
+
+    public static function defaultDetailTemplate(): string
+    {
+        return 'landing-page';
+    }
 }

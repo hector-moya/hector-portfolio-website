@@ -7,6 +7,7 @@ namespace App\Livewire\Frontend;
 use App\Models\Asset;
 use App\Models\Collection as CollectionModel;
 use App\Models\Entry;
+use App\Support\TemplateLayouts;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Collection;
@@ -21,17 +22,37 @@ final class EntryShow extends Component
 
     public function mount(string $collectionSlug, string $entrySlug): void
     {
-        $this->collection = CollectionModel::query()
+        $parent = CollectionModel::query()
             ->where('slug', $collectionSlug)
             ->where('is_active', true)
             ->firstOrFail();
 
-        $this->entry = Entry::query()
-            ->where('slug', $entrySlug)
-            ->where('blueprint_id', $this->collection->blueprint_id)
-            ->where('status', 'published')
-            ->with(['elements.field', 'blueprint.tabs.sections.fields', 'author'])
-            ->firstOrFail();
+        if (($parent->settings['type'] ?? 'standard') === 'main') {
+            // Entry lives in one of this collection's children
+            $blueprintIds = $parent->children()
+                ->where('is_active', true)
+                ->pluck('blueprint_id')
+                ->filter();
+
+            $this->entry = Entry::query()
+                ->where('slug', $entrySlug)
+                ->whereIn('blueprint_id', $blueprintIds)
+                ->where('status', 'published')
+                ->with(['elements.field', 'blueprint.tabs.sections.fields', 'author'])
+                ->firstOrFail();
+
+            $this->collection = $parent->children()
+                ->where('blueprint_id', $this->entry->blueprint_id)
+                ->firstOrFail();
+        } else {
+            $this->collection = $parent;
+            $this->entry = Entry::query()
+                ->where('slug', $entrySlug)
+                ->where('blueprint_id', $this->collection->blueprint_id)
+                ->where('status', 'published')
+                ->with(['elements.field', 'blueprint.tabs.sections.fields', 'author'])
+                ->firstOrFail();
+        }
     }
 
     #[Layout('components.layouts.frontend')]
@@ -41,10 +62,18 @@ final class EntryShow extends Component
         $assets = $this->resolveAssets($sections);
         $theme = $this->collection->settings['theme'] ?? 'greenpeace';
 
+        $detailTemplate = $this->collection->settings['detail_template']
+            ?? TemplateLayouts::defaultDetailTemplate();
+
+        if (! array_key_exists($detailTemplate, TemplateLayouts::detailTemplates())) {
+            $detailTemplate = TemplateLayouts::defaultDetailTemplate();
+        }
+
         return view('livewire.frontend.entry-show', [
             'sections' => $sections,
             'assets' => $assets,
             'theme' => $theme,
+            'template' => $detailTemplate,
         ]);
     }
 

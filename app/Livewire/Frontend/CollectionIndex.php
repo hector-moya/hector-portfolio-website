@@ -31,8 +31,14 @@ final class CollectionIndex extends Component
     #[Layout('components.layouts.frontend')]
     public function render(): View|Factory
     {
-        if (($this->collection->settings['type'] ?? 'standard') === 'single') {
+        $type = $this->collection->settings['type'] ?? 'standard';
+
+        if ($type === 'single') {
             return $this->renderSingle();
+        }
+
+        if ($type === 'main') {
+            return $this->renderMain();
         }
 
         $entries = $this->collection->entries()
@@ -80,6 +86,46 @@ final class CollectionIndex extends Component
             'template' => 'landing-page',
             'theme' => $theme,
             'isSingle' => true,
+        ]);
+    }
+
+    private function renderMain(): View|Factory
+    {
+        $entry = $this->collection->entries()
+            ->where('status', 'published')
+            ->with(['elements.field', 'blueprint'])
+            ->latest('published_at')
+            ->first();
+
+        $sections = $entry?->getPageBuilderSections() ?? [];
+        $assets = $this->resolveAssets($sections);
+        $theme = $this->collection->settings['theme'] ?? 'greenpeace';
+
+        $childTemplate = $this->collection->settings['index_template']
+            ?? TemplateLayouts::defaultIndexTemplate();
+
+        if (! array_key_exists($childTemplate, TemplateLayouts::indexTemplates())) {
+            $childTemplate = TemplateLayouts::defaultIndexTemplate();
+        }
+
+        $childEntries = $this->collection->children()
+            ->where('is_active', true)
+            ->with(['entries' => fn ($q) => $q->where('status', 'published')->with(['elements.field', 'author'])->latest('published_at')])
+            ->get()
+            ->flatMap(fn (CollectionModel $child) => $child->entries)
+            ->sortByDesc('published_at')
+            ->values();
+
+        return view('livewire.frontend.collection-index', [
+            'entry' => $entry,
+            'sections' => $sections,
+            'assets' => $assets,
+            'template' => 'main',
+            'childTemplate' => $childTemplate,
+            'childEntries' => $childEntries,
+            'collection' => $this->collection,
+            'theme' => $theme,
+            'isSingle' => false,
         ]);
     }
 

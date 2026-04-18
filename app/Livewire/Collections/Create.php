@@ -6,6 +6,7 @@ namespace App\Livewire\Collections;
 
 use App\Livewire\Forms\CollectionForm;
 use App\Models\Blueprint;
+use App\Models\Collection;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Livewire\Attributes\Title;
@@ -27,6 +28,7 @@ final class Create extends Component
     {
         return view('livewire.collections.create', [
             'blueprints' => Blueprint::query()->where('is_active', true)->get(),
+            'mainCollections' => Collection::query()->where('is_active', true)->whereJsonContains('settings->type', 'main')->get(),
         ]);
     }
 }

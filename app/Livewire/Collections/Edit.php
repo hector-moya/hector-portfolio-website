@@ -36,6 +36,11 @@ final class Edit extends Component
     {
         return view('livewire.collections.edit', [
             'blueprints' => Blueprint::query()->where('is_active', true)->get(),
+            'mainCollections' => Collection::query()
+                ->where('is_active', true)
+                ->whereJsonContains('settings->type', 'main')
+                ->where('id', '!=', $this->collection->id)
+                ->get(),
         ]);
     }
 }

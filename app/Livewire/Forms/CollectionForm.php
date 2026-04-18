@@ -28,6 +28,9 @@ final class CollectionForm extends Form
     #[Validate('nullable|exists:blueprints,id')]
     public ?int $blueprint_id = null;
 
+    #[Validate('nullable|exists:collections,id')]
+    public ?int $parent_id = null;
+
     #[Validate('boolean')]
     public bool $is_active = true;
 
@@ -37,7 +40,10 @@ final class CollectionForm extends Form
     #[Validate('nullable|string')]
     public string $index_template = '';
 
-    #[Validate('required|string|in:standard,single')]
+    #[Validate('nullable|string')]
+    public string $detail_template = '';
+
+    #[Validate('required|string|in:standard,single,main,child')]
     public string $type = 'standard';
 
     public function rules(): array
@@ -60,9 +66,11 @@ final class CollectionForm extends Form
         $this->slug = $collection->slug;
         $this->description = $collection->description ?? '';
         $this->blueprint_id = $collection->blueprint_id;
+        $this->parent_id = $collection->parent_id;
         $this->is_active = $collection->is_active;
         $this->theme = $collection->settings['theme'] ?? '';
         $this->index_template = $collection->settings['index_template'] ?? '';
+        $this->detail_template = $collection->settings['detail_template'] ?? '';
         $this->type = $collection->settings['type'] ?? 'standard';
     }
 
@@ -75,10 +83,12 @@ final class CollectionForm extends Form
             'slug' => $this->slug,
             'description' => $this->description,
             'blueprint_id' => $this->blueprint_id,
+            'parent_id' => $this->parent_id,
             'is_active' => $this->is_active,
             'settings' => array_filter([
                 'theme' => $this->theme ?: null,
                 'index_template' => $this->index_template ?: null,
+                'detail_template' => $this->detail_template ?: null,
                 'type' => $this->type !== 'standard' ? $this->type : null,
             ]),
         ]);
@@ -89,7 +99,7 @@ final class CollectionForm extends Form
             variant: 'success',
         );
 
-        $this->reset('name', 'slug', 'description', 'blueprint_id', 'is_active', 'theme', 'index_template', 'type');
+        $this->reset('name', 'slug', 'description', 'blueprint_id', 'parent_id', 'is_active', 'theme', 'index_template', 'detail_template', 'type');
 
         return $collection;
     }
@@ -103,10 +113,12 @@ final class CollectionForm extends Form
             'slug' => $this->slug,
             'description' => $this->description,
             'blueprint_id' => $this->blueprint_id,
+            'parent_id' => $this->parent_id,
             'is_active' => $this->is_active,
             'settings' => array_filter(array_merge($collection->settings ?? [], [
                 'theme' => $this->theme ?: null,
-                'index_template' => ($this->type === 'single') ? null : ($this->index_template ?: null),
+                'index_template' => in_array($this->type, ['single', 'child']) ? null : ($this->index_template ?: null),
+                'detail_template' => $this->detail_template ?: null,
                 'type' => $this->type !== 'standard' ? $this->type : null,
             ])),
         ]);
