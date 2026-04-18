@@ -1,10 +1,11 @@
 <div>
     <flux:tab.group>
-        <flux:tabs variant="segmented">
+        <flux:tabs variant="segmented" wire:sort="reorderTabs">
             @foreach ($tabs as $tabIndex => $tab)
-                <flux:tab :name="$tabIndex" :key="'tab-'.$tabIndex">
+                <flux:tab :name="$tabIndex" wire:key="{{ $tab->id }}" wire:sort:item="{{ $tab->id }}">
+                    <flux:icon.grip-vertical wire:sort:handle variant="micro" class="mr-1 cursor-move" />
                     {{ $tab->name }}
-                    <flux:icon.chevron-down variant="micro" wire:click="openEditModal({{ $tab->id }})" class="hover: cursor-pointer transition-transform duration-200 hover:scale-110 hover:opacity-30" />
+                    <flux:icon.chevron-down variant="micro" wire:sort:ignore wire:click="openEditModal({{ $tab->id }})" class="hover: cursor-pointer transition-transform duration-200 hover:scale-110 hover:opacity-30" />
                 </flux:tab>
             @endforeach
             <flux:modal.trigger name="add-tab-modal">
@@ -15,9 +16,13 @@
         </flux:tabs>
         @foreach ($tabs as $tabIndex => $tab)
             <flux:tab.panel :name="$tabIndex" class="space-y-6" :key="'panel-'.$tabIndex">
-                @foreach ($tab->sections ?? [] as $sectionIndex => $section)
-                    <livewire:blueprints.components.section-card :sectionId="$section->id" :key="$section->id" :tabId="$tab->id" />
-                @endforeach
+                <div wire:sort="reorderSections" class="space-y-6">
+                    @foreach ($tab->sections ?? [] as $sectionIndex => $section)
+                        <div wire:sort:item="{{ $section->id }}" wire:key="{{ $section->id }}">
+                            <livewire:blueprints.components.section-card :sectionId="$section->id" :key="$section->id" :tabId="$tab->id" />
+                        </div>
+                    @endforeach
+                </div>
                 <flux:card class="max-w-1/2 mx-auto flex justify-center border-2 border-dashed px-16">
                     <flux:button icon="plus" variant="ghost" wire:click="addSection({{ $tab->id }})" tooltip="{{ __('Click to add a new section.') }}">{{ __('Add Section') }}</flux:button>
                 </flux:card>

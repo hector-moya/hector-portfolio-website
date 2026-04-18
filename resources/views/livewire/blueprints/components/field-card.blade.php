@@ -1,7 +1,7 @@
 <div>
     <flux:card class="!p-0">
         <div class="flex items-center justify-between">
-            <flux:icon.grip-vertical variant="micro" class="mx-2 transition-opacity duration-200 hover:opacity-45" />
+            <flux:icon.grip-vertical wire:sort:handle variant="micro" class="mx-2 cursor-move transition-opacity duration-200 hover:opacity-45" />
             <flux:separator vertical />
             <div class="m-2 flex flex-grow items-center">
                 <flux:modal.trigger name="field-config-{{ $fieldId }}">

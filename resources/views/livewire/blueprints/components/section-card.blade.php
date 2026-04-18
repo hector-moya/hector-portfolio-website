@@ -1,6 +1,6 @@
 <flux:card class="p-0!">
     <div class="flex items-center justify-between">
-        <flux:icon.grip-vertical variant="micro" class="mx-2 transition-opacity duration-200 hover:opacity-45" />
+        <flux:icon.grip-vertical wire:sort:handle variant="micro" class="mx-2 cursor-move transition-opacity duration-200 hover:opacity-45" />
         <flux:separator vertical />
         <div class="m-2 flex flex-grow">
             <flux:modal.trigger name="edit-section-modal-{{ $sectionId }}">
@@ -20,9 +20,11 @@
             <flux:text>{{ __('No fields added yet. Click "Plus button" to get started.') }}</flux:text>
         </div>
     @else
-        <div class="flex flex-col gap-4 p-6">
+        <div class="flex flex-col gap-4 p-6" wire:sort="reorderFields">
             @foreach ($form->fields as $fieldIndex => $field)
-                <livewire:blueprints.components.field-card :fieldId="$field->id" :key="'field-' . $fieldIndex" />
+                <div wire:sort:item="{{ $field->id }}" wire:key="field-{{ $field->id }}">
+                    <livewire:blueprints.components.field-card :fieldId="$field->id" :key="'field-' . $fieldIndex" />
+                </div>
             @endforeach
         </div>
     @endif

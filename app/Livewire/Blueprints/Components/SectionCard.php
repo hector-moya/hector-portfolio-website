@@ -39,6 +39,25 @@ final class SectionCard extends Component
         return resolve(SectionTypeRegistry::class)->all();
     }
 
+    public function reorderFields(int $id, int $position): void
+    {
+        $fields = \App\Models\Field::query()
+            ->where('section_id', $this->sectionId)
+            ->whereNull('parent_id')
+            ->orderBy('order')
+            ->get();
+
+        $field = $fields->firstWhere('id', $id);
+        $rest = $fields->reject(fn ($f) => $f->id === $id)->values();
+        $rest->splice($position, 0, [$field]);
+
+        foreach ($rest as $index => $f) {
+            $f->update(['order' => $index]);
+        }
+
+        $this->form->setSection($this->sectionId);
+    }
+
     public function addField(string $type): void
     {
         $this->form->addField($this->sectionId, $type);

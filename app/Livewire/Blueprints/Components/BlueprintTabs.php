@@ -87,6 +87,38 @@ final class BlueprintTabs extends Component
         Flux::modal('edit-tab-modal-'.$tabId)->close();
     }
 
+    public function reorderTabs(int $id, int $position): void
+    {
+        $tabs = Tab::query()->where('blueprint_id', $this->blueprintId)->orderBy('sort_order')->get();
+
+        $tab = $tabs->firstWhere('id', $id);
+        $rest = $tabs->reject(fn ($t) => $t->id === $id)->values();
+        $rest->splice($position, 0, [$tab]);
+
+        foreach ($rest as $index => $t) {
+            $t->update(['sort_order' => $index]);
+        }
+    }
+
+    public function reorderSections(int $id, int $position): void
+    {
+        $section = \App\Models\Section::query()->findOrFail($id);
+        $tabId = $section->tab_id;
+
+        $sections = \App\Models\Section::query()
+            ->where('blueprint_id', $this->blueprintId)
+            ->where('tab_id', $tabId)
+            ->orderBy('sort_order')
+            ->get();
+
+        $rest = $sections->reject(fn ($s) => $s->id === $id)->values();
+        $rest->splice($position, 0, [$section]);
+
+        foreach ($rest as $index => $s) {
+            $s->update(['sort_order' => $index]);
+        }
+    }
+
     public function addSection(int $tabId): void
     {
         $tab = $this->tabs->firstWhere('id', $tabId);
