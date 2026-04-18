@@ -19,7 +19,7 @@ describe('Blueprint slug reuse after soft delete', function (): void {
 
         $blueprint->delete();
 
-        expect($blueprint->fresh()->slug)->toBe('blog-post__deleted_' . $blueprint->id);
+        expect($blueprint->fresh()->slug)->toBe('blog-post__deleted_'.$blueprint->id);
     });
 
     test('original slug is available after deletion', function (): void {
@@ -38,7 +38,7 @@ describe('Collection slug reuse after soft delete', function (): void {
 
         $collection->delete();
 
-        expect($collection->fresh()->slug)->toBe('blog-posts__deleted_' . $collection->id);
+        expect($collection->fresh()->slug)->toBe('blog-posts__deleted_'.$collection->id);
     });
 
     test('original slug is available after deletion', function (): void {
@@ -57,7 +57,7 @@ describe('Entry slug reuse after soft delete', function (): void {
 
         $entry->delete();
 
-        expect($entry->fresh()->slug)->toBe('my-first-post__deleted_' . $entry->id);
+        expect($entry->fresh()->slug)->toBe('my-first-post__deleted_'.$entry->id);
     });
 
     test('original slug is available after deletion', function (): void {
