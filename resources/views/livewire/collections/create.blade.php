@@ -69,15 +69,6 @@
                 </flux:select>
                 @endif
 
-                {{-- Detail Template (child and standard types) --}}
-                @if(in_array($form->type, ['child', 'standard']))
-                <flux:select label="{{ __('Detail Template') }}" wire:model="form.detail_template" description="{{ __('Template used to render individual entry pages') }}">
-                    <flux:select.option value="">{{ __('Default (Landing Page)') }}</flux:select.option>
-                    @foreach (\App\Support\TemplateLayouts::detailTemplates() as $value => $label)
-                        <flux:select.option value="{{ $value }}">{{ $label }}</flux:select.option>
-                    @endforeach
-                </flux:select>
-                @endif
 
                 {{-- Status --}}
                 <div class="flex justify-end">

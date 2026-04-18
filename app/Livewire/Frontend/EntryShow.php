@@ -7,7 +7,6 @@ namespace App\Livewire\Frontend;
 use App\Models\Asset;
 use App\Models\Collection as CollectionModel;
 use App\Models\Entry;
-use App\Support\TemplateLayouts;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Collection;
@@ -62,18 +61,10 @@ final class EntryShow extends Component
         $assets = $this->resolveAssets($sections);
         $theme = $this->collection->settings['theme'] ?? 'greenpeace';
 
-        $detailTemplate = $this->collection->settings['detail_template']
-            ?? TemplateLayouts::defaultDetailTemplate();
-
-        if (! array_key_exists($detailTemplate, TemplateLayouts::detailTemplates())) {
-            $detailTemplate = TemplateLayouts::defaultDetailTemplate();
-        }
-
         return view('livewire.frontend.entry-show', [
             'sections' => $sections,
             'assets' => $assets,
             'theme' => $theme,
-            'template' => $detailTemplate,
         ]);
     }
 
