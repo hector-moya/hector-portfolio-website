@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Livewire\Blueprints\Components;
 
-use App\Models\Field;
 use App\Livewire\Forms\SectionForm;
+use App\Models\Field;
 use App\Services\SectionTypeRegistry;
 use App\Traits\HasSlug;
 use Flux\Flux;

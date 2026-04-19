@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Livewire\Blueprints\Components;
 
-use App\Models\Section;
 use App\Livewire\Forms\TabForm;
+use App\Models\Section;
 use App\Models\Tab;
 use App\Traits\HasSlug;
 use Flux\Flux;
