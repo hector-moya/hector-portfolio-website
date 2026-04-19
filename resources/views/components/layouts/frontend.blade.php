@@ -200,7 +200,7 @@
 
     <!-- Scroll-reveal observer -->
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
+        function initScrollReveal() {
             const observer = new IntersectionObserver(
                 (entries) => {
                     entries.forEach(entry => {
@@ -212,8 +212,11 @@
                 },
                 { threshold: 0.1, rootMargin: '0px 0px -48px 0px' }
             );
-            document.querySelectorAll('[data-animate]').forEach(el => observer.observe(el));
-        });
+            document.querySelectorAll('[data-animate]:not(.in-view)').forEach(el => observer.observe(el));
+        }
+
+        document.addEventListener('DOMContentLoaded', initScrollReveal);
+        document.addEventListener('livewire:navigated', initScrollReveal);
     </script>
 
     @fluxScripts
