@@ -36,15 +36,15 @@
             </defs>
             <rect width="100%" height="100%" fill="url(#hero-grid-{{ $section['_id'] }})" />
         </svg>
-        <div class="absolute right-0 top-0 h-96 w-96 -translate-y-1/2 translate-x-1/3 rounded-full bg-teal-500/20 blur-3xl"></div>
-        <div class="absolute bottom-0 left-0 h-80 w-80 translate-y-1/2 -translate-x-1/3 rounded-full bg-green-500/15 blur-3xl"></div>
+        <div class="absolute right-0 top-0 h-96 w-96 -translate-y-1/2 translate-x-1/3 rounded-full bg-teal-100/20 dark:bg-teal-500/20 blur-3xl"></div>
+        <div class="absolute bottom-0 left-0 h-80 w-80 translate-y-1/2 -translate-x-1/3 rounded-full bg-green-100/15 dark:bg-green-500/15 blur-3xl"></div>
     </div>
 
     <div class="relative mx-auto max-w-7xl px-6 pb-24 pt-32 sm:pb-32 sm:pt-40 lg:px-8">
         <div class="mx-auto max-w-3xl">
             @if (!empty($data['title']))
                 <div data-animate>
-                    <flux:heading class="text-5xl! font-bold leading-tight tracking-tight text-white sm:text-6xl! lg:text-7xl!" level="1">
+                    <flux:heading class="text-5xl! font-bold leading-tight tracking-tight sm:text-6xl! lg:text-7xl!" level="1">
                         {{ $data['title'] }}
                     </flux:heading>
                 </div>
@@ -52,7 +52,7 @@
 
             @if (!empty($data['subtitle']))
                 <div data-animate data-delay="100">
-                    <flux:heading size="xl" class="mt-4 font-normal! text-teal-300">
+                    <flux:heading size="xl" class="mt-4 font-normal! text-zinc-400 dark:text-teal-300">
                         {{ $data['subtitle'] }}
                     </flux:heading>
                 </div>
@@ -60,7 +60,7 @@
 
             @if (!empty($data['content']))
                 <div data-animate data-delay="200">
-                    <flux:text size="xl" class="mt-6 text-lg leading-8 text-zinc-300">
+                    <flux:text size="xl" class="mt-6 text-lg leading-8 text-zinc-400 dark:text-zinc-400">
                         {!! nl2br(e($data['content'])) !!}
                     </flux:text>
                 </div>
@@ -74,7 +74,7 @@
                         </flux:button>
                     @endif
                     @if (!empty($data['secondary_cta_text']))
-                        <flux:button href="{{ $data['secondary_cta_url'] ?? '#' }}" class="shadow-xl shadow-zinc9200/40">
+                        <flux:button href="{{ $data['secondary_cta_url'] ?? '#' }}" class="shadow-xl! shadow-zinc-400/40">
                             {{ $data['secondary_cta_text'] }}
                             <flux:icon name="arrow-right" class="size-4" />
                         </flux:button>

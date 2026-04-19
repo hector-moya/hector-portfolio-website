@@ -27,7 +27,7 @@
         }
     }"
     x-init="window.addEventListener('scroll', () => { scrolled = window.scrollY > 40 }, { passive: true })"
-    class="flex min-h-screen flex-col justify-between bg-white font-sans antialiased dark:bg-zinc-900"
+    class="flex min-h-screen flex-col justify-between bg-zinc-50 font-sans antialiased dark:bg-zinc-900"
 >
     @php
         $siteName = \App\Facades\Globals::get('branding.site_name.content', config('app.name')) ?: config('app.name');
@@ -48,7 +48,7 @@
                 <a
                     href="/"
                     class="-m-1.5 p-1.5 transition-opacity hover:opacity-75"
-                    :class="scrolled ? 'text-zinc-900 dark:text-white' : 'text-white'"
+                    :class="scrolled ? 'text-zinc-900 dark:text-white' : 'text-zinc-900 dark:text-white'"
                 >
                     @if ($logoAsset)
                         <img src="{{ $logoAsset->url }}" alt="{{ $siteName }}" class="h-8 w-auto" />
