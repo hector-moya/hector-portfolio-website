@@ -11,18 +11,18 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('entries', function (Blueprint $table) {
+        Schema::table('entries', function (Blueprint $table): void {
             $table->unsignedInteger('order')->default(0)->after('id');
         });
 
-        foreach (DB::table('entries')->orderBy('created_at')->pluck('id') as $index => $id) {
+        foreach (DB::table('entries')->oldest()->pluck('id') as $index => $id) {
             DB::table('entries')->where('id', $id)->update(['order' => $index]);
         }
     }
 
     public function down(): void
     {
-        Schema::table('entries', function (Blueprint $table) {
+        Schema::table('entries', function (Blueprint $table): void {
             $table->dropColumn('order');
         });
     }

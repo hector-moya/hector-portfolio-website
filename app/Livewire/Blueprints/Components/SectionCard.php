@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Livewire\Blueprints\Components;
 
+use App\Models\Field;
 use App\Livewire\Forms\SectionForm;
 use App\Services\SectionTypeRegistry;
 use App\Traits\HasSlug;
@@ -41,14 +42,14 @@ final class SectionCard extends Component
 
     public function reorderFields(int $id, int $position): void
     {
-        $fields = \App\Models\Field::query()
+        $fields = Field::query()
             ->where('section_id', $this->sectionId)
             ->whereNull('parent_id')
             ->orderBy('order')
             ->get();
 
         $field = $fields->firstWhere('id', $id);
-        $rest = $fields->reject(fn ($f) => $f->id === $id)->values();
+        $rest = $fields->reject(fn ($f): bool => $f->id === $id)->values();
         $rest->splice($position, 0, [$field]);
 
         foreach ($rest as $index => $f) {

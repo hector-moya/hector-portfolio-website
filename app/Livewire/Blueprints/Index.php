@@ -57,7 +57,7 @@ final class Index extends Component
         $blueprints = Blueprint::query()->orderBy('order')->get();
 
         $blueprint = $blueprints->firstWhere('id', $id);
-        $rest = $blueprints->reject(fn ($b) => $b->id === $id)->values();
+        $rest = $blueprints->reject(fn ($b): bool => $b->id === $id)->values();
         $rest->splice($position, 0, [$blueprint]);
 
         foreach ($rest as $index => $b) {

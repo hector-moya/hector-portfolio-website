@@ -99,7 +99,7 @@ final class Edit extends Component
         $items = $this->navigation->items()->whereNull('parent_id')->orderBy('order')->get();
 
         $item = $items->firstWhere('id', $id);
-        $rest = $items->reject(fn ($i) => $i->id === $id)->values();
+        $rest = $items->reject(fn ($i): bool => $i->id === $id)->values();
         $rest->splice($position, 0, [$item]);
 
         foreach ($rest as $index => $i) {

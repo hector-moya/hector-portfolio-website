@@ -48,6 +48,7 @@ return new class extends Migration
             if (! is_array($layout)) {
                 continue;
             }
+
             if ($layout === []) {
                 continue;
             }

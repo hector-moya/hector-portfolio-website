@@ -77,7 +77,7 @@ final class Index extends Component
         $entries = Entry::query()->orderBy('order')->get();
 
         $entry = $entries->firstWhere('id', $id);
-        $rest = $entries->reject(fn ($e) => $e->id === $id)->values();
+        $rest = $entries->reject(fn ($e): bool => $e->id === $id)->values();
         $rest->splice($position, 0, [$entry]);
 
         foreach ($rest as $index => $e) {

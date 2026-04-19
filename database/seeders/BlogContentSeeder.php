@@ -43,20 +43,20 @@ final class BlogContentSeeder extends Seeder
         ]);
 
         // Step 2 — Collections (with parent-child links)
-        $home = Collection::query()->create(['name' => 'Home', 'slug' => 'home', 'blueprint_id' => $homeBlueprint->id]);
+        Collection::query()->create(['name' => 'Home', 'slug' => 'home', 'blueprint_id' => $homeBlueprint->id]);
         $blog = Collection::query()->create(['name' => 'Blog', 'slug' => 'blog', 'blueprint_id' => $blogIndexBlueprint->id]);
-        $blogPosts = Collection::query()->create(['name' => 'Blog Posts', 'slug' => 'blog-posts', 'blueprint_id' => $blogPostBlueprint->id, 'parent_id' => $blog->id]);
+        Collection::query()->create(['name' => 'Blog Posts', 'slug' => 'blog-posts', 'blueprint_id' => $blogPostBlueprint->id, 'parent_id' => $blog->id]);
         $portfolio = Collection::query()->create(['name' => 'Portfolio', 'slug' => 'portfolio', 'blueprint_id' => $portfolioIndexBlueprint->id]);
-        $projects = Collection::query()->create(['name' => 'Portfolio Projects', 'slug' => 'portfolio-projects', 'blueprint_id' => $portfolioProjectBlueprint->id, 'parent_id' => $portfolio->id]);
+        Collection::query()->create(['name' => 'Portfolio Projects', 'slug' => 'portfolio-projects', 'blueprint_id' => $portfolioProjectBlueprint->id, 'parent_id' => $portfolio->id]);
 
         // Step 3 — Entries
         $this->createEntry($homeBlueprint, $admin, ['title' => 'Home', 'slug' => 'home'], [
             'hero' => [
-                'title' => 'Progress, not perfection. The work is never done. That\'s the point.',
+                'title' => "Progress, not perfection. The work is never done. That's the point.",
                 'subtitle' => 'A living archive of the things I build, learn, and break.',
-                'content' => 'The work of building software is rarely elegant. It\'s an ongoing loop of trial, adjustment, and acceptance.',
+                'content' => "The work of building software is rarely elegant. It's an ongoing loop of trial, adjustment, and acceptance.",
                 'bg_image' => null,
-                'cta_text' => 'See what I\'m building',
+                'cta_text' => "See what I'm building",
                 'cta_url' => '/portfolio',
                 'secondary_cta_text' => 'Check the journey',
                 'secondary_cta_url' => '/blog',
@@ -66,8 +66,8 @@ final class BlogContentSeeder extends Seeder
                 'items' => [],
             ],
             'cta' => [
-                'title' => 'Let\'s Work Together',
-                'content' => 'I\'m always open to new ideas, collaborations, or a good conversation about code.',
+                'title' => "Let's Work Together",
+                'content' => "I'm always open to new ideas, collaborations, or a good conversation about code.",
                 'cta_text' => 'Get in Touch',
                 'cta_url' => '/contact',
             ],
@@ -77,7 +77,7 @@ final class BlogContentSeeder extends Seeder
             'hero' => [
                 'title' => 'The Blog',
                 'subtitle' => 'Thoughts on code, craft, and the process of building things.',
-                'content' => 'A running log of what I\'m learning, building, and thinking about.',
+                'content' => "A running log of what I'm learning, building, and thinking about.",
                 'bg_image' => null,
                 'cta_text' => '',
                 'cta_url' => '',
@@ -93,7 +93,7 @@ final class BlogContentSeeder extends Seeder
                 'hero' => [
                     'title' => 'The Journey Begins',
                     'subtitle' => 'Every developer has a story of how they got started.',
-                    'content' => 'Here\'s mine.',
+                    'content' => "Here's mine.",
                     'bg_image' => null,
                     'cta_text' => '',
                     'cta_url' => '',
@@ -126,7 +126,7 @@ final class BlogContentSeeder extends Seeder
                 'slug' => 'laravel-and-me',
                 'hero' => [
                     'title' => 'Laravel & Me',
-                    'subtitle' => 'My experience with Laravel and why it\'s become my go-to framework.',
+                    'subtitle' => "My experience with Laravel and why it's become my go-to framework.",
                     'content' => 'It felt like discovering a well-organised toolbox.',
                     'bg_image' => null,
                     'cta_text' => '',
@@ -150,7 +150,7 @@ final class BlogContentSeeder extends Seeder
         $this->createEntry($portfolioIndexBlueprint, $admin, ['title' => 'Portfolio', 'slug' => 'portfolio'], [
             'hero' => [
                 'title' => 'My Work',
-                'subtitle' => 'A selection of projects I\'ve built and contributed to.',
+                'subtitle' => "A selection of projects I've built and contributed to.",
                 'content' => 'Each project is a snapshot of where I was technically and creatively at that moment in time.',
                 'bg_image' => null,
                 'cta_text' => '',

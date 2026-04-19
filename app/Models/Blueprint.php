@@ -108,7 +108,7 @@ final class Blueprint extends Model
     {
         self::creating(function (self $model): void {
             if ($model->order === 0 || $model->order === null) {
-                $model->order = (static::query()->max('order') ?? -1) + 1;
+                $model->order = (self::query()->max('order') ?? -1) + 1;
             }
         });
 

@@ -45,7 +45,7 @@ final class Index extends Component
         $collections = CollectionModel::query()->orderBy('order')->get();
 
         $collection = $collections->firstWhere('id', $id);
-        $rest = $collections->reject(fn ($c) => $c->id === $id)->values();
+        $rest = $collections->reject(fn ($c): bool => $c->id === $id)->values();
         $rest->splice($position, 0, [$collection]);
 
         foreach ($rest as $index => $c) {
