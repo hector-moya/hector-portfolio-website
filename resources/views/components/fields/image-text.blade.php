@@ -6,8 +6,10 @@
     $imageRight = ($data['image_position'] ?? 'left') === 'right';
 @endphp
 
-<div class="bg-white py-16 dark:bg-zinc-900 sm:py-24">
-    <div class="mx-auto max-w-7xl px-6 lg:px-8">
+<div class="relative overflow-hidden bg-white py-16 dark:bg-zinc-900 sm:py-24">
+    {{-- Decorative accent --}}
+    <div class="pointer-events-none absolute -left-20 -top-20 h-72 w-72 rounded-full bg-teal-100/50 blur-3xl dark:bg-teal-900/15" aria-hidden="true"></div>
+    <div class="relative mx-auto max-w-7xl px-6 lg:px-8">
         <div @class([
             'flex flex-col gap-12 lg:flex-row lg:items-center',
             'lg:flex-row-reverse' => $imageRight,
@@ -32,7 +34,7 @@
                 @endif
 
                 @if (!empty($data['content']))
-                    <flux:text class="text-lg leading-8 text-zinc-500 dark:text-zinc-400">
+                    <flux:text class="text-lg leading-8 text-zinc-500 dark:text-zinc-300">
                         {!! nl2br(e($data['content'])) !!}
                     </flux:text>
                 @endif

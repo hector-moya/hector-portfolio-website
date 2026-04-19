@@ -6,8 +6,10 @@
 @endphp
 
 @if (!empty($data['title']) || !empty($items))
-    <div class="bg-white py-16 dark:bg-zinc-900 sm:py-24">
-        <div class="mx-auto max-w-7xl px-6 lg:px-8">
+    <div class="relative overflow-hidden bg-white py-16 dark:bg-zinc-900 sm:py-24">
+        {{-- Decorative accent --}}
+        <div class="pointer-events-none absolute -bottom-20 -left-20 h-72 w-72 rounded-full bg-green-100/60 blur-3xl dark:bg-green-900/20" aria-hidden="true"></div>
+        <div class="relative mx-auto max-w-7xl px-6 lg:px-8">
             @if (!empty($data['title']))
                 <div data-animate class="mx-auto max-w-2xl text-center">
                     <flux:heading class="text-3xl! font-bold sm:text-4xl!" level="2">
@@ -28,7 +30,7 @@
                         <div
                             data-animate
                             data-delay="{{ $delay }}"
-                            class="group flex flex-col gap-4 rounded-2xl border border-zinc-200 bg-zinc-50/50 p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg dark:border-zinc-700/60 dark:bg-zinc-800/50 dark:hover:border-teal-700/50"
+                            class="group flex flex-col gap-4 rounded-2xl border border-zinc-200 bg-zinc-50/50 p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg dark:border-zinc-700/60 dark:bg-zinc-800/50 dark:hover:border-teal-700/50 dark:hover:shadow-teal-950/50"
                         >
                             @if (!empty($item['icon']))
                                 @php $iconName = Str::kebab($item['icon']); @endphp
@@ -48,7 +50,7 @@
                             @endif
 
                             @if (!empty($item['item_description']))
-                                <flux:text class="text-zinc-500 dark:text-zinc-400">
+                                <flux:text class="text-zinc-500 dark:text-zinc-300">
                                     {{ $item['item_description'] }}
                                 </flux:text>
                             @endif

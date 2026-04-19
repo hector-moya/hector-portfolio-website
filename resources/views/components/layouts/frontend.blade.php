@@ -38,7 +38,7 @@
     <!-- Navigation -->
     <header
         :class="scrolled
-            ? 'bg-gray-50 backdrop-blur-md shadow-sm dark:bg-zinc-900/90 border-b border-zinc-200/60 dark:border-zinc-700/60'
+            ? 'bg-zinc-50 backdrop-blur-md shadow-sm dark:bg-zinc-900/90 border-b border-zinc-200/60 dark:border-zinc-700/60'
             : 'bg-transparent'"
         class="fixed inset-x-0 top-0 z-50 transition-all duration-300"
     >
@@ -180,21 +180,21 @@
 
     <!-- Footer -->
     <footer class="border-t border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-950">
-        <div class="mx-auto max-w-7xl px-6 py-12 lg:px-8">
+        <div class="mx-auto max-w-7xl px-6 pb-8 pt-12 lg:px-8">
             <div class="flex flex-col items-center justify-between gap-6 sm:flex-row">
-                <a href="/" class="text-sm font-semibold text-zinc-900 transition-opacity hover:opacity-75 dark:text-white">
+                <a href="/" class="text-sm font-semibold text-zinc-900 transition-colors hover:text-teal-600 dark:text-white dark:hover:text-teal-400">
                     {{ $siteName }}
                 </a>
                 <x-menu
                     :navigation="\App\Facades\Navigation::get('footer-menu')"
-                    class="flex-wrap justify-center gap-6 text-sm text-zinc-500 dark:text-zinc-400"
+                    class="flex-wrap justify-center gap-6 text-sm text-zinc-500 dark:text-zinc-300"
                 />
             </div>
-            <div class="mt-8 border-t border-zinc-200 pt-6 dark:border-zinc-800">
-                <p class="text-center text-xs text-zinc-400 dark:text-zinc-500">
-                    &copy; {{ date('Y') }} {{ $siteName }}. {{ __('All rights reserved') }}.
-                </p>
-            </div>
+        </div>
+        <div class="border-t border-zinc-200 py-6 dark:border-zinc-800">
+            <p class="text-center text-xs text-zinc-400 dark:text-zinc-500">
+                &copy; {{ date('Y') }} {{ $siteName }}. {{ __('All rights reserved') }}.
+            </p>
         </div>
     </footer>
 

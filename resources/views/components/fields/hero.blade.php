@@ -74,7 +74,7 @@
                         </flux:button>
                     @endif
                     @if (!empty($data['secondary_cta_text']))
-                        <flux:button href="{{ $data['secondary_cta_url'] ?? '#' }}" class="shadow-xl! shadow-zinc-400/40">
+                        <flux:button href="{{ $data['secondary_cta_url'] ?? '#' }}" class="shadow-xl! shadow-zinc-400/40 dark:shadow-zinc-700/40">
                             {{ $data['secondary_cta_text'] }}
                             <flux:icon name="arrow-right" class="size-4" />
                         </flux:button>

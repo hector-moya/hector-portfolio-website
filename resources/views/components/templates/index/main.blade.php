@@ -13,42 +13,49 @@
 
     {{-- Child entries listing --}}
     @if($childEntries->isNotEmpty())
-        <div class="mt-16">
+        <div class="relative overflow-hidden bg-zinc-50 py-16 dark:bg-zinc-900 sm:py-24">
+            {{-- Decorative accent --}}
+            <div class="pointer-events-none absolute -right-24 -top-24 h-80 w-80 rounded-full bg-teal-100/60 blur-3xl dark:bg-teal-900/20" aria-hidden="true"></div>
+
             @if(count($sections) > 0)
                 <flux:separator class="mb-12" />
             @endif
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                @foreach($childEntries as $entry)
-                    @php
-                        $featuredImage = $entry->elements->firstWhere('handle', 'featured_image')?->getElementValue();
-                        $excerpt = $entry->elements->first(fn($el) => in_array($el->field?->type, ['textarea', 'text']) && $el->getElementValue())?->getElementValue();
-                    @endphp
-                    <flux:card class="p-0! overflow-hidden hover:shadow-xl transition">
-                        @if($featuredImage)
-                            <img src="{{ $featuredImage }}" alt="{{ $entry->title }}" class="w-full h-48 object-cover">
-                        @endif
-                        <div class="p-6 space-y-3">
-                            <flux:heading size="lg">
-                                <a href="{{ route('entry.show', [$collection->slug, $entry->slug]) }}" wire:navigate class="hover:text-indigo-600 dark:hover:text-indigo-400">
-                                    {{ $entry->title }}
-                                </a>
-                            </flux:heading>
-                            @if($excerpt)
-                                <flux:text class="line-clamp-3">{{ $excerpt }}</flux:text>
+            <div class="relative mx-auto max-w-7xl px-6 lg:px-8">
+                <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+                    @foreach($childEntries as $entry)
+                        @php
+                            $featuredImage = $entry->elements->firstWhere('handle', 'featured_image')?->getElementValue();
+                            $excerpt = $entry->elements->first(fn($el) => in_array($el->field?->type, ['textarea', 'text']) && $el->getElementValue())?->getElementValue();
+                        @endphp
+                        <flux:card class="group overflow-hidden p-0! transition-all duration-300 hover:-translate-y-1 hover:shadow-lg dark:hover:border-teal-700/50 dark:hover:shadow-teal-950/50">
+                            @if($featuredImage)
+                                <div class="overflow-hidden">
+                                    <img src="{{ $featuredImage }}" alt="{{ $entry->title }}" class="aspect-video w-full object-cover transition-transform duration-500 group-hover:scale-105">
+                                </div>
                             @endif
-                            <div class="flex items-center gap-2 text-sm text-zinc-500 dark:text-zinc-400">
-                                @if($entry->author)
-                                    <span>{{ $entry->author->name }}</span>
-                                    <span>•</span>
+                            <div class="space-y-3 p-6">
+                                <flux:heading size="lg">
+                                    <a href="{{ route('entry.show', [$collection->slug, $entry->slug]) }}" wire:navigate class="hover:text-teal-600 dark:hover:text-teal-400">
+                                        {{ $entry->title }}
+                                    </a>
+                                </flux:heading>
+                                @if($excerpt)
+                                    <flux:text class="line-clamp-3 text-zinc-500 dark:text-zinc-300">{{ $excerpt }}</flux:text>
                                 @endif
-                                @if($entry->published_at)
-                                    <span>{{ $entry->published_at->format('M d, Y') }}</span>
-                                @endif
+                                <div class="flex items-center gap-2 text-sm text-zinc-500 dark:text-zinc-400">
+                                    @if($entry->author)
+                                        <span>{{ $entry->author->name }}</span>
+                                        <span>•</span>
+                                    @endif
+                                    @if($entry->published_at)
+                                        <span>{{ $entry->published_at->format('M d, Y') }}</span>
+                                    @endif
+                                </div>
                             </div>
-                        </div>
-                    </flux:card>
-                @endforeach
+                        </flux:card>
+                    @endforeach
+                </div>
             </div>
         </div>
     @elseif(count($sections) === 0)

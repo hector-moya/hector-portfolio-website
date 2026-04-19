@@ -6,8 +6,10 @@
 @endphp
 
 @if (!empty($data['title']) || !empty($data['subtitle']) || $cards->isNotEmpty())
-    <div class="bg-white py-16 dark:bg-zinc-900 sm:py-24">
-        <div class="mx-auto max-w-7xl px-6 lg:px-8">
+    <div class="relative overflow-hidden bg-white py-16 dark:bg-zinc-900 sm:py-24">
+        {{-- Decorative accent --}}
+        <div class="pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full bg-teal-100/60 blur-3xl dark:bg-teal-900/20" aria-hidden="true"></div>
+        <div class="relative mx-auto max-w-7xl px-6 lg:px-8">
             @if (!empty($data['title']) || !empty($data['subtitle']))
                 <div data-animate class="mx-auto max-w-2xl text-center">
                     @if (!empty($data['title']))
@@ -16,7 +18,7 @@
                         </flux:heading>
                     @endif
                     @if (!empty($data['subtitle']))
-                        <flux:text size="lg" class="mt-4 text-zinc-500 dark:text-zinc-400">
+                        <flux:text size="lg" class="mt-4 text-zinc-500 dark:text-zinc-300">
                             {{ $data['subtitle'] }}
                         </flux:text>
                     @endif
@@ -37,7 +39,7 @@
                         <div
                             data-animate
                             data-delay="{{ $delay }}"
-                            class="group flex flex-col overflow-hidden rounded-2xl border border-zinc-200 bg-zinc-50/50 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg dark:border-zinc-700/60 dark:bg-zinc-800/50 dark:hover:border-teal-700/50"
+                            class="group flex flex-col overflow-hidden rounded-2xl border border-zinc-200 bg-zinc-50/50 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg dark:border-zinc-700/60 dark:bg-zinc-800/50 dark:hover:border-teal-700/50 dark:hover:shadow-teal-950/50"
                         >
                             @if ($cardAsset)
                                 <div class="overflow-hidden">
@@ -57,7 +59,7 @@
                                 @endif
 
                                 @if (!empty($card['excerpt']))
-                                    <flux:text class="flex-1 text-zinc-500 dark:text-zinc-400">
+                                    <flux:text class="flex-1 text-zinc-500 dark:text-zinc-300">
                                         {{ $card['excerpt'] }}
                                     </flux:text>
                                 @endif

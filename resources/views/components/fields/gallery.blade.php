@@ -7,8 +7,10 @@
 @endphp
 
 @if ($images->isNotEmpty())
-    <div class="bg-zinc-50 py-16 dark:bg-zinc-800/50 sm:py-24">
-        <div class="mx-auto max-w-7xl px-6 lg:px-8">
+    <div class="relative overflow-hidden bg-zinc-50 py-16 dark:bg-zinc-800/50 sm:py-24">
+        {{-- Decorative accent --}}
+        <div class="pointer-events-none absolute -bottom-20 -right-20 h-72 w-72 rounded-full bg-green-100/50 blur-3xl dark:bg-green-900/15" aria-hidden="true"></div>
+        <div class="relative mx-auto max-w-7xl px-6 lg:px-8">
             @if (!empty($data['title']))
                 <div data-animate class="mx-auto max-w-2xl text-center">
                     <flux:heading class="mb-10 text-3xl! font-bold sm:text-4xl!" level="2">
