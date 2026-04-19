@@ -18,12 +18,18 @@ new class extends Component {
         $this->field = $field;
     }
 
+    public function updatedData(): void
+    {
+        $this->dispatch('field-data-updated', handle: $this->field->handle, data: $this->data);
+    }
+
     #[On('asset-selected')]
     public function onAssetSelected(string $handle, mixed $value): void
     {
         if ($handle === $this->field->handle . '_card' && $this->activeCardIndex !== null) {
             $this->data['cards'][$this->activeCardIndex]['image'] = $value;
             $this->activeCardIndex = null;
+            $this->dispatch('field-data-updated', handle: $this->field->handle, data: $this->data);
         }
     }
 
@@ -36,17 +42,20 @@ new class extends Component {
     public function removeCardImage(int $index): void
     {
         $this->data['cards'][$index]['image'] = null;
+        $this->dispatch('field-data-updated', handle: $this->field->handle, data: $this->data);
     }
 
     public function addCard(): void
     {
         $this->data['cards'][] = ['image' => null, 'title' => '', 'excerpt' => '', 'link' => ''];
+        $this->dispatch('field-data-updated', handle: $this->field->handle, data: $this->data);
     }
 
     public function removeCard(int $index): void
     {
         array_splice($this->data['cards'], $index, 1);
         $this->data['cards'] = array_values($this->data['cards']);
+        $this->dispatch('field-data-updated', handle: $this->field->handle, data: $this->data);
     }
 };
 ?>

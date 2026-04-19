@@ -14,6 +14,11 @@ new class extends Component {
     {
         $this->field = $field;
     }
+
+    public function updatedData(): void
+    {
+        $this->dispatch('field-data-updated', handle: $this->field->handle, data: $this->data);
+    }
 };
 ?>
 

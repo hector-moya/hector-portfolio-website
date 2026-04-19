@@ -38,7 +38,7 @@
     <!-- Navigation -->
     <header
         :class="scrolled
-            ? 'bg-white/90 backdrop-blur-md shadow-sm dark:bg-zinc-900/90 border-b border-zinc-200/60 dark:border-zinc-700/60'
+            ? 'bg-gray-50 backdrop-blur-md shadow-sm dark:bg-zinc-900/90 border-b border-zinc-200/60 dark:border-zinc-700/60'
             : 'bg-transparent'"
         class="fixed inset-x-0 top-0 z-50 transition-all duration-300"
     >
@@ -90,7 +90,7 @@
             @php $mainMenu = \App\Facades\Navigation::get('main-menu'); @endphp
             <div
                 class="hidden lg:flex lg:items-center lg:gap-x-2"
-                :class="scrolled ? 'text-zinc-700 dark:text-zinc-200' : 'text-white'"
+                :class="scrolled ? 'text-teal-600 dark:text-teal-300' : 'text-teal-700 dark:text-teal-600'"
             >
                 <x-menu :navigation="$mainMenu" class="text-sm/6 font-semibold" />
 
@@ -142,11 +142,7 @@
         >
             <div class="flex items-center justify-between">
                 <a href="/" class="-m-1.5 p-1.5">
-                    @if ($logoAsset)
-                        <img src="{{ $logoAsset->url }}" alt="{{ $siteName }}" class="h-8 w-auto brightness-0 invert" />
-                    @else
-                        <span class="text-xl font-semibold text-white">{{ $siteName }}</span>
-                    @endif
+                    <span class="text-xl font-semibold text-white">{{ $siteName }}</span>
                 </a>
                 <button
                     @click="mobileOpen = false"

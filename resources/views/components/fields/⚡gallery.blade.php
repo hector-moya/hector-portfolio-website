@@ -16,11 +16,17 @@ new class extends Component {
         $this->field = $field;
     }
 
+    public function updatedData(): void
+    {
+        $this->dispatch('field-data-updated', handle: $this->field->handle, data: $this->data);
+    }
+
     #[On('asset-selected')]
     public function onAssetSelected(string $handle, mixed $value): void
     {
         if ($handle === $this->field->handle . '_gallery') {
             $this->data['images'][] = $value;
+            $this->dispatch('field-data-updated', handle: $this->field->handle, data: $this->data);
         }
     }
 
@@ -28,6 +34,7 @@ new class extends Component {
     {
         array_splice($this->data['images'], $index, 1);
         $this->data['images'] = array_values($this->data['images']);
+        $this->dispatch('field-data-updated', handle: $this->field->handle, data: $this->data);
     }
 };
 ?>

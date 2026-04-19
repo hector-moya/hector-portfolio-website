@@ -15,15 +15,22 @@ new class extends Component {
         $this->field = $field;
     }
 
+    public function updatedData(): void
+    {
+        $this->dispatch('field-data-updated', handle: $this->field->handle, data: $this->data);
+    }
+
     public function addFeatureItem(): void
     {
         $this->data['items'][] = ['icon' => '', 'item_title' => '', 'item_description' => ''];
+        $this->dispatch('field-data-updated', handle: $this->field->handle, data: $this->data);
     }
 
     public function removeFeatureItem(int $index): void
     {
         array_splice($this->data['items'], $index, 1);
         $this->data['items'] = array_values($this->data['items']);
+        $this->dispatch('field-data-updated', handle: $this->field->handle, data: $this->data);
     }
 };
 ?>

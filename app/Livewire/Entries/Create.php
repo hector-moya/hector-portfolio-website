@@ -13,6 +13,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Computed;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 final class Create extends Component
@@ -73,6 +74,12 @@ final class Create extends Component
         }
 
         return Blueprint::with(['tabs.sections.fields', 'fields'])->find($this->form->blueprint_id);
+    }
+
+    #[On('field-data-updated')]
+    public function onFieldDataUpdated(string $handle, array $data): void
+    {
+        $this->sectionValues[$handle] = $data;
     }
 
     public function save(): void

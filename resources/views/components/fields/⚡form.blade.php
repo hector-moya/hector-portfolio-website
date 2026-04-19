@@ -15,15 +15,22 @@ new class extends Component {
         $this->field = $field;
     }
 
+    public function updatedData(): void
+    {
+        $this->dispatch('field-data-updated', handle: $this->field->handle, data: $this->data);
+    }
+
     public function addFormField(): void
     {
         $this->data['fields'][] = ['type' => 'text', 'label' => '', 'handle' => '', 'required' => false];
+        $this->dispatch('field-data-updated', handle: $this->field->handle, data: $this->data);
     }
 
     public function removeFormField(int $index): void
     {
         array_splice($this->data['fields'], $index, 1);
         $this->data['fields'] = array_values($this->data['fields']);
+        $this->dispatch('field-data-updated', handle: $this->field->handle, data: $this->data);
     }
 };
 ?>

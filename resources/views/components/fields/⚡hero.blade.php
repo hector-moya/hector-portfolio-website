@@ -17,17 +17,24 @@ new class extends Component {
         $this->field = $field;
     }
 
+    public function updatedData(): void
+    {
+        $this->dispatch('field-data-updated', handle: $this->field->handle, data: $this->data);
+    }
+
     #[On('asset-selected')]
     public function onAssetSelected(string $handle, mixed $value): void
     {
         if ($handle === $this->field->handle . '_bg_image') {
             $this->data['bg_image'] = $value;
+            $this->dispatch('field-data-updated', handle: $this->field->handle, data: $this->data);
         }
     }
 
     public function removeBgImage(): void
     {
         $this->data['bg_image'] = null;
+        $this->dispatch('field-data-updated', handle: $this->field->handle, data: $this->data);
     }
 };
 ?>
