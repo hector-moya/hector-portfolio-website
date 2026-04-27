@@ -1,45 +1,50 @@
 @props(['section', 'assets' => collect()])
 
 @php
-    $data = $section['data'];
+    $data  = $section['data'];
     $cards = collect($data['cards'] ?? [])->filter(fn ($card) => !empty($card['title']) || !empty($card['image']));
 @endphp
 
 @if (!empty($data['title']) || !empty($data['subtitle']) || $cards->isNotEmpty())
-    <div class="relative overflow-hidden bg-white py-16 dark:bg-zinc-900 sm:py-24">
-        {{-- Decorative accent --}}
-        <div class="pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full bg-teal-100/60 blur-3xl dark:bg-teal-900/20" aria-hidden="true"></div>
-        <div class="relative mx-auto max-w-7xl px-6 lg:px-8">
+    <div class="relative overflow-hidden py-16 sm:py-24" style="background: var(--sp-bg-mid);">
+
+        {{-- Decorative accent blob --}}
+        <div class="pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full opacity-20 blur-3xl dark:opacity-10" style="background: var(--sp-solar);" aria-hidden="true"></div>
+
+        <div class="relative z-10 mx-auto max-w-7xl px-6 lg:px-8">
             @if (!empty($data['title']) || !empty($data['subtitle']))
                 <div data-animate class="mx-auto max-w-2xl text-center">
                     @if (!empty($data['title']))
-                        <flux:heading class="text-3xl! font-bold sm:text-4xl!" level="2">
+                        <h2 class="text-[clamp(1.8rem,3vw,2.6rem)] font-semibold" style="font-family: 'Cinzel', serif; color: var(--sp-fg);">
                             {{ $data['title'] }}
-                        </flux:heading>
+                        </h2>
                     @endif
                     @if (!empty($data['subtitle']))
-                        <flux:text size="lg" class="mt-4 text-zinc-500 dark:text-zinc-300">
+                        <p class="mt-4 text-base leading-7" style="color: var(--sp-muted);">
                             {{ $data['subtitle'] }}
-                        </flux:text>
+                        </p>
                     @endif
                 </div>
             @endif
 
             @if ($cards->isNotEmpty())
                 <div @class([
-                    'mt-12 grid gap-8',
+                    'mt-12 grid gap-6',
                     'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3' => $cards->count() !== 2,
                     'grid-cols-1 sm:grid-cols-2'               => $cards->count() === 2,
                 ])>
                     @foreach ($cards as $i => $card)
                         @php
                             $cardAsset = ($card['image'] ?? null) ? $assets->find($card['image']) : null;
-                            $delay = min(($i + 1) * 100, 500);
+                            $delay     = min(($i + 1) * 100, 500);
                         @endphp
                         <div
                             data-animate
                             data-delay="{{ $delay }}"
-                            class="group flex flex-col overflow-hidden rounded-2xl border border-zinc-200 bg-zinc-50/50 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg dark:border-zinc-700/60 dark:bg-zinc-800/50 dark:hover:border-teal-700/50 dark:hover:shadow-teal-950/50"
+                            class="group flex flex-col overflow-hidden rounded-xl border transition-all duration-300 hover:-translate-y-1"
+                            style="background: var(--sp-bg-card); border-color: var(--sp-border);"
+                            onmouseover="this.style.boxShadow='0 0 24px oklch(from var(--sp-bio) l c h / 0.14), 0 8px 32px oklch(0 0 0 / 0.2)'; this.style.borderColor='oklch(from var(--sp-bio) l c h / 0.4)';"
+                            onmouseout="this.style.boxShadow='none'; this.style.borderColor='var(--sp-border)';"
                         >
                             @if ($cardAsset)
                                 <div class="overflow-hidden">
@@ -47,29 +52,34 @@
                                         src="{{ $cardAsset->url }}"
                                         alt="{{ $cardAsset->alt_text ?? ($card['title'] ?? '') }}"
                                         class="aspect-video w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                        style="filter: saturate(0.88);"
                                     />
                                 </div>
                             @endif
 
                             <div class="flex flex-1 flex-col gap-3 p-6">
                                 @if (!empty($card['title']))
-                                    <flux:heading size="md" class="font-semibold leading-snug">
+                                    <h3 class="text-base font-semibold leading-snug" style="font-family: 'Cinzel', serif; color: var(--sp-fg);">
                                         {{ $card['title'] }}
-                                    </flux:heading>
+                                    </h3>
                                 @endif
 
                                 @if (!empty($card['excerpt']))
-                                    <flux:text class="flex-1 text-zinc-500 dark:text-zinc-300">
+                                    <p class="flex-1 text-sm leading-7" style="color: var(--sp-muted);">
                                         {{ $card['excerpt'] }}
-                                    </flux:text>
+                                    </p>
                                 @endif
 
                                 @if (!empty($card['link']))
                                     <div class="mt-2">
-                                        <flux:button variant="ghost" size="sm" href="{{ $card['link'] }}" class="px-0 text-teal-600 hover:text-teal-700 dark:text-teal-400 dark:hover:text-teal-300">
+                                        <a
+                                            href="{{ $card['link'] }}"
+                                            class="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-widest transition-opacity hover:opacity-80"
+                                            style="color: var(--sp-bio);"
+                                        >
                                             {{ __('Read more') }}
-                                            <flux:icon name="arrow-right" class="size-4" />
-                                        </flux:button>
+                                            <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                                        </a>
                                     </div>
                                 @endif
                             </div>
@@ -79,4 +89,6 @@
             @endif
         </div>
     </div>
+
+    <div class="relative z-10" style="height: 1px; background: linear-gradient(90deg, transparent, var(--sp-border), transparent);"></div>
 @endif

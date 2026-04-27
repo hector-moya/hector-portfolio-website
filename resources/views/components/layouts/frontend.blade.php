@@ -27,8 +27,20 @@
         }
     }"
     x-init="window.addEventListener('scroll', () => { scrolled = window.scrollY > 40 }, { passive: true })"
-    class="flex min-h-screen flex-col justify-between bg-zinc-50 font-sans antialiased dark:bg-zinc-900"
+    class="sp-site-body flex min-h-screen flex-col justify-between antialiased"
 >
+    {{-- Particle canvas — dark mode bioluminescent spores --}}
+    <canvas id="sp-particles"></canvas>
+
+    {{-- Topographic contour lines — light mode only --}}
+    <svg id="sp-topo-fixed" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">
+        <path d="M-100 780 Q300 720 700 755 Q1100 790 1540 740" fill="none" stroke="oklch(0.55 0.18 82)" stroke-width="1.0" opacity="0.5"/>
+        <path d="M-100 820 Q280 760 680 795 Q1080 830 1540 778" fill="none" stroke="oklch(0.55 0.18 82)" stroke-width="0.7" opacity="0.4"/>
+        <path d="M-100 860 Q320 800 720 835 Q1120 870 1540 815" fill="none" stroke="oklch(0.55 0.18 82)" stroke-width="0.5" opacity="0.3"/>
+        <path d="M-100 710 Q350 640 750 678 Q1150 715 1540 665" fill="none" stroke="oklch(0.45 0.14 202)" stroke-width="0.8" opacity="0.4"/>
+        <path d="M-100 640 Q400 570 800 610 Q1200 650 1540 595" fill="none" stroke="oklch(0.45 0.14 202)" stroke-width="0.5" opacity="0.3"/>
+    </svg>
+
     @php
         $siteName = \App\Facades\Globals::get('branding.site_name.content', config('app.name')) ?: config('app.name');
         $logoAssetId = \App\Facades\Globals::get('branding.logo.image');
@@ -37,23 +49,17 @@
 
     <!-- Navigation -->
     <header
-        :class="scrolled
-            ? 'bg-zinc-50 backdrop-blur-md shadow-sm dark:bg-zinc-900/90 border-b border-zinc-200/60 dark:border-zinc-700/60'
-            : 'bg-transparent'"
+        :class="scrolled ? 'sp-nav-scrolled border-b' : ''"
         class="fixed inset-x-0 top-0 z-50 transition-all duration-300"
     >
         <nav aria-label="Global" class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-8">
             <!-- Logo -->
             <div class="flex lg:flex-1">
-                <a
-                    href="/"
-                    class="-m-1.5 p-1.5 transition-opacity hover:opacity-75"
-                    :class="scrolled ? 'text-zinc-900 dark:text-white' : 'text-zinc-900 dark:text-white'"
-                >
+                <a href="/" class="-m-1.5 p-1.5 transition-opacity hover:opacity-80">
                     @if ($logoAsset)
                         <img src="{{ $logoAsset->url }}" alt="{{ $siteName }}" class="h-8 w-auto" />
                     @else
-                        <span class="text-xl font-semibold transition-colors duration-300">
+                        <span class="text-lg tracking-widest transition-all duration-300" style="font-family: 'Cinzel', serif; color: var(--sp-solar); text-shadow: 0 0 18px var(--sp-glow-s);">
                             {{ $siteName }}
                         </span>
                     @endif
@@ -65,9 +71,7 @@
                 <button
                     @click="toggleDark()"
                     class="rounded-full p-2 transition-colors"
-                    :class="scrolled
-                        ? 'text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800'
-                        : 'text-white hover:bg-white/10'"
+                    style="color: var(--sp-muted);"
                     aria-label="{{ __('Toggle dark mode') }}"
                 >
                     <flux:icon x-show="dark" name="sun" class="size-5" />
@@ -77,9 +81,7 @@
                 <button
                     @click="mobileOpen = true"
                     class="rounded-md p-2 transition-colors"
-                    :class="scrolled
-                        ? 'text-zinc-700 dark:text-zinc-300'
-                        : 'text-white'"
+                    style="color: var(--sp-muted);"
                     aria-label="{{ __('Open menu') }}"
                 >
                     <flux:icon name="bars-3" class="size-6" />
@@ -88,22 +90,21 @@
 
             <!-- Desktop nav -->
             @php $mainMenu = \App\Facades\Navigation::get('main-menu'); @endphp
-            <div
-                class="hidden lg:flex lg:items-center lg:gap-x-2"
-                :class="scrolled ? 'text-teal-600 dark:text-teal-300' : 'text-teal-700 dark:text-teal-600'"
-            >
-                <x-menu :navigation="$mainMenu" class="text-sm/6 font-semibold" />
+            <div class="hidden items-center gap-x-2 lg:flex" style="color: var(--sp-muted);">
+                <x-menu :navigation="$mainMenu" class="text-xs font-medium uppercase tracking-widest" />
 
-                <div class="ml-4 h-5 w-px bg-current opacity-20"></div>
+                <div class="ml-4 h-5 w-px opacity-20" style="background: var(--sp-border);"></div>
 
                 <!-- Dark mode toggle desktop -->
                 <button
                     @click="toggleDark()"
-                    class="rounded-full p-2 transition-colors hover:bg-black/10 dark:hover:bg-white/10"
+                    class="rounded-full border p-2 transition-all duration-300 hover:opacity-100"
+                    style="border-color: var(--sp-border); color: var(--sp-muted);"
+                    :style="dark ? 'box-shadow: 0 0 14px var(--sp-glow-s);' : ''"
                     aria-label="{{ __('Toggle dark mode') }}"
                 >
-                    <flux:icon x-show="dark" name="sun" class="size-5" />
-                    <flux:icon x-show="!dark" name="moon" class="size-5" />
+                    <flux:icon x-show="dark" name="sun" class="size-4" />
+                    <flux:icon x-show="!dark" name="moon" class="size-4" />
                 </button>
             </div>
         </nav>
@@ -124,7 +125,7 @@
     >
         <!-- Backdrop -->
         <div
-            class="absolute inset-0 bg-black/50 backdrop-blur-sm"
+            class="absolute inset-0 bg-black/60 backdrop-blur-sm"
             @click="mobileOpen = false"
         ></div>
 
@@ -137,16 +138,17 @@
             x-transition:leave="transition ease-in duration-200"
             x-transition:leave-start="translate-x-0"
             x-transition:leave-end="translate-x-full"
-            class="absolute inset-y-0 right-0 w-full overflow-y-auto bg-zinc-950 px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-white/10"
-            style="display: none"
+            class="absolute inset-y-0 right-0 w-full overflow-y-auto px-6 py-6 sm:max-w-sm sm:ring-1"
+            style="background: var(--sp-bg-mid); ring-color: var(--sp-border); display: none"
         >
             <div class="flex items-center justify-between">
                 <a href="/" class="-m-1.5 p-1.5">
-                    <span class="text-xl font-semibold text-white">{{ $siteName }}</span>
+                    <span class="text-lg tracking-widest" style="font-family: 'Cinzel', serif; color: var(--sp-solar);">{{ $siteName }}</span>
                 </a>
                 <button
                     @click="mobileOpen = false"
-                    class="-m-2.5 rounded-md p-2.5 text-zinc-400 hover:text-zinc-300 transition-colors"
+                    class="-m-2.5 rounded-md p-2.5 transition-colors"
+                    style="color: var(--sp-muted);"
                 >
                     <span class="sr-only">{{ __('Close menu') }}</span>
                     <flux:icon name="x-mark" class="size-6" />
@@ -154,14 +156,15 @@
             </div>
 
             <div class="mt-8 flow-root">
-                <div class="-my-4 divide-y divide-white/10">
+                <div class="-my-4 divide-y" style="border-color: var(--sp-border);">
                     <div class="py-4">
-                        <x-menu :navigation="$mainMenu" class="flex-col text-base font-semibold text-white" />
+                        <x-menu :navigation="$mainMenu" class="flex-col text-base font-medium uppercase tracking-widest" style="color: var(--sp-fg);" />
                     </div>
                     <div class="py-4">
                         <button
                             @click="toggleDark(); mobileOpen = false"
-                            class="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-semibold text-zinc-300 hover:bg-white/5 hover:text-white transition-colors"
+                            class="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:opacity-80"
+                            style="color: var(--sp-muted);"
                         >
                             <flux:icon x-show="dark" name="sun" class="size-5" />
                             <flux:icon x-show="!dark" name="moon" class="size-5" />
@@ -174,26 +177,27 @@
     </div>
 
     <!-- Page Content -->
-    <main>
+    <main class="relative z-10">
         {{ $slot }}
     </main>
 
     <!-- Footer -->
-    <footer class="border-t border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-950">
+    <footer class="relative z-10 border-t" style="background: var(--sp-bg); border-color: var(--sp-border);">
         <div class="mx-auto max-w-7xl px-6 pb-8 pt-12 lg:px-8">
             <div class="flex flex-col items-center justify-between gap-6 sm:flex-row">
-                <a href="/" class="text-sm font-semibold text-zinc-900 transition-colors hover:text-teal-600 dark:text-white dark:hover:text-teal-400">
+                <a href="/" class="text-sm font-medium tracking-widest transition-all hover:opacity-80" style="font-family: 'Cinzel', serif; color: var(--sp-solar); text-shadow: 0 0 12px var(--sp-glow-s);">
                     {{ $siteName }}
                 </a>
                 <x-menu
                     :navigation="\App\Facades\Navigation::get('footer-menu')"
-                    class="flex-wrap justify-center gap-6 text-sm text-zinc-500 dark:text-zinc-300"
+                    class="flex-wrap justify-center gap-6 text-xs uppercase tracking-widest"
+                    style="color: var(--sp-muted);"
                 />
             </div>
         </div>
-        <div class="border-t border-zinc-200 py-6 dark:border-zinc-800">
-            <p class="text-center text-xs text-zinc-400 dark:text-zinc-500">
-                &copy; {{ date('Y') }} {{ $siteName }}. {{ __('All rights reserved') }}.
+        <div class="border-t py-6" style="border-color: var(--sp-border);">
+            <p class="text-center text-xs tracking-wide" style="color: var(--sp-muted);">
+                &copy; {{ date('Y') }} <span style="color: var(--sp-leaf);">{{ $siteName }}</span>. {{ __('All rights reserved') }}.
             </p>
         </div>
     </footer>
@@ -217,6 +221,73 @@
 
         document.addEventListener('DOMContentLoaded', initScrollReveal);
         document.addEventListener('livewire:navigated', initScrollReveal);
+    </script>
+
+    <!-- Solarpunk particle system (dark mode bioluminescent spores) -->
+    <script>
+        (function () {
+            const canvas = document.getElementById('sp-particles');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+
+            function resizeCanvas() {
+                canvas.width  = window.innerWidth;
+                canvas.height = document.body.scrollHeight;
+            }
+
+            const COLS = [
+                'oklch(0.78 0.19 82)',
+                'oklch(0.72 0.17 178)',
+                'oklch(0.65 0.20 138)',
+            ];
+
+            class Spore {
+                constructor() { this.reset(true); }
+                reset(init) {
+                    this.x      = Math.random() * canvas.width;
+                    this.y      = init ? Math.random() * canvas.height : canvas.height + 10;
+                    this.r      = Math.random() * 1.6 + 0.4;
+                    this.vx     = (Math.random() - 0.5) * 0.25;
+                    this.vy     = -(Math.random() * 0.45 + 0.18);
+                    this.alpha  = Math.random() * 0.45 + 0.2;
+                    this.pulse  = Math.random() * Math.PI * 2;
+                    this.color  = COLS[Math.floor(Math.random() * 3)];
+                    this.life   = 0;
+                    this.maxLife = Math.random() * 700 + 300;
+                }
+                update() {
+                    this.x += this.vx;
+                    this.y += this.vy;
+                    this.pulse += 0.018;
+                    this.life++;
+                    if (this.life > this.maxLife) this.reset(false);
+                }
+                draw() {
+                    const a = this.alpha * (0.7 + 0.3 * Math.sin(this.pulse));
+                    ctx.save();
+                    ctx.globalAlpha = a;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+                    ctx.fillStyle    = this.color;
+                    ctx.shadowBlur   = 8;
+                    ctx.shadowColor  = this.color;
+                    ctx.fill();
+                    ctx.restore();
+                }
+            }
+
+            const spores = Array.from({ length: 85 }, () => new Spore());
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                spores.forEach(s => { s.update(); s.draw(); });
+                requestAnimationFrame(animate);
+            }
+
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas, { passive: true });
+            animate();
+        })();
     </script>
 
     @fluxScripts

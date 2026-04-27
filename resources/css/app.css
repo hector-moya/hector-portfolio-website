@@ -172,3 +172,152 @@ select:focus[data-flux-control] {
     [data-animate][data-delay="400"] { transition-delay: 400ms; }
     [data-animate][data-delay="500"] { transition-delay: 500ms; }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   SOLARPUNK DESIGN SYSTEM — "Bioluminescent Forest Future"
+   ═══════════════════════════════════════════════════════════════ */
+
+:root {
+    /* Light mode palette */
+    --sp-bg:        oklch(0.97 0.018 88);
+    --sp-bg-mid:    oklch(0.94 0.018 92);
+    --sp-bg-card:   oklch(0.99 0.008 88);
+    --sp-fg:        oklch(0.15 0.04 145);
+    --sp-muted:     oklch(0.46 0.06 148);
+    --sp-border:    oklch(0.78 0.07 145 / 0.38);
+    --sp-solar:     oklch(0.55 0.18 82);
+    --sp-bio:       oklch(0.45 0.14 202);
+    --sp-leaf:      oklch(0.50 0.13 322);
+    --sp-glow-s:    oklch(0.55 0.18 82 / 0.22);
+    --sp-glow-b:    oklch(0.45 0.14 202 / 0.18);
+    --sp-glow-l:    oklch(0.50 0.13 322 / 0.18);
+    --sp-glow-s-hi: oklch(0.55 0.18 82 / 0.40);
+    --sp-glow-b-hi: oklch(0.45 0.14 202 / 0.35);
+}
+
+.dark {
+    /* Dark mode palette */
+    --sp-bg:        oklch(0.10 0.04 145);
+    --sp-bg-mid:    oklch(0.14 0.055 148);
+    --sp-bg-card:   oklch(0.20 0.07 152);
+    --sp-fg:        oklch(0.94 0.025 88);
+    --sp-muted:     oklch(0.62 0.05 148);
+    --sp-border:    oklch(0.30 0.08 148 / 0.5);
+    --sp-solar:     oklch(0.78 0.19 82);
+    --sp-bio:       oklch(0.72 0.17 178);
+    --sp-leaf:      oklch(0.65 0.20 138);
+    --sp-glow-s:    oklch(0.78 0.19 82 / 0.35);
+    --sp-glow-b:    oklch(0.72 0.17 178 / 0.35);
+    --sp-glow-l:    oklch(0.65 0.20 138 / 0.35);
+    --sp-glow-s-hi: oklch(0.78 0.19 82 / 0.55);
+    --sp-glow-b-hi: oklch(0.72 0.17 178 / 0.55);
+}
+
+/* ─── Solarpunk body ─────────────────────────────────────────── */
+.sp-site-body {
+    background: var(--sp-bg);
+    color: var(--sp-fg);
+    font-family: 'Space Grotesk', sans-serif;
+    transition: background-color 0.4s, color 0.3s;
+}
+
+/* ─── Solarpunk nav ──────────────────────────────────────────── */
+.sp-nav-scrolled {
+    background: color-mix(in oklch, var(--sp-bg) 88%, transparent);
+    border-color: var(--sp-border) !important;
+    backdrop-filter: blur(16px);
+    box-shadow: 0 1px 20px oklch(0 0 0 / 0.15);
+}
+
+/* ─── Solarpunk keyframes ────────────────────────────────────── */
+@keyframes sp-glow-solar {
+    0%, 100% { text-shadow: 0 0 25px var(--sp-glow-s); }
+    50%       { text-shadow: 0 0 55px var(--sp-glow-s-hi), 0 0 90px var(--sp-glow-s); }
+}
+
+@keyframes sp-glow-bio {
+    0%, 100% { text-shadow: 0 0 25px var(--sp-glow-b); }
+    50%       { text-shadow: 0 0 55px var(--sp-glow-b-hi), 0 0 90px var(--sp-glow-b); }
+}
+
+@keyframes sp-bspin {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes sp-orb-pulse {
+    0%, 100% { opacity: 0.6; transform: scale(1); }
+    50%       { opacity: 1;   transform: scale(1.15); }
+}
+
+@keyframes sp-sunbreath {
+    0%, 100% { opacity: 0.6; transform: scale(1); }
+    50%       { opacity: 1;   transform: scale(1.08); }
+}
+
+@keyframes sp-scroll-line {
+    0%, 100% { transform: scaleY(0.4); opacity: 0.4; }
+    50%       { transform: scaleY(1);   opacity: 1; }
+}
+
+@keyframes sp-float-hint {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50%       { transform: translateX(-50%) translateY(7px); }
+}
+
+@keyframes sp-fade-up {
+    from { opacity: 0; transform: translateY(22px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── Hero entrance animations (fire immediately on load) ────── */
+.sp-entrance-1    { opacity: 0; animation: sp-fade-up 0.7s 0.30s ease forwards; }
+.sp-entrance-2    { opacity: 0; animation: sp-fade-up 0.7s 0.55s ease forwards; }
+.sp-entrance-3    { opacity: 0; animation: sp-fade-up 0.7s 0.75s ease forwards; }
+.sp-entrance-4    { opacity: 0; animation: sp-fade-up 0.7s 0.95s ease forwards; }
+.sp-entrance-5    { opacity: 0; animation: sp-fade-up 0.7s 1.15s ease forwards; }
+.sp-entrance-6    { opacity: 0; animation: sp-fade-up 0.7s 1.35s ease forwards; }
+.sp-entrance-hint { opacity: 0; animation: sp-fade-up 0.5s 1.65s ease forwards; }
+
+/* ─── Animated gradient image border ────────────────────────── */
+.sp-img-border {
+    position: relative;
+    border-radius: 8px;
+}
+
+.sp-img-border::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--sp-leaf), var(--sp-bio), var(--sp-solar), var(--sp-leaf));
+    background-size: 300% 300%;
+    z-index: -1;
+    animation: sp-bspin 8s linear infinite;
+}
+
+/* ─── Particle canvas (dark only) + topo overlay (light only) ── */
+#sp-particles {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.6s;
+}
+
+.dark #sp-particles { opacity: 0.55; }
+
+#sp-topo-fixed {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.6s;
+}
+
+html:not(.dark) #sp-topo-fixed { opacity: 0.45; }
