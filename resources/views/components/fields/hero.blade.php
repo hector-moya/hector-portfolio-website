@@ -108,27 +108,27 @@
         @endif
 
         {{-- CTA buttons --}}
-        @if (!empty($data['cta_text']) || !empty($data['secondary_cta_text']))
+        @php
+            $hasPrimaryCta = ! empty($data['cta_text']) && ! empty($data['cta_url']);
+            $hasSecondaryCta = ! empty($data['secondary_cta_text']) && ! empty($data['secondary_cta_url']);
+        @endphp
+        @if ($hasPrimaryCta || $hasSecondaryCta)
             <div class="sp-entrance-5 mt-10 flex flex-wrap items-center justify-center gap-4">
-                @if (!empty($data['cta_text']))
+                @if ($hasPrimaryCta)
                     <a
-                        href="{{ $data['cta_url'] ?? '#' }}"
-                        class="inline-flex items-center gap-2 rounded px-8 py-3.5 text-xs font-semibold uppercase tracking-widest transition-all duration-300 hover:-translate-y-0.5"
-                        style="background: var(--sp-solar); color: var(--sp-bg); box-shadow: 0 0 24px var(--sp-glow-s);"
-                        onmouseover="this.style.boxShadow='0 0 44px var(--sp-glow-s), 0 0 80px var(--sp-glow-s)'"
-                        onmouseout="this.style.boxShadow='0 0 24px var(--sp-glow-s)'"
+                        href="{{ $data['cta_url'] }}"
+                        class="sp-btn-solar inline-flex items-center gap-2 rounded px-8 py-3.5 text-xs font-semibold uppercase tracking-widest transition-all duration-300 hover:-translate-y-0.5"
                     >
                         {{ $data['cta_text'] }}
                     </a>
                 @endif
-                @if (!empty($data['secondary_cta_text']))
+                @if ($hasSecondaryCta)
                     <a
-                        href="{{ $data['secondary_cta_url'] ?? '#' }}"
-                        class="inline-flex items-center gap-2 rounded border px-8 py-3.5 text-xs font-semibold uppercase tracking-widest transition-all duration-300 hover:-translate-y-0.5"
-                        style="border-color: oklch(from var(--sp-bio) l c h / 0.5); color: var(--sp-bio); box-shadow: 0 0 14px var(--sp-glow-b);"
+                        href="{{ $data['secondary_cta_url'] }}"
+                        class="sp-btn-bio inline-flex items-center gap-2 rounded border px-8 py-3.5 text-xs font-semibold uppercase tracking-widest transition-all duration-300 hover:-translate-y-0.5"
                     >
                         {{ $data['secondary_cta_text'] }}
-                        <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                        <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                     </a>
                 @endif
             </div>
@@ -138,7 +138,7 @@
 
     {{-- Scroll hint --}}
     <div class="sp-entrance-hint absolute bottom-10 left-1/2 flex flex-col items-center gap-1.5" style="transform: translateX(-50%); animation: sp-float-hint 3s ease-in-out infinite, sp-fade-up 0.5s 1.65s ease both; color: var(--sp-muted);">
-        <span class="text-[0.65rem] uppercase tracking-[0.15em]">Scroll</span>
+        <span class="text-[0.65rem] uppercase tracking-[0.15em]">{{ __('Scroll') }}</span>
         <div class="w-px" style="height: 44px; background: linear-gradient(to bottom, var(--sp-leaf), transparent); animation: sp-scroll-line 2.5s ease-in-out infinite;"></div>
     </div>
 

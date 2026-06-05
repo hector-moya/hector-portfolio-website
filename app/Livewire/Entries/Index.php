@@ -80,9 +80,11 @@ final class Index extends Component
         $rest = $entries->reject(fn ($e): bool => $e->id === $id)->values();
         $rest->splice($position, 0, [$entry]);
 
-        foreach ($rest as $index => $e) {
-            $e->update(['order' => $index]);
-        }
+        DB::transaction(function () use ($rest): void {
+            foreach ($rest as $index => $e) {
+                $e->update(['order' => $index]);
+            }
+        });
 
         $this->dispatch('notify', message: __('Order updated.'));
     }

@@ -9,6 +9,7 @@ use App\Models\Collection as CollectionModel;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -48,9 +49,11 @@ final class Index extends Component
         $rest = $collections->reject(fn ($c): bool => $c->id === $id)->values();
         $rest->splice($position, 0, [$collection]);
 
-        foreach ($rest as $index => $c) {
-            $c->update(['order' => $index]);
-        }
+        DB::transaction(function () use ($rest): void {
+            foreach ($rest as $index => $c) {
+                $c->update(['order' => $index]);
+            }
+        });
 
         $this->dispatch('notify', type: 'success', message: __('Order updated.'));
     }

@@ -20,7 +20,7 @@ final class GlobalSetResource extends JsonResource
         /** @var GlobalSet $this */
         $variables = [];
         foreach ($this->variables as $variable) {
-            $variables[$variable->key] = $variable->value;
+            $variables[$variable->handle] = $variable->value;
         }
 
         return [

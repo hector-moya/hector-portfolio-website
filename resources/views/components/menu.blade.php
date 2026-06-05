@@ -16,8 +16,9 @@
         @foreach ($navigation->items->whereNull('parent_id') as $item)
             <a
                 href="{{ $item->url }}"
+                wire:navigate
                 @class([
-                    'inline-flex items-center gap-1.5 transition-opacity duration-150',
+                    'sp-nav-link inline-flex items-center gap-1.5 transition-opacity duration-150',
                     'opacity-60 hover:opacity-100' => ! request()->is(trim($item->url, '/')),
                     'opacity-100 font-semibold' => request()->is(trim($item->url, '/')),
                 ])
@@ -39,8 +40,9 @@
                         @foreach ($item->children as $child)
                             <a
                                 href="{{ $child->url }}"
+                                wire:navigate
                                 @class([
-                                    'block px-4 py-2.5 text-sm transition-opacity first:rounded-t-xl last:rounded-b-xl',
+                                    'sp-nav-link block px-4 py-2.5 text-sm transition-opacity first:rounded-t-xl last:rounded-b-xl',
                                     'opacity-60 hover:opacity-100 hover:bg-zinc-50 dark:hover:bg-zinc-700/50' => ! request()->is(trim($child->url, '/')),
                                     'opacity-100 font-medium bg-zinc-50 dark:bg-zinc-700/50' => request()->is(trim($child->url, '/')),
                                 ])

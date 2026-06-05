@@ -69,7 +69,7 @@ final class GlobalsService
             fn () => GlobalVariable::query()
                 ->whereHas('globalSet', fn ($q) => $q->where('handle', $set))
                 ->where('handle', $variable)
-                ->first()->value ?? $default
+                ->first()?->value ?? $default
         );
     }
 

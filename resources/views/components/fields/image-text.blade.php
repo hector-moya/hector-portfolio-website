@@ -91,15 +91,14 @@
                     </div>
                 @endif
 
-                @if (!empty($data['cta_text']))
+                @if (!empty($data['cta_text']) && !empty($data['cta_url']))
                     <div class="pt-2">
                         <a
-                            href="{{ $data['cta_url'] ?? '#' }}"
-                            class="inline-flex items-center gap-2 rounded border px-6 py-3 text-xs font-semibold uppercase tracking-widest transition-all duration-300 hover:-translate-y-0.5"
-                            style="border-color: oklch(from var(--sp-bio) l c h / 0.5); color: var(--sp-bio); box-shadow: 0 0 14px var(--sp-glow-b);"
+                            href="{{ $data['cta_url'] }}"
+                            class="sp-btn-bio inline-flex items-center gap-2 rounded border px-6 py-3 text-xs font-semibold uppercase tracking-widest transition-all duration-300 hover:-translate-y-0.5"
                         >
                             {{ $data['cta_text'] }}
-                            <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                            <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                         </a>
                     </div>
                 @endif

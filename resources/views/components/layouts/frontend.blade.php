@@ -65,7 +65,7 @@
         <nav aria-label="Global" class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-8">
             <!-- Logo -->
             <div class="flex lg:flex-1">
-                <a href="/" class="-m-1.5 p-1.5 transition-opacity hover:opacity-80">
+                <a href="/" wire:navigate class="sp-nav-link -m-1.5 p-1.5 transition-opacity hover:opacity-80">
                     @if ($logoAsset)
                         <img src="{{ $logoAsset->url }}" alt="{{ $siteName }}" class="h-8 w-auto" />
                     @else
@@ -198,7 +198,7 @@
     <footer class="relative z-10 border-t" style="background: var(--sp-bg); border-color: var(--sp-border);">
         <div class="mx-auto max-w-7xl px-6 pb-8 pt-12 lg:px-8">
             <div class="flex flex-col items-center justify-between gap-6 sm:flex-row">
-                <a href="/" class="text-sm font-medium tracking-widest transition-all hover:opacity-80" style="font-family: 'Cinzel', serif; color: var(--sp-solar); text-shadow: 0 0 12px var(--sp-glow-s);">
+                <a href="/" wire:navigate class="sp-nav-link text-sm font-medium tracking-widest transition-all hover:opacity-80" style="font-family: 'Cinzel', serif; color: var(--sp-solar); text-shadow: 0 0 12px var(--sp-glow-s);">
                     {{ $siteName }}
                 </a>
                 <x-menu
