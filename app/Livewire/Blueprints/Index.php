@@ -9,6 +9,7 @@ use App\Models\Blueprint;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -60,9 +61,11 @@ final class Index extends Component
         $rest = $blueprints->reject(fn ($b): bool => $b->id === $id)->values();
         $rest->splice($position, 0, [$blueprint]);
 
-        foreach ($rest as $index => $b) {
-            $b->update(['order' => $index]);
-        }
+        DB::transaction(function () use ($rest): void {
+            foreach ($rest as $index => $b) {
+                $b->update(['order' => $index]);
+            }
+        });
 
         $this->dispatch('notify', type: 'success', message: __('Order updated.'));
     }

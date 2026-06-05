@@ -351,3 +351,42 @@ html:not(.dark) #sp-topo-fixed { opacity: 0.45; }
         opacity: 0 !important;
     }
 }
+
+/* ─── Reusable solarpunk CTA buttons ──────────────────────────
+   CSS-driven hover + keyboard focus states (replaces inline
+   onmouseover/onmouseout and adds visible :focus-visible rings). */
+.sp-btn-solar {
+    background: var(--sp-solar);
+    color: var(--sp-bg);
+    box-shadow: 0 0 24px var(--sp-glow-s);
+}
+
+.sp-btn-solar:hover,
+.sp-btn-solar:focus-visible {
+    box-shadow: 0 0 44px var(--sp-glow-s), 0 0 80px var(--sp-glow-s);
+}
+
+.sp-btn-bio {
+    color: var(--sp-bio);
+    border-color: oklch(from var(--sp-bio) l c h / 0.5);
+    box-shadow: 0 0 14px var(--sp-glow-b);
+}
+
+.sp-btn-bio:hover,
+.sp-btn-bio:focus-visible {
+    box-shadow: 0 0 28px var(--sp-glow-b), 0 0 56px var(--sp-glow-b);
+}
+
+.sp-btn-solar:focus-visible,
+.sp-btn-bio:focus-visible {
+    outline: 2px solid var(--sp-solar);
+    outline-offset: 3px;
+}
+
+/* Visible keyboard focus for frontend nav/menu links. */
+.sp-nav-link:focus-visible {
+    outline: 2px solid var(--sp-solar);
+    outline-offset: 3px;
+    border-radius: 2px;
+    opacity: 1;
+}

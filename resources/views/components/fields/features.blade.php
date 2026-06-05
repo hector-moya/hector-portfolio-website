@@ -13,6 +13,16 @@
 @endphp
 
 @if (!empty($data['title']) || !empty($items))
+    <style>
+        /* Feature card hover (CSS-driven for keyboard/touch parity).
+           Accent colour is supplied per-card via the --feat-accent custom property. */
+        .sp-feature-card { box-shadow: none; }
+        .sp-feature-card:hover,
+        .sp-feature-card:focus-within {
+            border-color: oklch(from var(--feat-accent) l c h / 0.5) !important;
+            box-shadow: 0 0 32px oklch(from var(--feat-accent) l c h / 0.18), 0 12px 40px oklch(0 0 0 / 0.25);
+        }
+    </style>
     <div class="relative overflow-hidden py-16 sm:py-24" style="background: var(--sp-bg);">
 
         {{-- Decorative accent blob --}}
@@ -52,16 +62,8 @@
                         <div
                             data-animate
                             data-delay="{{ $delay }}"
-                            class="group relative flex flex-col gap-5 overflow-hidden rounded-xl border p-6 transition-all duration-300 hover:-translate-y-1.5"
-                            style="background: var(--sp-bg-card); border-color: var(--sp-border);"
-                            onmouseover="
-                                this.style.borderColor = 'oklch(from var({{ $accent['var'] }}) l c h / 0.5)';
-                                this.style.boxShadow   = '0 0 32px oklch(from var({{ $accent['var'] }}) l c h / 0.18), 0 12px 40px oklch(0 0 0 / 0.25)';
-                            "
-                            onmouseout="
-                                this.style.borderColor = 'var(--sp-border)';
-                                this.style.boxShadow   = 'none';
-                            "
+                            class="sp-feature-card group relative flex flex-col gap-5 overflow-hidden rounded-xl border p-6 transition-all duration-300 hover:-translate-y-1.5"
+                            style="background: var(--sp-bg-card); border-color: var(--sp-border); --feat-accent: var({{ $accent['var'] }});"
                         >
                             {{-- Top-edge highlight (appears on hover via CSS sibling trick via JS above) --}}
                             <div class="absolute left-[10%] right-[10%] top-0 h-px opacity-0 transition-opacity duration-300 group-hover:opacity-100" style="background: linear-gradient(90deg, transparent, var({{ $accent['var'] }}), transparent);"></div>
