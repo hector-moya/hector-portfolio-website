@@ -4,18 +4,20 @@ declare(strict_types=1);
 
 namespace App\Livewire\Frontend;
 
-use App\Models\Asset;
+use App\Livewire\Frontend\Concerns\ResolvesFrontendAssets;
 use App\Models\Collection as CollectionModel;
+use App\Models\Entry;
+use App\Support\Seo;
 use App\Support\TemplateLayouts; // Used for index templates (card-grid, list, magazine)
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
-use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithPagination;
 
 final class CollectionIndex extends Component
 {
+    use ResolvesFrontendAssets;
     use WithPagination;
 
     public CollectionModel $collection;
@@ -54,17 +56,12 @@ final class CollectionIndex extends Component
             $template = TemplateLayouts::defaultIndexTemplate();
         }
 
-        return view('livewire.frontend.collection-index', [
+        return $this->withSeo(view('livewire.frontend.collection-index', [
             'entries' => $entries,
             'template' => $template,
             'theme' => $this->collection->settings['theme'] ?? 'greenpeace',
             'isSingle' => false,
-        ]);
-    }
-
-    public function title(): string
-    {
-        return $this->collection->name;
+        ]));
     }
 
     private function renderSingle(): View|Factory
@@ -79,14 +76,14 @@ final class CollectionIndex extends Component
         $assets = $this->resolveAssets($sections);
         $theme = $this->collection->settings['theme'] ?? 'greenpeace';
 
-        return view('livewire.frontend.collection-index', [
+        return $this->withSeo(view('livewire.frontend.collection-index', [
             'entry' => $entry,
             'sections' => $sections,
             'assets' => $assets,
             'template' => 'landing-page',
             'theme' => $theme,
             'isSingle' => true,
-        ]);
+        ]), $entry);
     }
 
     private function renderMain(): View|Factory
@@ -116,7 +113,7 @@ final class CollectionIndex extends Component
             ->sortByDesc('published_at')
             ->values();
 
-        return view('livewire.frontend.collection-index', [
+        return $this->withSeo(view('livewire.frontend.collection-index', [
             'entry' => $entry,
             'sections' => $sections,
             'assets' => $assets,
@@ -126,34 +123,23 @@ final class CollectionIndex extends Component
             'collection' => $this->collection,
             'theme' => $theme,
             'isSingle' => false,
-        ]);
+        ]), $entry);
     }
 
     /**
-     * Batch-load assets referenced by image fields in page builder sections.
+     * Apply SEO metadata to a view, preferring the resolved entry's fields
+     * and falling back to the collection name.
      */
-    private function resolveAssets(array $sections): EloquentCollection
+    private function withSeo(View $view, ?Entry $entry = null): View
     {
-        if ($sections === []) {
-            return new EloquentCollection;
-        }
+        $seo = Seo::forEntry($entry, ['title' => $this->collection->name]);
 
-        $assetIds = collect($sections)
-            ->flatMap(fn (array $section): array => match ($section['type']) {
-                'hero' => [$section['data']['bg_image'] ?? null],
-                'image_text' => [$section['data']['image'] ?? null],
-                'gallery' => $section['data']['images'] ?? [],
-                default => [],
-            })
-            ->filter()
-            ->unique()
-            ->values()
-            ->all();
-
-        if (empty($assetIds)) {
-            return new EloquentCollection;
-        }
-
-        return Asset::query()->whereIn('id', $assetIds)->get();
+        return $view
+            ->title($seo['title'])
+            ->layoutData([
+                'description' => $seo['description'],
+                'ogImage' => $seo['ogImage'],
+                'ogType' => $seo['ogType'],
+            ]);
     }
 }

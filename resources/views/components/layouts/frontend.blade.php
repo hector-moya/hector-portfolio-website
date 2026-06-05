@@ -24,16 +24,26 @@
             this.dark = !this.dark;
             document.documentElement.classList.toggle('dark', this.dark);
             localStorage.setItem('theme', this.dark ? 'dark' : 'light');
+            window.dispatchEvent(new CustomEvent('theme-changed', { detail: { dark: this.dark } }));
         }
     }"
     x-init="window.addEventListener('scroll', () => { scrolled = window.scrollY > 40 }, { passive: true })"
     class="sp-site-body flex min-h-screen flex-col justify-between antialiased"
 >
+    {{-- Skip to main content (keyboard accessibility) --}}
+    <a
+        href="#main-content"
+        class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded focus:px-4 focus:py-2 focus:text-sm focus:font-semibold"
+        style="background: var(--sp-solar); color: var(--sp-bg);"
+    >
+        {{ __('Skip to content') }}
+    </a>
+
     {{-- Particle canvas — dark mode bioluminescent spores --}}
-    <canvas id="sp-particles"></canvas>
+    <canvas id="sp-particles" aria-hidden="true"></canvas>
 
     {{-- Topographic contour lines — light mode only --}}
-    <svg id="sp-topo-fixed" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">
+    <svg id="sp-topo-fixed" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
         <path d="M-100 780 Q300 720 700 755 Q1100 790 1540 740" fill="none" stroke="oklch(0.55 0.18 82)" stroke-width="1.0" opacity="0.5"/>
         <path d="M-100 820 Q280 760 680 795 Q1080 830 1540 778" fill="none" stroke="oklch(0.55 0.18 82)" stroke-width="0.7" opacity="0.4"/>
         <path d="M-100 860 Q320 800 720 835 Q1120 870 1540 815" fill="none" stroke="oklch(0.55 0.18 82)" stroke-width="0.5" opacity="0.3"/>
@@ -122,6 +132,9 @@
         @keydown.escape.window="mobileOpen = false"
         class="fixed inset-0 z-50 lg:hidden"
         style="display: none"
+        role="dialog"
+        aria-modal="true"
+        aria-label="{{ __('Site menu') }}"
     >
         <!-- Backdrop -->
         <div
@@ -177,7 +190,7 @@
     </div>
 
     <!-- Page Content -->
-    <main class="relative z-10">
+    <main id="main-content" tabindex="-1" class="relative z-10 scroll-mt-24 focus:outline-none">
         {{ $slot }}
     </main>
 
@@ -278,15 +291,47 @@
 
             const spores = Array.from({ length: 85 }, () => new Spore());
 
+            let rafId = null;
+
             function animate() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 spores.forEach(s => { s.update(); s.draw(); });
-                requestAnimationFrame(animate);
+                rafId = requestAnimationFrame(animate);
+            }
+
+            const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+            function shouldRun() {
+                return document.documentElement.classList.contains('dark')
+                    && !document.hidden
+                    && !reduceMotion.matches;
+            }
+
+            function start() {
+                if (rafId === null && shouldRun()) {
+                    animate();
+                }
+            }
+
+            function stop() {
+                if (rafId !== null) {
+                    cancelAnimationFrame(rafId);
+                    rafId = null;
+                }
+            }
+
+            function sync() {
+                shouldRun() ? start() : stop();
             }
 
             resizeCanvas();
             window.addEventListener('resize', resizeCanvas, { passive: true });
-            animate();
+            // Pause animation when the tab is hidden, the theme is light, or the
+            // visitor prefers reduced motion — saving CPU and battery.
+            document.addEventListener('visibilitychange', sync);
+            window.addEventListener('theme-changed', sync);
+            reduceMotion.addEventListener('change', sync);
+            sync();
         })();
     </script>
 

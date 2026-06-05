@@ -321,3 +321,33 @@ select:focus[data-flux-control] {
 }
 
 html:not(.dark) #sp-topo-fixed { opacity: 0.45; }
+
+/* ─── Respect reduced-motion preferences ──────────────────────
+   Disable the decorative entrance, glow, float and gradient
+   animations for visitors who prefer reduced motion. The particle
+   canvas is paused via JavaScript in the frontend layout. */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    .sp-entrance-1,
+    .sp-entrance-2,
+    .sp-entrance-3,
+    .sp-entrance-4,
+    .sp-entrance-5,
+    .sp-entrance-6,
+    .sp-entrance-hint {
+        opacity: 1 !important;
+        animation: none !important;
+    }
+
+    #sp-particles {
+        opacity: 0 !important;
+    }
+}

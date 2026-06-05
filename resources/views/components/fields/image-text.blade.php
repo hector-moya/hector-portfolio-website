@@ -20,6 +20,17 @@
     .dark .sp-imagetext-{{ $id }} {
         background: var(--sp-bg-mid);
     }
+
+    /* Image hover treatment (CSS-driven for keyboard/touch parity) */
+    .sp-imagetext-{{ $id }} img {
+        filter: saturate(0.88) brightness(0.94);
+        transition: filter 0.4s;
+    }
+
+    .sp-imagetext-{{ $id }}:hover img,
+    .sp-imagetext-{{ $id }} a:focus-visible img {
+        filter: saturate(1) brightness(1);
+    }
 </style>
 
 <div class="sp-imagetext-{{ $id }} relative overflow-hidden py-16 sm:py-24">
@@ -40,10 +51,9 @@
                         <img
                             src="{{ $image->url }}"
                             alt="{{ $image->alt_text }}"
+                            loading="lazy"
+                            decoding="async"
                             class="w-full rounded-lg object-cover"
-                            style="filter: saturate(0.88) brightness(0.94); transition: filter 0.4s;"
-                            onmouseover="this.style.filter='saturate(1) brightness(1)'"
-                            onmouseout="this.style.filter='saturate(0.88) brightness(0.94)'"
                         />
                     </div>
 

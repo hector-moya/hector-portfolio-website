@@ -31,17 +31,7 @@ final class MoveModal extends Component
 
     public $sortDirection = 'asc';
 
-    // public ?int $currentFolderId = null;
-
-    // public array $assetIds = [];
-
     public array $selected = [];
-
-    public function mount(): void
-    {
-        // $this->assetIds = $this->selected;
-        // dd($this->selected);
-    }
 
     public function sort($column): void
     {

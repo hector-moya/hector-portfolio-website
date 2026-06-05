@@ -15,13 +15,21 @@ final class EntriesController extends Controller
 {
     public function index(Request $request): AnonymousResourceCollection
     {
+        $validated = $request->validate([
+            'collection' => ['nullable', 'string', 'max:255'],
+            'search' => ['nullable', 'string', 'max:255'],
+            'per_page' => ['nullable', 'integer', 'min:1', 'max:100'],
+        ]);
+
+        $search = isset($validated['search']) ? trim($validated['search']) : null;
+
         $entries = Entry::query()
             ->where('status', 'published')
             ->with(['collection', 'author', 'elements'])
-            ->when($request->collection, fn ($q) => $q->whereHas('collection', fn ($c) => $c->where('slug', $request->collection)))
-            ->when($request->search, fn ($q) => $q->where('title', 'like', sprintf('%%%s%%', $request->search)))
+            ->when($validated['collection'] ?? null, fn ($q, $slug) => $q->whereHas('collection', fn ($c) => $c->where('slug', $slug)))
+            ->when($search, fn ($q) => $q->where('title', 'like', '%'.addcslashes($search, '%_\\').'%'))
             ->latest('published_at')
-            ->paginate($request->integer('per_page', 15));
+            ->paginate($validated['per_page'] ?? 15);
 
         return EntryResource::collection($entries);
     }
