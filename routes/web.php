@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\SitemapController;
 use App\Livewire\ActivityLog\Index as ActivityLogIndex;
 use App\Livewire\Assets\Index as AssetsIndex;
 use App\Livewire\Blueprints\AiWizard as BlueprintsAiWizard;
@@ -41,6 +42,13 @@ use Laravel\Fortify\Features;
 
 // Frontend Routes (Public)
 Route::get('/', Home::class)->name('home');
+Route::get('sitemap.xml', SitemapController::class)->name('sitemap');
+
+Route::get('robots.txt', function () {
+    $body = "User-agent: *\nDisallow:\n\nSitemap: ".route('sitemap')."\n";
+
+    return response($body, 200, ['Content-Type' => 'text/plain']);
+})->name('robots');
 
 Route::get('dashboard', Dashboard::class)
     ->middleware(['auth', 'verified'])

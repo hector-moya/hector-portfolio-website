@@ -35,6 +35,8 @@
                         <img
                             src="{{ $image->url }}"
                             alt="{{ $image->alt_text }}"
+                            loading="lazy"
+                            decoding="async"
                             class="aspect-4/3 w-full object-cover transition-transform duration-500 group-hover:scale-105"
                         />
                     </div>

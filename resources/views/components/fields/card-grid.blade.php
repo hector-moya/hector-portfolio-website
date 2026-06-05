@@ -6,6 +6,15 @@
 @endphp
 
 @if (!empty($data['title']) || !empty($data['subtitle']) || $cards->isNotEmpty())
+    <style>
+        /* Card hover treatment (CSS-driven for keyboard/touch parity) */
+        .sp-card { box-shadow: none; }
+        .sp-card:hover,
+        .sp-card:focus-within {
+            box-shadow: 0 0 24px oklch(from var(--sp-bio) l c h / 0.14), 0 8px 32px oklch(0 0 0 / 0.2);
+            border-color: oklch(from var(--sp-bio) l c h / 0.4) !important;
+        }
+    </style>
     <div class="relative overflow-hidden py-16 sm:py-24" style="background: var(--sp-bg-mid);">
 
         {{-- Decorative accent blob --}}
@@ -41,16 +50,16 @@
                         <div
                             data-animate
                             data-delay="{{ $delay }}"
-                            class="group flex flex-col overflow-hidden rounded-xl border transition-all duration-300 hover:-translate-y-1"
+                            class="sp-card group flex flex-col overflow-hidden rounded-xl border transition-all duration-300 hover:-translate-y-1"
                             style="background: var(--sp-bg-card); border-color: var(--sp-border);"
-                            onmouseover="this.style.boxShadow='0 0 24px oklch(from var(--sp-bio) l c h / 0.14), 0 8px 32px oklch(0 0 0 / 0.2)'; this.style.borderColor='oklch(from var(--sp-bio) l c h / 0.4)';"
-                            onmouseout="this.style.boxShadow='none'; this.style.borderColor='var(--sp-border)';"
                         >
                             @if ($cardAsset)
                                 <div class="overflow-hidden">
                                     <img
                                         src="{{ $cardAsset->url }}"
                                         alt="{{ $cardAsset->alt_text ?? ($card['title'] ?? '') }}"
+                                        loading="lazy"
+                                        decoding="async"
                                         class="aspect-video w-full object-cover transition-transform duration-500 group-hover:scale-105"
                                         style="filter: saturate(0.88);"
                                     />

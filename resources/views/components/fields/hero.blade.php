@@ -77,7 +77,7 @@
 
         {{-- Eyebrow / section badge --}}
         <div class="sp-entrance-1 mb-6 text-xs font-semibold uppercase tracking-[0.28em]" style="color: var(--sp-solar); text-shadow: 0 0 16px var(--sp-glow-s);">
-            {{ config('app.name') }}
+            {{ \App\Support\Seo::siteName() }}
         </div>
 
         {{-- Main title --}}
